@@ -2,7 +2,6 @@ package org.JE.Window;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -20,8 +19,8 @@ public class Window {
 
     public static void createWindow(WindowPreferences wp) {
         Thread t = new Thread(() -> {
-            init();
-            loop();
+            InitializeWindow(wp);
+            WindowLoop();
             glfwFreeCallbacks(windowHandle);
             glfwDestroyWindow(windowHandle);
             glfwTerminate();
@@ -34,7 +33,7 @@ public class Window {
         glfwSetWindowShouldClose(windowHandle, true);
     }
 
-    private static void init() {
+    private static void InitializeWindow(WindowPreferences wp) {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -46,10 +45,10 @@ public class Window {
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current windowHandle hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the windowHandle will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the windowHandle will be resizable
+        glfwWindowHint(GLFW_RESIZABLE, (wp.windowResizable? 1:0)); // the windowHandle will be resizable
 
         // Create the windowHandle
-        windowHandle = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+        windowHandle = glfwCreateWindow(wp.windowSize.x(), wp.windowSize.y(), wp.windowTitle, NULL, NULL);
         if ( windowHandle == NULL )
             throw new RuntimeException("Failed to create the GLFW windowHandle");
 
@@ -86,7 +85,7 @@ public class Window {
         // Make the windowHandle visible
         glfwShowWindow(windowHandle);
     }
-    private static void loop() {
+    private static void WindowLoop() {
 
         GL.setCapabilities(GL.createCapabilities());
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
