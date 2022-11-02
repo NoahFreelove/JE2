@@ -1,4 +1,4 @@
-package org.JE.Window;
+package JE.Window;
 
 public class WindowCloseReason {
     public static final int WINDOW_CLOSE_USER_REQUEST = 0;

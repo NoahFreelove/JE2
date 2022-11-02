@@ -1,8 +1,8 @@
-package org.JE.Objects.Components;
+package JE.Objects.Components;
 
-import org.JE.Objects.GameObject;
+import java.io.Serializable;
 
-public abstract class Component {
+public abstract class Component implements Serializable {
     public boolean active = true;
     public abstract void update();
     public abstract void start();

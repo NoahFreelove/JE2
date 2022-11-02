@@ -1,4 +1,4 @@
-package org.JE.Objects.Components;
+package JE.Objects.Components;
 
 import org.joml.Vector2f;
 

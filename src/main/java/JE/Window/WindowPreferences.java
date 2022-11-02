@@ -1,4 +1,4 @@
-package org.JE.Window;
+package JE.Window;
 
 import org.joml.Vector2i;
 

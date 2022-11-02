@@ -1,12 +1,14 @@
-package org.JE;
+package JE;
 
-import org.JE.Window.Window;
-import org.JE.Window.WindowCloseReason;
-import org.JE.Window.WindowPreferences;
+import JE.Scene.Scene;
+import JE.Window.Window;
+import JE.Window.WindowCloseReason;
+import JE.Window.WindowPreferences;
 
 public class Manager {
 
     private static WindowPreferences preferences = new WindowPreferences();
+    private static Scene activeScene = new Scene();
 
     public static void setWindowPreferences(WindowPreferences wp){
         preferences = wp;
@@ -32,5 +34,10 @@ public class Manager {
     public static void Quit(){
         Window.CloseWindow(WindowCloseReason.WINDOW_CLOSE_USER_REQUEST);
         System.exit(WindowCloseReason.WINDOW_CLOSE_USER_REQUEST);
+    }
+
+    public static void SetScene(Scene s){
+        activeScene = s;
+        s.start();
     }
 }

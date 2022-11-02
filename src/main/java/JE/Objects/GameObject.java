@@ -1,18 +1,23 @@
-package org.JE.Objects;
+package JE.Objects;
 
-import org.JE.Objects.Components.Component;
-import org.JE.Objects.Components.Transform;
+import JE.Objects.Components.Component;
+import JE.Objects.Components.Transform;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GameObject {
+public class GameObject implements Serializable {
     public boolean active = true;
+    private Identity identity = new Identity();
 
     private ArrayList<Component> components = new ArrayList<>(){{
         add(new Transform());
     }};
 
     public GameObject(){}
+    public GameObject(Identity id){
+        this.identity = id;
+    }
 
     public Transform getTransform(){
         return (Transform) components.get(0);
@@ -57,6 +62,13 @@ public class GameObject {
                 continue;
             c.awake();
         }
+    }
+
+    public Identity getIdentity() {
+        return new Identity(identity.name, identity.tag);
+    }
+    public void setIdentity(Identity identity) {
+        this.identity = identity;
     }
 
 
