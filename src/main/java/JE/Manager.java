@@ -19,16 +19,18 @@ public class Manager {
      * Creates window with specified settings
      * @param wp WindowPreferences. Width, Height, Title, Resizeable?
      */
-    public static void Run(WindowPreferences wp){
+    public static void Start(WindowPreferences wp){
         preferences = wp;
         Window.createWindow(preferences);
+
     }
 
     /**
      * Runs window with default settings.
      */
-    public static void Start(){
-        Run(preferences);
+    public static void Run(){
+        if(!Window.hasInit)
+            return;
     }
 
     public static void Quit(){
@@ -40,4 +42,10 @@ public class Manager {
         activeScene = s;
         s.start();
     }
+
+    public static void QueueGLFunction(Runnable r){
+        Window.QueueGLFunction(r);
+    }
+
+
 }

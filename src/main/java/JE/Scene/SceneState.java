@@ -6,10 +6,13 @@ import java.io.*;
 
 public class SceneState {
 
-    private byte[] state;
+    private final byte[] state;
 
     private SceneState(byte[] state){
         this.state = state;
+    }
+    public static SceneState saveState(Scene scene){
+        return saveState(scene, new SceneStateSaveMethod());
     }
 
     public static SceneState saveState(Scene scene, SceneStateSaveMethod saveType) {

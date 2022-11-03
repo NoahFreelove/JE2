@@ -10,7 +10,7 @@ public class GameObject implements Serializable {
     public boolean active = true;
     private Identity identity = new Identity();
 
-    private ArrayList<Component> components = new ArrayList<>(){{
+    private final ArrayList<Component> components = new ArrayList<>(){{
         add(new Transform());
     }};
 
@@ -27,12 +27,23 @@ public class GameObject implements Serializable {
     }
 
     public boolean addComponent(Component c){
+        if(!c.getRestrictions().canHaveMultiple)
+        {
+            for(Component comp : components){
+                if(comp.getClass() == c.getClass()){
+                    return false;
+                }
+            }
+        }
         return components.add(c);
     }
     public boolean removeComponent(Component c){
         if(c == components.get(0) || c == null || components.size() == 1){
             return false;
         }
+        if(!c.getRestrictions().canBeRemoved)
+            return false;
+
         return components.remove(c);
     }
 
@@ -40,7 +51,7 @@ public class GameObject implements Serializable {
         if(!active)
             return;
         for(Component c : components){
-            if(!c.active)
+            if(!c.getActive())
                 continue;
             c.update();
         }
@@ -49,7 +60,7 @@ public class GameObject implements Serializable {
         if(!active)
             return;
         for(Component c : components){
-            if(!c.active)
+            if(!c.getActive())
                 continue;
             c.start();
         }
@@ -58,7 +69,7 @@ public class GameObject implements Serializable {
         if(!active)
             return;
         for(Component c : components){
-            if(!c.active)
+            if(!c.getActive())
                 continue;
             c.awake();
         }

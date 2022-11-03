@@ -1,9 +1,11 @@
 package JE.Rendering;
 
 import JE.Objects.Components.Component;
+import JE.Security.GetClassCaller;
 
 public class Camera extends Component {
-    public Camera(){}
+    public Camera(){
+    }
 
     @Override
     public void update() {

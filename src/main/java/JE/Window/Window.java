@@ -7,6 +7,9 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -16,21 +19,29 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
     private static long windowHandle = 0;
+    public static boolean hasInit = false;
+    private static ArrayList<Runnable> actionQueue = new ArrayList<>();
 
     public static void createWindow(WindowPreferences wp) {
         Thread t = new Thread(() -> {
             InitializeWindow(wp);
-            WindowLoop();
-            glfwFreeCallbacks(windowHandle);
-            glfwDestroyWindow(windowHandle);
-            glfwTerminate();
-            glfwSetErrorCallback(null).free();
+            hasInit = true;
+            Loop();
         });
         t.start();
+
     }
     public static void CloseWindow(int code){
         System.out.println("Closing window with code: " + code);
         glfwSetWindowShouldClose(windowHandle, true);
+    }
+
+    public static void Loop(){
+        WindowLoop();
+        glfwFreeCallbacks(windowHandle);
+        glfwDestroyWindow(windowHandle);
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     private static void InitializeWindow(WindowPreferences wp) {
@@ -92,6 +103,8 @@ public class Window {
 
         while ( !glfwWindowShouldClose(windowHandle) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            actionQueue.forEach(Runnable::run);
+            actionQueue.clear();
 
             glfwSwapBuffers(windowHandle); // swap the color buffers
 
@@ -105,4 +118,7 @@ public class Window {
 
     }
 
+    public static void QueueGLFunction(Runnable r) {
+        actionQueue.add(r);
+    }
 }
