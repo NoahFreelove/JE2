@@ -2,6 +2,7 @@ package JE.Objects;
 
 import JE.Objects.Components.Component;
 import JE.Objects.Components.Transform;
+import JE.Rendering.Renderer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 public class GameObject implements Serializable {
     public boolean active = true;
     private Identity identity = new Identity();
+    public Renderer renderer = null;
 
     private final ArrayList<Component> components = new ArrayList<>(){{
         add(new Transform());
@@ -34,6 +36,10 @@ public class GameObject implements Serializable {
                     return false;
                 }
             }
+        }
+        if(c instanceof Renderer)
+        {
+            renderer = (Renderer) c;
         }
         return components.add(c);
     }
@@ -81,6 +87,5 @@ public class GameObject implements Serializable {
     public void setIdentity(Identity identity) {
         this.identity = identity;
     }
-
 
 }

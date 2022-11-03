@@ -47,5 +47,6 @@ public class Manager {
         Window.QueueGLFunction(r);
     }
 
+    public static Scene getActiveScene(){return activeScene;}
 
 }

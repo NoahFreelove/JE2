@@ -9,8 +9,6 @@ import java.util.ArrayList;
 public class Scene {
     public Camera activeCamera = new Camera();
     public ArrayList<GameObject> gameObjects = new ArrayList<>(){{
-        add(new GameObject(new Identity("Object", "tag")));
-        add(new GameObject(new Identity("Object2", "tag")));
     }};
 
 
@@ -26,6 +24,7 @@ public class Scene {
             return;
         gameObjects.add(newGameObject);
     }
+
     public void remove(GameObject gameObject)
     {
         if(gameObject == null)

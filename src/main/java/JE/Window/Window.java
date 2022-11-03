@@ -1,5 +1,7 @@
 package JE.Window;
 
+import JE.Manager;
+import JE.Objects.GameObject;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import org.lwjgl.glfw.*;
@@ -8,8 +10,7 @@ import org.lwjgl.system.*;
 
 import java.nio.*;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -20,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
     private static long windowHandle = 0;
     public static boolean hasInit = false;
-    private static ArrayList<Runnable> actionQueue = new ArrayList<>();
+    private static final ArrayList<Runnable> actionQueue = new ArrayList<>();
 
     public static void createWindow(WindowPreferences wp) {
         Thread t = new Thread(() -> {
@@ -41,7 +42,12 @@ public class Window {
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(new GLFWErrorCallback() {
+            @Override
+            public void invoke(int i, long l) {
+                System.out.println("Error: " + i + " " + l);
+            }
+        })).free();
     }
 
     private static void InitializeWindow(WindowPreferences wp) {
@@ -78,20 +84,21 @@ public class Window {
             glfwGetWindowSize(windowHandle, pWidth, pHeight);
 
             // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
             // Center the windowHandle
             glfwSetWindowPos(
                     windowHandle,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
+                    (videoMode.width() - pWidth.get(0)) / 2,
+                    (videoMode.height() - pHeight.get(0)) / 2
             );
         } // the stack frame is popped automatically
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(windowHandle);
-        // Enable v-sync
-        glfwSwapInterval(1);
+
+        // Enable VSync if requested
+        glfwSwapInterval((wp.vSync? 1:0));
 
         // Make the windowHandle visible
         glfwShowWindow(windowHandle);
@@ -102,20 +109,35 @@ public class Window {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         while ( !glfwWindowShouldClose(windowHandle) ) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             actionQueue.forEach(Runnable::run);
             actionQueue.clear();
 
-            glfwSwapBuffers(windowHandle); // swap the color buffers
+            render();
 
-            // Poll for windowHandle events. The key callback above will only be
-            // invoked during this call.
+            // Poll for windowHandle events. The key callback above will only be invoked during this call.
             glfwPollEvents();
         }
     }
 
-    public static void onPreferenceUpdated(WindowPreferences wp){
+    private static void render() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+        for (GameObject object: Manager.getActiveScene().gameObjects) {
+            if(object.renderer != null)
+            {
+                object.renderer.Render();
+            }
+        }
+        glfwSwapBuffers(windowHandle); // swap the color buffers
+    }
+
+    public static void onPreferenceUpdated(WindowPreferences wp){
+        actionQueue.add(() -> {
+            glfwSetWindowSize(windowHandle, wp.windowSize.x(), wp.windowSize.y());
+            glfwSetWindowTitle(windowHandle, wp.windowTitle);
+            glfwSetWindowAttrib(windowHandle, GLFW_RESIZABLE, (wp.windowResizable? 1:0));
+            glfwSwapInterval((wp.vSync? 1:0));
+        });
     }
 
     public static void QueueGLFunction(Runnable r) {

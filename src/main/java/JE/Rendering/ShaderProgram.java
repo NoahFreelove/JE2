@@ -8,9 +8,23 @@ public class ShaderProgram {
     public int programID;
     private int vertexShaderID;
     private int fragmentShaderID;
+    public boolean vertexCompileStatus;
+    public boolean fragmentCompileStatus;
 
     public ShaderProgram(){
-        CreateShader("void main(){gl_Position = vec4(0.0, 0.0, 0.0, 1.0);}", "void main(){gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);}");
+        CreateShader(
+                "#version 330 core\n" +
+                "layout(location = 0) in vec3 vertexPosition_modelspace;\n" +
+                "void main(){  \n" +
+                "  gl_Position.xyz = vertexPosition_modelspace;\n" +
+                "  gl_Position.w = 1.0;\n" +
+                "}\n",
+
+                "#version 330 core\n" +
+                "out vec3 color;\n" +
+                "void main(){\n" +
+                "  color = vec3(1,0,0);\n" +
+                "}");
     }
 
     public void CreateShader(String vertex, String fragment) {
@@ -22,14 +36,17 @@ public class ShaderProgram {
             glShaderSource(fragmentShaderID, fragment);
             glCompileShader(vertexShaderID);
             glCompileShader(fragmentShaderID);
-            glGetShaderi(vertexShaderID, GL_COMPILE_STATUS);
-            glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS);
+            //System.out.println("Vertex Shader Status: " + glGetShaderi(vertexShaderID, GL_COMPILE_STATUS));
+            vertexCompileStatus = glGetShaderi(vertexShaderID, GL_COMPILE_STATUS) == 1;
+            //System.out.println("Fragment Shader Status: " + glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS));
+            fragmentCompileStatus = glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS) == 1;
 
             programID = glCreateProgram();
             glAttachShader(programID, vertexShaderID);
             glAttachShader(programID, fragmentShaderID);
             glLinkProgram(programID);
             glValidateProgram(programID);
+
         };
         Manager.QueueGLFunction(r);
     }

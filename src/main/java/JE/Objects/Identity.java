@@ -13,4 +13,9 @@ public class Identity implements Serializable {
         this.name = "GameObject";
         this.tag = "Untagged";
     }
+
+    @Override
+    public String toString(){
+        return name + " : " + tag;
+    }
 }
