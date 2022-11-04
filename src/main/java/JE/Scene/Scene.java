@@ -1,7 +1,6 @@
 package JE.Scene;
 
-import JE.Objects.GameObject;
-import JE.Objects.Identity;
+import JE.Objects.Base.GameObject;
 import JE.Rendering.Camera;
 
 import java.util.ArrayList;

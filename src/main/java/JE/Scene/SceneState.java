@@ -1,6 +1,6 @@
 package JE.Scene;
 
-import JE.Objects.GameObject;
+import JE.Objects.Base.GameObject;
 
 import java.io.*;
 

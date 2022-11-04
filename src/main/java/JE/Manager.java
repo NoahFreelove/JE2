@@ -4,6 +4,7 @@ import JE.Scene.Scene;
 import JE.Window.Window;
 import JE.Window.WindowCloseReason;
 import JE.Window.WindowPreferences;
+import org.joml.Vector2i;
 
 public class Manager {
 
@@ -48,5 +49,9 @@ public class Manager {
     }
 
     public static Scene getActiveScene(){return activeScene;}
+
+    public static Vector2i getWindowSize(){
+        return new Vector2i(preferences.windowSize.x(), preferences.windowSize.y());
+    }
 
 }

@@ -1,4 +1,4 @@
-package JE.Objects;
+package JE.Objects.Base;
 
 import JE.Objects.Components.Component;
 import JE.Objects.Components.Transform;

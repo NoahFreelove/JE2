@@ -1,7 +1,7 @@
 package JE.Window;
 
 import JE.Manager;
-import JE.Objects.GameObject;
+import JE.Objects.Base.GameObject;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import org.lwjgl.glfw.*;
@@ -107,11 +107,13 @@ public class Window {
 
         GL.setCapabilities(GL.createCapabilities());
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glEnable(GL_TEXTURE_2D);
 
         while ( !glfwWindowShouldClose(windowHandle) ) {
             actionQueue.forEach(Runnable::run);
             actionQueue.clear();
 
+            update();
             render();
 
             // Poll for windowHandle events. The key callback above will only be invoked during this call.
@@ -119,13 +121,23 @@ public class Window {
         }
     }
 
+    private static void update() {
+        for (GameObject object: Manager.getActiveScene().gameObjects) {
+            if (object == null)
+                continue;
+            object.Update();
+        }
+    }
+
     private static void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
         for (GameObject object: Manager.getActiveScene().gameObjects) {
+            if(object == null)
+                continue;
             if(object.renderer != null)
             {
-                object.renderer.Render();
+                object.renderer.Render(object.getTransform());
             }
         }
         glfwSwapBuffers(windowHandle); // swap the color buffers
