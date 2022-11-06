@@ -1,9 +1,14 @@
 package JE.Objects.Components;
 
+import JE.Logging.Errors.ComponentError;
+import JE.Logging.Logger;
+import JE.Objects.Base.GameObject;
+
 import java.io.Serializable;
 
 public abstract class Component implements Serializable {
     protected ComponentRestrictions restrictions = new ComponentRestrictions();
+    public GameObject parentObject;
 
     public ComponentRestrictions getRestrictions(){
         return new ComponentRestrictions(restrictions);
@@ -13,6 +18,7 @@ public abstract class Component implements Serializable {
 
     public void setActive (boolean newState){
         if(!restrictions.canBeDisabled && !newState){
+            Logger.log(new ComponentError(this, "Component restrictions do not let it be disabled."));
             return;
         }
         active = newState;

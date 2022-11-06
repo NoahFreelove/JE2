@@ -39,7 +39,6 @@ public class VAO {
             }
             fb.flip();
             glBufferData(GL_ARRAY_BUFFER, fb, GL_STATIC_DRAW);
-            System.out.println(vertexBufferID);
         };
 
         Manager.QueueGLFunction(r);

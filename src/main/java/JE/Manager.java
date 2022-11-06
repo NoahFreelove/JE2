@@ -23,15 +23,13 @@ public class Manager {
     public static void Start(WindowPreferences wp){
         preferences = wp;
         Window.createWindow(preferences);
-
     }
 
     /**
      * Runs window with default settings.
      */
     public static void Run(){
-        if(!Window.hasInit)
-            return;
+        Start(new WindowPreferences());
     }
 
     public static void Quit(){

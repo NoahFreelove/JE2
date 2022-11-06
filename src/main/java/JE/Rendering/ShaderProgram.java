@@ -1,5 +1,7 @@
 package JE.Rendering;
 
+import JE.Logging.Logger;
+import JE.Logging.Errors.ShaderError;
 import JE.Manager;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -15,17 +17,19 @@ public class ShaderProgram {
         CreateShader(
                 "#version 330 core\n" +
                         "layout(location = 0) in vec2 modelPos;\n" +
+                        "layout(location = 1) in vec2 texCoord;\n" +
+                        "\n" +
                         "uniform mat4 MVP;\n" +
                         "uniform float zPos;\n" +
                         "out vec2 UV;\n" +
                         "void main(){\n" +
                         "  vec4 pos = MVP * vec4(modelPos, zPos, 1);\n" +
                         "  gl_Position = pos;\n" +
-                        "  UV = modelPos;\n" +
-                        "}\n",
+                        "  UV = texCoord;\n" +
+                        "}",
 
                 "#version 330 core\n" +
-                        "out vec3 color;\n" +
+                        "out vec3 color;" +
                         "uniform sampler2D JE_Texture;\n" +
                         "in vec2 UV;\n" +
                         "\n" +
@@ -39,15 +43,21 @@ public class ShaderProgram {
             vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
             fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-
             glShaderSource(vertexShaderID, vertex);
             glShaderSource(fragmentShaderID, fragment);
             glCompileShader(vertexShaderID);
             glCompileShader(fragmentShaderID);
-            System.out.println("Vertex Shader Status: " + glGetShaderi(vertexShaderID, GL_COMPILE_STATUS));
             vertexCompileStatus = glGetShaderi(vertexShaderID, GL_COMPILE_STATUS) == 1;
-            System.out.println("Fragment Shader Status: " + glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS));
             fragmentCompileStatus = glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS) == 1;
+
+            if(!vertexCompileStatus){
+                Logger.log(new ShaderError(vertex, true));
+            }
+
+            if(!fragmentCompileStatus)
+            {
+                Logger.log(new ShaderError(fragment, false));
+            }
 
             programID = glCreateProgram();
             glAttachShader(programID, vertexShaderID);

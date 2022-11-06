@@ -16,6 +16,6 @@ public class Identity implements Serializable {
 
     @Override
     public String toString(){
-        return name + " : " + tag;
+        return "Name: '" + name + "' Tag: '" + tag + "'";
     }
 }

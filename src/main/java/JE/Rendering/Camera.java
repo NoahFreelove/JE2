@@ -17,6 +17,7 @@ public class Camera extends Component {
     @Override
     public void update() {
         this.position = new Vector2f(parentObject.getTransform().position.x(), parentObject.getTransform().position.y()).add(positionOffset);
+        this.zPos = parentObject.getTransform().zPos;
     }
 
     @Override
