@@ -1,5 +1,7 @@
 package JE.Window;
 
+import JE.Input.KeyPressedEvent;
+import JE.Input.Keyboard;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -72,8 +74,16 @@ public class Window {
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(windowHandle, (windowHandle, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(windowHandle, true); // We will detect this in the rendering loop
+                glfwSetWindowShouldClose(windowHandle, true);
+
+            if(action == GLFW_PRESS){
+                Keyboard.keyPressedEvents.forEach(e -> e.invoke(key, mods));
+            }
+            else if(action == GLFW_RELEASE){
+                Keyboard.keyReleasedEvents.forEach(e -> e.invoke(key, mods));
+            }
         });
+
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
@@ -115,9 +125,8 @@ public class Window {
 
             update();
             render();
-
-            // Poll for windowHandle events. The key callback above will only be invoked during this call.
             glfwPollEvents();
+
         }
     }
 

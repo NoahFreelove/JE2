@@ -1,5 +1,8 @@
 package JE;
 
+import JE.Input.KeyPressedEvent;
+import JE.Input.KeyReleasedEvent;
+import JE.Input.Keyboard;
 import JE.Scene.Scene;
 import JE.Window.Window;
 import JE.Window.WindowCloseReason;
@@ -52,4 +55,19 @@ public class Manager {
         return new Vector2i(preferences.windowSize.x(), preferences.windowSize.y());
     }
 
+    public static void AddKeyPressedCallback(KeyPressedEvent e){
+        Keyboard.keyPressedEvents.add(e);
+    }
+
+    public static void RemoveKeyPressedCallback(KeyPressedEvent e){
+        Keyboard.keyPressedEvents.remove(e);
+    }
+
+    public static void AddKeyReleasedCallback(KeyReleasedEvent e){
+        Keyboard.keyReleasedEvents.add(e);
+    }
+
+    public static void RemoveKeyReleasedCallback(KeyReleasedEvent e){
+        Keyboard.keyReleasedEvents.remove(e);
+    }
 }

@@ -87,8 +87,8 @@ public class Renderer extends Component {
 
         Matrix4f projection = new Matrix4f().identity();
         projection = projection.perspective((float) Math.toRadians(45), (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y(), 0.1f, 100.0f);
-        Matrix4f view = new Matrix4f().identity();
 
+        Matrix4f view = new Matrix4f().identity();
         Vector2f cameraPos = Manager.getActiveScene().activeCamera.position;
         Vector3f cameraScenePos = new Vector3f(cameraPos, Manager.getActiveScene().activeCamera.zPos);
         Vector3f direction = new Vector3f(0, 0, -1);
