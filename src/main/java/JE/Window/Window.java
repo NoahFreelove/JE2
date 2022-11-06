@@ -1,5 +1,6 @@
 package JE.Window;
 
+import JE.Annotations.GLThread;
 import JE.Input.KeyPressedEvent;
 import JE.Input.Keyboard;
 import JE.Manager;
@@ -120,7 +121,10 @@ public class Window {
         glEnable(GL_TEXTURE_2D);
 
         while ( !glfwWindowShouldClose(windowHandle) ) {
-            actionQueue.forEach(Runnable::run);
+            Object[] actions = actionQueue.toArray();
+            for (Object action : actions) {
+                ((Runnable) action).run();
+            }
             actionQueue.clear();
 
             update();

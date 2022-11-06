@@ -29,12 +29,12 @@ public class ShaderProgram {
                         "}",
 
                 "#version 330 core\n" +
-                        "out vec3 color;" +
+                        "out vec4 FragColor;" +
                         "uniform sampler2D JE_Texture;\n" +
                         "in vec2 UV;\n" +
                         "\n" +
                         "void main(){\n" +
-                        "  color = texture(JE_Texture, UV).rgb;\n" +
+                        "  FragColor = texture(JE_Texture, UV);\n" +
                         "}");
     }
 

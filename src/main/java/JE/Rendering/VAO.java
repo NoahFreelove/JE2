@@ -1,41 +1,52 @@
 package JE.Rendering;
 
+import JE.Annotations.GLThread;
 import JE.Manager;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
 public class VAO {
+    protected float[] data;
+    protected int vertexBufferID = 0;
+    protected int location;
+
     public ShaderProgram shaderProgram = new ShaderProgram();
-    public Vector2f[] vertices = new Vector2f[0];
-    public int vertexBufferID = 0;
+    protected int dataSize = 1;
+
     public VAO(){
         GenerateBuffers();
     }
 
-    public VAO(Vector2f[] vertices){
-        this.vertices = vertices;
+    public VAO(float[] data){
+        this.data = data;
         GenerateBuffers();
     }
-
-    public VAO(Vector2f[] vertices, ShaderProgram sp){
-        this.vertices = vertices;
+    public VAO(float[] data, ShaderProgram sp){
+        this.data = data;
         this.shaderProgram = sp;
         GenerateBuffers();
     }
 
-    private void GenerateBuffers(){
+    protected float[] dataConversion(){
+        return data;
+    }
+
+    protected void GenerateBuffers(){
         Runnable r = () -> {
+            this.data = dataConversion();
             vertexBufferID = glGenBuffers();
             glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-            FloatBuffer fb = BufferUtils.createFloatBuffer(vertices.length * 2 );
-            for (Vector2f v : vertices) {
-                fb.put(v.x);
-                fb.put(v.y);
+            FloatBuffer fb = BufferUtils.createFloatBuffer(data.length * dataSize);
+            for (float v : data) {
+                fb.put(v);
             }
             fb.flip();
             glBufferData(GL_ARRAY_BUFFER, fb, GL_STATIC_DRAW);
@@ -44,25 +55,24 @@ public class VAO {
         Manager.QueueGLFunction(r);
     }
 
-    public void addVertex(Vector2f vertex){
-        Vector2f[] newVertices = new Vector2f[vertices.length + 1];
-        System.arraycopy(vertices, 0, newVertices, 0, vertices.length);
-        newVertices[newVertices.length - 1] = vertex;
-        vertices = newVertices;
+    @GLThread
+    public void Enable(int location){
+        this.location = location;
+        glUseProgram(shaderProgram.programID);
+        glEnableVertexAttribArray(location);
+        glBindBuffer(GL20.GL_ARRAY_BUFFER, vertexBufferID);
+        glVertexAttribPointer(location, dataSize, GL_FLOAT, false, 0, 0);
+    }
+    @GLThread
+    public void Disable(){
+        glDisableVertexAttribArray(location);
     }
 
-    public void addVertices(Vector2f[] vertices){
-        Vector2f[] newVertices = new Vector2f[this.vertices.length + vertices.length];
-        System.arraycopy(this.vertices, 0, newVertices, 0, this.vertices.length);
-        System.arraycopy(vertices, 0, newVertices, this.vertices.length, vertices.length);
-        this.vertices = newVertices;
-    }
-
-    public void setVertices(Vector2f[] vertices){
-        this.vertices = vertices;
+    public void setData(float[] data){
+        this.data = data;
         GenerateBuffers();
     }
-    public void setShaderProgram(ShaderProgram sp){
-        this.shaderProgram = sp;
+    public float[] getData(){
+        return data;
     }
 }

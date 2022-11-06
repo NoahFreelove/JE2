@@ -4,7 +4,6 @@ import JE.Input.KeyPressedEvent;
 import JE.Input.Keyboard;
 import JE.Objects.Base.Identity;
 import JE.Objects.CameraRig;
-import JE.Objects.Components.Component;
 import JE.Objects.Square;
 import JE.Scene.Scene;
 
