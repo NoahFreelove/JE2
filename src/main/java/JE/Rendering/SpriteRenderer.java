@@ -9,7 +9,7 @@ import org.joml.Vector2i;
 import java.nio.ByteBuffer;
 
 public class SpriteRenderer extends Renderer {
-    private VAO2f spriteCoordVAO = new VAO2f();
+    private VAO2f spriteCoordVAO;
     public Texture texture = new Texture();
 
     public SpriteRenderer(){
@@ -50,16 +50,21 @@ public class SpriteRenderer extends Renderer {
 
     @Override
     @GLThread
-    public void Render(Transform t){
+    public void Render(Transform t) {
+        Render(t, 0);
+    }
+
+    @Override
+    @GLThread
+    public void Render(Transform t, int additionalBufferSize) {
         if(texture.generatedTextureID <=-1) {
             super.Render(t, 0);
             return;
         }
 
         texture.ActivateTexture(vao.shaderProgram, texture);
-
         spriteCoordVAO.Enable(1);
-        super.Render(t, spriteCoordVAO.getVertices().length*2);
+        super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize);
         spriteCoordVAO.Disable();
     }
 

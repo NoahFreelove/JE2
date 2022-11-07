@@ -38,12 +38,9 @@ public class Renderer extends Component {
     }
     public void Render(Transform t, int additionalBufferSize) {
         Matrix4f mvp = Manager.getActiveScene().activeCamera.getMVP(t);
+        vao.shaderProgram.setUniformMatrix4f("MVP", mvp.get(BufferUtils.createFloatBuffer(16)));
 
-        int mvpID = glGetUniformLocation(vao.shaderProgram.programID, "MVP");
-        glUniformMatrix4fv(mvpID, false, mvp.get(BufferUtils.createFloatBuffer(16)));
-
-        int zPos = glGetUniformLocation(vao.shaderProgram.programID, "zPos");
-        glUniform1f(zPos,t.zPos);
+        vao.shaderProgram.setUniform1f("zPos", t.zPos);
 
         vao.Enable(0);
         glDrawArrays(drawMode, 0, vao.vertices.length + additionalBufferSize);

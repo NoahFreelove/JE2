@@ -1,9 +1,12 @@
 package JE.Rendering;
 
+import JE.Annotations.GLThread;
 import JE.Logging.Logger;
 import JE.Logging.Errors.ShaderError;
 import JE.Manager;
 import org.joml.Vector2f;
+
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -35,24 +38,29 @@ public class ShaderProgram {
                         "in vec2 UV;\n" +
                         "\n" +
                         "void main(){\n" +
-                        "  FragColor = texture(JE_Texture, UV);\n" +
+                        "  FragColor = vec4(1,0,0,1);\n" +
                         "}");
     }
-
-    public void setUniform1f(String name, float value){
-        Runnable r = () -> {
-            int location = glGetUniformLocation(programID, name);
-            glUniform1f(location, value);
-        };
-        Manager.QueueGLFunction(r);
+    public ShaderProgram(String vertexShader, String fragmentShader){
+        CreateShader(vertexShader, fragmentShader);
     }
 
+    @GLThread
+    public void setUniformMatrix4f(String name, FloatBuffer matrix){
+        int location = glGetUniformLocation(programID, name);
+        glUniformMatrix4fv(location, false, matrix);
+    }
+
+    @GLThread
+    public void setUniform1f(String name, float value){
+        int location = glGetUniformLocation(programID, name);
+        glUniform1f(location, value);
+    }
+
+    @GLThread
     public void setUniform2f(String name, Vector2f value){
-        Runnable r = () -> {
-            int location = glGetUniformLocation(programID, name);
-            glUniform2f(location, value.x, value.y);
-        };
-        Manager.QueueGLFunction(r);
+        int location = glGetUniformLocation(programID, name);
+        glUniform2f(location, value.x, value.y);
     }
 
     public void CreateShader(String vertex, String fragment) {

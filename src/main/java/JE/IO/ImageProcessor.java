@@ -1,5 +1,6 @@
 package JE.IO;
 
+import JE.Annotations.GLThread;
 import JE.Logging.Errors.ImageProcessError;
 import JE.Logging.Logger;
 import org.lwjgl.BufferUtils;
@@ -11,6 +12,7 @@ import java.nio.IntBuffer;
 
 public class ImageProcessor {
 
+    @GLThread
     public static ByteBuffer ProcessImage(String filepath)
     {
         if(filepath == null)
