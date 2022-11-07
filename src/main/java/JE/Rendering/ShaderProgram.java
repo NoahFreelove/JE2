@@ -3,6 +3,7 @@ package JE.Rendering;
 import JE.Logging.Logger;
 import JE.Logging.Errors.ShaderError;
 import JE.Manager;
+import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -36,6 +37,22 @@ public class ShaderProgram {
                         "void main(){\n" +
                         "  FragColor = texture(JE_Texture, UV);\n" +
                         "}");
+    }
+
+    public void setUniform1f(String name, float value){
+        Runnable r = () -> {
+            int location = glGetUniformLocation(programID, name);
+            glUniform1f(location, value);
+        };
+        Manager.QueueGLFunction(r);
+    }
+
+    public void setUniform2f(String name, Vector2f value){
+        Runnable r = () -> {
+            int location = glGetUniformLocation(programID, name);
+            glUniform2f(location, value.x, value.y);
+        };
+        Manager.QueueGLFunction(r);
     }
 
     public void CreateShader(String vertex, String fragment) {

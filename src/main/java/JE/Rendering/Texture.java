@@ -24,8 +24,9 @@ public class Texture {
         GenerateTexture();
     }
 
-    public Texture(String filepath){
+    public Texture(String filepath, Vector2i size){
         textureBuffer = ImageProcessor.ProcessImage(filepath);
+        this.size = size;
         GenerateTexture();
     }
 

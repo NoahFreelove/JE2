@@ -11,7 +11,10 @@ public abstract class Component implements Serializable {
     public GameObject parentObject;
 
     public ComponentRestrictions getRestrictions(){
-        return new ComponentRestrictions(restrictions);
+        return restrictions;
+    }
+    public void setRestrictions(ComponentRestrictions restrictions){
+        this.restrictions = restrictions;
     }
 
     private boolean active = true;

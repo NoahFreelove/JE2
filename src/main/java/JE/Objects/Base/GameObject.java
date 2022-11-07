@@ -43,10 +43,27 @@ public class GameObject implements Serializable {
         {
             for(Component comp : components){
                 if(comp.getClass() == c.getClass()){
+                    Logger.log(new GameObjectError(this, "Can't Add Component. This Component cannot have multiple instances on a single object."));
                     return false;
                 }
             }
         }
+
+        if(c.getRestrictions().restrictClasses){
+            boolean allowed = false;
+            for (Class clazz: c.getRestrictions().permittedClasses) {
+                if (getClass() == clazz) {
+                    allowed = true;
+                    break;
+                }
+            }
+            if(!allowed) {
+                Logger.log(new GameObjectError(this, "Can't Add Component. GameObject class is not on permitted list."));
+                return false;
+            }
+        }
+
+
         if(c instanceof Renderer)
         {
             renderer = (Renderer) c;
@@ -76,8 +93,7 @@ public class GameObject implements Serializable {
         }
         return components.remove(c);
     }
-
-    public void Update(){
+    public void ComponentUpdate(){
         if(!active)
             return;
         for(Component c : components){
@@ -86,7 +102,7 @@ public class GameObject implements Serializable {
             c.update();
         }
     }
-    public void Start(){
+    public void ComponentStart(){
         if(!active)
             return;
         for(Component c : components){
@@ -94,6 +110,13 @@ public class GameObject implements Serializable {
                 continue;
             c.start();
         }
+    }
+
+    public void Update(){
+
+    }
+    public void Start(){
+
     }
     public void Awake(){
         if(!active)

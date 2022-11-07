@@ -63,16 +63,21 @@ public class SpriteRenderer extends Renderer {
         spriteCoordVAO.Disable();
     }
 
-    public void setTextureBuffer(String texturePath) {
+    public void setTexture(String texturePath) {
         setTexture(ImageProcessor.ProcessImage(texturePath), new Vector2i(64,64));
     }
 
-    public void setTexture(ByteBuffer texture, Vector2i size){
-        setTexture(new Texture(texture, size), vao.getVertices());
+    public void setTexture(Texture texture, boolean softSet){
+        setTexture(texture, spriteCoordVAO.getVertices(), softSet);
     }
 
-    public void setTexture(Texture texture, Vector2f[] textCoords) {
+    public void setTexture(ByteBuffer texture, Vector2i size){
+        setTexture(new Texture(texture, size), spriteCoordVAO.getVertices(), false);
+    }
+
+    public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
         this.texture = texture;
+        if(softSet) return;
         spriteCoordVAO.setVertices(textCoords);
     }
 }

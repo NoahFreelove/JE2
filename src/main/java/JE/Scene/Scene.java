@@ -36,12 +36,14 @@ public class Scene {
     public void update(){
         for (GameObject gameObject : gameObjects) {
             gameObject.Update();
+            gameObject.ComponentUpdate();
         }
     }
 
     public void start(){
         for (GameObject gameObject : gameObjects) {
             gameObject.Start();
+            gameObject.ComponentStart();
         }
     }
 }

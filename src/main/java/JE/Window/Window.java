@@ -5,9 +5,13 @@ import JE.Input.KeyPressedEvent;
 import JE.Input.Keyboard;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import org.lwjgl.glfw.*;
+import org.lwjgl.nuklear.NkAllocator;
+import org.lwjgl.nuklear.NkContext;
+import org.lwjgl.nuklear.Nuklear;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
@@ -25,6 +29,8 @@ public class Window {
     private static long windowHandle = 0;
     public static boolean hasInit = false;
     private static final ArrayList<Runnable> actionQueue = new ArrayList<>();
+
+
 
     public static void createWindow(WindowPreferences wp) {
         Thread t = new Thread(() -> {
@@ -119,26 +125,20 @@ public class Window {
         GL.setCapabilities(GL.createCapabilities());
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glEnable(GL_TEXTURE_2D);
+        glEnable(GL_DEPTH_TEST);
 
         while ( !glfwWindowShouldClose(windowHandle) ) {
+
             Object[] actions = actionQueue.toArray();
             for (Object action : actions) {
                 ((Runnable) action).run();
             }
             actionQueue.clear();
 
-            update();
+            Manager.getActiveScene().update();
             render();
             glfwPollEvents();
 
-        }
-    }
-
-    private static void update() {
-        for (GameObject object: Manager.getActiveScene().gameObjects) {
-            if (object == null)
-                continue;
-            object.Update();
         }
     }
 
