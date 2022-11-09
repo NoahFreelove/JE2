@@ -13,7 +13,7 @@ public class Sprite extends GameObject {
 
     protected SpriteRenderer sr;
 
-    private String spriteVertexShader = "#version 330 core\n" +
+    protected String spriteVertexShader = "#version 330 core\n" +
             "layout(location = 0) in vec2 modelPos;\n" +
             "layout(location = 1) in vec2 texCoord;\n" +
             "\n" +
@@ -26,7 +26,7 @@ public class Sprite extends GameObject {
             "  UV = texCoord;\n" +
             "}";
 
-            private String spriteFragmentShader = "#version 330 core\n" +
+    protected String spriteFragmentShader = "#version 330 core\n" +
             "out vec4 FragColor;" +
             "uniform sampler2D JE_Texture;\n" +
             "in vec2 UV;\n" +
@@ -55,6 +55,14 @@ public class Sprite extends GameObject {
     {
         super();
         sr = new SpriteRenderer(new VAO2f(vertices, new ShaderProgram(spriteVertexShader, spriteFragmentShader)),uv, new Texture(ImageProcessor.ProcessImage(spriteFilePath), size));
+        sr.setRestrictions(new ComponentRestrictions(false, true, false));
+        addComponent(sr);
+    }
+
+    public Sprite(Vector2f[] vertices, Vector2f[] uv, ShaderProgram shaderProgram)
+    {
+        super();
+        sr = new SpriteRenderer(new VAO2f(vertices, shaderProgram),uv, new Texture());
         sr.setRestrictions(new ComponentRestrictions(false, true, false));
         addComponent(sr);
     }

@@ -3,7 +3,7 @@ package JE.Window;
 import org.joml.Vector2i;
 
 public class WindowPreferences {
-    public Vector2i windowSize = new Vector2i(1920, 1080);
+    public Vector2i windowSize = new Vector2i(1280, 720);
     public String windowTitle = "JE2";
     public boolean windowResizable = false;
     public boolean vSync = true;

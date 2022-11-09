@@ -2,6 +2,7 @@ package JE.Rendering;
 
 import JE.Annotations.GLThread;
 import JE.IO.ImageProcessor;
+import JE.Manager;
 import JE.Objects.Components.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -81,8 +82,11 @@ public class SpriteRenderer extends Renderer {
     }
 
     public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
-        this.texture = texture;
-        if(softSet) return;
-        spriteCoordVAO.setVertices(textCoords);
+        Runnable r = () ->{
+            this.texture = texture;
+            if(softSet) return;
+            spriteCoordVAO.setVertices(textCoords);
+        };
+        Manager.QueueGLFunction(r);
     }
 }

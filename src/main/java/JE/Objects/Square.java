@@ -17,8 +17,8 @@ public class Square extends Sprite {
                         new Vector2f(0,1)
                 },
 
-                "bin/cat.png",
-                new Vector2i(158,209));
+                "bin/texture1.png",
+                new Vector2i(64,64));
         renderer.setDrawMode(GL_POLYGON);
     }
 
@@ -31,8 +31,8 @@ public class Square extends Sprite {
                         new Vector2f(0,1)
                 },
 
-                "bin/cat.png",
-                new Vector2i(158,209));
+                "bin/texture1.png",
+                new Vector2i(64,64));
         renderer.setDrawMode(GL_POLYGON);
         getTransform().position = pos;
     }
