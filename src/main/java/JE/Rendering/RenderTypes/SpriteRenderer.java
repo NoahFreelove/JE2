@@ -1,9 +1,10 @@
-package JE.Rendering;
+package JE.Rendering.RenderTypes;
 
 import JE.Annotations.GLThread;
 import JE.IO.ImageProcessor;
 import JE.Manager;
 import JE.Objects.Components.Transform;
+import JE.Rendering.Texture;
 import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -15,7 +16,7 @@ public class SpriteRenderer extends Renderer {
     public Texture texture = new Texture();
 
     public SpriteRenderer(){
-        spriteCoordVAO = new VAO2f(vao.getVertices(), vao.shaderProgram);
+        spriteCoordVAO = new VAO2f(new Vector2f[]{}, vao.shaderProgram);
     }
 
     public SpriteRenderer(VAO2f vao){

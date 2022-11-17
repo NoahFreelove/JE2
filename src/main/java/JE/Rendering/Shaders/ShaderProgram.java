@@ -5,7 +5,10 @@ import JE.Logging.Logger;
 import JE.Logging.Errors.ShaderError;
 import JE.Manager;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
@@ -59,6 +62,46 @@ public class ShaderProgram {
     public void setUniform2f(String name, Vector2f value){
         int location = glGetUniformLocation(programID, name);
         glUniform2f(location, value.x, value.y);
+    }
+    @GLThread
+    public void setUniform4f(String name, Vector4f value){
+        int location = glGetUniformLocation(programID, name);
+        glUniform4f(location, value.x, value.y, value.z, value.w);
+    }
+
+    public void CreateShader(File vertex, File fragment){
+        String vertexShader = "";
+        String fragmentShader = "";
+
+        FileInputStream vertexStream = null;
+        FileInputStream fragmentStream = null;
+
+        try {
+            vertexStream = new FileInputStream(vertex);
+            fragmentStream = new FileInputStream(fragment);
+
+            int data = vertexStream.read();
+            while(data != -1){
+                vertexShader += (char)data;
+                data = vertexStream.read();
+            }
+
+            data = fragmentStream.read();
+            while(data != -1){
+                fragmentShader += (char)data;
+                data = fragmentStream.read();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+                vertexStream.close();
+                fragmentStream.close();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        CreateShader(vertexShader, fragmentShader);
     }
 
     public void CreateShader(String vertex, String fragment) {

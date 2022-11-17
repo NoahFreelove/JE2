@@ -4,7 +4,7 @@ import JE.Logging.Errors.GameObjectError;
 import JE.Logging.Logger;
 import JE.Objects.Components.Component;
 import JE.Objects.Components.Transform;
-import JE.Rendering.Renderer;
+import JE.Rendering.RenderTypes.Renderer;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package JE.Objects.Base;
 import JE.IO.ImageProcessor;
 import JE.Objects.Components.ComponentRestrictions;
 import JE.Rendering.Shaders.BuiltIn.SpriteShader;
-import JE.Rendering.SpriteRenderer;
+import JE.Rendering.RenderTypes.SpriteRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Rendering.VertexBuffers.VAO2f;

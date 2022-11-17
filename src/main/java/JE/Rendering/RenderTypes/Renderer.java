@@ -1,12 +1,14 @@
-package JE.Rendering;
+package JE.Rendering.RenderTypes;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
 import JE.Objects.Components.Component;
 import JE.Objects.Components.ComponentRestrictions;
 import JE.Objects.Components.Transform;
+import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderLayout;
 import JE.Rendering.Shaders.ShaderProgram;
+import JE.Rendering.VertexBuffers.VAO;
 import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Component {
-    protected VAO2f vao = new VAO2f();
+    protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
 
     protected int drawMode = GL_POLYGON;
@@ -29,10 +31,11 @@ public class Renderer extends Component {
         this.vao = vao;
         restrictions = new ComponentRestrictions(false, true, true);
     }
-
-    public void SetVertices(Vector2f[] vertices){
-        vao.setVertices(vertices);
+    public Renderer(VAO vao){
+        this.vao = vao;
+        restrictions = new ComponentRestrictions(false, true, true);
     }
+
     public void SetShader(ShaderProgram shader){
         vao.setShaderProgram(shader);
     }
@@ -66,7 +69,7 @@ public class Renderer extends Component {
 
         vao.Enable(0);
         enableLayouts();
-        glDrawArrays(drawMode, 0, vao.getVertices().length + additionalBufferSize);
+        glDrawArrays(drawMode, 0, vao.getData().length + additionalBufferSize);
         disableLayouts();
         vao.Disable();
     }

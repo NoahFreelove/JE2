@@ -1,7 +1,7 @@
 package JE.Objects.Components.Animator.Sprite;
 
 import JE.Objects.Base.Sprite;
-import JE.Rendering.SpriteRenderer;
+import JE.Rendering.RenderTypes.SpriteRenderer;
 import JE.Rendering.Texture;
 
 public class SpriteAnimationFrame {

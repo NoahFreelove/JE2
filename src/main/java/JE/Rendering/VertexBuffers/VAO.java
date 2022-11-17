@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
 public class VAO {
-    protected float[] data;
+    protected float[] data = {};
     protected int vertexBufferID = 0;
     protected int location;
 
