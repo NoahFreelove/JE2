@@ -4,6 +4,7 @@ import JE.Input.KeyPressedEvent;
 import JE.Input.Keyboard;
 import JE.Objects.Base.Identity;
 import JE.Objects.Base.Skybox;
+import JE.Objects.Base.Sprite;
 import JE.Objects.CameraRig;
 import JE.Objects.Components.Animator.Sprite.SpriteAnimationFrame;
 import JE.Objects.Components.Animator.Sprite.SpriteAnimator;
@@ -14,21 +15,39 @@ import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 
+import static org.lwjgl.opengl.GL11.GL_POLYGON;
+
 public class Main {
     public static void main(String[] args) {
         Manager.Run();
+        Manager.setWindowSize(new Vector2i(1920, 1080));
 
         Scene scene = new Scene();
-        Square sprite = new Square();
+        Sprite sprite = new Sprite(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        },
+
+                "bin/texture1.png",
+                new Vector2i(64,64));
+
+        Sprite sprite2 = new Sprite(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        },
+
+                "bin/texture2.png",
+                new Vector2i(64,64));
+
+        sprite.getTransform().position = new Vector2f(-1,0);
         sprite.setIdentity(new Identity("Sprite", "sprite"));
 
         CameraRig cr = new CameraRig();
         cr.getTransform().zPos = 10;
-        SpriteAnimator spriteAnimator = new SpriteAnimator(new SpriteAnimationFrame(new Texture("bin/texture1.png",new Vector2i(64,64)), 200f),
-                new SpriteAnimationFrame(new Texture("bin/texture2.png",new Vector2i(64,64)), 200f));
-        sprite.addComponent(spriteAnimator);
-        //spriteAnimator.Play();
-
 
         scene.activeCamera = cr.camera;
 
@@ -50,14 +69,11 @@ public class Main {
                 sprite.getTransform().position.y-=1f;
                 cr.getTransform().position.y-=1f;
             }
-            else if(key == Keyboard.nameToCode("R")){
-                spriteAnimator.Restart();
-            }
         };
         Manager.AddKeyPressedCallback(kp);
 
         scene.add(cr);
-        scene.add(new Square(new Vector2f(1,0)));
+        scene.add(sprite2);
         scene.add(sprite);
         scene.add(new Skybox(new Vector4f(0.27f,0.5f,0.64f,1)));
 

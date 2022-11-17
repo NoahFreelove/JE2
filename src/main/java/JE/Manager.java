@@ -70,4 +70,9 @@ public class Manager {
     public static void RemoveKeyReleasedCallback(KeyReleasedEvent e){
         Keyboard.keyReleasedEvents.remove(e);
     }
+
+    public static void setWindowSize(Vector2i size){
+        preferences.windowSize = size;
+        Window.onPreferenceUpdated(preferences);
+    }
 }

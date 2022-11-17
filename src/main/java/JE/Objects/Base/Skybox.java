@@ -1,7 +1,7 @@
 package JE.Objects.Base;
 
 import JE.Objects.Square;
-import JE.Rendering.ShaderProgram;
+import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;

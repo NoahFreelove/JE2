@@ -1,8 +1,8 @@
-package JE.Rendering;
+package JE.Rendering.VertexBuffers;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
-import org.joml.Vector2f;
+import JE.Rendering.Shaders.ShaderProgram;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -22,37 +22,45 @@ public class VAO {
     protected int dataSize = 1;
 
     public VAO(){
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
 
     public VAO(float[] data){
         this.data = data;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
     public VAO(float[] data, ShaderProgram sp){
         this.data = data;
         this.shaderProgram = sp;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
 
     protected float[] dataConversion(){
         return data;
     }
 
-    protected void GenerateBuffers(){
-        Runnable r = () -> {
-            this.data = dataConversion();
-            vertexBufferID = glGenBuffers();
-            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-            FloatBuffer fb = BufferUtils.createFloatBuffer(data.length * dataSize);
-            for (float v : data) {
-                fb.put(v);
-            }
-            fb.flip();
-            glBufferData(GL_ARRAY_BUFFER, fb, GL_STATIC_DRAW);
-        };
-
+    protected void QueueGenerateBuffers(){
+        Runnable r = this::GenerateBuffers;
         Manager.QueueGLFunction(r);
+    }
+
+    @GLThread
+    private void GenerateBuffers(){
+        this.data = dataConversion();
+        vertexBufferID = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+        FloatBuffer fb = BufferUtils.createFloatBuffer(data.length * dataSize);
+        for (float v : data) {
+            fb.put(v);
+        }
+        fb.flip();
+        glBufferData(GL_ARRAY_BUFFER, fb, GL_STATIC_DRAW);
+    }
+
+    @GLThread
+    public void setDataNow(float[] data){
+        this.data = data;
+        GenerateBuffers();
     }
 
     @GLThread
@@ -70,9 +78,13 @@ public class VAO {
 
     public void setData(float[] data){
         this.data = data;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
     public float[] getData(){
         return data;
+    }
+
+    public void setShaderProgram(ShaderProgram sp){
+        this.shaderProgram = sp;
     }
 }

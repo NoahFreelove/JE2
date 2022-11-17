@@ -1,5 +1,6 @@
-package JE.Rendering;
+package JE.Rendering.VertexBuffers;
 
+import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector3f;
 
 public class VAO3f extends VAO{
@@ -7,14 +8,14 @@ public class VAO3f extends VAO{
 
     public VAO3f(){
         dataSize = 3;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
 
     public VAO3f(Vector3f[] vertices){
         this.vertices = vertices;
         this.data = dataConversion();
         dataSize = 3;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
 
     public VAO3f(Vector3f[] vertices, ShaderProgram sp){
@@ -22,14 +23,14 @@ public class VAO3f extends VAO{
         this.shaderProgram = sp;
         this.data = dataConversion();
         dataSize = 3;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
     public VAO3f(VAO2f vao){
         this.vertices = new Vector3f[vao.getVertices().length];
         this.data = dataConversion();
         dataSize = 3;
         this.shaderProgram = vao.shaderProgram;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
 
     public void addVertex(Vector3f vertex){
@@ -37,7 +38,7 @@ public class VAO3f extends VAO{
         System.arraycopy(vertices, 0, newVertices, 0, vertices.length);
         newVertices[newVertices.length - 1] = vertex;
         vertices = newVertices;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
 
     public void addVertices(Vector3f[] vertices){
@@ -45,15 +46,12 @@ public class VAO3f extends VAO{
         System.arraycopy(this.vertices, 0, newVertices, 0, this.vertices.length);
         System.arraycopy(vertices, 0, newVertices, this.vertices.length, vertices.length);
         this.vertices = newVertices;
-        GenerateBuffers();
+        QueueGenerateBuffers();
     }
 
     public void setVertices(Vector3f[] vertices){
         this.vertices = vertices;
-        GenerateBuffers();
-    }
-    public void setShaderProgram(ShaderProgram sp){
-        this.shaderProgram = sp;
+        QueueGenerateBuffers();
     }
 
 

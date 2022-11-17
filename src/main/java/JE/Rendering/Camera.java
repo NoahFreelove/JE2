@@ -4,7 +4,6 @@ import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Component;
 import JE.Objects.Components.Transform;
-import JE.Security.GetClassCaller;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

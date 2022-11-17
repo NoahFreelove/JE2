@@ -3,6 +3,7 @@ package JE.Rendering;
 import JE.Annotations.GLThread;
 import JE.IO.ImageProcessor;
 import JE.Manager;
+import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL13;

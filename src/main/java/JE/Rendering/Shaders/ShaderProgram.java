@@ -1,4 +1,4 @@
-package JE.Rendering;
+package JE.Rendering.Shaders;
 
 import JE.Annotations.GLThread;
 import JE.Logging.Logger;
@@ -7,6 +7,7 @@ import JE.Manager;
 import org.joml.Vector2f;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -21,26 +22,23 @@ public class ShaderProgram {
         CreateShader(
                 "#version 330 core\n" +
                         "layout(location = 0) in vec2 modelPos;\n" +
-                        "layout(location = 1) in vec2 texCoord;\n" +
                         "\n" +
                         "uniform mat4 MVP;\n" +
                         "uniform float zPos;\n" +
-                        "out vec2 UV;\n" +
                         "void main(){\n" +
                         "  vec4 pos = MVP * vec4(modelPos, zPos, 1);\n" +
                         "  gl_Position = pos;\n" +
-                        "  UV = texCoord;\n" +
                         "}",
 
                 "#version 330 core\n" +
                         "out vec4 FragColor;" +
-                        "uniform sampler2D JE_Texture;\n" +
-                        "in vec2 UV;\n" +
                         "\n" +
                         "void main(){\n" +
                         "  FragColor = vec4(1,0,0,1);\n" +
                         "}");
     }
+
+
     public ShaderProgram(String vertexShader, String fragmentShader){
         CreateShader(vertexShader, fragmentShader);
     }

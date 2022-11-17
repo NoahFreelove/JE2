@@ -4,6 +4,7 @@ import JE.Annotations.GLThread;
 import JE.IO.ImageProcessor;
 import JE.Manager;
 import JE.Objects.Components.Transform;
+import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 

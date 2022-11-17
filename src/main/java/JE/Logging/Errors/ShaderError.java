@@ -6,6 +6,11 @@ public class ShaderError extends JE2Error {
         NAME = "SHADER ERROR";
     }
 
+    public ShaderError(String message){
+        MESSAGE = message;
+        NAME = "SHADER ERROR";
+    }
+
     public ShaderError(String message, String shaderSource)
     {
         NAME = "SHADER ERROR";

@@ -5,15 +5,21 @@ import JE.Manager;
 import JE.Objects.Components.Component;
 import JE.Objects.Components.ComponentRestrictions;
 import JE.Objects.Components.Transform;
-import org.joml.Matrix4f;
+import JE.Rendering.Shaders.ShaderLayout;
+import JE.Rendering.Shaders.ShaderProgram;
+import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Component {
     protected VAO2f vao = new VAO2f();
-    protected int drawMode = GL_TRIANGLES;
+    public ArrayList<ShaderLayout> layouts = new ArrayList<>();
+
+    protected int drawMode = GL_POLYGON;
 
     public Renderer(){
         restrictions = new ComponentRestrictions(false, true, true);
@@ -31,19 +37,37 @@ public class Renderer extends Component {
         vao.setShaderProgram(shader);
     }
 
+    protected void PreRender(){}
+
     @GLThread
     public void Render(Transform t)
     {
-        Render(t,0);
+        Render(t,0, Manager.getActiveScene().activeCamera);
     }
-    public void Render(Transform t, int additionalBufferSize) {
-        Matrix4f mvp = Manager.getActiveScene().activeCamera.getMVP(t);
-        vao.shaderProgram.setUniformMatrix4f("MVP", mvp.get(BufferUtils.createFloatBuffer(16)));
 
+    @GLThread
+    public void Render(Transform t, int additionalBufferSize) {
+        Render(t,additionalBufferSize, Manager.getActiveScene().activeCamera);
+    }
+
+    public void enableLayouts(){
+        layouts.forEach(ShaderLayout::Enable);
+    }
+    public void disableLayouts(){
+        layouts.forEach(ShaderLayout::Disable);
+    }
+
+    @GLThread
+    public void Render(Transform t, int additionalBufferSize, Camera camera) {
+        PreRender();
+
+        vao.shaderProgram.setUniformMatrix4f("MVP", camera.getMVP(t).get(BufferUtils.createFloatBuffer(16)));
         vao.shaderProgram.setUniform1f("zPos", t.zPos);
 
         vao.Enable(0);
-        glDrawArrays(drawMode, 0, vao.vertices.length + additionalBufferSize);
+        enableLayouts();
+        glDrawArrays(drawMode, 0, vao.getVertices().length + additionalBufferSize);
+        disableLayouts();
         vao.Disable();
     }
 
