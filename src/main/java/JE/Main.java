@@ -6,11 +6,7 @@ import JE.Objects.Base.Identity;
 import JE.Objects.Base.Skybox;
 import JE.Objects.Base.Sprite;
 import JE.Objects.CameraRig;
-import JE.Objects.Components.Animator.Sprite.SpriteAnimationFrame;
-import JE.Objects.Components.Animator.Sprite.SpriteAnimator;
-import JE.Objects.Lights.SimpleLight;
-import JE.Objects.Square;
-import JE.Rendering.Texture;
+import JE.Objects.Lights.Light;
 import JE.Scene.Scene;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -42,7 +38,7 @@ public class Main {
                 "bin/texture2.png",
                 new Vector2i(64,64));
 
-        SimpleLight simpleLight = new SimpleLight(new Vector2f(0,0), new Vector2f(1,1), new Vector4f(1,0,0,1));
+        Light light = new Light(new Vector2f(0,0), new Vector2f(10,10), new Vector4f(1,1,0,1));
 
         sprite.getTransform().position = new Vector2f(-1,0);
         sprite.setIdentity(new Identity("Sprite", "sprite"));
@@ -76,8 +72,8 @@ public class Main {
         scene.add(cr);
         scene.add(sprite2);
         scene.add(sprite);
-        scene.add(simpleLight);
-        scene.add(new Skybox(new Vector4f(0.27f,0.5f,0.64f,1)));
+        scene.addLight(light);
+        scene.add(new Skybox(new Vector4f(0,0,0,1)));
 
         Manager.SetScene(scene);
 

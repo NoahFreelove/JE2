@@ -26,7 +26,7 @@ public class SceneState {
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bao);
 
-            for (GameObject go : scene.gameObjects) {
+            for (GameObject go : scene.world.gameObjects) {
                 boolean ignoreThis = false;
                 for (GameObject ig : ignore) {
                     if (go == ig) {

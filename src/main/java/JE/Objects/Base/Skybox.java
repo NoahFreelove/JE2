@@ -1,6 +1,7 @@
 package JE.Objects.Base;
 
 import JE.Objects.Square;
+import JE.Rendering.Shaders.BuiltIn.LightSpriteShader;
 import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -24,24 +25,8 @@ public class Skybox extends Sprite {
                         new Vector2f(1,1),
                         new Vector2f(0,1)
                 },
-                new ShaderProgram(
-                        "#version 330 core\n" +
-                                "layout(location = 0) in vec2 modelPos;\n" +
-                                "\n" +
-                                "uniform mat4 MVP;\n" +
-                                "uniform float zPos;\n" +
-                                "void main(){\n" +
-                                "  gl_Position = MVP * vec4(modelPos, zPos, 100);\n" +
-                                "}",
-
-                        "#version 330 core\n" +
-                                "out vec4 FragColor;" +
-                                "\n" +
-                                "void main(){\n" +
-                                "  FragColor = vec4(" + color.x + ", " + color.y + ", " + color.z + "," + color.w + ");\n" +
-                                "}"
-
-                ));
+                new LightSpriteShader());
         renderer.setDrawMode(GL_POLYGON);
+        renderer.baseColor = color;
     }
 }

@@ -5,6 +5,7 @@ import JE.Input.KeyPressedEvent;
 import JE.Input.Keyboard;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
+import JE.Scene.World;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
@@ -29,7 +30,6 @@ public class Window {
     private static long windowHandle = 0;
     public static boolean hasInit = false;
     private static final ArrayList<Runnable> actionQueue = new ArrayList<>();
-
 
 
     public static void createWindow(WindowPreferences wp) {
@@ -145,7 +145,7 @@ public class Window {
     private static void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-        for (GameObject object: Manager.getActiveScene().gameObjects) {
+        for (GameObject object: Manager.getActiveScene().world.gameObjects) {
             if(object == null)
                 continue;
             if(object.renderer != null)

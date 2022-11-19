@@ -1,47 +1,62 @@
 package JE.Scene;
 
 import JE.Objects.Base.GameObject;
+import JE.Objects.Lights.Light;
 import JE.Rendering.Camera;
 
-import java.util.ArrayList;
 
 public class Scene {
     public Camera activeCamera = new Camera();
-    public ArrayList<GameObject> gameObjects = new ArrayList<>(){{
-    }};
 
+    public final World world = new World();
 
     public void clear(){
-        gameObjects.clear();
+        world.gameObjects.clear();
     }
 
     public void add(GameObject newGameObject)
     {
         if(newGameObject == null)
             return;
-        if(gameObjects.contains(newGameObject))
+        if(world.gameObjects.contains(newGameObject))
             return;
-        gameObjects.add(newGameObject);
+        world.gameObjects.add(newGameObject);
     }
 
     public void remove(GameObject gameObject)
     {
         if(gameObject == null)
             return;
-        if(!gameObjects.contains(gameObject))
+        if(!world.gameObjects.contains(gameObject))
             return;
-        gameObjects.remove(gameObject);
+        world.gameObjects.remove(gameObject);
+    }
+
+    public void addLight(Light light){
+        if(light == null)
+            return;
+        if(world.lights.contains(light))
+            return;
+        world.lights.add(light);
+    }
+
+    public void removeLight(Light light){
+        if(light == null)
+            return;
+        if(!world.lights.contains(light))
+            return;
+        world.lights.remove(light);
     }
 
     public void update(){
-        for (GameObject gameObject : gameObjects) {
+        for (GameObject gameObject : world.gameObjects) {
             gameObject.Update();
             gameObject.ComponentUpdate();
         }
     }
 
     public void start(){
-        for (GameObject gameObject : gameObjects) {
+        for (GameObject gameObject : world.gameObjects) {
             gameObject.Start();
             gameObject.ComponentStart();
         }

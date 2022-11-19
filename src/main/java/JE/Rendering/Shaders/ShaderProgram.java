@@ -5,6 +5,7 @@ import JE.Logging.Logger;
 import JE.Logging.Errors.ShaderError;
 import JE.Manager;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.io.File;
@@ -24,12 +25,12 @@ public class ShaderProgram {
     public ShaderProgram(){
         CreateShader(
                 "#version 330 core\n" +
-                        "layout(location = 0) in vec2 modelPos;\n" +
+                        "layout(location = 0) in vec2 vertexPos;\n" +
                         "\n" +
                         "uniform mat4 MVP;\n" +
-                        "uniform float zPos;\n" +
+                        "uniform vec3 world_position;\n" +
                         "void main(){\n" +
-                        "  vec4 pos = MVP * vec4(modelPos, zPos, 1);\n" +
+                        "  vec4 pos = MVP * vec4(vertexPos, world_position.z, 1);\n" +
                         "  gl_Position = pos;\n" +
                         "}",
 
@@ -40,6 +41,7 @@ public class ShaderProgram {
                         "  FragColor = vec4(1,0,0,1);\n" +
                         "}");
     }
+    public ShaderProgram(boolean s){}
 
 
     public ShaderProgram(String vertexShader, String fragmentShader){
@@ -59,6 +61,12 @@ public class ShaderProgram {
     }
 
     @GLThread
+    public void setUniform1i(String name, int value){
+        int location = glGetUniformLocation(programID, name);
+        glUniform1i(location, value);
+    }
+
+    @GLThread
     public void setUniform2f(String name, Vector2f value){
         int location = glGetUniformLocation(programID, name);
         glUniform2f(location, value.x, value.y);
@@ -67,6 +75,12 @@ public class ShaderProgram {
     public void setUniform4f(String name, Vector4f value){
         int location = glGetUniformLocation(programID, name);
         glUniform4f(location, value.x, value.y, value.z, value.w);
+    }
+
+    @GLThread
+    public void setUniform3f(String name, Vector3f value){
+        int location = glGetUniformLocation(programID, name);
+        glUniform3f(location, value.x, value.y, value.z);
     }
 
     public void CreateShader(File vertex, File fragment){
@@ -105,34 +119,36 @@ public class ShaderProgram {
     }
 
     public void CreateShader(String vertex, String fragment) {
-        Runnable r = () -> {
-            vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-            fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-            glShaderSource(vertexShaderID, vertex);
-            glShaderSource(fragmentShaderID, fragment);
-            glCompileShader(vertexShaderID);
-            glCompileShader(fragmentShaderID);
-            vertexCompileStatus = glGetShaderi(vertexShaderID, GL_COMPILE_STATUS) == 1;
-            fragmentCompileStatus = glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS) == 1;
-
-            if(!vertexCompileStatus){
-                Logger.log(new ShaderError(vertex, true));
-            }
-
-            if(!fragmentCompileStatus)
-            {
-                Logger.log(new ShaderError(fragment, false));
-            }
-
-            programID = glCreateProgram();
-            glAttachShader(programID, vertexShaderID);
-            glAttachShader(programID, fragmentShaderID);
-            glLinkProgram(programID);
-            glValidateProgram(programID);
-
-        };
+        Runnable r = () -> CreateShaderNow(vertex,fragment);
         Manager.QueueGLFunction(r);
+    }
+
+    @GLThread
+    public void CreateShaderNow(String vertex, String fragment){
+        vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+        fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+        glShaderSource(vertexShaderID, vertex);
+        glShaderSource(fragmentShaderID, fragment);
+        glCompileShader(vertexShaderID);
+        glCompileShader(fragmentShaderID);
+        vertexCompileStatus = glGetShaderi(vertexShaderID, GL_COMPILE_STATUS) == 1;
+        fragmentCompileStatus = glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS) == 1;
+
+        if(!vertexCompileStatus){
+            Logger.log(new ShaderError(vertex, true));
+        }
+
+        if(!fragmentCompileStatus)
+        {
+            Logger.log(new ShaderError(fragment, false));
+        }
+
+        programID = glCreateProgram();
+        glAttachShader(programID, vertexShaderID);
+        glAttachShader(programID, fragmentShaderID);
+        glLinkProgram(programID);
+        glValidateProgram(programID);
     }
 
     public void DeleteShader(){

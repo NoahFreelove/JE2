@@ -2,6 +2,7 @@ package JE.Objects.Base;
 
 import JE.IO.ImageProcessor;
 import JE.Objects.Components.ComponentRestrictions;
+import JE.Rendering.Shaders.BuiltIn.LightSpriteShader;
 import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.RenderTypes.SpriteRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
@@ -28,7 +29,7 @@ public class Sprite extends GameObject {
     public Sprite(Vector2f[] vertices, String spriteFilePath, Vector2i size)
     {
         super();
-        init(vertices, new SpriteShader(), spriteFilePath, size);
+        init(vertices, new LightSpriteShader(), spriteFilePath, size);
     }
 
     public Sprite(Vector2f[] vertices, Vector2f[] uv, String spriteFilePath, Vector2i size)
