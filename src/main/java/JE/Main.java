@@ -1,12 +1,13 @@
 package JE;
 
-import JE.Input.KeyPressedEvent;
-import JE.Input.Keyboard;
-import JE.Objects.Base.Identity;
 import JE.Objects.Base.Skybox;
 import JE.Objects.Base.Sprite;
-import JE.Objects.CameraRig;
-import JE.Objects.Lights.Light;
+import JE.Objects.Lights.PointLight;
+import JE.Objects.Player;
+import JE.Rendering.Shaders.BuiltIn.LightObject.LightObjectShader;
+import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
+import JE.Rendering.Shaders.Debugging.ShaderDebugger;
+import JE.Rendering.Shaders.Debugging.ShaderTestSceneCustomData;
 import JE.Scene.Scene;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -18,15 +19,8 @@ public class Main {
         Manager.setWindowSize(new Vector2i(1920, 1080));
 
         Scene scene = new Scene();
-        Sprite sprite = new Sprite(new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(1,1),
-                new Vector2f(0,1)
-        },
 
-                "bin/texture1.png",
-                new Vector2i(64,64));
+        Player player = new Player(new Vector2f(-1, 0));
 
         Sprite sprite2 = new Sprite(new Vector2f[]{
                 new Vector2f(0,0),
@@ -34,48 +28,25 @@ public class Main {
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         },
-
                 "bin/texture2.png",
                 new Vector2i(64,64));
 
-        Light light = new Light(new Vector2f(0,0), new Vector2f(10,10), new Vector4f(1,1,0,1));
+        PointLight light = new PointLight(new Vector2f(-3,0), new Vector4f(1f,1f,1f,1f),5);
+        PointLight light2 = new PointLight(new Vector2f(3,0), new Vector4f(1f,1f,1f,1f),5);
 
-        sprite.getTransform().position = new Vector2f(-1,0);
-        sprite.setIdentity(new Identity("Sprite", "sprite"));
-
-        CameraRig cr = new CameraRig();
-        cr.getTransform().zPos = 10;
-
-        scene.activeCamera = cr.camera;
-
-        KeyPressedEvent kp = (key, mods) -> {
-            if(key == Keyboard.nameToCode("D")){
-                sprite.getTransform().position.x+=1f;
-                cr.getTransform().position.x+=1f;
-            }
-            else if(key == Keyboard.nameToCode("A")){
-                sprite.getTransform().position.x-=1f;
-                cr.getTransform().position.x-=1f;
-            }
-            else if(key == Keyboard.nameToCode("W")){
-                sprite.getTransform().position.y+=1f;
-                cr.getTransform().position.y+=1f;
-
-            }
-            else if(key == Keyboard.nameToCode("S")){
-                sprite.getTransform().position.y-=1f;
-                cr.getTransform().position.y-=1f;
-            }
-        };
-        Manager.AddKeyPressedCallback(kp);
-
-        scene.add(cr);
         scene.add(sprite2);
-        scene.add(sprite);
+        scene.add(player);
         scene.addLight(light);
+        scene.addLight(light2);
         scene.add(new Skybox(new Vector4f(0,0,0,1)));
-
         Manager.SetScene(scene);
+        Manager.getActiveScene().activeCamera = player.camera;
+
+        /*ShaderTestSceneCustomData data = new ShaderTestSceneCustomData();
+        data.baseColor = new Vector4f(0,1,0,1);
+        data.sceneLights.add(new PointLight(new Vector2f(0,0), new Vector4f(1,1,1,1), 0.5f));
+        ShaderDebugger.TestShader(new LightObjectShader(),data);*/
+
 
     }
 }

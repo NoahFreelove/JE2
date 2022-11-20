@@ -1,6 +1,7 @@
 package JE.Input;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Keyboard {
 
@@ -93,18 +94,6 @@ public class Keyboard {
             case "F10" -> 121;
             case "F11" -> 122;
             case "F12" -> 123;
-            case "F13" -> 124;
-            case "F14" -> 125;
-            case "F15" -> 126;
-            case "F16" -> 127;
-            case "F17" -> 128;
-            case "F18" -> 129;
-            case "F19" -> 130;
-            case "F20" -> 131;
-            case "F21" -> 132;
-            case "F22" -> 133;
-            case "F23" -> 134;
-            case "F24" -> 135;
             case "NUMPAD0" -> 96;
             case "NUMPAD1" -> 97;
             case "NUMPAD2" -> 98;

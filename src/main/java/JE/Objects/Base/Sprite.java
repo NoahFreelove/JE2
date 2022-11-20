@@ -2,7 +2,7 @@ package JE.Objects.Base;
 
 import JE.IO.ImageProcessor;
 import JE.Objects.Components.ComponentRestrictions;
-import JE.Rendering.Shaders.BuiltIn.LightSpriteShader;
+import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.RenderTypes.SpriteRenderer;
 import JE.Rendering.Shaders.ShaderProgram;

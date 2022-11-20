@@ -1,10 +1,9 @@
 package JE.Objects.Base;
 
-import JE.Objects.Square;
-import JE.Rendering.Shaders.BuiltIn.LightSpriteShader;
+import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
+import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 import static org.lwjgl.opengl.GL11.GL_POLYGON;
@@ -25,7 +24,7 @@ public class Skybox extends Sprite {
                         new Vector2f(1,1),
                         new Vector2f(0,1)
                 },
-                new LightSpriteShader());
+                new ShaderProgram());
         renderer.setDrawMode(GL_POLYGON);
         renderer.baseColor = color;
     }

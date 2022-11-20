@@ -30,6 +30,7 @@ public class Window {
     private static long windowHandle = 0;
     public static boolean hasInit = false;
     private static final ArrayList<Runnable> actionQueue = new ArrayList<>();
+    public static float deltaTime = 0;
 
 
     public static void createWindow(WindowPreferences wp) {
@@ -119,15 +120,25 @@ public class Window {
 
         // Make the windowHandle visible
         glfwShowWindow(windowHandle);
+
+        Keyboard.keyPressedEvents.add((key, mods) -> Keyboard.keys[key] = true);
+        Keyboard.keyReleasedEvents.add((key, mods) -> Keyboard.keys[key] = false);
+
+        GL.setCapabilities(GL.createCapabilities());
     }
     private static void WindowLoop() {
 
-        GL.setCapabilities(GL.createCapabilities());
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glEnable(GL_COLOR_MATERIAL);
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
         while ( !glfwWindowShouldClose(windowHandle) ) {
+            double startTime = (double)glfwGetTime();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
 
             Object[] actions = actionQueue.toArray();
             for (Object action : actions) {
@@ -138,6 +149,8 @@ public class Window {
             Manager.getActiveScene().update();
             render();
             glfwPollEvents();
+            double endTime = (double)glfwGetTime();
+            deltaTime = (float)(endTime - startTime);
 
         }
     }

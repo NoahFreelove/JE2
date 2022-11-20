@@ -36,9 +36,9 @@ public class ShaderProgram {
 
                 "#version 330 core\n" +
                         "out vec4 FragColor;" +
-                        "\n" +
+                        "uniform vec4 baseColor;\n" +
                         "void main(){\n" +
-                        "  FragColor = vec4(1,0,0,1);\n" +
+                        "  FragColor = baseColor;\n" +
                         "}");
     }
     public ShaderProgram(boolean s){}
