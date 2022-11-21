@@ -25,7 +25,7 @@ public class Skybox extends Sprite {
                         new Vector2f(1,1),
                         new Vector2f(0,1)
                 },
-                new ShaderProgram());
+                new LightObjectShader());
         renderer.setDrawMode(GL_POLYGON);
         renderer.baseColor = color;
     }

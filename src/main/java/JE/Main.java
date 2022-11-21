@@ -17,7 +17,7 @@ import org.joml.Vector4f;
 public class Main {
     public static void main(String[] args) {
         Manager.Run();
-        Manager.setWindowSize(new Vector2i(1920, 1080));
+        //Manager.setWindowSize(new Vector2i(1920, 1080));
 
         Scene scene = new Scene();
 
@@ -32,14 +32,14 @@ public class Main {
                 "bin/texture2.png",
                 new Vector2i(64,64));
 
-        PointLight light = new PointLight(new Vector2f(-5,0), new Vector4f(1f,1f,1f,1f),15);
+        PointLight light = new PointLight(new Vector2f(-0,0), new Vector4f(1f,1f,1f,1f),5);
         PointLight light2 = new PointLight(new Vector2f(5,0), new Vector4f(1f,1f,1f,1f),15);
 
         scene.add(sprite2);
         scene.add(player);
         scene.addLight(light);
         //scene.addLight(light2);
-        scene.add(new Skybox(new Vector4f(0.5f,0.5f,0.5f,1)));
+        //scene.add(new Skybox(new Vector4f(0.1f,0.1f,0.1f,1)));
         Manager.SetScene(scene);
         Manager.getActiveScene().activeCamera = player.camera;
         ShaderProgram sp = new ShaderProgram();

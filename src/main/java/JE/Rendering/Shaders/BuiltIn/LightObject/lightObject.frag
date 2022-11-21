@@ -1,57 +1,63 @@
 #version 330 core
 
 #define MAX_LIGHTS 32
+
 in vec2 UV;
 in vec3 FragPos;
 
 struct Light{
     vec3 position;
     vec4 color;
-	float constant;
-	float linear;
-	float quadratic;
-	float intensity;
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+    float constant;
+    float linear;
+    float quadratic;
+    float intensity;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float radius;
 };
 
 uniform int lightCount;
 uniform Light lights[MAX_LIGHTS];
-uniform sampler2D JE_Texture;
 uniform vec3 world_position;
 uniform vec4 baseColor;
 
 out vec4 FragColor;
 
-
-vec3 CalcLight(Light light, vec3 normal, vec3 viewDir, vec3 fragPos, vec4 color){
-    vec3 lightDir = normalize(light.position - fragPos);
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 ambient = light.ambient * color.rgb;
-    vec3 diffuse = light.diffuse * diff * color.rgb;
-    vec3 result = (ambient + diffuse) * color.rgb;
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-    result *= attenuation;
-    result *= light.intensity;
-
-    return result;
-}
-
 void main(){
     vec3 result = vec3(0,0,0);
-    vec2 size = vec2(1,1);
-    vec3 pos = vec3( world_position.x * size.x ,world_position.y * size.y,0);
+    for(int i = 0; i < lightCount; i++){
+        vec3 ambient = lights[i].ambient;
 
-for(int i = 0; i < lightCount; i++){
-    result += CalcLight(lights[i], vec3(0,0,1), vec3(0,0,1), pos, baseColor);
+        vec3 norm = normalize(FragPos - world_position);
+        vec3 lightDir = normalize(lights[i].position - world_position);
+        float diff = max(dot(norm, lightDir), 0.0);
+        vec3 diffuse = lights[i].diffuse * diff;
 
-    result = clamp(result, 0.0, 1.0);
+        vec3 viewDir = normalize(-world_position);
+        vec3 reflectDir = reflect(-lightDir, norm);
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0f);
+        vec3 specular = lights[i].specular * spec;
 
+        float distance = length(lights[i].position - world_position);
+        float attenuation = 1.0 / (lights[i].constant + lights[i].linear * distance + lights[i].quadratic * (distance * distance));
+        ambient *= attenuation;
+        diffuse *= attenuation;
+        specular *= attenuation;
+        ambient *= lights[i].intensity;
+        diffuse *= lights[i].intensity;
+        specular *= lights[i].intensity;
 
-    //result += (ambient + diffuse + specular) * lights[i].color.rgb * baseColor.rgb;
+        float radius = lights[i].radius;
+        float lightDistance = length(lights[i].position - world_position);
+        if(lightDistance > radius){
+            float lightIntensity = 1.0 - (lightDistance / radius);
+            ambient *= lightIntensity;
+            diffuse *= lightIntensity;
+            specular *= lightIntensity;
+        }
+        result += (ambient + diffuse + specular) * lights[i].color.xyz * baseColor.rgb;
     }
-
-FragColor = vec4(result, 1.0);
+    FragColor = vec4(result, 1.0);
 }

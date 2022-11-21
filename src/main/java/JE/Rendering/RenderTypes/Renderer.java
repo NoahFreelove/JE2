@@ -85,7 +85,7 @@ public class Renderer extends Component {
             vao.shaderProgram.setUniform3f("lights[" + i + "].ambient", light.ambient);
             vao.shaderProgram.setUniform3f("lights[" + i + "].diffuse", light.diffuse);
             vao.shaderProgram.setUniform3f("lights[" + i + "].specular", light.specular);
-
+            vao.shaderProgram.setUniform1f("lights[" + i + "].radius", light.radius);
 
             /*vao.shaderProgram.setUniform4f("lights[" + i + "].color", Manager.getActiveScene().world.lights.get(i).color);
             vao.shaderProgram.setUniform2f("lights[" + i + "].intensity", Manager.getActiveScene().world.lights.get(i).size);*/
