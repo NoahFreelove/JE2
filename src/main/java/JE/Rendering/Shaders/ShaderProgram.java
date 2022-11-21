@@ -4,6 +4,8 @@ import JE.Annotations.GLThread;
 import JE.Logging.Logger;
 import JE.Logging.Errors.ShaderError;
 import JE.Manager;
+import JE.Rendering.Shaders.Debugging.ShaderDebugInfo;
+import JE.Rendering.Shaders.Debugging.ShaderDebugger;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -21,6 +23,8 @@ public class ShaderProgram {
     private int fragmentShaderID;
     public boolean vertexCompileStatus;
     public boolean fragmentCompileStatus;
+    public String vertex;
+    public String fragment;
 
     public ShaderProgram(){
         CreateShader(
@@ -119,6 +123,8 @@ public class ShaderProgram {
     }
 
     public void CreateShader(String vertex, String fragment) {
+        this.vertex = vertex;
+        this.fragment = fragment;
         Runnable r = () -> CreateShaderNow(vertex,fragment);
         Manager.QueueGLFunction(r);
     }

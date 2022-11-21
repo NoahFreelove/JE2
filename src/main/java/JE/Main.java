@@ -8,6 +8,7 @@ import JE.Rendering.Shaders.BuiltIn.LightObject.LightObjectShader;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Shaders.Debugging.ShaderDebugger;
 import JE.Rendering.Shaders.Debugging.ShaderTestSceneCustomData;
+import JE.Rendering.Shaders.ShaderProgram;
 import JE.Scene.Scene;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -31,16 +32,17 @@ public class Main {
                 "bin/texture2.png",
                 new Vector2i(64,64));
 
-        PointLight light = new PointLight(new Vector2f(-3,0), new Vector4f(1f,1f,1f,1f),5);
-        PointLight light2 = new PointLight(new Vector2f(3,0), new Vector4f(1f,1f,1f,1f),5);
+        PointLight light = new PointLight(new Vector2f(-5,0), new Vector4f(1f,1f,1f,1f),15);
+        PointLight light2 = new PointLight(new Vector2f(5,0), new Vector4f(1f,1f,1f,1f),15);
 
         scene.add(sprite2);
         scene.add(player);
         scene.addLight(light);
-        scene.addLight(light2);
-        scene.add(new Skybox(new Vector4f(0,0,0,1)));
+        //scene.addLight(light2);
+        scene.add(new Skybox(new Vector4f(0.5f,0.5f,0.5f,1)));
         Manager.SetScene(scene);
         Manager.getActiveScene().activeCamera = player.camera;
+        ShaderProgram sp = new ShaderProgram();
 
         /*ShaderTestSceneCustomData data = new ShaderTestSceneCustomData();
         data.baseColor = new Vector4f(0,1,0,1);

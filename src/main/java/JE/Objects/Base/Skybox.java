@@ -1,5 +1,6 @@
 package JE.Objects.Base;
 
+import JE.Rendering.Shaders.BuiltIn.LightObject.LightObjectShader;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.Shaders.ShaderProgram;

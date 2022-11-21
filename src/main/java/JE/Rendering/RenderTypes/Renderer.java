@@ -11,6 +11,7 @@ import JE.Rendering.Shaders.ShaderLayout;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.VertexBuffers.VAO;
 import JE.Rendering.VertexBuffers.VAO2f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
