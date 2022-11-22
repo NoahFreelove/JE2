@@ -1,13 +1,8 @@
 package JE;
 
-import JE.Objects.Base.Skybox;
 import JE.Objects.Base.Sprite;
 import JE.Objects.Lights.PointLight;
 import JE.Objects.Player;
-import JE.Rendering.Shaders.BuiltIn.LightObject.LightObjectShader;
-import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
-import JE.Rendering.Shaders.Debugging.ShaderDebugger;
-import JE.Rendering.Shaders.Debugging.ShaderTestSceneCustomData;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Scene.Scene;
 import org.joml.Vector2f;

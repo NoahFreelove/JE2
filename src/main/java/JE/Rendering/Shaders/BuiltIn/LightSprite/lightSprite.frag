@@ -52,12 +52,11 @@ void main(){
 
         float radius = lights[i].radius;
         float lightDistance = length(lights[i].position - world_position);
-        if(lightDistance > radius){
-            float lightIntensity = 1.0 - (lightDistance / radius);
-            ambient *= lightIntensity;
-            diffuse *= lightIntensity;
-            specular *= lightIntensity;
-        }
+        float lightIntensity = 1.0 - (lightDistance / radius);
+        ambient *= lightIntensity;
+        diffuse *= lightIntensity;
+        specular *= lightIntensity;
+
         result += (ambient + diffuse + specular) * lights[i].color.xyz * texture(JE_Texture, UV).rgb;
     }
     FragColor = vec4(result, 1.0);
