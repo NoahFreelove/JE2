@@ -2,10 +2,10 @@ package JE.Scene;
 
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
+import JE.Objects.Gizmos.GizmoParent;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Camera;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 
@@ -92,6 +92,9 @@ public class Scene {
         for(Gizmo gizmo : gizmos){
             addGizmo(gizmo);
         }
+    }
+    public void addGizmo(GizmoParent gp){
+        addGizmo(gp.gizmos);
     }
 
     public void removeGizmo(Gizmo gizmo){

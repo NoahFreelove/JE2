@@ -1,19 +1,12 @@
 package JE.Window;
 
-import JE.Annotations.GLThread;
-import JE.Input.KeyPressedEvent;
 import JE.Input.Keyboard;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
-import JE.Scene.World;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import org.lwjgl.glfw.*;
-import org.lwjgl.nuklear.NkAllocator;
-import org.lwjgl.nuklear.NkContext;
-import org.lwjgl.nuklear.Nuklear;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
@@ -134,7 +127,8 @@ public class Window {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glEnable(GL_COLOR_MATERIAL);
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthFunc(GL_LEQUAL);
 
         while ( !glfwWindowShouldClose(windowHandle) ) {
             double startTime = (double)glfwGetTime();

@@ -5,7 +5,7 @@ import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import static org.lwjgl.opengl.GL11.GL_POLYGON;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Gizmo extends Sprite {
 
@@ -27,10 +27,11 @@ public class Gizmo extends Sprite {
         getTransform().zPos = 10;
     }
 
-    public Gizmo(Vector2f[] vertices){
+    public Gizmo(Vector2f[] vertices, Vector4f color, int drawMode){
         super(vertices,vertices,new ShaderProgram());
-
-        renderer.baseColor = new Vector4f(1,1,1,1);
-        renderer.setDrawMode(GL_POLYGON);    }
+        getTransform().zPos = 10;
+        renderer.baseColor = color;
+        renderer.setDrawMode(drawMode);
+    }
 
 }

@@ -2,8 +2,6 @@ package JE.Objects.Components;
 
 import org.joml.*;
 
-import java.lang.Math;
-
 public class Transform extends Component{
     public Vector2f position;
     public float zPos = 1;

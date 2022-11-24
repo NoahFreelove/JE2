@@ -1,7 +1,5 @@
 package JE.Logging.Errors;
 
-import JE.Objects.Components.Component;
-
 public class ImageProcessError extends JE2Error {
     public ImageProcessError(){
         MESSAGE = "Unknown Image Process Error";

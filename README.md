@@ -12,7 +12,9 @@ Still lacking key features like a GUI, but it's getting there.
 - Simple lighting
 
 ## Planned Features
-- 3D Rendering
+- GUI
+- Materials
 - Physics
 - Audio
+- 3D Rendering
 - Networking?

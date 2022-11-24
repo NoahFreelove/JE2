@@ -3,7 +3,6 @@ package JE.Rendering.Shaders.Debugging;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Base.Identity;
-import JE.Objects.Base.Sprite;
 import JE.Objects.CameraRig;
 import JE.Rendering.RenderTypes.Renderer;
 import JE.Rendering.Shaders.ShaderProgram;
