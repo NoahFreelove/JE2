@@ -37,12 +37,12 @@ public class SpriteRenderer extends Renderer {
     }
 
     @Override
-    public void update() {
+    public void Update() {
 
     }
 
     @Override
-    public void start() {
+    public void Start() {
 
     }
 

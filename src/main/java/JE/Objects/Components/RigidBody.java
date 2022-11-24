@@ -9,12 +9,12 @@ public class RigidBody extends Component {
     }
 
     @Override
-    public void update() {
+    public void Update() {
 
     }
 
     @Override
-    public void start() {
+    public void Start() {
 
     }
 

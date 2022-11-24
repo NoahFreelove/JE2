@@ -23,7 +23,7 @@ public class SpriteAnimator extends Component {
     }
 
     @Override
-    public void update() {
+    public void Update() {
         if(parentObject==null)
             return;
         try {
@@ -35,7 +35,7 @@ public class SpriteAnimator extends Component {
     }
 
     @Override
-    public void start() {
+    public void Start() {
 
     }
 

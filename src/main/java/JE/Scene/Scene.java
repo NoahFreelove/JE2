@@ -1,6 +1,7 @@
 package JE.Scene;
 
 import JE.Objects.Base.GameObject;
+import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Camera;
 
@@ -39,7 +40,6 @@ public class Scene {
         }
     }
 
-
     public void remove(GameObject gameObject)
     {
         if(gameObject == null)
@@ -67,13 +67,39 @@ public class Scene {
         }
     }
 
-
     public void removeLight(PointLight light){
         if(light == null)
             return;
         if(!world.lights.contains(light))
             return;
         world.lights.remove(light);
+    }
+
+    public void addGizmo(Gizmo gizmo){
+        if(gizmo == null)
+            return;
+        if(world.gizmos.contains(gizmo))
+            return;
+        world.gizmos.add(gizmo);
+    }
+
+    public void addGizmo(Gizmo... gizmos){
+        for(Gizmo gizmo : gizmos){
+            addGizmo(gizmo);
+        }
+    }
+    public void addGizmo(ArrayList<Gizmo> gizmos){
+        for(Gizmo gizmo : gizmos){
+            addGizmo(gizmo);
+        }
+    }
+
+    public void removeGizmo(Gizmo gizmo){
+        if(gizmo == null)
+            return;
+        if(!world.gizmos.contains(gizmo))
+            return;
+        world.gizmos.remove(gizmo);
     }
 
     public void update(){

@@ -6,7 +6,7 @@ import JE.Objects.Base.GameObject;
 
 import java.io.Serializable;
 
-public abstract class Component implements Serializable {
+public class Component implements Serializable {
     protected ComponentRestrictions restrictions = new ComponentRestrictions();
     public GameObject parentObject;
 
@@ -28,9 +28,10 @@ public abstract class Component implements Serializable {
     }
     public boolean getActive(){return active;}
 
-    public abstract void update();
-    public abstract void start();
-    public abstract void awake();
+    public void Update(){}
+    public void Start(){}
+    public void awake(){}
+    public void onAddedToGameObject(GameObject gameObject){}
 
 
 }

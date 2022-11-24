@@ -11,7 +11,6 @@ import JE.Rendering.Shaders.ShaderLayout;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.VertexBuffers.VAO;
 import JE.Rendering.VertexBuffers.VAO2f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
@@ -73,6 +72,18 @@ public class Renderer extends Component {
         vao.shaderProgram.setUniform1i("lightCount", Manager.getActiveScene().world.lights.size());
         vao.shaderProgram.setUniform4f("baseColor", baseColor);
 
+
+        if(vao.shaderProgram.supportsLighting)
+            setLighting();
+
+        vao.Enable(0);
+        enableLayouts();
+        glDrawArrays(drawMode, 0, vao.getData().length + additionalBufferSize);
+        disableLayouts();
+        vao.Disable();
+    }
+
+    private void setLighting() {
         for (int i = 0; i <Manager.getActiveScene().world.lights.size(); i++) {
             PointLight light = Manager.getActiveScene().world.lights.get(i);
             Transform lightTransform = light.getTransform();
@@ -90,21 +101,15 @@ public class Renderer extends Component {
             /*vao.shaderProgram.setUniform4f("lights[" + i + "].color", Manager.getActiveScene().world.lights.get(i).color);
             vao.shaderProgram.setUniform2f("lights[" + i + "].intensity", Manager.getActiveScene().world.lights.get(i).size);*/
         }
-
-        vao.Enable(0);
-        enableLayouts();
-        glDrawArrays(drawMode, 0, vao.getData().length + additionalBufferSize);
-        disableLayouts();
-        vao.Disable();
     }
 
     @Override
-    public void update() {
+    public void Update() {
 
     }
 
     @Override
-    public void start() {
+    public void Start() {
 
     }
 

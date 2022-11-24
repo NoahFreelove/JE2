@@ -8,5 +8,6 @@ public class LightSpriteShader extends ShaderProgram {
     public LightSpriteShader(){
         CreateShader(new File("src/main/java/JE/Rendering/Shaders/BuiltIn/LightSprite/lightSprite.vert"),
                 new File("src/main/java/JE/Rendering/Shaders/BuiltIn/LightSprite/lightSprite.frag"));
+        supportsLighting = true;
     }
 }

@@ -75,4 +75,7 @@ public class Manager {
         preferences.windowSize = size;
         Window.onPreferenceUpdated(preferences);
     }
+    public static float DeltaTime(){
+        return Window.deltaTime;
+    }
 }

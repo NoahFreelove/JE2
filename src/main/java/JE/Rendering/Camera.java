@@ -10,7 +10,7 @@ import org.joml.Vector3f;
 
 public class Camera extends Component {
     public GameObject parentObject = new GameObject();
-    public float zPos = 10;
+    public float zPos = 100;
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1;
 
@@ -21,11 +21,11 @@ public class Camera extends Component {
     }
 
     @Override
-    public void update() {
+    public void Update() {
     }
 
     @Override
-    public void start() {
+    public void Start() {
 
     }
 
@@ -58,7 +58,7 @@ public class Camera extends Component {
 
     public Matrix4f getView(){
         Vector2f position =  parentObject.getTransform().position;
-        Vector2f finalPos = new Vector2f(parentObject.getTransform().position.x + positionOffset.x, parentObject.getTransform().position.y + positionOffset.y);
+        Vector2f finalPos = new Vector2f(position.x + positionOffset.x, position.y + positionOffset.y);
 
         return new Matrix4f().identity().translate(-finalPos.x(), -finalPos.y(), -zPos);
     }
@@ -70,7 +70,7 @@ public class Camera extends Component {
         Matrix4f projection = new Matrix4f().identity();
 
         float aspect = (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y();
-        projection = projection.ortho(-aspect, aspect, -1,1f, 0.1f, 100.0f);
+        projection = projection.ortho(-aspect, aspect, -1,1f, 0.1f, zPos);
         projection = projection.scale(0.5f*zoomMultiplier);
 
         return new Matrix4f().mul(projection).mul(view).mul(model);

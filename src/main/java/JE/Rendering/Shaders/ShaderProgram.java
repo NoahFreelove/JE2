@@ -23,6 +23,7 @@ public class ShaderProgram {
     private int fragmentShaderID;
     public boolean vertexCompileStatus;
     public boolean fragmentCompileStatus;
+    public boolean supportsLighting = false;
     public String vertex;
     public String fragment;
 

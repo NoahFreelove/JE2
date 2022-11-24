@@ -30,9 +30,9 @@ public class Player extends Sprite {
         getTransform().zPos = 2;
         addComponent(camera = new Camera(this));
         setIdentity(new Identity("Player","Player"));
-        camera.positionOffset = new Vector2f(0.5f,0.3f);
+        getTransform().scale = new Vector2f(1,1);
 
-
+        camera.positionOffset = new Vector2f(0.5f * getTransform().scale.x(),0.4f * getTransform().scale.y());
     }
 
     @Override

@@ -30,12 +30,12 @@ public class Transform extends Component{
     public static final Transform One = new Transform(new Vector2f(1,1), new Vector3f(1,1,1), new Vector2f(1,1));
 
     @Override
-    public void start() {
+    public void Start() {
 
     }
 
     @Override
-    public void update() {
+    public void Update() {
     }
 
     @Override

@@ -69,6 +69,7 @@ public class GameObject implements Serializable {
             renderer = (Renderer) c;
         }
         c.parentObject = this;
+        c.onAddedToGameObject(this);
         return components.add(c);
     }
     public boolean removeComponent(Component c){
@@ -99,7 +100,7 @@ public class GameObject implements Serializable {
         for(Component c : components){
             if(!c.getActive())
                 continue;
-            c.update();
+            c.Update();
         }
     }
     public void ComponentStart(){
@@ -108,7 +109,7 @@ public class GameObject implements Serializable {
         for(Component c : components){
             if(!c.getActive())
                 continue;
-            c.start();
+            c.Start();
         }
     }
 

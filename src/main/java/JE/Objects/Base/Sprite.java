@@ -15,7 +15,6 @@ public class Sprite extends GameObject {
 
     protected SpriteRenderer sr;
 
-
     public Sprite(){
         super();
         init(new Vector2f[]{}, new SpriteShader(), "", new Vector2i(64,64));
@@ -46,6 +45,20 @@ public class Sprite extends GameObject {
         sr = new SpriteRenderer(new VAO2f(vertices, shaderProgram),uv, new Texture());
         sr.setRestrictions(new ComponentRestrictions(false, true, false));
         addComponent(sr);
+    }
+
+    public Sprite(Vector2f[] vertices, ShaderProgram shaderProgram)
+    {
+        super();
+        sr = new SpriteRenderer(new VAO2f(vertices, shaderProgram), new Texture());
+        sr.setRestrictions(new ComponentRestrictions(false, true, false));
+        addComponent(sr);
+    }
+
+    public Sprite(Vector2f[] vertices, ShaderProgram sp, String spriteFP, Vector2i spriteSize)
+    {
+        super();
+        init(vertices, sp, spriteFP, spriteSize);
     }
 
     private void init(Vector2f[] vertices, ShaderProgram sp, String spriteFilePath, Vector2i size){

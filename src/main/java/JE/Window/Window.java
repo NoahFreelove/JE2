@@ -5,6 +5,7 @@ import JE.Input.KeyPressedEvent;
 import JE.Input.Keyboard;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
+import JE.Objects.Gizmos.Gizmo;
 import JE.Scene.World;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -166,7 +167,15 @@ public class Window {
                 object.renderer.Render(object.getTransform());
             }
         }
-        glfwSwapBuffers(windowHandle); // swap the color buffers
+        for (Gizmo gizmo: Manager.getActiveScene().world.gizmos) {
+            if(gizmo == null)
+                continue;
+            if(gizmo.renderer != null)
+            {
+                gizmo.renderer.Render(gizmo.getTransform());
+            }
+        }
+        glfwSwapBuffers(windowHandle);
     }
 
     public static void onPreferenceUpdated(WindowPreferences wp){

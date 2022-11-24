@@ -1,6 +1,8 @@
 package JE.Objects.Lights;
 
+import JE.Manager;
 import JE.Objects.Base.GameObject;
+import JE.Objects.Gizmos.Gizmo;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -35,5 +37,13 @@ public class PointLight extends GameObject {
         this.ambient = ambient;
         this.diffuse = diffuse;
         this.specular = specular;
+    }
+    public Gizmo getGizmo(){
+        Gizmo gizmo = new Gizmo();
+        gizmo.getTransform().scale = new Vector2f(0.5f,0.5f);
+        gizmo.getTransform().position = getTransform().position;
+
+        gizmo.renderer.baseColor = color;
+       return gizmo;
     }
 }

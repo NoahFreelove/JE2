@@ -30,7 +30,6 @@ void main(){
     vec3 result = vec3(0,0,0);
     for(int i = 0; i < lightCount; i++){
         vec3 ambient = lights[i].ambient;
-
         vec3 norm = normalize(FragPos - world_position);
         vec3 lightDir = normalize(lights[i].position - world_position);
         float diff = max(dot(norm, lightDir), 0.0);
@@ -52,12 +51,16 @@ void main(){
 
         float radius = lights[i].radius;
         float lightDistance = length(lights[i].position - world_position);
+
         float lightIntensity = 1.0 - (lightDistance / radius);
+        lightIntensity = clamp(lightIntensity, 0.0, 1.0);
         ambient *= lightIntensity;
         diffuse *= lightIntensity;
         specular *= lightIntensity;
 
+
         result += (ambient + diffuse + specular) * lights[i].color.xyz * texture(JE_Texture, UV).rgb;
     }
+
     FragColor = vec4(result, 1.0);
 }
