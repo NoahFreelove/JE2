@@ -36,6 +36,7 @@ public class SceneState {
                 }
                 if (ignoreThis)
                     continue;
+                System.out.println("Saving " + go.getClass().getSimpleName());
                 oos.writeObject(go);
             }
             bao.close();

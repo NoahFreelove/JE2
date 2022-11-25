@@ -16,6 +16,9 @@ public class Scene {
 
     public void clear(){
         world.gameObjects.clear();
+        world.lights.clear();
+        world.gizmos.clear();
+        world.PhysicsWorld = new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,-9.8f));
     }
 
     public void add(GameObject newGameObject)

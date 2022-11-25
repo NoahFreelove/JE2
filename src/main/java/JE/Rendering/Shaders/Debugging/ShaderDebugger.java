@@ -102,9 +102,9 @@ public class ShaderDebugger {
     }
 
     public static void TestShader(ShaderProgram shaderProgram){
-        Manager.SetScene(shaderTestScene(shaderProgram, new ShaderTestSceneCustomData()));
+        Manager.setScene(shaderTestScene(shaderProgram, new ShaderTestSceneCustomData()));
     }
     public static void TestShader(ShaderProgram shaderProgram, ShaderTestSceneCustomData data){
-        Manager.SetScene(shaderTestScene(shaderProgram, data));
+        Manager.setScene(shaderTestScene(shaderProgram, data));
     }
 }

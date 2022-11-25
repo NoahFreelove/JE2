@@ -89,6 +89,6 @@ public class SpriteRenderer extends Renderer {
             if(softSet) return;
             spriteCoordVAO.setVertices(textCoords);
         };
-        Manager.QueueGLFunction(r);
+        Manager.queueGLFunction(r);
     }
 }

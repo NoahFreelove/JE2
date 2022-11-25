@@ -140,7 +140,7 @@ public class Pathfinding extends Component {
             return;
 
         parentObject.getTransform().position = interpolate(parentObject.getTransform().position, target, percent);
-        percent = clamp(percent + speed*Manager.DeltaTime(),0,1);
+        percent = clamp(percent + speed*Manager.deltaTime(),0,1);
 
         nextPointCheck();
     }
@@ -199,9 +199,9 @@ public class Pathfinding extends Component {
                 maxY = v.y();
         }
         outline[0] = new Vector2f(minX, minY);
-        outline[1] = new Vector2f(maxX, minY);
-        outline[2] = new Vector2f(maxX, maxY);
-        outline[3] = new Vector2f(minX, maxY);
+        outline[1] = new Vector2f(maxX+1, minY);
+        outline[2] = new Vector2f(maxX+1, maxY+1);
+        outline[3] = new Vector2f(minX, maxY+1);
         // make line loop not start at 0,0
         Vector2f[] outline2 = new Vector2f[outline.length + 1];
         for (int i = 0; i < outline.length; i++) {

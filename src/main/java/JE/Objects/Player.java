@@ -1,10 +1,12 @@
 package JE.Objects;
 
 import JE.Input.Keyboard;
+import JE.Input.Mouse;
 import JE.Objects.Base.Sprite;
 import JE.Objects.Base.Identity;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
+import JE.Utility.JOMLtoJBOX;
 import JE.Window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -14,10 +16,10 @@ public class Player extends Sprite {
     final int d = 68;
     final int w = 87;
     final int s = 83;
-    final int UP = 38;
-    final int DOWN = 40;
-    final int LEFT = 37;
-    final int RIGHT = 39;
+    final int UP = 265;
+    final int DOWN = 264;
+    final int LEFT = 263;
+    final int RIGHT = 262;
     float moveSpeed = 5f;
     public Camera camera;
     public Player(Vector2f position){
@@ -41,16 +43,16 @@ public class Player extends Sprite {
 
     @Override
     public void Update(){
-        if(Keyboard.keys[a] || Keyboard.keys[LEFT]){
+        if(Keyboard.isKeyPressed(a) || Keyboard.isKeyPressed(LEFT)){
             getTransform().position.x -= moveSpeed * Window.deltaTime;
         }
-        if(Keyboard.keys[d] || Keyboard.keys[RIGHT]){
+        if(Keyboard.isKeyPressed(d) || Keyboard.isKeyPressed(RIGHT)){
             getTransform().position.x += moveSpeed * Window.deltaTime;
         }
-        if(Keyboard.keys[w] || Keyboard.keys[UP]){
+        if(Keyboard.isKeyPressed(w) || Keyboard.isKeyPressed(UP)){
             getTransform().position.y += moveSpeed * Window.deltaTime;
         }
-        if(Keyboard.keys[s] || Keyboard.keys[DOWN]){
+        if(Keyboard.isKeyPressed(s) || Keyboard.isKeyPressed(DOWN)){
             getTransform().position.y -= moveSpeed * Window.deltaTime;
         }
     }

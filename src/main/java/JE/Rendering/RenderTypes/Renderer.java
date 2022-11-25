@@ -67,7 +67,7 @@ public class Renderer extends Component {
     public void Render(Transform t, int additionalBufferSize, Camera camera) {
         PreRender();
 
-        vao.shaderProgram.setUniformMatrix4f("MVP", camera.getOrthographic(t).get(BufferUtils.createFloatBuffer(16)));
+        vao.shaderProgram.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
         vao.shaderProgram.setUniform3f("world_position", new Vector3f(t.position, t.zPos));
         vao.shaderProgram.setUniform1i("lightCount", Manager.getActiveScene().world.lights.size());
         vao.shaderProgram.setUniform4f("baseColor", baseColor);

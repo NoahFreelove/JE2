@@ -1,9 +1,10 @@
 package JE.Objects.Components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ComponentRestrictions {
+public class ComponentRestrictions implements Serializable {
     public boolean canHaveMultiple = true;
     public boolean canBeDisabled = true;
     public boolean canBeRemoved = true;

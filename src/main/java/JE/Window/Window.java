@@ -1,6 +1,7 @@
 package JE.Window;
 
 import JE.Input.Keyboard;
+import JE.Input.Mouse;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
@@ -86,6 +87,15 @@ public class Window {
             }
         });
 
+        glfwSetMouseButtonCallback(windowHandle, (windowHandle, button, action, mods) -> {
+            if(action == GLFW_PRESS){
+                Mouse.mousePressedEvents.forEach(e -> e.invoke(button, mods));
+            }
+            else if(action == GLFW_RELEASE){
+                Mouse.mouseReleasedEvents.forEach(e -> e.invoke(button, mods));
+            }
+        });
+
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
@@ -115,8 +125,11 @@ public class Window {
         // Make the windowHandle visible
         glfwShowWindow(windowHandle);
 
-        Keyboard.keyPressedEvents.add((key, mods) -> Keyboard.keys[key] = true);
-        Keyboard.keyReleasedEvents.add((key, mods) -> Keyboard.keys[key] = false);
+        Keyboard.keyPressedEvents.add((key, mods) -> Keyboard.keyPressed(key));
+        Keyboard.keyReleasedEvents.add((key, mods) -> Keyboard.keyReleased(key));
+
+        Mouse.mousePressedEvents.add((button, mods) -> Mouse.mousePressed(button));
+        Mouse.mouseReleasedEvents.add((button, mods) -> Mouse.mouseReleased(button));
 
         GL.setCapabilities(GL.createCapabilities());
     }
@@ -166,6 +179,7 @@ public class Window {
                 continue;
             if(gizmo.renderer != null)
             {
+                gizmo.onDraw();
                 gizmo.renderer.Render(gizmo.getTransform());
             }
         }
@@ -183,5 +197,9 @@ public class Window {
 
     public static void QueueGLFunction(Runnable r) {
         actionQueue.add(r);
+    }
+
+    public static long getWindowHandle(){
+        return windowHandle;
     }
 }

@@ -4,20 +4,18 @@ import JE.Annotations.GLThread;
 import JE.Logging.Logger;
 import JE.Logging.Errors.ShaderError;
 import JE.Manager;
-import JE.Rendering.Shaders.Debugging.ShaderDebugInfo;
-import JE.Rendering.Shaders.Debugging.ShaderDebugger;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL20.*;
 
-public class ShaderProgram {
+public class ShaderProgram implements Serializable {
     public int programID;
     private int vertexShaderID;
     private int fragmentShaderID;
@@ -127,7 +125,7 @@ public class ShaderProgram {
         this.vertex = vertex;
         this.fragment = fragment;
         Runnable r = () -> CreateShaderNow(vertex,fragment);
-        Manager.QueueGLFunction(r);
+        Manager.queueGLFunction(r);
     }
 
     @GLThread
@@ -166,6 +164,6 @@ public class ShaderProgram {
             glDeleteShader(fragmentShaderID);
             glDeleteProgram(programID);
         };
-        Manager.QueueGLFunction(r);
+        Manager.queueGLFunction(r);
     }
 }

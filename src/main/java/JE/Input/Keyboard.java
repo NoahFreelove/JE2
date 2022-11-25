@@ -1,20 +1,23 @@
 package JE.Input;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Keyboard {
 
     public static ArrayList<KeyPressedEvent> keyPressedEvents = new ArrayList<>();
     public static ArrayList<KeyReleasedEvent> keyReleasedEvents = new ArrayList<>();
 
-    public static boolean[] keys = new boolean[1024];
+    private static final boolean[] keys = new boolean[1024];
 
-    public void KeyPressed(int code) {
+    public static void keyPressed(int code) {
+        if(code >= keys.length)
+            return;
         keys[code] = true;
     }
 
-    public void KeyReleased(int code) {
+    public static void keyReleased(int code) {
+        if(code >= keys.length)
+            return;
         keys[code] = false;
     }
 
@@ -23,6 +26,7 @@ public class Keyboard {
     }
 
     public static int nameToCode(String keyName) {
+        keyName = keyName.toUpperCase();
         return switch (keyName) {
             case "A" -> 65;
             case "B" -> 66;
@@ -74,10 +78,10 @@ public class Keyboard {
             case "PAGE_DOWN" -> 34;
             case "END" -> 35;
             case "HOME" -> 36;
-            case "LEFT" -> 37;
-            case "UP" -> 38;
-            case "RIGHT" -> 39;
-            case "DOWN" -> 40;
+            case "LEFT" -> 263;
+            case "UP" -> 265;
+            case "RIGHT" -> 262;
+            case "DOWN" -> 264;
             case "INSERT" -> 45;
             case "DELETE" -> 46;
             case "NUM_LOCK" -> 144;

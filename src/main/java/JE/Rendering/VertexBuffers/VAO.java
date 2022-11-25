@@ -6,6 +6,7 @@ import JE.Rendering.Shaders.ShaderProgram;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
+import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -13,7 +14,7 @@ import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
-public class VAO {
+public class VAO implements Serializable {
     protected float[] data = {};
     protected int vertexBufferID = 0;
     protected int location;
@@ -41,7 +42,7 @@ public class VAO {
 
     protected void QueueGenerateBuffers(){
         Runnable r = this::GenerateBuffers;
-        Manager.QueueGLFunction(r);
+        Manager.queueGLFunction(r);
     }
 
     @GLThread

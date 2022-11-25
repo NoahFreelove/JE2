@@ -8,6 +8,7 @@ import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL13;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -16,7 +17,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
-public class Texture {
+public class Texture implements Serializable {
     public ByteBuffer textureBuffer = BufferUtils.createByteBuffer(0);
     public Vector2i size = new Vector2i(64,64);
     public int generatedTextureID = -1;
@@ -46,7 +47,7 @@ public class Texture {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glGenerateMipmap(GL_TEXTURE_2D);
         };
-        Manager.QueueGLFunction(r);
+        Manager.queueGLFunction(r);
     }
 
     @GLThread

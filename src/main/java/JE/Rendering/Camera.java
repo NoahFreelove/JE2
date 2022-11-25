@@ -34,15 +34,14 @@ public class Camera extends Component {
 
     }
 
-    public Matrix4f getPerspective(Transform t){
+    public Matrix4f getPerspective(){
+        return new Matrix4f().identity().perspective((float) Math.toRadians(45), (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y(), 0.1f, 100.0f);
+    }
+
+    public Matrix4f MVPPerspective(Transform t){
         Matrix4f model = getModel(t);
-        Matrix4f view = getView();
-        Matrix4f projection = new Matrix4f().identity();
-
-        projection = projection.perspective((float) Math.toRadians(45), (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y(), 0.1f, 100.0f);
-
-
-        return new Matrix4f().mul(projection).mul(view).mul(model);
+        Matrix4f view = getViewMatrix();
+        return new Matrix4f().mul(getPerspective()).mul(view).mul(model);
     }
 
     public Matrix4f getModel(Transform t){
@@ -56,23 +55,26 @@ public class Camera extends Component {
     }
 
 
-    public Matrix4f getView(){
+    public Matrix4f getViewMatrix(){
         Vector2f position =  parentObject.getTransform().position;
         Vector2f finalPos = new Vector2f(position.x + positionOffset.x, position.y + positionOffset.y);
 
         return new Matrix4f().identity().translate(-finalPos.x(), -finalPos.y(), -zPos);
     }
 
-
-    public Matrix4f getOrthographic(Transform t){
-        Matrix4f model = getModel(t);
-        Matrix4f view = getView();
+    public Matrix4f getOrtho(){
         Matrix4f projection = new Matrix4f().identity();
-
         float aspect = (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y();
         projection = projection.ortho(-aspect, aspect, -1,1f, 0.1f, zPos);
         projection = projection.scale(0.5f*zoomMultiplier);
+        return projection;
+    }
 
-        return new Matrix4f().mul(projection).mul(view).mul(model);
+
+    public Matrix4f MVPOrtho(Transform t){
+        Matrix4f model = getModel(t);
+        Matrix4f view = getViewMatrix();
+
+        return new Matrix4f().mul(getOrtho()).mul(view).mul(model);
     }
 }
