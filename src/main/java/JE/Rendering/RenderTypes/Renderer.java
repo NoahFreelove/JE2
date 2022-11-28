@@ -11,6 +11,7 @@ import JE.Rendering.Shaders.ShaderLayout;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.VertexBuffers.VAO;
 import JE.Rendering.VertexBuffers.VAO2f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
@@ -69,6 +70,9 @@ public class Renderer extends Component {
 
         vao.shaderProgram.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
         vao.shaderProgram.setUniform3f("world_position", new Vector3f(t.position, t.zPos));
+        vao.shaderProgram.setUniform2f("world_scale", new Vector2f(t.scale));
+        vao.shaderProgram.setUniform3f("world_rotation", new Vector3f(t.rotation));
+
         vao.shaderProgram.setUniform1i("lightCount", Manager.getActiveScene().world.lights.size());
         vao.shaderProgram.setUniform4f("baseColor", baseColor);
 

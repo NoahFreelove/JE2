@@ -169,6 +169,8 @@ public class Window {
         for (GameObject object: Manager.getActiveScene().world.gameObjects) {
             if(object == null)
                 continue;
+            object.preRender();
+
             if(object.renderer != null)
             {
                 object.renderer.Render(object.getTransform());

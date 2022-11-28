@@ -35,6 +35,10 @@ public class VAO implements Serializable {
         this.shaderProgram = sp;
         QueueGenerateBuffers();
     }
+    public VAO(VAO2f vao)
+    {
+        this(vao.dataConversion(), vao.shaderProgram);
+    }
 
     protected float[] dataConversion(){
         return data;

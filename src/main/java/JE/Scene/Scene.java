@@ -110,15 +110,15 @@ public class Scene {
 
     public void update(){
         for (GameObject gameObject : world.gameObjects) {
-            gameObject.Update();
-            gameObject.ComponentUpdate();
+            gameObject.update();
+            gameObject.componentUpdate();
         }
     }
 
     public void start(){
         for (GameObject gameObject : world.gameObjects) {
-            gameObject.Start();
-            gameObject.ComponentStart();
+            gameObject.start();
+            gameObject.componentStart();
         }
     }
 }

@@ -65,7 +65,7 @@ public class Camera extends Component {
     public Matrix4f getOrtho(){
         Matrix4f projection = new Matrix4f().identity();
         float aspect = (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y();
-        projection = projection.ortho(-aspect, aspect, -1,1f, 0.1f, zPos);
+        projection = projection.ortho(-aspect, aspect, -1,1f, 0f, 1000);
         projection = projection.scale(0.5f*zoomMultiplier);
         return projection;
     }

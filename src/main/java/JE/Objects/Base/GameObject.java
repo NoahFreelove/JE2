@@ -25,6 +25,9 @@ public class GameObject implements Serializable {
     public GameObject(Transform t){
         this.setTransform(t);
     }
+    public GameObject(Transform t, Identity id){
+        this.setTransform(t); this.identity = id;
+    }
 
     public Transform getTransform(){
         return (Transform) components.get(0);
@@ -94,7 +97,7 @@ public class GameObject implements Serializable {
         }
         return components.remove(c);
     }
-    public void ComponentUpdate(){
+    public void componentUpdate(){
         if(!active)
             return;
         for(Component c : components){
@@ -103,7 +106,7 @@ public class GameObject implements Serializable {
             c.Update();
         }
     }
-    public void ComponentStart(){
+    public void componentStart(){
         if(!active)
             return;
         for(Component c : components){
@@ -113,13 +116,13 @@ public class GameObject implements Serializable {
         }
     }
 
-    public void Update(){
+    public void update(){
 
     }
-    public void Start(){
+    public void start(){
 
     }
-    public void Awake(){
+    public void awake(){
         if(!active)
             return;
         for(Component c : components){
@@ -128,6 +131,8 @@ public class GameObject implements Serializable {
             c.awake();
         }
     }
+
+    public void preRender(){}
 
     public Identity getIdentity() {
         return new Identity(identity.name, identity.tag);

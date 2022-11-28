@@ -61,11 +61,11 @@ public class SpriteRenderer extends Renderer {
     @GLThread
     public void Render(Transform t, int additionalBufferSize) {
         if(texture.generatedTextureID <=-1) {
-            super.Render(t, 0);
+            super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize);
             return;
         }
 
-        texture.ActivateTexture(vao.shaderProgram, texture);
+        texture.activateTexture(vao.shaderProgram);
         spriteCoordVAO.Enable(1);
         super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize);
         spriteCoordVAO.Disable();

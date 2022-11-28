@@ -42,7 +42,7 @@ public class Player extends Sprite {
     }
 
     @Override
-    public void Update(){
+    public void update(){
         if(Keyboard.isKeyPressed(a) || Keyboard.isKeyPressed(LEFT)){
             getTransform().position.x -= moveSpeed * Window.deltaTime;
         }

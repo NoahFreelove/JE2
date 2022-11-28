@@ -13,6 +13,7 @@ import JE.Rendering.Shaders.Debugging.ShaderDebugger;
 import JE.Rendering.Shaders.Debugging.ShaderTestSceneCustomData;
 import JE.Scene.Scene;
 import JE.Scene.SceneState;
+import JE.UI.UIHandler;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
@@ -53,6 +54,7 @@ public class Main {
 
         scene.add(sprite2);
         scene.add(player);
+        scene.add(new UIHandler());
         scene.addLight(light);
         scene.addGizmo(light.getRangeGizmo());
         scene.addGizmo(pathComp.getRangeGizmo());

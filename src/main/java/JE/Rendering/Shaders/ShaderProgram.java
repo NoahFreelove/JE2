@@ -166,4 +166,9 @@ public class ShaderProgram implements Serializable {
         };
         Manager.queueGLFunction(r);
     }
+
+    @GLThread
+    public void use(){
+        glUseProgram(programID);
+    }
 }

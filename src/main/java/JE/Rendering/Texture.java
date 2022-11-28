@@ -51,10 +51,10 @@ public class Texture implements Serializable {
     }
 
     @GLThread
-    public void ActivateTexture(ShaderProgram shaderProgram, Texture texture){
+    public void activateTexture(ShaderProgram shaderProgram){
         int textureUniform = glGetUniformLocation(shaderProgram.programID, "JE_Texture");
         glActiveTexture(GL13.GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture.generatedTextureID);
+        glBindTexture(GL_TEXTURE_2D, generatedTextureID);
         glUniform1i(textureUniform, 0);
     }
 
