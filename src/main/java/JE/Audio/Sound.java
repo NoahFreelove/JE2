@@ -1,6 +1,5 @@
 package JE.Audio;
 
-import JE.Audio.Filters.LowPassFilter;
 import JE.Audio.Filters.SoundFilter;
 import JE.Window.Window;
 import org.lwjgl.openal.AL10;
@@ -18,16 +17,18 @@ public class Sound {
     private int bufferID;
     private int sourceID;
 
-    private final String fp;
+    private final String filepath;
 
     private boolean isPlaying = false;
 
     private boolean loops;
+
     private SoundFilter filter;
 
     public Sound(String filePath, boolean loops){
-        this.fp = filePath;
+        this.filepath = filePath;
         this.loops = loops;
+
         if(Window.audioContext() == -1)
             Window.CreateOpenAL();
 
@@ -89,6 +90,8 @@ public class Sound {
         {
             isPlaying = false;
             alSourcei(sourceID, AL_POSITION, 0);
+            alGetSourcei(sourceID, AL_POSITION);
+
         }
 
         if(!isPlaying){
@@ -104,8 +107,8 @@ public class Sound {
         }
     }
 
-    public String getFp() {
-        return fp;
+    public String getFilepath() {
+        return filepath;
     }
 
     public boolean isPlaying() {
@@ -132,6 +135,7 @@ public class Sound {
     public void setMaxGain(float maxGain){
         alSourcef(sourceID,AL_MAX_GAIN, maxGain);
     }
-
-
+    public int getPosition(){
+        return alGetSourcei(sourceID, AL_POSITION);
+    }
 }

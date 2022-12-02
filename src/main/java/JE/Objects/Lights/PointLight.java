@@ -4,6 +4,7 @@ import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.GizmoParent;
 import JE.Objects.Gizmos.Gizmo;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -51,7 +52,11 @@ public class PointLight extends GameObject {
         Gizmo rangeGizmo = new Gizmo(vertices, color, GL_LINES);
         rangeGizmo.getTransform().position = getTransform().position;
 
-        Gizmo pointGizmo = new Gizmo();
+        Gizmo pointGizmo = new Gizmo(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)}, "bin/light.png", new Vector2i(128,128));
         pointGizmo.getTransform().scale = new Vector2f(0.5f,0.5f);
         pointGizmo.getTransform().position = getTransform().position;
         pointGizmo.renderer.baseColor = color;

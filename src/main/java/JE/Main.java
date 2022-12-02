@@ -16,15 +16,14 @@ import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 public class Main {
-    static SceneState st;
     public static void main(String[] args) {
         Manager.run();
-        Manager.setWindowSize(new Vector2i(1920, 1080));
+        //Manager.setWindowSize(new Vector2i(1920, 1080));
 
         Scene scene = new Scene();
 
         Player player = new Player(new Vector2f(-1, 0));
-        scene.addGizmo(new MoveGizmo(player));
+        //scene.addGizmo(new MoveGizmo(player));
 
         Sprite sprite2 = new Sprite(new Vector2f[]{
                 new Vector2f(0,0),
@@ -36,7 +35,7 @@ public class Main {
                 new Vector2i(64,64));
         sprite2.getTransform().position = new Vector2f(-2,2);
 
-        Pathfinding pathComp = new Pathfinding();
+        /*Pathfinding pathComp = new Pathfinding();
         pathComp.path = new Vector2f[]{
                 new Vector2f(-2,-2),
                 new Vector2f(-2,2),
@@ -45,16 +44,18 @@ public class Main {
         };
         pathComp.speed = 0.2f;
         sprite2.addComponent(pathComp);
-        pathComp.startPathfinding();
+        pathComp.startPathfinding();*/
 
         PointLight light = new PointLight(new Vector2f(0,0), new Vector4f(1f,1f,1f,1f),15, 5);
 
         scene.add(sprite2);
         scene.add(player);
         scene.addLight(light);
-        Sound2D sound = new Sound2D("bin/sound.ogg",false);
+        scene.addGizmo(light.getRangeGizmo());
+
+        /*Sound2D sound = new Sound2D("bin/sound.ogg",false);
         sound.soundPlayer.sound.setFilter(new SoundFilter());
-        scene.add(sound);
+        scene.add(sound);*/
 
         scene.activeCamera = player.camera;
         Manager.setScene(scene);
@@ -64,6 +65,7 @@ public class Main {
                 System.out.println(Manager.getFPS());
             }
         });
+
 
         /*ShaderTestSceneCustomData data = new ShaderTestSceneCustomData();
         data.baseColor = new Vector4f(0,1,0,1);

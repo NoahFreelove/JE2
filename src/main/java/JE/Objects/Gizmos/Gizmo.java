@@ -1,10 +1,12 @@
 package JE.Objects.Gizmos;
 
 import JE.Objects.Base.Sprites.Sprite;
+import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
+import org.lwjgl.stb.STBImage;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -29,14 +31,14 @@ public class Gizmo extends Sprite {
     }
 
     public Gizmo(Vector2f[] vertices, Vector4f color, int drawMode){
-        super(vertices,vertices,new ShaderProgram());
+        super(vertices,vertices, new ShaderProgram());
         getTransform().zPos = 10;
         renderer.baseColor = color;
         renderer.setDrawMode(drawMode);
     }
 
     public Gizmo(Vector2f[] vertices, String spriteFP, Vector2i size){
-        super(vertices,new ShaderProgram(), spriteFP, size);
+        super(vertices,new SpriteShader(), spriteFP, size);
         getTransform().zPos = 10;
     }
 
