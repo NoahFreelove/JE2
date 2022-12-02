@@ -24,8 +24,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
     private static long windowHandle = 0;
     public static boolean hasInit = false;
-    private static final ArrayList<Runnable> actionQueue = new ArrayList<>();
-    public static float deltaTime = 0;
+    public static final ArrayList<Runnable> actionQueue = new ArrayList<>();
+    public static Pipeline pipeline = new DefaultPipeline();
 
 
     public static void createWindow(WindowPreferences wp) {
@@ -143,49 +143,7 @@ public class Window {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthFunc(GL_LEQUAL);
 
-        while ( !glfwWindowShouldClose(windowHandle) ) {
-            double startTime = (double)glfwGetTime();
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
-
-            Object[] actions = actionQueue.toArray();
-            for (Object action : actions) {
-                ((Runnable) action).run();
-            }
-            actionQueue.clear();
-
-            Manager.getActiveScene().update();
-            render();
-            glfwPollEvents();
-            double endTime = (double)glfwGetTime();
-            deltaTime = (float)(endTime - startTime);
-
-        }
-    }
-
-    private static void render() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
-        for (GameObject object: Manager.getActiveScene().world.gameObjects) {
-            if(object == null)
-                continue;
-            object.preRender();
-
-            if(object.renderer != null)
-            {
-                object.renderer.Render(object.getTransform());
-            }
-        }
-        for (Gizmo gizmo: Manager.getActiveScene().world.gizmos) {
-            if(gizmo == null)
-                continue;
-            if(gizmo.renderer != null)
-            {
-                gizmo.onDraw();
-                gizmo.renderer.Render(gizmo.getTransform());
-            }
-        }
-        glfwSwapBuffers(windowHandle);
+        while ( !glfwWindowShouldClose(windowHandle) ) pipeline.onStart();
     }
 
     public static void onPreferenceUpdated(WindowPreferences wp){
@@ -202,6 +160,13 @@ public class Window {
     }
 
     public static long getWindowHandle(){
+        return windowHandle;
+    }
+    public static float deltaTime(){
+        return pipeline.deltaTime;
+    }
+    public static long handle()
+    {
         return windowHandle;
     }
 }

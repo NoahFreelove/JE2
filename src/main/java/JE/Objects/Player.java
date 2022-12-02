@@ -44,16 +44,16 @@ public class Player extends Sprite {
     @Override
     public void update(){
         if(Keyboard.isKeyPressed(a) || Keyboard.isKeyPressed(LEFT)){
-            getTransform().position.x -= moveSpeed * Window.deltaTime;
+            getTransform().position.x -= moveSpeed * Window.deltaTime();
         }
         if(Keyboard.isKeyPressed(d) || Keyboard.isKeyPressed(RIGHT)){
-            getTransform().position.x += moveSpeed * Window.deltaTime;
+            getTransform().position.x += moveSpeed * Window.deltaTime();
         }
         if(Keyboard.isKeyPressed(w) || Keyboard.isKeyPressed(UP)){
-            getTransform().position.y += moveSpeed * Window.deltaTime;
+            getTransform().position.y += moveSpeed * Window.deltaTime();
         }
         if(Keyboard.isKeyPressed(s) || Keyboard.isKeyPressed(DOWN)){
-            getTransform().position.y -= moveSpeed * Window.deltaTime;
+            getTransform().position.y -= moveSpeed * Window.deltaTime();
         }
     }
 

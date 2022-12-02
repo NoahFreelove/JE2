@@ -81,9 +81,9 @@ public class Manager {
         Window.onPreferenceUpdated(preferences);
     }
     public static float deltaTime(){
-        return Window.deltaTime;
+        return Window.deltaTime();
     }
     public static int getFPS(){
-        return (int)(1/Window.deltaTime);
+        return (int)(1/Window.deltaTime());
     }
 }

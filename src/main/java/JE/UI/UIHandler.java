@@ -9,7 +9,7 @@ public final class UIHandler extends GameObject {
     public ArrayList<UINode> nodes = new ArrayList<>();
 
     public UIHandler(){
-        nodes.add(new UINode(new Vector2f(0,0),new Vector2f(0.5f,0.5f)));
+        //nodes.add(new UINode(new Vector2f(0,0),new Vector2f(0.5f,0.5f)));
     }
 
     @Override
