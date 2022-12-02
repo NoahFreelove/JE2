@@ -1,8 +1,7 @@
 package JE.Objects.Gizmos;
 
-import JE.Objects.Base.Sprite;
+import JE.Objects.Base.Sprites.Sprite;
 import JE.Rendering.Shaders.ShaderProgram;
-import JE.Rendering.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;

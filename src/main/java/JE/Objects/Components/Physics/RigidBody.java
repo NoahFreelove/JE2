@@ -1,4 +1,6 @@
-package JE.Objects.Components;
+package JE.Objects.Components.Physics;
+
+import JE.Objects.Components.Base.Component;
 
 public class RigidBody extends Component {
     public RigidBody(){
@@ -6,12 +8,12 @@ public class RigidBody extends Component {
     }
 
     @Override
-    public void Update() {
+    public void update() {
 
     }
 
     @Override
-    public void Start() {
+    public void start() {
 
     }
 

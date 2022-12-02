@@ -1,6 +1,6 @@
 package JE.Logging.Errors;
 
-import JE.Objects.Components.Component;
+import JE.Objects.Components.Base.Component;
 
 public class ComponentError extends JE2Error {
     public ComponentError(){

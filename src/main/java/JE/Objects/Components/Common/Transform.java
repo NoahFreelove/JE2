@@ -1,8 +1,9 @@
-package JE.Objects.Components;
+package JE.Objects.Components.Common;
 
+import JE.Objects.Components.Base.Component;
 import org.joml.*;
 
-public class Transform extends Component{
+public class Transform extends Component {
     public Vector2f position;
     public float zPos = 1;
     public Vector3f rotation;
@@ -33,12 +34,12 @@ public class Transform extends Component{
     public static final Transform One = new Transform(new Vector2f(1,1), new Vector3f(1,1,1), new Vector2f(1,1));
 
     @Override
-    public void Start() {
+    public void start() {
 
     }
 
     @Override
-    public void Update() {
+    public void update() {
     }
 
     @Override

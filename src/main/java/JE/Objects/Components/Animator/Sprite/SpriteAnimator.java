@@ -2,8 +2,8 @@ package JE.Objects.Components.Animator.Sprite;
 
 import JE.Logging.Errors.JE2Error;
 import JE.Logging.Logger;
-import JE.Objects.Base.Sprite;
-import JE.Objects.Components.Component;
+import JE.Objects.Base.Sprites.Sprite;
+import JE.Objects.Components.Base.Component;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class SpriteAnimator extends Component {
     }
 
     @Override
-    public void Update() {
+    public void update() {
         if(parentObject==null)
             return;
         try {
@@ -35,7 +35,7 @@ public class SpriteAnimator extends Component {
     }
 
     @Override
-    public void Start() {
+    public void start() {
 
     }
 

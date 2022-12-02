@@ -2,7 +2,7 @@ package JE.Objects.Components.Pathfinding;
 
 import JE.Manager;
 import JE.Objects.Base.GameObject;
-import JE.Objects.Components.Component;
+import JE.Objects.Components.Base.Component;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Gizmos.GizmoParent;
 import org.joml.Vector2f;
@@ -135,7 +135,7 @@ public class Pathfinding extends Component {
     }
 
     @Override
-    public void Update() {
+    public void update() {
         if(!isPathfinding)
             return;
 
@@ -146,7 +146,7 @@ public class Pathfinding extends Component {
     }
 
     @Override
-    public void Start() {
+    public void start() {
 
     }
     @Override

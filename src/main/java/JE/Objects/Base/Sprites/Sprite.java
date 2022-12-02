@@ -1,7 +1,8 @@
-package JE.Objects.Base;
+package JE.Objects.Base.Sprites;
 
 import JE.IO.ImageProcessor;
-import JE.Objects.Components.ComponentRestrictions;
+import JE.Objects.Base.GameObject;
+import JE.Objects.Components.Base.ComponentRestrictions;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.RenderTypes.SpriteRenderer;

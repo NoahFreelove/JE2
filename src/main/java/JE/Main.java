@@ -1,19 +1,16 @@
 package JE;
 
-import JE.Input.KeyPressedEvent;
+import JE.Audio.Filters.LowPassFilter;
+import JE.Audio.Filters.SoundFilter;
 import JE.Input.Keyboard;
-import JE.Objects.Base.Sprite;
-import JE.Objects.CameraRig;
+import JE.Objects.Audio.Sound2D;
+import JE.Objects.Base.Sprites.Sprite;
 import JE.Objects.Components.Pathfinding.Pathfinding;
 import JE.Objects.Gizmos.MoveGizmo;
 import JE.Objects.Lights.PointLight;
-import JE.Objects.Player;
-import JE.Rendering.Shaders.BuiltIn.LightObject.LightObjectShader;
-import JE.Rendering.Shaders.Debugging.ShaderDebugger;
-import JE.Rendering.Shaders.Debugging.ShaderTestSceneCustomData;
+import JE.Objects.Common.Player;
 import JE.Scene.Scene;
 import JE.Scene.SceneState;
-import JE.UI.UIHandler;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
@@ -54,10 +51,10 @@ public class Main {
 
         scene.add(sprite2);
         scene.add(player);
-        scene.add(new UIHandler());
         scene.addLight(light);
-        scene.addGizmo(light.getRangeGizmo());
-        scene.addGizmo(pathComp.getRangeGizmo());
+        Sound2D sound = new Sound2D("bin/sound.ogg",false);
+        sound.soundPlayer.sound.setFilter(new SoundFilter());
+        scene.add(sound);
 
         scene.activeCamera = player.camera;
         Manager.setScene(scene);

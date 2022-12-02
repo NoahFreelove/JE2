@@ -2,8 +2,8 @@ package JE.Rendering;
 
 import JE.Manager;
 import JE.Objects.Base.GameObject;
-import JE.Objects.Components.Component;
-import JE.Objects.Components.Transform;
+import JE.Objects.Components.Base.Component;
+import JE.Objects.Components.Common.Transform;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -21,11 +21,11 @@ public class Camera extends Component {
     }
 
     @Override
-    public void Update() {
+    public void update() {
     }
 
     @Override
-    public void Start() {
+    public void start() {
 
     }
 

@@ -1,4 +1,4 @@
-package JE.Objects.Components;
+package JE.Objects.Components.Base;
 
 import java.io.Serializable;
 import java.util.ArrayList;

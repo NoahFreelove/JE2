@@ -1,4 +1,4 @@
-package JE.Objects.Components;
+package JE.Objects.Components.Base;
 
 import JE.Logging.Errors.ComponentError;
 import JE.Logging.Logger;
@@ -28,9 +28,11 @@ public class Component implements Serializable {
     }
     public boolean getActive(){return active;}
 
-    public void Update(){}
-    public void Start(){}
+    public void update(){}
+    public void start(){}
     public void awake(){}
+    public void unload(){}
+    public void destroy(){}
     public void onAddedToGameObject(GameObject gameObject){}
 
 

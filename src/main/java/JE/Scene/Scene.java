@@ -109,16 +109,17 @@ public class Scene {
     }
 
     public void update(){
-        for (GameObject gameObject : world.gameObjects) {
-            gameObject.update();
-            gameObject.componentUpdate();
-        }
+        world.gameObjects.forEach(GameObject::update);
+        world.gameObjects.forEach(GameObject::componentUpdate);
     }
 
     public void start(){
-        for (GameObject gameObject : world.gameObjects) {
-            gameObject.start();
-            gameObject.componentStart();
-        }
+        world.gameObjects.forEach(GameObject::start);
+        world.gameObjects.forEach(GameObject::componentStart);
+    }
+
+    public void unload() {
+        world.gameObjects.forEach(GameObject::unload);
+        world.gameObjects.forEach(GameObject::componentUnload);
     }
 }

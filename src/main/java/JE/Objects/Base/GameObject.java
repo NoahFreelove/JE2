@@ -2,15 +2,16 @@ package JE.Objects.Base;
 
 import JE.Logging.Errors.GameObjectError;
 import JE.Logging.Logger;
-import JE.Objects.Components.Component;
-import JE.Objects.Components.Transform;
+import JE.Objects.Components.Base.Component;
+import JE.Objects.Components.Common.Transform;
 import JE.Rendering.RenderTypes.Renderer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GameObject implements Serializable {
-    public boolean active = true;
+    private boolean active = true;
     private Identity identity = new Identity();
     public Renderer renderer = null;
 
@@ -37,11 +38,14 @@ public class GameObject implements Serializable {
     }
 
     public boolean addComponent(Component c){
+        Objects.requireNonNull(c);
+
         if(c.parentObject !=null)
         {
             Logger.log(new GameObjectError(this, "Can't Add Component. This Component already has a parent."));
             return false;
         }
+
         if(!c.getRestrictions().canHaveMultiple)
         {
             for(Component comp : components){
@@ -103,7 +107,7 @@ public class GameObject implements Serializable {
         for(Component c : components){
             if(!c.getActive())
                 continue;
-            c.Update();
+            c.update();
         }
     }
     public void componentStart(){
@@ -112,17 +116,10 @@ public class GameObject implements Serializable {
         for(Component c : components){
             if(!c.getActive())
                 continue;
-            c.Start();
+            c.start();
         }
     }
-
-    public void update(){
-
-    }
-    public void start(){
-
-    }
-    public void awake(){
+    public void componentAwake(){
         if(!active)
             return;
         for(Component c : components){
@@ -131,6 +128,33 @@ public class GameObject implements Serializable {
             c.awake();
         }
     }
+    public void componentDestroy(){
+        for(Component c : components){
+            if(!c.getActive())
+                continue;
+            c.destroy();
+        }
+    }
+    public void componentUnload(){
+        for(Component c : components){
+            if(!c.getActive())
+                continue;
+            c.unload();
+        }
+    }
+
+    public void update(){
+
+    }
+    public void start(){
+    }
+    public void awake(){
+    }
+
+    public void destroy(){
+
+    }
+    public void unload(){}
 
     public void preRender(){}
 
@@ -144,5 +168,16 @@ public class GameObject implements Serializable {
     @Override
     public String toString() {
         return identity.toString();
+    }
+    public boolean active(){
+        return active;
+    }
+    public void setActive(boolean newState){
+        this.active = newState;
+        if(active)
+        {
+            awake();
+            componentAwake();
+        }
     }
 }

@@ -2,9 +2,9 @@ package JE.Rendering.RenderTypes;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
-import JE.Objects.Components.Component;
-import JE.Objects.Components.ComponentRestrictions;
-import JE.Objects.Components.Transform;
+import JE.Objects.Components.Base.Component;
+import JE.Objects.Components.Base.ComponentRestrictions;
+import JE.Objects.Components.Common.Transform;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderLayout;
@@ -108,12 +108,12 @@ public class Renderer extends Component {
     }
 
     @Override
-    public void Update() {
+    public void update() {
 
     }
 
     @Override
-    public void Start() {
+    public void start() {
 
     }
 

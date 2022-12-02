@@ -1,6 +1,6 @@
-package JE.Objects;
+package JE.Objects.Base.Sprites;
 
-import JE.Objects.Base.Sprite;
+import JE.Objects.Base.Sprites.Sprite;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 

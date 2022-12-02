@@ -1,14 +1,11 @@
 package JE.Rendering.RenderTypes.UI;
 
-import JE.Objects.Components.Transform;
-import JE.Rendering.RenderTypes.Renderer;
+import JE.Objects.Components.Common.Transform;
 import JE.Rendering.RenderTypes.SpriteRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
-import JE.Rendering.VertexBuffers.VAO;
 import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 
 import static org.lwjgl.opengl.GL11.GL_POLYGON;
 

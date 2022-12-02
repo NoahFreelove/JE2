@@ -2,12 +2,17 @@ package JE.Window;
 
 import JE.Input.Keyboard;
 import JE.Input.Mouse;
+import JE.Logging.Logger;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import org.lwjgl.glfw.*;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
@@ -17,12 +22,15 @@ import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
     private static long windowHandle = 0;
+    private static long audioDevice =-1;
+    private static long audioContext =-1;
     public static boolean hasInit = false;
     public static final ArrayList<Runnable> actionQueue = new ArrayList<>();
     public static Pipeline pipeline = new DefaultPipeline();
@@ -132,7 +140,28 @@ public class Window {
         Mouse.mouseReleasedEvents.add((button, mods) -> Mouse.mouseReleased(button));
 
         GL.setCapabilities(GL.createCapabilities());
+        CreateOpenAL();
     }
+
+    public static void CreateOpenAL() {
+        String audioDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        audioDevice = alcOpenDevice(audioDeviceName);
+
+        if (audioDevice == NULL) {
+            Logger.log("Could not initialize OpenAl! There is no audio device.");
+        }
+        else{
+            int[] attributes = {0};
+            audioContext = alcCreateContext(audioDevice, attributes);
+            alcMakeContextCurrent(audioContext);
+
+            ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
+            ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+
+            assert alCapabilities.OpenAL10 : "OpenAL 1.0 is not supported";
+        }
+    }
+
     private static void WindowLoop() {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -168,5 +197,8 @@ public class Window {
     public static long handle()
     {
         return windowHandle;
+    }
+    public static long audioContext(){
+        return audioContext;
     }
 }

@@ -1,12 +1,10 @@
-package JE.Objects;
+package JE.Objects.Common;
 
 import JE.Input.Keyboard;
-import JE.Input.Mouse;
-import JE.Objects.Base.Sprite;
+import JE.Objects.Base.Sprites.Sprite;
 import JE.Objects.Base.Identity;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
-import JE.Utility.JOMLtoJBOX;
 import JE.Window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;

@@ -1,4 +1,4 @@
-package JE.Objects.Base;
+package JE.Objects.Base.Sprites;
 
 import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;

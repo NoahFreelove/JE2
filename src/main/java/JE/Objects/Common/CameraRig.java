@@ -1,4 +1,4 @@
-package JE.Objects;
+package JE.Objects.Common;
 
 import JE.Objects.Base.GameObject;
 import JE.Objects.Base.Identity;

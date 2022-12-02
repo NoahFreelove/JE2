@@ -1,6 +1,6 @@
 package JE.Objects.Components.Animator.Sprite;
 
-import JE.Objects.Base.Sprite;
+import JE.Objects.Base.Sprites.Sprite;
 import JE.Rendering.RenderTypes.SpriteRenderer;
 import JE.Rendering.Texture;
 

@@ -3,7 +3,7 @@ package JE.Rendering.RenderTypes;
 import JE.Annotations.GLThread;
 import JE.IO.ImageProcessor;
 import JE.Manager;
-import JE.Objects.Components.Transform;
+import JE.Objects.Components.Common.Transform;
 import JE.Rendering.Texture;
 import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
@@ -37,12 +37,12 @@ public class SpriteRenderer extends Renderer {
     }
 
     @Override
-    public void Update() {
+    public void update() {
 
     }
 
     @Override
-    public void Start() {
+    public void start() {
 
     }
 
