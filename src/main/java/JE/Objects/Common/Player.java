@@ -1,6 +1,9 @@
 package JE.Objects.Common;
 
+import JE.Audio.Filters.IntensityFilter;
+import JE.Audio.Filters.LowPassFilter;
 import JE.Input.Keyboard;
+import JE.Main;
 import JE.Objects.Base.Sprites.Sprite;
 import JE.Objects.Base.Identity;
 import JE.Rendering.Camera;
@@ -53,6 +56,17 @@ public class Player extends Sprite {
         if(Keyboard.isKeyPressed(s) || Keyboard.isKeyPressed(DOWN)){
             getTransform().position.y -= moveSpeed * Window.deltaTime();
         }
+        if(Keyboard.isKeyPressed(Keyboard.nameToCode("1"))){
+            IntensityFilter lpf = (IntensityFilter)Main.worldSound.soundPlayer.sound.getFilter();
+            lpf.setIntensity(lpf.getIntensity()-0.01f);
+            Main.worldSound.soundPlayer.sound.setFilter(lpf);
+
+        }
+        if(Keyboard.isKeyPressed(Keyboard.nameToCode("2"))){
+            IntensityFilter lpf = (IntensityFilter)Main.worldSound.soundPlayer.sound.getFilter();
+            lpf.setIntensity(lpf.getIntensity()+0.01f);
+        }
+
     }
 
 }

@@ -84,12 +84,15 @@ public class Sound {
     }
 
     public void play(){
+        playAt(0);
+    }
+    public void playAt(int pos){
         int state = alGetSourcei(sourceID, AL_SOURCE_STATE);
 
         if(state == AL_STOPPED)
         {
             isPlaying = false;
-            alSourcei(sourceID, AL_POSITION, 0);
+            alSourcei(sourceID, AL_POSITION, pos);
             alGetSourcei(sourceID, AL_POSITION);
 
         }
@@ -126,6 +129,11 @@ public class Sound {
 
     public void setFilter(SoundFilter filter){
         this.filter = filter;
+        filter.attachedSound = this;
+        updateFilter();
+    }
+    public void updateFilter(){
+        if(filter == null) return;
         AL10.alSourcei(sourceID, EXTEfx.AL_DIRECT_FILTER, filter.filterHandle);
     }
     public SoundFilter getFilter(){return filter;}

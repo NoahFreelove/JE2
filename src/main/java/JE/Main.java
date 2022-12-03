@@ -1,24 +1,23 @@
 package JE;
 
+import JE.Audio.Filters.HighPassFilter;
 import JE.Audio.Filters.LowPassFilter;
-import JE.Audio.Filters.SoundFilter;
 import JE.Input.Keyboard;
 import JE.Objects.Audio.Sound2D;
 import JE.Objects.Base.Sprites.Sprite;
-import JE.Objects.Components.Pathfinding.Pathfinding;
-import JE.Objects.Gizmos.MoveGizmo;
-import JE.Objects.Lights.PointLight;
 import JE.Objects.Common.Player;
+import JE.Objects.Lights.PointLight;
 import JE.Scene.Scene;
-import JE.Scene.SceneState;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 public class Main {
+    public static Sound2D worldSound;
+
     public static void main(String[] args) {
         Manager.run();
-        //Manager.setWindowSize(new Vector2i(1920, 1080));
+        Manager.setWindowSize(new Vector2i(1920, 1080));
 
         Scene scene = new Scene();
 
@@ -56,6 +55,9 @@ public class Main {
         /*Sound2D sound = new Sound2D("bin/sound.ogg",false);
         sound.soundPlayer.sound.setFilter(new SoundFilter());
         scene.add(sound);*/
+        worldSound = new Sound2D("bin/music.ogg",false);
+        worldSound.soundPlayer.sound.setFilter(new LowPassFilter(0));
+        scene.add(worldSound);
 
         scene.activeCamera = player.camera;
         Manager.setScene(scene);
