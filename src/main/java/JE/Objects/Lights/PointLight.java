@@ -29,20 +29,6 @@ public class PointLight extends GameObject {
         this.radius = radius;
     }
 
-    /*public PointLight(Vector2f position, float radius, Vector4f color, float intensity, float constant, float linear, float quadratic, Vector3f ambient, Vector3f diffuse, Vector3f specular){
-        super();
-        getTransform().position = new Vector2f(position.x(), position.y());
-        this.radius = radius;
-        this.intensity = intensity;
-        this.color = color;
-        this.constant = constant;
-        this.linear = linear;
-        this.quadratic = quadratic;
-        this.ambient = ambient;
-        this.diffuse = diffuse;
-        this.specular = specular;
-    }*/
-
     public GizmoParent getRangeGizmo(){
 
         Vector2f[] vertices = new Vector2f[360];

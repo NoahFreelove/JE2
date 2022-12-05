@@ -1,34 +1,51 @@
 package JE.Audio;
 
-import JE.Objects.Components.Base.Component;
+import JE.Manager;
+import JE.Objects.Gizmos.Gizmo;
+import JE.Scene.Scene;
+import JE.Scene.World;
+import org.joml.Vector2f;
 
-public class SoundPlayer extends Component {
-    public final Sound sound;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+
+public final class SoundPlayer extends Sound {
+    private World worldRef;
+    public float range = 1f;
 
     public SoundPlayer(String filepath, boolean loops) {
-        sound = new Sound(filepath, loops);
+        super(filepath, loops);
     }
 
     public void play(){
-        sound.play();
+        /*System.out.println();
+        if(Manager.getActiveScene().world != worldRef)
+            return;*/
+        playSound();
     }
 
     public void stop(){
-        sound.stop();
+        stopSound();
     }
+
 
     @Override
     public void destroy(){
-        stop();
+        stopSound();
     }
 
     @Override
     public void unload(){
-        stop();
+        stopSound();
     }
 
     public void restart(){
-        sound.stop();
-        sound.play();
+        stopSound();
+        playSound();
+    }
+
+    @Override
+    public void gameObjectAddedToScene(Scene scene) {
+        worldRef = scene.world;
+        worldRef.sounds.add(this);
     }
 }

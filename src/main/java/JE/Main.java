@@ -1,9 +1,8 @@
 package JE;
 
-import JE.Audio.Filters.HighPassFilter;
 import JE.Audio.Filters.LowPassFilter;
 import JE.Input.Keyboard;
-import JE.Objects.Audio.Sound2D;
+import JE.Objects.Audio.WorldSound;
 import JE.Objects.Base.Sprites.Sprite;
 import JE.Objects.Common.Player;
 import JE.Objects.Lights.PointLight;
@@ -13,7 +12,7 @@ import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 public class Main {
-    public static Sound2D worldSound;
+    public static WorldSound worldSound;
 
     public static void main(String[] args) {
         Manager.run();
@@ -22,7 +21,6 @@ public class Main {
         Scene scene = new Scene();
 
         Player player = new Player(new Vector2f(-1, 0));
-        //scene.addGizmo(new MoveGizmo(player));
 
         Sprite sprite2 = new Sprite(new Vector2f[]{
                 new Vector2f(0,0),
@@ -34,17 +32,6 @@ public class Main {
                 new Vector2i(64,64));
         sprite2.getTransform().position = new Vector2f(-2,2);
 
-        /*Pathfinding pathComp = new Pathfinding();
-        pathComp.path = new Vector2f[]{
-                new Vector2f(-2,-2),
-                new Vector2f(-2,2),
-                new Vector2f(2,2),
-                new Vector2f(2,-2),
-        };
-        pathComp.speed = 0.2f;
-        sprite2.addComponent(pathComp);
-        pathComp.startPathfinding();*/
-
         PointLight light = new PointLight(new Vector2f(0,0), new Vector4f(1f,1f,1f,1f),15, 5);
 
         scene.add(sprite2);
@@ -52,12 +39,10 @@ public class Main {
         scene.addLight(light);
         scene.addGizmo(light.getRangeGizmo());
 
-        /*Sound2D sound = new Sound2D("bin/sound.ogg",false);
-        sound.soundPlayer.sound.setFilter(new SoundFilter());
-        scene.add(sound);*/
-        worldSound = new Sound2D("bin/music.ogg",false);
-        worldSound.soundPlayer.sound.setFilter(new LowPassFilter(0));
+        worldSound = new WorldSound("bin/music.ogg",false);
         scene.add(worldSound);
+        worldSound.soundPlayer.play();
+
 
         scene.activeCamera = player.camera;
         Manager.setScene(scene);
@@ -67,7 +52,6 @@ public class Main {
                 System.out.println(Manager.getFPS());
             }
         });
-
 
         /*ShaderTestSceneCustomData data = new ShaderTestSceneCustomData();
         data.baseColor = new Vector4f(0,1,0,1);

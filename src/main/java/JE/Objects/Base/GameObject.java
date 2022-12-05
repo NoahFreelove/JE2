@@ -5,6 +5,7 @@ import JE.Logging.Logger;
 import JE.Objects.Components.Base.Component;
 import JE.Objects.Components.Common.Transform;
 import JE.Rendering.RenderTypes.Renderer;
+import JE.Scene.Scene;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -140,6 +141,13 @@ public class GameObject implements Serializable {
             if(!c.getActive())
                 continue;
             c.unload();
+        }
+    }
+    public void componentGameObjectAddedToScene(Scene s){
+        for(Component c : components){
+            if(!c.getActive())
+                continue;
+            c.gameObjectAddedToScene(s);
         }
     }
 

@@ -71,9 +71,6 @@ public class SpriteRenderer extends Renderer {
         spriteCoordVAO.Disable();
     }
 
-    public void setTexture(String texturePath) {
-        setTexture(ImageProcessor.ProcessImage(texturePath), new Vector2i(64,64));
-    }
 
     public void setTexture(Texture texture, boolean softSet){
         setTexture(texture, spriteCoordVAO.getVertices(), softSet);

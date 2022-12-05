@@ -3,6 +3,8 @@ package JE.IO;
 import JE.Annotations.GLThread;
 import JE.Logging.Errors.ImageProcessError;
 import JE.Logging.Logger;
+import JE.Resources.ResourceBundle;
+import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
@@ -12,9 +14,9 @@ import java.nio.IntBuffer;
 
 public class ImageProcessor {
 
-    @GLThread
-    public static ByteBuffer ProcessImage(String filepath)
-    {
+    public static ResourceBundle ProcessImage(String filepath){
+        ResourceBundle rb = new ResourceBundle();
+
         if(filepath == null)
         {
             Logger.log(new ImageProcessError(true));
@@ -35,6 +37,9 @@ public class ImageProcessor {
         if (image == null) {
             Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason()));
         }
-        return image;
+        rb.imageData = image;
+        rb.imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
+        return rb;
     }
+
 }

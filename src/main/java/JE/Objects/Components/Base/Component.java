@@ -3,6 +3,7 @@ package JE.Objects.Components.Base;
 import JE.Logging.Errors.ComponentError;
 import JE.Logging.Logger;
 import JE.Objects.Base.GameObject;
+import JE.Scene.Scene;
 
 import java.io.Serializable;
 
@@ -34,6 +35,7 @@ public class Component implements Serializable {
     public void unload(){}
     public void destroy(){}
     public void onAddedToGameObject(GameObject gameObject){}
+    public void gameObjectAddedToScene(Scene scene){}
 
 
 }

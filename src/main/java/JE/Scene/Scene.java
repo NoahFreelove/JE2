@@ -25,9 +25,11 @@ public class Scene {
     {
         if(newGameObject == null)
             return;
-        if(world.gameObjects.contains(newGameObject))
+        if(world.gameObjects.contains(newGameObject)) {
             return;
+        }
         world.gameObjects.add(newGameObject);
+        newGameObject.componentGameObjectAddedToScene(this);
     }
 
     public void add(GameObject... newGameObjects)

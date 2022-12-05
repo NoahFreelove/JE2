@@ -19,4 +19,10 @@ public class ComponentError extends JE2Error {
         NAME = "COMPONENT ERROR";
         MESSAGE = "Error with Component: " + component.getClass().getSimpleName() + " : " + message;
     }
+
+    public ComponentError(String message)
+    {
+        NAME = "COMPONENT ERROR";
+        MESSAGE = "Error with Component: " + message;
+    }
 }

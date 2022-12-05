@@ -10,7 +10,7 @@ public abstract class Pipeline {
     double startTime = 1f;
 
     @GLThread
-    public abstract void run(); // will be called every frame
+    protected abstract void run(); // will be called every frame
 
     @GLThread
     public void onStart(){
@@ -20,7 +20,7 @@ public abstract class Pipeline {
     }
 
     @GLThread
-    public void onEnd(){
+    protected void onEnd(){
         double endTime = glfwGetTime();
         deltaTime = (float)(endTime - startTime);
     }

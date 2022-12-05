@@ -56,7 +56,7 @@ public class Player extends Sprite {
         if(Keyboard.isKeyPressed(s) || Keyboard.isKeyPressed(DOWN)){
             getTransform().position.y -= moveSpeed * Window.deltaTime();
         }
-        if(Keyboard.isKeyPressed(Keyboard.nameToCode("1"))){
+        /*if(Keyboard.isKeyPressed(Keyboard.nameToCode("1"))){
             IntensityFilter lpf = (IntensityFilter)Main.worldSound.soundPlayer.sound.getFilter();
             lpf.setIntensity(lpf.getIntensity()-0.01f);
             Main.worldSound.soundPlayer.sound.setFilter(lpf);
@@ -65,7 +65,7 @@ public class Player extends Sprite {
         if(Keyboard.isKeyPressed(Keyboard.nameToCode("2"))){
             IntensityFilter lpf = (IntensityFilter)Main.worldSound.soundPlayer.sound.getFilter();
             lpf.setIntensity(lpf.getIntensity()+0.01f);
-        }
+        }*/
 
     }
 

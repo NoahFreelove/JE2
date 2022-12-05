@@ -31,11 +31,17 @@ public class Sprite extends GameObject {
         super();
         init(vertices, new LightSpriteShader(), spriteFilePath, size);
     }
+    public Sprite(Vector2f[] vertices, String spriteFilePath, ShaderProgram sp)
+    {
+        super();
+        sr = new SpriteRenderer(new VAO2f(vertices, sp), new Texture(spriteFilePath));
+    }
+
 
     public Sprite(Vector2f[] vertices, Vector2f[] uv, String spriteFilePath, Vector2i size)
     {
         super();
-        sr = new SpriteRenderer(new VAO2f(vertices, new SpriteShader()),uv, new Texture(ImageProcessor.ProcessImage(spriteFilePath), size));
+        sr = new SpriteRenderer(new VAO2f(vertices, new SpriteShader()),uv, new Texture(spriteFilePath, size));
         sr.setRestrictions(new ComponentRestrictions(false, true, false));
         addComponent(sr);
     }
@@ -63,7 +69,7 @@ public class Sprite extends GameObject {
     }
 
     private void init(Vector2f[] vertices, ShaderProgram sp, String spriteFilePath, Vector2i size){
-        sr = new SpriteRenderer(new VAO2f(vertices, sp), new Texture(ImageProcessor.ProcessImage(spriteFilePath), size));
+        sr = new SpriteRenderer(new VAO2f(vertices, sp), new Texture(spriteFilePath, size));
         sr.setRestrictions(new ComponentRestrictions(false, true, false));
         addComponent(sr);
     }

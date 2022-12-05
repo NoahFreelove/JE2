@@ -1,23 +1,22 @@
 package JE.Audio;
 
 import JE.Audio.Filters.SoundFilter;
-import JE.Window.Window;
+import JE.Objects.Components.Base.Component;
+import JE.Resources.Resource;
+import JE.Resources.ResourceType;
+import org.joml.Vector3f;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.EXTEfx;
-import org.lwjgl.stb.STBVorbis;
-
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import static org.lwjgl.openal.AL10.*;
-import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
-public class Sound {
+public sealed class Sound extends Component permits SoundPlayer  {
     private int bufferID;
     private int sourceID;
 
-    private final String filepath;
+    private Resource audioResource;
+
 
     private boolean isPlaying = false;
 
@@ -26,43 +25,13 @@ public class Sound {
     private SoundFilter filter;
 
     public Sound(String filePath, boolean loops){
-        this.filepath = filePath;
         this.loops = loops;
 
-        if(Window.audioContext() == -1)
-            Window.CreateOpenAL();
-
-        stackPush();
-        IntBuffer channelsBuffer = stackMallocInt(1);
-        stackPush();
-        IntBuffer sampleRateBuffer = stackMallocInt(1);
-
-        ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(filePath, channelsBuffer, sampleRateBuffer);
-
-        if(rawAudioBuffer == null){
-            System.out.println("Error loading sound file: " + filePath);
-            stackPop();
-            stackPop();
-            return;
-        }
-
-        int channels = channelsBuffer.get(0);
-        int sampleRate = sampleRateBuffer.get(0);
-
-        stackPop();
-        stackPop();
-
-        //Find correct format
-        int format = -1;
-        if(channels == 1){
-            format = AL10.AL_FORMAT_MONO16;
-        }else if(channels == 2){
-            format = AL10.AL_FORMAT_STEREO16;
-        }
+        this.audioResource = new Resource("sound", filePath, ResourceType.SOUND);
 
         bufferID = AL10.alGenBuffers();
 
-        alBufferData(bufferID, format, rawAudioBuffer, sampleRate);
+        alBufferData(bufferID, audioResource.bundle.format, audioResource.bundle.soundData, audioResource.bundle.sampleRate);
 
         // Generate source
         sourceID = alGenSources();
@@ -75,18 +44,18 @@ public class Sound {
         setGain(1);
         setFilter(new SoundFilter());
 
-        free(rawAudioBuffer);
+        //free(audioResource.bundle.soundData);
     }
 
-    public void delete(){
+    protected void delete(){
         alDeleteSources(sourceID);
         alDeleteBuffers(bufferID);
     }
 
-    public void play(){
+    protected void playSound(){
         playAt(0);
     }
-    public void playAt(int pos){
+    protected void playAt(int pos){
         int state = alGetSourcei(sourceID, AL_SOURCE_STATE);
 
         if(state == AL_STOPPED)
@@ -101,18 +70,18 @@ public class Sound {
             alSourcePlay(sourceID);
             isPlaying = true;
         }
+        audioResource.bundle.isPlaying = isPlaying;
+
     }
 
-    public void stop(){
+    protected void stopSound(){
         if(isPlaying){
             alSourceStop(sourceID);
             isPlaying = false;
         }
+        audioResource.bundle.isPlaying = isPlaying;
     }
 
-    public String getFilepath() {
-        return filepath;
-    }
 
     public boolean isPlaying() {
         int state = alGetSourcei(sourceID, AL_SOURCE_STATE);
@@ -145,5 +114,9 @@ public class Sound {
     }
     public int getPosition(){
         return alGetSourcei(sourceID, AL_POSITION);
+    }
+    public void setAttribute3f(int attribute, Vector3f value)
+    {
+        alSource3f(sourceID, attribute, value.x, value.y, value.z);
     }
 }
