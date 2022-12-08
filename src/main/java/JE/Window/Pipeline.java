@@ -1,6 +1,8 @@
 package JE.Window;
 
 import JE.Annotations.GLThread;
+import JE.Manager;
+import org.jbox2d.collision.WorldManifold;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -8,12 +10,13 @@ public abstract class Pipeline {
 
     public float deltaTime = 1f;
     double startTime = 1f;
+    int gcThreshold = 1000;
 
     @GLThread
     protected abstract void run(); // will be called every frame
 
     @GLThread
-    public void onStart(){
+    public final void onStart(){
         startTime = glfwGetTime();
         run();
         onEnd();
@@ -23,6 +26,11 @@ public abstract class Pipeline {
     protected void onEnd(){
         double endTime = glfwGetTime();
         deltaTime = (float)(endTime - startTime);
+
+        if(Manager.getActiveScene().world.gameObjects.size() > gcThreshold)
+        {
+            System.gc();
+        }
     }
     @GLThread
     public abstract void renderObjects(); // GameObjects

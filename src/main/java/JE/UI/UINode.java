@@ -2,7 +2,6 @@ package JE.UI;
 
 import JE.Objects.Base.GameObject;
 import JE.Rendering.RenderTypes.UI.UIRenderer;
-import JE.Rendering.Shaders.BuiltIn.UI.ScreenUI.ScreenUIShader;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import org.joml.Vector2f;
@@ -20,7 +19,7 @@ public class UINode extends GameObject {
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
-        },new ScreenUIShader());
+        }, new ShaderProgram());
         renderer.baseColor = new Vector4f(0.5f,0.5f,0.5f,1);
     }
 

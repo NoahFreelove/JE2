@@ -1,12 +1,8 @@
 package JE.Audio;
 
 import JE.Manager;
-import JE.Objects.Gizmos.Gizmo;
 import JE.Scene.Scene;
 import JE.Scene.World;
-import org.joml.Vector2f;
-
-import static org.lwjgl.opengl.GL11.GL_LINES;
 
 public final class SoundPlayer extends Sound {
     private World worldRef;
@@ -17,9 +13,8 @@ public final class SoundPlayer extends Sound {
     }
 
     public void play(){
-        /*System.out.println();
         if(Manager.getActiveScene().world != worldRef)
-            return;*/
+            return;
         playSound();
     }
 

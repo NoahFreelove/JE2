@@ -6,8 +6,8 @@ import java.io.File;
 
 public class LightObjectShader extends ShaderProgram {
     public LightObjectShader(){
-        CreateShader(new File("src/main/java/JE/Rendering/Shaders/BuiltIn/LightObject/lightObject.vert"),
-                new File("src/main/java/JE/Rendering/Shaders/BuiltIn/LightObject/lightObject.frag"));
+        CreateShader(new File("shaders/LightObject/lightObject.vert"),
+                new File("shaders/LightObject/lightObject.frag"));
         supportsLighting = true;
     }
 }

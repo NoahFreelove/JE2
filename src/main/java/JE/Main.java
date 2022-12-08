@@ -19,6 +19,7 @@ public class Main {
         Manager.setWindowSize(new Vector2i(1920, 1080));
 
         Scene scene = new Scene();
+        Manager.setScene(scene);
 
         Player player = new Player(new Vector2f(-1, 0));
 
@@ -41,11 +42,10 @@ public class Main {
 
         worldSound = new WorldSound("bin/music.ogg",false);
         scene.add(worldSound);
-        worldSound.soundPlayer.play();
 
 
         scene.activeCamera = player.camera;
-        Manager.setScene(scene);
+        //worldSound.soundPlayer.play();
 
         Manager.AddKeyPressedCallback((key, mods) -> {
             if(key == Keyboard.nameToCode("F")){

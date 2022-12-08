@@ -4,6 +4,8 @@ import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
 
+import java.util.function.Consumer;
+
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
@@ -22,14 +24,15 @@ public class DefaultPipeline extends Pipeline{
 
     @Override
     public void renderObjects() {
-        for (GameObject object: Manager.getActiveScene().world.gameObjects) {
-            if(object == null)
-                continue;
-            object.preRender();
+        GameObject[] gameObjects = Manager.getActiveScene().world.gameObjects.toArray(new GameObject[0]);
+        for (GameObject gameObject : gameObjects) {
+            if(gameObject == null)
+                return;
+            gameObject.preRender();
 
-            if(object.renderer != null)
+            if(gameObject.renderer != null)
             {
-                object.renderer.Render(object.getTransform());
+                gameObject.renderer.Render(gameObject.getTransform());
             }
         }
     }
