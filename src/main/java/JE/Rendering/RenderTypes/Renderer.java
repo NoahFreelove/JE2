@@ -10,7 +10,6 @@ import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderLayout;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.VertexBuffers.VAO;
-import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -31,14 +30,6 @@ public class Renderer extends Component {
         restrictions = new ComponentRestrictions(false, true, true);
     }
 
-    public Renderer(VAO2f vao){
-        this.vao = vao;
-        restrictions = new ComponentRestrictions(false, true, true);
-    }
-    public Renderer(VAO vao){
-        this.vao = vao;
-        restrictions = new ComponentRestrictions(false, true, true);
-    }
 
     public void SetShader(ShaderProgram shader){
         vao.setShaderProgram(shader);
@@ -125,4 +116,7 @@ public class Renderer extends Component {
     public void setDrawMode(int mode){
         drawMode = mode;
     }
+
+    public VAO getVAO(){return vao;}
+
 }

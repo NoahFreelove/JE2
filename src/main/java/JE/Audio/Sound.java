@@ -9,7 +9,6 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.EXTEfx;
 
 import static org.lwjgl.openal.AL10.*;
-import static org.lwjgl.system.libc.LibCStdlib.free;
 
 public sealed class Sound extends Component permits SoundPlayer  {
     private int bufferID;
@@ -17,17 +16,25 @@ public sealed class Sound extends Component permits SoundPlayer  {
 
     private Resource audioResource;
 
-
     private boolean isPlaying = false;
 
     private boolean loops;
 
     private SoundFilter filter;
 
-    public Sound(String filePath, boolean loops){
-        this.loops = loops;
-
+    public Sound(){
+        super();
+    }
+    public void setAudio(String filePath){
         this.audioResource = new Resource("sound", filePath, ResourceType.SOUND);
+        generateAudioBuffer();
+
+    }
+    public void setAudio(Resource resource){
+        this.audioResource = resource;
+        generateAudioBuffer();
+    }
+    private void generateAudioBuffer(){
 
         bufferID = AL10.alGenBuffers();
 
@@ -43,8 +50,6 @@ public sealed class Sound extends Component permits SoundPlayer  {
         setMaxGain(1);
         setGain(1);
         setFilter(new SoundFilter());
-
-        //free(audioResource.bundle.soundData);
     }
 
     protected void delete(){

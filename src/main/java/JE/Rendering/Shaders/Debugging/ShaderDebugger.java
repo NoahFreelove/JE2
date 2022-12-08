@@ -83,13 +83,14 @@ public class ShaderDebugger {
         scene.addLight(data.sceneLights);
 
         // Test Object
-        GameObject testObject = new GameObject(new Identity("Test Object", "GameObject"));
+        GameObject testObject = new GameObject();
         testObject.getTransform().position = new Vector2f(-0.5f, -0.5f);
         scene.add(testObject);
         scene.add(data.otherObjects);
 
         // Configure Renderer
-        Renderer r = new Renderer(new VAO2f(data.vertices, shader));
+        Renderer r = new Renderer();
+        r.getVAO().setShaderProgram(shader);
         r.baseColor = data.baseColor;
         testObject.addComponent(r);
 

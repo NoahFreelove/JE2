@@ -1,8 +1,9 @@
 package JE.Resources;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ResourceManager {
+public class ResourceManager implements Serializable {
     public static ArrayList<Resource> textures = new ArrayList<>();
     public static ArrayList<Resource> sounds = new ArrayList<>();
 

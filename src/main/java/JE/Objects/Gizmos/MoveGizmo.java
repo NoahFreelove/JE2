@@ -16,16 +16,13 @@ public class MoveGizmo extends Gizmo{
 
     Vector2f prevMousePos = new Vector2f();
 
-    public MoveGizmo(GameObject controlledObject){
-        super(new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(1,1),
-                new Vector2f(0,1)
-        },new Vector4f(0.5f,1,0,0.5f), GL_POLYGON);
-        getTransform().position = controlledObject.getTransform().position;
-        this.controlledObject = controlledObject;
+    public MoveGizmo(){
+        super();
+        setBaseColor(new Vector4f(1,0,0,0.5f));
+
         Mouse.mousePressedEvents.add((button, mods) -> {
+            if(controlledObject == null)
+                return;
             if(button == Mouse.nameToCode("LEFT")){
                 Vector2f cursorPos = Mouse.getMouseWorldPosition();
                 Vector2f bottomLeft = controlledObject.getTransform().position;
@@ -37,6 +34,8 @@ public class MoveGizmo extends Gizmo{
         });
 
         Mouse.mouseReleasedEvents.add((button, mods) -> {
+            if(controlledObject == null)
+                return;
             if(button == Mouse.nameToCode("LEFT")){
                 interacting = false;
             }
@@ -56,5 +55,10 @@ public class MoveGizmo extends Gizmo{
         }
         controlledObject.getTransform().position.add(Mouse.getMouseWorldPosition().sub(prevMousePos));
         prevMousePos = Mouse.getMouseWorldPosition();
+    }
+
+    public void setControlledObject(GameObject object){
+        this.controlledObject = object;
+        getTransform().position = controlledObject.getTransform().position;
     }
 }

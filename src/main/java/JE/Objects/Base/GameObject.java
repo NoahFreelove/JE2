@@ -6,11 +6,21 @@ import JE.Objects.Components.Base.Component;
 import JE.Objects.Components.Common.Transform;
 import JE.Rendering.RenderTypes.Renderer;
 import JE.Scene.Scene;
+import org.joml.Vector2f;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ JE2 - GameObject
+ @author Noah Freelove
+
+ GameObjects are the base for everything you see in JE2. Every object possesses a Transform (pos, rot, scale).
+ GameObjects can have components attached to them to add additional behaviour.
+ GameObjects should have a default constructor if you want them to work with save/load features.
+
+ **/
 public class GameObject implements Serializable {
     private boolean active = true;
     private Identity identity = new Identity();
@@ -21,19 +31,27 @@ public class GameObject implements Serializable {
     }};
 
     public GameObject(){}
-    public GameObject(Identity id){
-        this.identity = id;
-    }
-    public GameObject(Transform t){
-        this.setTransform(t);
-    }
-    public GameObject(Transform t, Identity id){
-        this.setTransform(t); this.identity = id;
-    }
 
     public Transform getTransform(){
         return (Transform) components.get(0);
     }
+
+    public void setPosition(Vector2f pos){
+        getTransform().position = new Vector2f(pos);
+    }
+    public void setPosition(float x,float y)
+    {
+        getTransform().position = new Vector2f(x,y);
+    }
+
+    public void setScale(Vector2f scale){
+        getTransform().scale = new Vector2f(scale);
+    }
+    public void setScale(float x,float y)
+    {
+        getTransform().scale = new Vector2f(x,y);
+    }
+
     public void setTransform(Transform transform){
         components.set(0, transform);
     }

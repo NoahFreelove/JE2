@@ -22,6 +22,7 @@ public class SpriteAnimationTimeline {
         updateDelta = new Date().getTime();
         calculateDuration();
     }
+
     public void Restart(){
         isPlaying = true;
         position = 0;

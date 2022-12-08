@@ -13,7 +13,8 @@ import static org.lwjgl.opengl.GL11.GL_LINES;
 public class WorldSound extends GameObject {
     public final SoundPlayer soundPlayer;
     public WorldSound(String filepath, boolean loops){
-        addComponent(soundPlayer = new SoundPlayer(filepath,loops));
+        addComponent(soundPlayer = new SoundPlayer());
+
     }
 
     @Override
@@ -34,7 +35,10 @@ public class WorldSound extends GameObject {
         for(int i = 0; i < 360; i++){
             vertices[i] = new Vector2f((float)Math.cos(Math.toRadians(i)) * soundPlayer.range, (float)Math.sin(Math.toRadians(i)) * soundPlayer.range);
         }
-        Gizmo rangeGizmo = new Gizmo(vertices, new Vector4f(1,1,1,1), GL_LINES);
+        Gizmo rangeGizmo = new Gizmo();
+        rangeGizmo.setVertices(vertices);
+        rangeGizmo.setBaseColor(new Vector4f(1,1,1,1));
+        rangeGizmo.setDrawMode(GL_LINES);
         rangeGizmo.getTransform().position = getTransform().position;
         return rangeGizmo;
     }

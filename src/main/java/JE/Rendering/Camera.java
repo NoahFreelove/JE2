@@ -16,9 +16,6 @@ public class Camera extends Component {
 
     public Camera(){
     }
-    public Camera(GameObject parent){
-        this.parentObject = parent;
-    }
 
     @Override
     public void update() {

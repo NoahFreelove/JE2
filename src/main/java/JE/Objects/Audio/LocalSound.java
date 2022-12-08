@@ -6,6 +6,8 @@ import JE.Objects.Base.GameObject;
 public class LocalSound extends GameObject {
     public final SoundPlayer soundPlayer;
     public LocalSound(String filepath, boolean loops){
-        addComponent(soundPlayer = new SoundPlayer(filepath,loops));
+        addComponent(soundPlayer = new SoundPlayer());
+        soundPlayer.setAudio(filepath);
+        soundPlayer.setLoops(loops);
     }
 }

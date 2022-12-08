@@ -3,7 +3,7 @@ package JE.Objects.Gizmos;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GizmoParent {
+public final class GizmoParent {
     public ArrayList<Gizmo> gizmos = new ArrayList<Gizmo>();
 
     public GizmoParent(){

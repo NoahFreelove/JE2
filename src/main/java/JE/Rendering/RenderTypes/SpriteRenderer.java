@@ -1,9 +1,10 @@
 package JE.Rendering.RenderTypes;
 
 import JE.Annotations.GLThread;
-import JE.IO.ImageProcessor;
 import JE.Manager;
 import JE.Objects.Components.Common.Transform;
+import JE.Rendering.Shaders.BuiltIn.SpriteShader;
+import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Rendering.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
@@ -12,28 +13,20 @@ import org.joml.Vector2i;
 import java.nio.ByteBuffer;
 
 public class SpriteRenderer extends Renderer {
-    private VAO2f spriteCoordVAO;
-    public Texture texture = new Texture();
+    private final VAO2f spriteCoordVAO;
+    private Texture texture = new Texture();
 
     public SpriteRenderer(){
-        spriteCoordVAO = new VAO2f(new Vector2f[]{}, vao.shaderProgram);
-    }
+        super();
+        spriteCoordVAO = new VAO2f(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        }, new ShaderProgram());
+        vao = spriteCoordVAO;
 
-    public SpriteRenderer(VAO2f vao){
-        super(vao);
-        spriteCoordVAO = new VAO2f(vao.getVertices(), vao.shaderProgram);
-    }
 
-    public SpriteRenderer(VAO2f vao, Texture texture){
-        super(vao);
-        spriteCoordVAO = new VAO2f(vao.getVertices(), vao.shaderProgram);
-        this.texture = texture;
-    }
-
-    public SpriteRenderer(VAO2f vao, Vector2f[] uv, Texture texture){
-        super(vao);
-        spriteCoordVAO = new VAO2f(uv, vao.shaderProgram);
-        this.texture = texture;
     }
 
     @Override
@@ -60,12 +53,10 @@ public class SpriteRenderer extends Renderer {
     @Override
     @GLThread
     public void Render(Transform t, int additionalBufferSize) {
-        if(texture.generatedTextureID <=-1) {
-            super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize);
-            return;
+        if(texture.generatedTextureID >=0) {
+            texture.activateTexture(vao.shaderProgram);
         }
 
-        texture.activateTexture(vao.shaderProgram);
         spriteCoordVAO.Enable(1);
         super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize);
         spriteCoordVAO.Disable();
@@ -88,4 +79,5 @@ public class SpriteRenderer extends Renderer {
         };
         Manager.queueGLFunction(r);
     }
+    public VAO2f getSpriteVAO(){return spriteCoordVAO;}
 }

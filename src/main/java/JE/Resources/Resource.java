@@ -6,9 +6,10 @@ import JE.Logging.Errors.ResourceError;
 import JE.Logging.Logger;
 import org.joml.Vector2i;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-public class Resource {
+public class Resource implements Serializable {
     public ResourceBundle bundle;
 
     public final String name;

@@ -14,12 +14,10 @@ public class SpriteAnimator extends Component {
     public SpriteAnimator(){
         spriteAnimationTimelines.add(new SpriteAnimationTimeline());
     }
-    public SpriteAnimator(SpriteAnimationFrame... frames){
-        spriteAnimationTimelines.add(new SpriteAnimationTimeline(frames));
-    }
 
-    public SpriteAnimator(SpriteAnimationTimeline... timelines){
+    public void addTimelines(SpriteAnimationTimeline... timelines){
         spriteAnimationTimelines.addAll(java.util.Arrays.asList(timelines));
+
     }
 
     @Override

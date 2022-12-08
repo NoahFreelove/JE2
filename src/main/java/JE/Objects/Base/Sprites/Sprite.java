@@ -9,8 +9,10 @@ import JE.Rendering.RenderTypes.SpriteRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Rendering.VertexBuffers.VAO2f;
+import JE.Resources.Resource;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
+import org.joml.Vector4f;
 
 public class Sprite extends GameObject {
 
@@ -18,59 +20,23 @@ public class Sprite extends GameObject {
 
     public Sprite(){
         super();
-        init(new Vector2f[]{}, new SpriteShader(), "", new Vector2i(64,64));
+        addComponent(sr = new SpriteRenderer());
+        sr.setRestrictions(new ComponentRestrictions(false,true,false));
     }
-    public Sprite(Vector2f[] vertices)
-    {
-        super();
-        init(vertices, new SpriteShader(), "", new Vector2i(64,64));
+    public void setShader(ShaderProgram sp){
+        sr.getSpriteVAO().shaderProgram = sp;
+        sr.getVAO().shaderProgram = sp;
     }
-
-    public Sprite(Vector2f[] vertices, String spriteFilePath, Vector2i size)
-    {
-        super();
-        init(vertices, new LightSpriteShader(), spriteFilePath, size);
+    public void setTexture(Texture t){
+        sr.setTexture(t,true);
     }
-    public Sprite(Vector2f[] vertices, String spriteFilePath, ShaderProgram sp)
-    {
-        super();
-        sr = new SpriteRenderer(new VAO2f(vertices, sp), new Texture(spriteFilePath));
+    public void setVertices(Vector2f[] vertices){
+        sr.getSpriteVAO().setVertices(vertices);
     }
-
-
-    public Sprite(Vector2f[] vertices, Vector2f[] uv, String spriteFilePath, Vector2i size)
-    {
-        super();
-        sr = new SpriteRenderer(new VAO2f(vertices, new SpriteShader()),uv, new Texture(spriteFilePath, size));
-        sr.setRestrictions(new ComponentRestrictions(false, true, false));
-        addComponent(sr);
+    public void setBaseColor(Vector4f color){
+        sr.baseColor = color;
     }
-
-    public Sprite(Vector2f[] vertices, Vector2f[] uv, ShaderProgram shaderProgram)
-    {
-        super();
-        sr = new SpriteRenderer(new VAO2f(vertices, shaderProgram),uv, new Texture());
-        sr.setRestrictions(new ComponentRestrictions(false, true, false));
-        addComponent(sr);
-    }
-
-    public Sprite(Vector2f[] vertices, ShaderProgram shaderProgram)
-    {
-        super();
-        sr = new SpriteRenderer(new VAO2f(vertices, shaderProgram), new Texture());
-        sr.setRestrictions(new ComponentRestrictions(false, true, false));
-        addComponent(sr);
-    }
-
-    public Sprite(Vector2f[] vertices, ShaderProgram sp, String spriteFP, Vector2i spriteSize)
-    {
-        super();
-        init(vertices, sp, spriteFP, spriteSize);
-    }
-
-    private void init(Vector2f[] vertices, ShaderProgram sp, String spriteFilePath, Vector2i size){
-        sr = new SpriteRenderer(new VAO2f(vertices, sp), new Texture(spriteFilePath, size));
-        sr.setRestrictions(new ComponentRestrictions(false, true, false));
-        addComponent(sr);
+    public void setDrawMode(int mode){
+        sr.setDrawMode(mode);
     }
 }

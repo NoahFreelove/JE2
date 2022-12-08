@@ -28,12 +28,6 @@ public class Pathfinding extends Component {
     public Pathfinding(){
         path = new Vector2f[0];
     }
-    public Pathfinding(Vector2f[] pathPoints){
-        this.path = pathPoints;
-    }
-    public Pathfinding(Vector2f start, Vector2f end){
-        path = new Vector2f[]{start, end};
-    }
 
     public void generatePath(Vector2f start, Vector2f end){
         path = new Vector2f[]{start, end};
@@ -209,7 +203,10 @@ public class Pathfinding extends Component {
         }
         outline2[outline2.length - 1] = outline[0];
 
-        Gizmo outlineGizmo = new Gizmo(outline2, new Vector4f(0.6f,0.7f,0.9f,0.2f), GL_POLYGON);
+        Gizmo outlineGizmo = new Gizmo();
+        outlineGizmo.setVertices(outline2);
+        outlineGizmo.setBaseColor(new Vector4f(0.6f,0.7f,0.9f,0.2f));
+        outlineGizmo.setDrawMode(GL_POLYGON);
         gp.gizmos.add(outlineGizmo);
         return gp;
     }

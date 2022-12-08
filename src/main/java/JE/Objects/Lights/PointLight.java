@@ -21,12 +21,8 @@ public class PointLight extends GameObject {
     public Vector3f diffuse = new Vector3f(0.8f, 0.8f, 0.8f);
     public Vector3f specular = new Vector3f(1.0f, 1.0f, 1.0f);
 
-    public PointLight(Vector2f position, Vector4f color, float intensity, float radius){
+    public PointLight(){
         super();
-        getTransform().position = new Vector2f(position.x(), position.y());
-        this.intensity = intensity;
-        this.color = color;
-        this.radius = radius;
     }
 
     public GizmoParent getRangeGizmo(){
@@ -35,12 +31,15 @@ public class PointLight extends GameObject {
         for(int i = 0; i < 360; i++){
             vertices[i] = new Vector2f((float)Math.cos(Math.toRadians(i)) * radius, (float)Math.sin(Math.toRadians(i)) * radius);
         }
-        Gizmo rangeGizmo = new Gizmo(vertices, color, GL_LINES);
-        rangeGizmo.getTransform().position = getTransform().position;
+        Gizmo rangeGizmo = new Gizmo();
+        rangeGizmo.setVertices(vertices);
+        rangeGizmo.setBaseColor(color);
+        rangeGizmo.setDrawMode(GL_LINES);
+        rangeGizmo.getTransform().position = new Vector2f(getTransform().position.x+0.5f,getTransform().position.y+0.5f);
 
         Gizmo pointGizmo = new Gizmo();
         pointGizmo.getTransform().scale = new Vector2f(0.5f,0.5f);
-        pointGizmo.getTransform().position = getTransform().position;
+        pointGizmo.getTransform().position = new Vector2f(getTransform().position.x+0.25f,getTransform().position.y+0.25f);
         pointGizmo.renderer.baseColor = color;
 
         return new GizmoParent(pointGizmo, rangeGizmo);

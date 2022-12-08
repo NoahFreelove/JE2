@@ -8,8 +8,8 @@ public final class SoundPlayer extends Sound {
     private World worldRef;
     public float range = 1f;
 
-    public SoundPlayer(String filepath, boolean loops) {
-        super(filepath, loops);
+    public SoundPlayer() {
+        super();
     }
 
     public void play(){
@@ -21,7 +21,6 @@ public final class SoundPlayer extends Sound {
     public void stop(){
         stopSound();
     }
-
 
     @Override
     public void destroy(){

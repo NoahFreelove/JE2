@@ -14,5 +14,5 @@ public class World {
     public ArrayList<Gizmo> gizmos = new ArrayList<>();
     public ArrayList<SoundPlayer> sounds = new ArrayList<>();
 
-    public org.jbox2d.dynamics.World PhysicsWorld = new org.jbox2d.dynamics.World(new Vec2(0,-9.8f));
+    public org.jbox2d.dynamics.World physicsWorld = new org.jbox2d.dynamics.World(new Vec2(0,-9.8f));
 }
