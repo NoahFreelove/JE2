@@ -9,11 +9,14 @@ import JE.Window.Window;
 import JE.Window.WindowCloseReason;
 import JE.Window.WindowPreferences;
 import org.joml.Vector2i;
+import org.joml.Vector4i;
 
 public class Manager {
 
     private static WindowPreferences preferences = new WindowPreferences();
     private static Scene activeScene = new Scene();
+
+    private static Vector4i defaultViewport = new Vector4i(0,0,1280,720);
 
     public static Camera getCamera(){
         return activeScene.activeCamera;
@@ -79,6 +82,7 @@ public class Manager {
 
     public static void setWindowSize(Vector2i size){
         preferences.windowSize = size;
+        defaultViewport = new Vector4i(defaultViewport.x(), defaultViewport.y(), size.x, size.y);
         Window.onPreferenceUpdated(preferences);
     }
     public static float deltaTime(){
@@ -86,5 +90,9 @@ public class Manager {
     }
     public static int getFPS(){
         return (int)(1/Window.deltaTime());
+    }
+
+    public static Vector4i defaultViewport(){
+        return defaultViewport;
     }
 }

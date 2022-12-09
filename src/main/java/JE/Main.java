@@ -19,11 +19,10 @@ import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 public class Main {
-    static SceneState st;
 
     public static void main(String[] args) {
         Manager.run();
-        Manager.setWindowSize(new Vector2i(1920, 1080));
+        //Manager.setWindowSize(new Vector2i(1920, 1080));
 
         Scene scene = new Scene();
         Manager.setScene(scene);
@@ -32,9 +31,6 @@ public class Main {
         player.setPosition(-1,0);
         scene.add(player);
         scene.activeCamera = player.camera;
-
-
-
 
         PointLight light = new PointLight();
         light.getTransform().position = new Vector2f(0,0);

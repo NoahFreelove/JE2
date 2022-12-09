@@ -4,15 +4,16 @@ import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Base.Component;
 import JE.Objects.Components.Common.Transform;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.joml.*;
+
+import java.lang.Math;
 
 public class Camera extends Component {
     public GameObject parentObject = new GameObject();
     public float zPos = 100;
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1;
+    public Vector4i viewportSize = Manager.defaultViewport();
 
     public Camera(){
     }

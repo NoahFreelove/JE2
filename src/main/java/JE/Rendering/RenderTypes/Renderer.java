@@ -57,6 +57,8 @@ public class Renderer extends Component {
 
     @GLThread
     public void Render(Transform t, int additionalBufferSize, Camera camera) {
+        glViewport(camera.viewportSize.x, camera.viewportSize.y, camera.viewportSize.z, camera.viewportSize.w);
+
         PreRender();
 
         vao.shaderProgram.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
