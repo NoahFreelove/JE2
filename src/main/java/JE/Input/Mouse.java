@@ -1,6 +1,7 @@
 package JE.Input;
 
 import JE.Manager;
+import JE.Rendering.Camera;
 import JE.Window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -49,11 +50,13 @@ public class Mouse {
         GLFW.glfwGetCursorPos(Window.getWindowHandle(),x,y);
         return new Vector2f((float) x.get(), (float) y.get());
     }
-
-    public static Vector2f getMouseWorldPosition(){
+    public static Vector2f getMouseWorldPosition() {
+        return getMouseWorldPosition(Manager.getCamera());
+    }
+    public static Vector2f getMouseWorldPosition(Camera c){
         Vector2f cursorPos = getMousePosition();
-        Matrix4f viewMatrix = Manager.getCamera().getViewMatrix();
-        Matrix4f projectionMatrix = Manager.getCamera().getOrtho();
+        Matrix4f viewMatrix = c.getViewMatrix();
+        Matrix4f projectionMatrix = c.getOrtho();
         Matrix4f inverted = new Matrix4f();
         projectionMatrix.mul(viewMatrix, inverted);
         inverted.invert();

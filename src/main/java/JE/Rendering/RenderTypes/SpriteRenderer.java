@@ -3,6 +3,7 @@ package JE.Rendering.RenderTypes;
 import JE.Annotations.GLThread;
 import JE.Manager;
 import JE.Objects.Components.Common.Transform;
+import JE.Rendering.Camera;
 import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
@@ -12,9 +13,18 @@ import org.joml.Vector2i;
 
 import java.nio.ByteBuffer;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+
 public class SpriteRenderer extends Renderer {
     private final VAO2f spriteCoordVAO;
     private Texture texture = new Texture();
+    private Texture normal = new Texture();
 
     public SpriteRenderer(){
         super();
@@ -53,22 +63,33 @@ public class SpriteRenderer extends Renderer {
     @Override
     @GLThread
     public void Render(Transform t, int additionalBufferSize) {
-        if(texture.generatedTextureID >=0) {
-            texture.activateTexture(vao.shaderProgram);
-        }
+        Render(t,additionalBufferSize,Manager.getCamera());
+    }
+
+    @Override
+    @GLThread
+    public void Render(Transform t, int additionalBufferSize, Camera camera){
+        texture.activateTexture(GL_TEXTURE0);
+        normal.activateTexture(GL_TEXTURE1);
+        glUniform1i(glGetUniformLocation(vao.shaderProgram.programID, "JE_Texture"), 0);
+        glUniform1i(glGetUniformLocation(vao.shaderProgram.programID, "JE_Normal"), 1);
 
         spriteCoordVAO.Enable(1);
-        super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize);
+        super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize, camera);
         spriteCoordVAO.Disable();
     }
 
 
-    public void setTexture(Texture texture, boolean softSet){
-        setTexture(texture, spriteCoordVAO.getVertices(), softSet);
+    public void setTexture(Texture texture){
+        setTexture(texture, spriteCoordVAO.getVertices(), true);
     }
 
     public void setTexture(ByteBuffer texture, Vector2i size){
         setTexture(new Texture(texture, size), spriteCoordVAO.getVertices(), false);
+    }
+
+    public void setNormalTexture(Texture texture) {
+        this.normal = texture;
     }
 
     public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {

@@ -43,7 +43,7 @@ public class Component implements Serializable {
     public void update(){}
     public void start(){}
     public void awake(){}
-    public void unload(){}
+    public void unload(Scene oldScene, Scene newScene){}
     public void destroy(){}
     public void onAddedToGameObject(GameObject gameObject){}
     public void gameObjectAddedToScene(Scene scene){}

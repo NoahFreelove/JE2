@@ -49,7 +49,7 @@ public class Manager {
     }
 
     public static void setScene(Scene s){
-        activeScene.unload();
+        activeScene.unload(activeScene, s);
         activeScene = s;
         s.start();
     }
@@ -58,7 +58,7 @@ public class Manager {
         Window.QueueGLFunction(r);
     }
 
-    public static Scene getActiveScene(){return activeScene;}
+    public static Scene activeScene(){return activeScene;}
 
     public static Vector2i getWindowSize(){
         return new Vector2i(preferences.windowSize.x(), preferences.windowSize.y());

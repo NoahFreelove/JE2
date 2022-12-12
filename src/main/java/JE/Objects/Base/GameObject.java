@@ -154,11 +154,11 @@ public class GameObject implements Serializable {
             c.destroy();
         }
     }
-    public void componentUnload(){
+    public void componentUnload(Scene oldScene, Scene newScene){
         for(Component c : components){
             if(!c.getActive())
                 continue;
-            c.unload();
+            c.unload(oldScene, newScene);
         }
     }
     public void componentGameObjectAddedToScene(Scene s){

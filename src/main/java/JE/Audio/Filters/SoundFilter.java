@@ -1,13 +1,12 @@
 package JE.Audio.Filters;
 
-import JE.Audio.Sound;
-import org.joml.Vector3f;
+import JE.Audio.AudioSource;
 import org.lwjgl.openal.EXTEfx;
 
 public class SoundFilter {
 
     public final int filterHandle;
-    public Sound attachedSound;
+    public AudioSource attachedAudioSource;
 
     public SoundFilter(){
         filterHandle = EXTEfx.alGenFilters();

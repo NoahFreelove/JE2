@@ -40,12 +40,12 @@ public class Renderer extends Component {
     @GLThread
     public void Render(Transform t)
     {
-        Render(t,0, Manager.getActiveScene().activeCamera);
+        Render(t,0, Manager.getCamera());
     }
 
     @GLThread
     public void Render(Transform t, int additionalBufferSize) {
-        Render(t,additionalBufferSize, Manager.getActiveScene().activeCamera);
+        Render(t,additionalBufferSize, Manager.getCamera());
     }
 
     public void enableLayouts(){
@@ -62,12 +62,15 @@ public class Renderer extends Component {
         PreRender();
 
         vao.shaderProgram.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
+        vao.shaderProgram.setUniformMatrix4f("model", camera.getModel(t).get(BufferUtils.createFloatBuffer(16)));
+        vao.shaderProgram.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
+        vao.shaderProgram.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
         vao.shaderProgram.setUniform3f("world_position", new Vector3f(t.position, t.zPos));
         vao.shaderProgram.setUniform2f("world_scale", new Vector2f(t.scale));
         vao.shaderProgram.setUniform3f("world_rotation", new Vector3f(t.rotation));
 
-        vao.shaderProgram.setUniform1i("lightCount", Manager.getActiveScene().world.lights.size());
-        vao.shaderProgram.setUniform4f("baseColor", baseColor);
+        vao.shaderProgram.setUniform1i("light_count", Manager.activeScene().world.lights.size());
+        vao.shaderProgram.setUniform4f("base_color", baseColor);
 
 
         if(vao.shaderProgram.supportsLighting)
@@ -81,8 +84,8 @@ public class Renderer extends Component {
     }
 
     private void setLighting() {
-        for (int i = 0; i <Manager.getActiveScene().world.lights.size(); i++) {
-            PointLight light = Manager.getActiveScene().world.lights.get(i);
+        for (int i = 0; i <Manager.activeScene().world.lights.size(); i++) {
+            PointLight light = Manager.activeScene().world.lights.get(i);
             Transform lightTransform = light.getTransform();
             vao.shaderProgram.setUniform3f("lights[" + i + "].position", new Vector3f(lightTransform.position, lightTransform.zPos));
             vao.shaderProgram.setUniform4f("lights[" + i + "].color", light.color);

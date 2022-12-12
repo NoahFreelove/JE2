@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
@@ -55,12 +56,10 @@ public class Texture implements Serializable {
         Manager.queueGLFunction(r);
     }
 
-    @GLThread
-    public void activateTexture(ShaderProgram shaderProgram){
-        int textureUniform = glGetUniformLocation(shaderProgram.programID, "JE_Texture");
-        glActiveTexture(GL13.GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, generatedTextureID);
-        glUniform1i(textureUniform, 0);
-    }
 
+    @GLThread
+    public void activateTexture(int textureSlot){
+        glActiveTexture(textureSlot);
+        glBindTexture(GL_TEXTURE_2D, generatedTextureID);
+    }
 }

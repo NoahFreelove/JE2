@@ -18,6 +18,6 @@ public class SpriteAnimationFrame {
         SpriteRenderer sr = (SpriteRenderer)sprite.renderer;
         if(sr == null)
             return;
-        sr.setTexture(texture, true);
+        sr.setTexture(texture);
     }
 }

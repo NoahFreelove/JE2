@@ -1,6 +1,6 @@
 package JE.Objects.Audio;
 
-import JE.Audio.SoundPlayer;
+import JE.Audio.AudioSourcePlayer;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
@@ -11,15 +11,15 @@ import org.joml.Vector4f;
 import static org.lwjgl.opengl.GL11.GL_LINES;
 
 public class WorldSound extends GameObject {
-    public final SoundPlayer soundPlayer;
+    public final AudioSourcePlayer soundPlayer;
     public WorldSound(String filepath, boolean loops){
-        addComponent(soundPlayer = new SoundPlayer());
+        addComponent(soundPlayer = new AudioSourcePlayer());
 
     }
 
     @Override
     public void update(){
-        Vector2f cameraPos = Manager.getActiveScene().activeCamera.parentObject.getTransform().position;
+        Vector2f cameraPos = Manager.getCamera().parentObject.getTransform().position;
         Vector2f worldPos = getTransform().position;
         Vector3f distance = new Vector3f(worldPos.x - cameraPos.x, worldPos.y - cameraPos.y,0);
         // Calculate rolloff

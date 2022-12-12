@@ -5,14 +5,19 @@ import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Gizmos.GizmoParent;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Camera;
+import JE.Utility.Watcher;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Scene {
+
     public Camera activeCamera = new Camera();
 
     public final World world = new World();
+
+    public CopyOnWriteArrayList<Watcher> watchers = new CopyOnWriteArrayList<>();
 
     public void clear(){
         world.gameObjects.clear();
@@ -120,8 +125,8 @@ public class Scene {
         world.gameObjects.forEach(GameObject::componentStart);
     }
 
-    public void unload() {
+    public void unload(Scene oldScene, Scene newScene) {
         world.gameObjects.forEach(GameObject::unload);
-        world.gameObjects.forEach(GameObject::componentUnload);
+        world.gameObjects.forEach(gameObject -> gameObject.componentUnload(oldScene,newScene));
     }
 }

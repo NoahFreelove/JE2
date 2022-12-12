@@ -3,8 +3,7 @@ package JE.Window;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
-
-import java.util.function.Consumer;
+import JE.Utility.Watcher;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -18,13 +17,14 @@ public class DefaultPipeline extends Pipeline{
         updateScene();
         renderObjects();
         renderGUI();
+        checkWatchers();
         pollEvents();
         glfwSwapBuffers(Window.getWindowHandle());
     }
 
     @Override
     public void renderObjects() {
-        GameObject[] gameObjects = Manager.getActiveScene().world.gameObjects.toArray(new GameObject[0]);
+        GameObject[] gameObjects = Manager.activeScene().world.gameObjects.toArray(new GameObject[0]);
         for (GameObject gameObject : gameObjects) {
             if(gameObject == null)
                 return;
@@ -32,18 +32,17 @@ public class DefaultPipeline extends Pipeline{
 
             if(gameObject.renderer != null)
             {
-                gameObject.renderer.Render(gameObject.getTransform());
+                gameObject.renderer.Render(gameObject.getTransform(),0, Manager.getCamera());
             }
         }
     }
 
     @Override
     public void renderGUI() {
-        for (Gizmo gizmo: Manager.getActiveScene().world.gizmos) {
-            if(gizmo == null)
+        for (Gizmo gizmo : Manager.activeScene().world.gizmos) {
+            if (gizmo == null)
                 continue;
-            if(gizmo.renderer != null)
-            {
+            if (gizmo.renderer != null) {
                 gizmo.onDraw();
                 gizmo.renderer.Render(gizmo.getTransform());
             }
@@ -63,11 +62,11 @@ public class DefaultPipeline extends Pipeline{
 
     @Override
     public void updateScene() {
-        Manager.getActiveScene().update();
+        Manager.activeScene().update();
     }
 
     @Override
-    public void calculateAudio() {
-
+    public void checkWatchers() {
+        Manager.activeScene().watchers.forEach(Watcher::invoke);
     }
 }

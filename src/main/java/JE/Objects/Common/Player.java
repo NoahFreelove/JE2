@@ -1,17 +1,15 @@
 package JE.Objects.Common;
 
-import JE.Audio.Filters.IntensityFilter;
-import JE.Audio.Filters.LowPassFilter;
 import JE.Input.Keyboard;
-import JE.Main;
-import JE.Objects.Base.Sprites.Sprite;
 import JE.Objects.Base.Identity;
+import JE.Objects.Base.Sprites.Sprite;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Texture;
 import JE.Window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
+import org.joml.Vector4i;
 
 public class Player extends Sprite {
     final int a = 65;
@@ -27,9 +25,11 @@ public class Player extends Sprite {
     public Player(){
         super();
         setTexture(new Texture("bin/texture1.png", new Vector2i(64,64)));
+        setNormalTexture(new Texture("bin/texture1_N.png", new Vector2i(64,64)));
         setShader(new LightSpriteShader());
         getTransform().zPos = 2;
         addComponent(camera = new Camera());
+        //camera.viewportSize = new Vector4i(0,0,640,720);
         camera.parentObject = this;
         setIdentity(new Identity("Player","Player"));
         getTransform().scale = new Vector2f(1,1);

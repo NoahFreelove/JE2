@@ -21,9 +21,9 @@ public abstract class IntensityFilter extends SoundFilter {
     public void setIntensity(float intensity){
         this.intensity = simpleClamp(intensity);
         intensityUpdate(intensity);
-        if(attachedSound !=null)
+        if(attachedAudioSource !=null)
         {
-            attachedSound.updateFilter();
+            attachedAudioSource.updateFilter();
         }
 
     }

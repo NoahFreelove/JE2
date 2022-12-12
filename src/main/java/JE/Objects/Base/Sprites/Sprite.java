@@ -28,8 +28,9 @@ public class Sprite extends GameObject {
         sr.getVAO().shaderProgram = sp;
     }
     public void setTexture(Texture t){
-        sr.setTexture(t,true);
+        sr.setTexture(t);
     }
+    public void setNormalTexture(Texture t){sr.setNormalTexture(t);}
     public void setVertices(Vector2f[] vertices){
         sr.getSpriteVAO().setVertices(vertices);
     }

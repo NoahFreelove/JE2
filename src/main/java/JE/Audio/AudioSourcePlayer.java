@@ -1,20 +1,22 @@
 package JE.Audio;
 
-import JE.Manager;
 import JE.Scene.Scene;
 import JE.Scene.World;
 
-public final class SoundPlayer extends Sound {
+public final class AudioSourcePlayer extends AudioSource {
     private World worldRef;
     public float range = 1f;
 
-    public SoundPlayer() {
+    public AudioSourcePlayer() {
         super();
+    }
+    public AudioSourcePlayer(String filepath) {
+        super();
+        setAudio(filepath);
     }
 
     public void play(){
-        if(Manager.getActiveScene().world != worldRef)
-            return;
+
         playSound();
     }
 
@@ -28,7 +30,7 @@ public final class SoundPlayer extends Sound {
     }
 
     @Override
-    public void unload(){
+    public void unload(Scene oldScene, Scene newScene){
         stopSound();
     }
 
@@ -39,7 +41,7 @@ public final class SoundPlayer extends Sound {
 
     @Override
     public void gameObjectAddedToScene(Scene scene) {
-        worldRef = scene.world;
-        worldRef.sounds.add(this);
+        /*worldRef = scene.world;
+        worldRef.sounds.add(this);*/
     }
 }

@@ -2,7 +2,6 @@ package JE.Window;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
-import org.jbox2d.collision.WorldManifold;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -27,7 +26,7 @@ public abstract class Pipeline {
         double endTime = glfwGetTime();
         deltaTime = (float)(endTime - startTime);
 
-        if(Manager.getActiveScene().world.gameObjects.size() > gcThreshold)
+        if(Manager.activeScene().world.gameObjects.size() > gcThreshold)
         {
             System.gc();
         }
@@ -43,6 +42,6 @@ public abstract class Pipeline {
     @GLThread
     public abstract void updateScene(); // run GameObject update methods
     @GLThread
-    public abstract void calculateAudio(); // play scene audio
+    public abstract void checkWatchers(); // run scene's watchers to watch for event changes
 
 }

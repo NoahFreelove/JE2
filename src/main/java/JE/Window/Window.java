@@ -19,9 +19,11 @@ import org.lwjgl.system.*;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.AL10.alGenBuffers;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
@@ -32,9 +34,9 @@ public class Window {
     private static long audioDevice =-1;
     private static long audioContext =-1;
     public static boolean hasInit = false;
-    public static final ArrayList<Runnable> actionQueue = new ArrayList<>();
+    public static final CopyOnWriteArrayList<Runnable> actionQueue = new CopyOnWriteArrayList<>();
     public static Pipeline pipeline = new DefaultPipeline();
-
+    public static int audioBuffer = 0;
 
     public static void createWindow(WindowPreferences wp) {
         Thread t = new Thread(() -> {
@@ -160,6 +162,8 @@ public class Window {
 
             assert alCapabilities.OpenAL10 : "OpenAL 1.0 is not supported";
         }
+
+        audioBuffer = alGenBuffers();
     }
 
     private static void WindowLoop() {

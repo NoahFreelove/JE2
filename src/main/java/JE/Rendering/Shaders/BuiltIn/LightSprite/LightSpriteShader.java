@@ -6,7 +6,7 @@ import java.io.File;
 
 public class LightSpriteShader extends ShaderProgram {
     public LightSpriteShader(){
-        CreateShader(new File("shaders/LightSprite//lightSprite.vert"),
+        CreateShader(new File("shaders/LightSprite/lightSprite.vert"),
                 new File("shaders/LightSprite/lightSprite.frag"));
         supportsLighting = true;
     }
