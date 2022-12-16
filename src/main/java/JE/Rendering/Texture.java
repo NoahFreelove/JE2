@@ -7,6 +7,7 @@ import JE.Resources.Resource;
 import JE.Resources.ResourceType;
 import org.joml.Vector2i;
 import org.lwjgl.opengl.GL13;
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -25,15 +26,21 @@ public class Texture implements Serializable {
     public Texture(){
         GenerateTexture();
     }
-
-    public Texture(String filepath){
-        resource = new Resource("texture",filepath, ResourceType.TEXTURE);
+    public Texture(Resource resource){
+        this.resource = resource;
         GenerateTexture();
     }
 
-    public Texture(String filepath, Vector2i size){
+    public Texture(String filepath){
+        resource = new Resource("texture",filepath, ResourceType.TEXTURE);
+        resource.bundle.filepath = filepath;
+        GenerateTexture();
+    }
+
+    public  Texture(String filepath, Vector2i size){
         resource = new Resource("texture",filepath, ResourceType.TEXTURE);
         resource.bundle.imageSize = size;
+        resource.bundle.filepath = filepath;
         GenerateTexture();
     }
 

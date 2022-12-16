@@ -1,15 +1,17 @@
 package JE.Objects.Common;
 
+import JE.IO.ImageProcessor;
 import JE.Input.Keyboard;
 import JE.Objects.Base.Identity;
 import JE.Objects.Base.Sprites.Sprite;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Texture;
+import JE.Resources.Resource;
+import JE.Resources.ResourceType;
 import JE.Window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
-import org.joml.Vector4i;
 
 public class Player extends Sprite {
     final int a = 65;
@@ -24,7 +26,8 @@ public class Player extends Sprite {
     public Camera camera;
     public Player(){
         super();
-        setTexture(new Texture("bin/texture1.png", new Vector2i(64,64)));
+        Texture t = new Texture("bin/texture1.png", new Vector2i(64,64));
+        setTexture(t);
         setNormalTexture(new Texture("bin/texture1_N.png", new Vector2i(64,64)));
         setShader(new LightSpriteShader());
         getTransform().zPos = 2;

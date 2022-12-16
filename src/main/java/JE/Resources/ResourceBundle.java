@@ -8,13 +8,16 @@ import java.nio.ShortBuffer;
 
 public class ResourceBundle implements Serializable {
 
+    // General
+    public String filepath;
+
+
     // Texture
     public Vector2i imageSize;
     public ByteBuffer imageData;
 
     // Sound
     public ShortBuffer soundData;
-    public String filepath;
     public int format;
     public int sampleRate;
     public int channels;

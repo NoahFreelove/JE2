@@ -33,6 +33,17 @@ public class Resource implements Serializable {
         }
         hasBeenLoaded = true;
     }
+
+    public Resource(String name, ResourceBundle rb, ResourceType type){
+        this.name = name;
+        this.type = type;
+        bundle = rb;
+        switch (type) {
+            case TEXTURE -> ResourceManager.textures.add(this);
+            case SOUND -> ResourceManager.sounds.add(this);
+        }
+    }
+
     public Resource(String name, ByteBuffer buffer, Vector2i size, ResourceType type)
     {
         this.name = name;
@@ -57,6 +68,7 @@ public class Resource implements Serializable {
                     bundle.imageData.clear();
                     bundle.imageData = null;
                     bundle.imageSize = null;
+                    bundle.filepath = null;
                     ResourceManager.textures.remove(this);
                 }
                 case SOUND -> {

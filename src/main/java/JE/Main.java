@@ -43,11 +43,6 @@ public class Main {
         scene.addLight(light);
         //scene.addGizmo(light.getRangeGizmo());
 
-        Soundtrack st = new Soundtrack(new AudioSourcePlayer("bin/sound.ogg"),
-                new AudioSourcePlayer("bin/music.ogg"));
-        st.addToWorld();
-        st.playTrack(0);
-
         Sprite sprite2 = new Sprite();
         sprite2.setPosition(-2,2);
         sprite2.renderer.baseColor = new Vector4f(1,1,0,1);

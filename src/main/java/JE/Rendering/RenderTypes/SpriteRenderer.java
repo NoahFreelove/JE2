@@ -93,12 +93,16 @@ public class SpriteRenderer extends Renderer {
     }
 
     public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
+        this.texture = texture;
         Runnable r = () ->{
-            this.texture = texture;
             if(softSet) return;
             spriteCoordVAO.setVertices(textCoords);
         };
         Manager.queueGLFunction(r);
     }
     public VAO2f getSpriteVAO(){return spriteCoordVAO;}
+
+    public Texture getTexture(){ return texture; }
+    public Texture getNormalTexture(){ return normal; }
+
 }
