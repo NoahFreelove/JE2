@@ -56,7 +56,6 @@ public class Camera extends Component {
     public Matrix4f getViewMatrix(){
         Vector2f position =  parentObject.getTransform().position;
         Vector2f finalPos = new Vector2f(position.x + positionOffset.x, position.y + positionOffset.y);
-
         return new Matrix4f().identity().translate(-finalPos.x(), -finalPos.y(), -zPos);
     }
 

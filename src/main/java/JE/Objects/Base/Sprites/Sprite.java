@@ -22,6 +22,7 @@ public class Sprite extends GameObject {
         super();
         addComponent(sr = new SpriteRenderer());
         sr.setRestrictions(new ComponentRestrictions(false,true,false));
+        setShader(new SpriteShader());
     }
     public void setShader(ShaderProgram sp){
         sr.getSpriteVAO().shaderProgram = sp;
