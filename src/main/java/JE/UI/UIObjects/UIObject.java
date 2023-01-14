@@ -1,6 +1,6 @@
 package JE.UI.UIObjects;
 
-public abstract class Object_UI {
+public abstract class UIObject {
     protected boolean isCreated = false;
     protected boolean isVisible =true ;
     protected boolean isActive = true;

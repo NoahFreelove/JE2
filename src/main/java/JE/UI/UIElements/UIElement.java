@@ -1,6 +1,6 @@
 package JE.UI.UIElements;
 
-public abstract class Element_UI {
+public abstract class UIElement {
     protected abstract void render();
     public boolean isVisible = true;
     public final void requestRender(){

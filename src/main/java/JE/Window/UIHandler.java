@@ -3,7 +3,7 @@ package JE.Window;
 import JE.IO.UserInput.Keyboard;
 import JE.IO.UserInput.Mouse;
 import JE.Manager;
-import JE.UI.UIObjects.Object_UI;
+import JE.UI.UIObjects.UIObject;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBTTAlignedQuad;
@@ -448,7 +448,7 @@ public class UIHandler {
             glViewport(0, 0, Window.monitorWidth, Window.monitorHeight);
         }
 
-        Manager.activeScene().world.UI.forEach(Object_UI::requestRender);
+        Manager.activeScene().world.UI.forEach(UIObject::requestRender);
 
         {
             // convert from command queue into draw list and draw to screen

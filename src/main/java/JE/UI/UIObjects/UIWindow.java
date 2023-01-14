@@ -1,7 +1,7 @@
 package JE.UI.UIObjects;
 
 import JE.Manager;
-import JE.UI.UIElements.Element_UI;
+import JE.UI.UIElements.UIElement;
 import JE.Window.UIHandler;
 import org.joml.Vector2i;
 import org.lwjgl.nuklear.NkContext;
@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.nuklear.Nuklear.nk_end;
 
-public class Window_UI extends Object_UI {
+public class UIWindow extends UIObject {
     private final NkContext context = UIHandler.ctx;
     public String name = "Window";
     public int windowOptions = NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE;
@@ -25,32 +25,32 @@ public class Window_UI extends Object_UI {
 
     private boolean closedFromWindow = false;
 
-    public CopyOnWriteArrayList<Element_UI> children = new CopyOnWriteArrayList<>();
+    public CopyOnWriteArrayList<UIElement> children = new CopyOnWriteArrayList<>();
 
-    public Window_UI() {
+    public UIWindow() {
         super();
         rect = NkRect.create();
     }
 
-    public Window_UI(String name) {
+    public UIWindow(String name) {
         this.name = name;
         rect = NkRect.create();
     }
 
-    public Window_UI(String name, int windowOptions) {
+    public UIWindow(String name, int windowOptions) {
         this.name = name;
         this.windowOptions = windowOptions;
         rect = NkRect.create();
     }
 
-    public Window_UI(String name, int windowOptions, Vector2i pos) {
+    public UIWindow(String name, int windowOptions, Vector2i pos) {
         this.name = name;
         this.windowOptions = windowOptions;
         this.homePosition = pos;
         rect = NkRect.create();
     }
 
-    public Window_UI(String name, int windowOptions, Vector2i pos, ArrayList<Element_UI> children) {
+    public UIWindow(String name, int windowOptions, Vector2i pos, ArrayList<UIElement> children) {
         this.name = name;
         this.windowOptions = windowOptions;
         this.homePosition = pos;
@@ -88,7 +88,7 @@ public class Window_UI extends Object_UI {
             isCreated = true;
             closedFromWindow = false;
             nk_layout_row_dynamic(context, 30, 1);
-            children.forEach(Element_UI::requestRender);
+            children.forEach(UIElement::requestRender);
 
         }
         nk_end(context);

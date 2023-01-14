@@ -4,7 +4,7 @@ import JE.Window.UIHandler;
 
 import static org.lwjgl.nuklear.Nuklear.nk_button_label;
 
-public class Button extends Element_UI {
+public class Button extends UIElement {
     public String text = "text";
     public Runnable onClickEvent = () -> {};
     public Button() {

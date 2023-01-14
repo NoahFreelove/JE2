@@ -8,7 +8,7 @@ import JE.Objects.Base.Sprites.Sprite;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Texture;
-import JE.UI.UIObjects.Window_UI;
+import JE.UI.UIObjects.UIWindow;
 import JE.Window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -45,7 +45,7 @@ public class Player extends Sprite {
             @Override
             public void invoke(int key, int mods) {
                 if(Keyboard.nameToCode("F") == key){
-                    ((Window_UI)Manager.activeScene().world.UI.get(0)).toggleVisibility();
+                    ((UIWindow)Manager.activeScene().world.UI.get(0)).toggleVisibility();
                 }
             }
         });

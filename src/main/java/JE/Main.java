@@ -6,10 +6,8 @@ import JE.Objects.Common.Player;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Shaders.BuiltIn.LightObject.LightObjectShader;
 import JE.Scene.Scene;
-import JE.UI.UIElements.Button;
-import JE.UI.UIElements.Element_UI;
-import JE.UI.UIElements.Label;
-import JE.UI.UIObjects.Window_UI;
+import JE.UI.UIElements.*;
+import JE.UI.UIObjects.UIWindow;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
@@ -47,10 +45,12 @@ public class Main {
         sprite2.renderer.baseColor = new Vector4f(1,1,0,1);
         sprite2.setShader(new LightObjectShader());
 
-        ArrayList<Element_UI> elements = new ArrayList<>();
+        ArrayList<UIElement> elements = new ArrayList<>();
         elements.add(new Button("Button", () -> System.out.println("click")));
         elements.add(new Label("This is a label"));
-        scene.addUI(new Window_UI("Cool window",
+        elements.add(new Slider());
+        elements.add(new Checkbox());
+        scene.addUI(new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2i(100,100), elements));
 
