@@ -1,40 +1,35 @@
 package JE.Window;
 
 import JE.Manager;
-import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Utility.Watcher;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.opengl.GL11.*;
 
 public class DefaultPipeline extends Pipeline{
     @Override
     public void run() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
         runQueuedEvents();
         updateScene();
         renderObjects();
         renderGUI();
         checkWatchers();
         pollEvents();
-        glfwSwapBuffers(Window.getWindowHandle());
     }
 
     @Override
     public void renderObjects() {
-        GameObject[] gameObjects = Manager.activeScene().world.gameObjects.toArray(new GameObject[0]);
-        for (GameObject gameObject : gameObjects) {
+        Manager.activeScene().world.gameObjects.forEach((gameObject) ->{
             if(gameObject == null)
                 return;
             gameObject.preRender();
 
             if(gameObject.renderer != null)
             {
+                gameObject.renderer.getVAO().shaderProgram.use();
                 gameObject.renderer.Render(gameObject.getTransform(),0, Manager.getCamera());
             }
-        }
+        });
     }
 
     @Override

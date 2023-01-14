@@ -1,17 +1,12 @@
 package JE.Objects.Base.Sprites;
 
-import JE.IO.ImageProcessor;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Base.ComponentRestrictions;
-import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Shaders.BuiltIn.SpriteShader;
-import JE.Rendering.RenderTypes.SpriteRenderer;
+import JE.Rendering.Renderers.SpriteRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
-import JE.Rendering.VertexBuffers.VAO2f;
-import JE.Resources.Resource;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 public class Sprite extends GameObject {

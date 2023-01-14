@@ -1,4 +1,4 @@
-package JE.IO;
+package JE.IO.FileInput;
 
 import JE.Annotations.GLThread;
 import JE.Logging.Errors.ImageProcessError;

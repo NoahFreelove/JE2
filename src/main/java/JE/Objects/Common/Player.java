@@ -1,14 +1,14 @@
 package JE.Objects.Common;
 
-import JE.IO.ImageProcessor;
-import JE.Input.Keyboard;
+import JE.IO.UserInput.KeyReleasedEvent;
+import JE.IO.UserInput.Keyboard;
+import JE.Manager;
 import JE.Objects.Base.Identity;
 import JE.Objects.Base.Sprites.Sprite;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Texture;
-import JE.Resources.Resource;
-import JE.Resources.ResourceType;
+import JE.UI.UIObjects.Window_UI;
 import JE.Window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -29,7 +29,7 @@ public class Player extends Sprite {
     public Camera camera;
     public Player(){
         super();
-        Texture t = new Texture("bin/light.png", new Vector2i(128,128));
+        Texture t = new Texture("bin/texture1.png", new Vector2i(64,64));
         setTexture(t);
         setNormalTexture(new Texture("bin/texture1_N.png", new Vector2i(64,64)));
         getTransform().zPos = 2;
@@ -40,6 +40,15 @@ public class Player extends Sprite {
         setIdentity(new Identity("Player","Player"));
 
         camera.positionOffset = new Vector2f(0.5f * getTransform().scale.x(),0.4f * getTransform().scale.y());
+
+        Keyboard.keyReleasedEvents.add(new KeyReleasedEvent() {
+            @Override
+            public void invoke(int key, int mods) {
+                if(Keyboard.nameToCode("F") == key){
+                    ((Window_UI)Manager.activeScene().world.UI.get(0)).toggleVisibility();
+                }
+            }
+        });
     }
 
     @Override

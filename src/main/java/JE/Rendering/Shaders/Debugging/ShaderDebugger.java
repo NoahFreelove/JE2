@@ -2,11 +2,9 @@ package JE.Rendering.Shaders.Debugging;
 
 import JE.Manager;
 import JE.Objects.Base.GameObject;
-import JE.Objects.Base.Identity;
 import JE.Objects.Common.CameraRig;
-import JE.Rendering.RenderTypes.Renderer;
+import JE.Rendering.Renderers.Renderer;
 import JE.Rendering.Shaders.ShaderProgram;
-import JE.Rendering.VertexBuffers.VAO2f;
 import JE.Scene.Scene;
 import org.joml.Vector2f;
 

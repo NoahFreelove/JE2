@@ -13,10 +13,10 @@ public class JOMLtoJBOX {
         return new Vec2(v.x(), v.y());
     }
 
-    public static Vector3f boxVec3(Vec3 v){
+    public static Vector3f vector3f(Vec3 v){
         return new Vector3f(v.x, v.y, v.z);
     }
-    public static Vector2f boxVec2(Vec2 v){
+    public static Vector2f vector2f(Vec2 v){
         return new Vector2f(v.x, v.y);
     }
 }

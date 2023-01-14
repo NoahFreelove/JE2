@@ -1,14 +1,23 @@
 package JE;
 
 
-import JE.Input.Keyboard;
 import JE.Objects.Base.Sprites.Sprite;
 import JE.Objects.Common.Player;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Shaders.BuiltIn.LightObject.LightObjectShader;
 import JE.Scene.Scene;
+import JE.UI.UIElements.Button;
+import JE.UI.UIElements.Element_UI;
+import JE.UI.UIElements.Label;
+import JE.UI.UIObjects.Window_UI;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
+
+import java.util.ArrayList;
+
+import static org.lwjgl.nuklear.Nuklear.*;
+import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_CLOSABLE;
 
 public class Main {
 
@@ -38,14 +47,18 @@ public class Main {
         sprite2.renderer.baseColor = new Vector4f(1,1,0,1);
         sprite2.setShader(new LightObjectShader());
 
-        //scene.add(sprite2);
-        //worldSound.soundPlayer.play();
+        ArrayList<Element_UI> elements = new ArrayList<>();
+        elements.add(new Button("Button", () -> System.out.println("click")));
+        elements.add(new Label("This is a label"));
+        scene.addUI(new Window_UI("Cool window",
+                NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
+                new Vector2i(100,100), elements));
 
-        Manager.AddKeyPressedCallback((key, mods) -> {
+        /*Manager.AddKeyPressedCallback((key, mods) -> {
             if(key == Keyboard.nameToCode("F")){
                 System.out.println(Manager.getFPS());
             }
-        });
+        });*/
 
         /*ShaderTestSceneCustomData data = new ShaderTestSceneCustomData();
         data.baseColor = new Vector4f(0,1,0,1);

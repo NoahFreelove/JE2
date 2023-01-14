@@ -5,6 +5,7 @@ import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Gizmos.GizmoParent;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Camera;
+import JE.UI.UIObjects.Object_UI;
 import JE.Utility.Watcher;
 
 import java.util.ArrayList;
@@ -76,6 +77,25 @@ public class Scene {
             addLight(light);
         }
     }
+    public void addUI(Object_UI ui){
+        if(ui == null)
+            return;
+        if(world.UI.contains(ui))
+            return;
+        world.UI.add(ui);
+    }
+    public void addUI(Object_UI... ui){
+        for(Object_UI ui1 : ui){
+            addUI(ui1);
+        }
+    }
+    public void removeUI(Object_UI ui){
+        if(ui == null)
+            return;
+        if(!world.UI.contains(ui))
+            return;
+        world.UI.remove(ui);
+    }
 
     public void removeLight(PointLight light){
         if(light == null)
@@ -118,6 +138,7 @@ public class Scene {
     public void update(){
         world.gameObjects.forEach(GameObject::update);
         world.gameObjects.forEach(GameObject::componentUpdate);
+        world.UI.forEach(Object_UI::update);
     }
 
     public void start(){

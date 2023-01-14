@@ -1,7 +1,7 @@
 package JE.Resources;
 
-import JE.IO.ImageProcessor;
-import JE.IO.SoundProcessor;
+import JE.IO.FileInput.ImageProcessor;
+import JE.IO.FileInput.SoundProcessor;
 import JE.Logging.Errors.ResourceError;
 import JE.Logging.Logger;
 import org.joml.Vector2i;

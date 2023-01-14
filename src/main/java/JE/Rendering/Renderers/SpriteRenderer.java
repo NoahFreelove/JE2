@@ -1,10 +1,9 @@
-package JE.Rendering.RenderTypes;
+package JE.Rendering.Renderers;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
 import JE.Objects.Components.Common.Transform;
 import JE.Rendering.Camera;
-import JE.Rendering.Shaders.BuiltIn.SpriteShader;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Rendering.VertexBuffers.VAO2f;
@@ -13,9 +12,6 @@ import org.joml.Vector2i;
 
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;

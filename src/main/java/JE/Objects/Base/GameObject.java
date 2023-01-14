@@ -4,7 +4,7 @@ import JE.Logging.Errors.GameObjectError;
 import JE.Logging.Logger;
 import JE.Objects.Components.Base.Component;
 import JE.Objects.Components.Common.Transform;
-import JE.Rendering.RenderTypes.Renderer;
+import JE.Rendering.Renderers.Renderer;
 import JE.Scene.Scene;
 import org.joml.Vector2f;
 

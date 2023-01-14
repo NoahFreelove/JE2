@@ -1,4 +1,4 @@
-package JE.IO;
+package JE.IO.FileInput;
 
 import JE.Resources.ResourceBundle;
 import JE.Window.Window;

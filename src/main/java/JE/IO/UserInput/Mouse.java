@@ -1,4 +1,4 @@
-package JE.Input;
+package JE.IO.UserInput;
 
 import JE.Manager;
 import JE.Rendering.Camera;

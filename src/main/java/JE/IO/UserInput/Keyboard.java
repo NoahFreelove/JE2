@@ -1,4 +1,4 @@
-package JE.Input;
+package JE.IO.UserInput;
 
 import java.util.ArrayList;
 
@@ -109,6 +109,71 @@ public class Keyboard {
             case "NUMPAD8" -> 104;
             case "NUMPAD9" -> 105;
             default -> -1;
+        };
+    }
+    public static String codeToName(int code) {
+        return switch (code) {
+            case 65 -> "A";
+            case 66 -> "B";
+            case 67 -> "C";
+            case 68 -> "D";
+            case 69 -> "E";
+            case 70 -> "F";
+            case 71 -> "G";
+            case 72 -> "H";
+            case 73 -> "I";
+            case 74 -> "J";
+            case 75 -> "K";
+            case 76 -> "L";
+            case 77 -> "M";
+            case 78 -> "N";
+            case 79 -> "O";
+            case 80 -> "P";
+            case 81 -> "Q";
+            case 82 -> "R";
+            case 83 -> "S";
+            case 84 -> "T";
+            case 85 -> "U";
+            case 86 -> "V";
+            case 87 -> "W";
+            case 88 -> "X";
+            case 89 -> "Y";
+            case 90 -> "Z";
+            case 48 -> "0";
+            case 49 -> "1";
+            case 50 -> "2";
+            case 51 -> "3";
+            case 52 -> "4";
+            case 53 -> "5";
+            case 54 -> "6";
+            case 55 -> "7";
+            case 56 -> "8";
+            case 57 -> "9";
+            case 32 -> "SPACE";
+            case 10 -> "ENTER";
+            case 27 -> "ESCAPE";
+            case 8 -> "BACKSPACE";
+            case 9 -> "TAB";
+            case 20 -> "CAPS_LOCK";
+            case 16 -> "SHIFT";
+            case 17 -> "CTRL";
+            case 18 -> "ALT";
+            case 19 -> "PAUSE";
+            case 33 -> "PAGE_UP";
+            case 34 -> "PAGE_DOWN";
+            case 35 -> "END";
+            case 36 -> "HOME";
+            case 263 -> "LEFT";
+            case 265 -> "UP";
+            case 262 -> "RIGHT";
+            case 264 -> "DOWN";
+            case 45 -> "INSERT";
+            case 46 -> "DELETE";
+            case 144 -> "NUM_LOCK";
+            case 145 -> "SCROLL_LOCK";
+            case 112 -> "F1";
+            case 113 -> "F2";
+            default -> "UNKNOWN";
         };
     }
 }

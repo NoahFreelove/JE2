@@ -1,4 +1,4 @@
-package JE.Rendering.RenderTypes;
+package JE.Rendering.Renderers;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
@@ -57,9 +57,10 @@ public class Renderer extends Component {
 
     @GLThread
     public void Render(Transform t, int additionalBufferSize, Camera camera) {
-        glViewport(camera.viewportSize.x, camera.viewportSize.y, camera.viewportSize.z, camera.viewportSize.w);
 
+        glViewport(camera.viewportSize.x, camera.viewportSize.y, camera.viewportSize.z, camera.viewportSize.w);
         PreRender();
+        vao.shaderProgram.use();
 
         vao.shaderProgram.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
         vao.shaderProgram.setUniformMatrix4f("model", camera.getModel(t).get(BufferUtils.createFloatBuffer(16)));

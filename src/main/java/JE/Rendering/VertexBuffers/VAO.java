@@ -71,7 +71,6 @@ public class VAO implements Serializable {
     @GLThread
     public void Enable(int location){
         this.location = location;
-        glUseProgram(shaderProgram.programID);
         glEnableVertexAttribArray(location);
         glBindBuffer(GL20.GL_ARRAY_BUFFER, vertexBufferID);
         glVertexAttribPointer(location, dataSize, GL_FLOAT, false, 0, 0);

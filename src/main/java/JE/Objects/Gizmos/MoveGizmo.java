@@ -1,14 +1,9 @@
 package JE.Objects.Gizmos;
 
-import JE.Input.Mouse;
-import JE.Input.MousePressedEvent;
-import JE.Input.MouseReleasedEvent;
+import JE.IO.UserInput.Mouse;
 import JE.Objects.Base.GameObject;
-import JE.Rendering.Camera;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-
-import static org.lwjgl.opengl.GL11.GL_POLYGON;
 
 public class MoveGizmo extends Gizmo{
     GameObject controlledObject;
