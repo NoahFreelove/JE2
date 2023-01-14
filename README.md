@@ -1,7 +1,7 @@
 # JEngine 2.0
 An OpenGL remake of JEngine, a JavaFX based game engine.
 
-Still lacking key features like a GUI, but it's getting there. 
+Still lacking key features, but it's getting there. 
 
 ## Planned Features
 - 2D vertex rendering ✅
