@@ -8,8 +8,8 @@ Still lacking key features like a GUI, but it's getting there.
 - Shader loading ✅
 - Texture loading ✅
 - Simple lighting ✅
-- Audio ✅
-- GUI
+- Audio ✅ (WIP)
+- GUI✅ (WIP)
 - Materials
 - Physics
 - 3D Rendering
