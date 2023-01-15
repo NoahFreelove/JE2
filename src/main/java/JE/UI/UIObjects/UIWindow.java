@@ -69,7 +69,7 @@ public class UIWindow extends UIObject {
         System.out.println("ClosedFrom:" + closedFromWindow);*/
 
         if(isCreated){
-            if(!isActive){
+            if(!isAlive){
                 Manager.activeScene().removeUI(this);
                 return;
             }
@@ -95,7 +95,7 @@ public class UIWindow extends UIObject {
     }
 
     public void closeWindow(){
-        isActive = false;
+        isAlive = false;
     }
 
     public void toggleVisibility(){

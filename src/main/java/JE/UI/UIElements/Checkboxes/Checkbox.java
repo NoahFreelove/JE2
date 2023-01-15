@@ -1,5 +1,7 @@
-package JE.UI.UIElements;
+package JE.UI.UIElements.Checkboxes;
 
+import JE.UI.UIElements.BooleanEventChanged;
+import JE.UI.UIElements.UIElement;
 import JE.Window.UIHandler;
 
 import org.lwjgl.BufferUtils;
@@ -37,6 +39,8 @@ public class Checkbox extends UIElement {
         boolean prev = isChecked;
         bb.put(0,(byte) (isChecked? 1 : 0));
         nk_checkbox_label(UIHandler.ctx, label, bb);
+        if(!isActive())
+            return;
         isChecked = ((int)(bb.get(0)) == 1);
         if(prev!=isChecked)
             onChange.run(isChecked);

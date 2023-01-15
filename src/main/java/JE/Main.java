@@ -2,10 +2,13 @@ package JE;
 
 
 import JE.Objects.Common.Player;
-import JE.Objects.Lights.AreaLight;
 import JE.Objects.Lights.PointLight;
 import JE.Scene.Scene;
 import JE.UI.UIElements.*;
+import JE.UI.UIElements.Buttons.StyledButton;
+import JE.UI.UIElements.Checkboxes.StyledCheckbox;
+import JE.UI.UIElements.Sliders.Slider;
+import JE.UI.UIElements.Sliders.StyledSlider;
 import JE.UI.UIObjects.UIWindow;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -40,10 +43,10 @@ public class Main {
         //scene.addGizmo(light.getRangeGizmo());
 
         ArrayList<UIElement> elements = new ArrayList<>();
-        elements.add(new Button("Button", () -> System.out.println("click")));
-        elements.add(new Label("This is a label"));
-        elements.add(new Slider());
-        elements.add(new Checkbox());
+        StyledSlider coolSlider = new StyledSlider();
+        elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
+        elements.add(coolSlider);
+        elements.add(new StyledCheckbox());
         scene.addUI(new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2i(100,100), elements));
