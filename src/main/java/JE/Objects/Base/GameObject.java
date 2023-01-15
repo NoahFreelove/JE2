@@ -191,6 +191,10 @@ public class GameObject implements Serializable {
         this.identity = identity;
     }
 
+    public ArrayList<Component> getComponents() {
+        return components;
+    }
+
     @Override
     public String toString() {
         return identity.toString();

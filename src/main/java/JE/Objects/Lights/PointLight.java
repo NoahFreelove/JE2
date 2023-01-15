@@ -16,7 +16,6 @@ public class PointLight extends Light {
     public PointLight(){
         super(new Vector4f(1,1,1,1), 1,1);
         this.type = 1;
-        this.intensity = 1f;
     }
 
     @Override
