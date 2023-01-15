@@ -1,5 +1,6 @@
 package JE.IO.FileInput;
 
+import JE.Logging.Logger;
 import JE.Resources.ResourceBundle;
 import JE.Window.Window;
 import org.lwjgl.openal.AL10;
@@ -26,7 +27,7 @@ public class SoundProcessor {
         ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(filePath, channelsBuffer, sampleRateBuffer);
 
         if(rawAudioBuffer == null){
-            System.out.println("Error loading sound file: " + filePath);
+            Logger.log("Error loading sound file: " + filePath);
             stackPop();
             stackPop();
             return bundle;

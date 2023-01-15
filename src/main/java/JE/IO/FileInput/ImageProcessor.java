@@ -87,7 +87,7 @@ public class ImageProcessor {
             normalBundle.imageData = BufferUtils.createByteBuffer(baos.size());
             normalBundle.imageData.put(baos.toByteArray());}
         catch (IOException e){
-            System.out.println(e.getMessage());
+            Logger.log(e.getMessage());
         }
 
         return normalBundle;

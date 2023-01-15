@@ -3,9 +3,10 @@ package JE.UI.UIObjects;
 import JE.Manager;
 import JE.UI.UIElements.UIElement;
 import JE.Window.UIHandler;
-import org.joml.Vector2i;
+import org.joml.Vector2f;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.NkRect;
+import org.lwjgl.nuklear.NkWindow;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -20,10 +21,12 @@ public class UIWindow extends UIObject {
     private NkRect rect;
 
     // Will reset to this position upon showing window from a hidden state. definitely a feature.
-    public Vector2i homePosition = new Vector2i(50,50);
+    private Vector2f pos = new Vector2f(50,50);
+    private Vector2f size = new Vector2f(200,200);
     private boolean isMinimized = false;
-
     private boolean closedFromWindow = false;
+
+    public boolean reset = false;
 
     public CopyOnWriteArrayList<UIElement> children = new CopyOnWriteArrayList<>();
 
@@ -43,17 +46,17 @@ public class UIWindow extends UIObject {
         rect = NkRect.create();
     }
 
-    public UIWindow(String name, int windowOptions, Vector2i pos) {
+    public UIWindow(String name, int windowOptions, Vector2f pos) {
         this.name = name;
         this.windowOptions = windowOptions;
-        this.homePosition = pos;
+        this.pos = pos;
         rect = NkRect.create();
     }
 
-    public UIWindow(String name, int windowOptions, Vector2i pos, ArrayList<UIElement> children) {
+    public UIWindow(String name, int windowOptions, Vector2f pos, ArrayList<UIElement> children) {
         this.name = name;
         this.windowOptions = windowOptions;
-        this.homePosition = pos;
+        this.pos = pos;
         this.children.addAll(children);
         rect = NkRect.create();
     }
@@ -65,9 +68,11 @@ public class UIWindow extends UIObject {
 
     @Override
     public void render() {
-        /*System.out.println("Visible:" + isVisible);
-        System.out.println("ClosedFrom:" + closedFromWindow);*/
-
+        if(reset)
+        {
+            reset = false;
+            return;
+        }
         if(isCreated){
             if(!isAlive){
                 Manager.activeScene().removeUI(this);
@@ -84,13 +89,15 @@ public class UIWindow extends UIObject {
             }
         }
 
-        if (nk_begin(context, name, nk_rect(homePosition.x, homePosition.y, 200, 200, rect), windowOptions)) {
+
+        if (nk_begin(context, name, nk_rect(pos.x, pos.y, size.x, size.y, rect), windowOptions)) {
             isCreated = true;
             closedFromWindow = false;
+
             nk_layout_row_dynamic(context, 30, 1);
             children.forEach(UIElement::requestRender);
-
         }
+
         nk_end(context);
     }
 
@@ -105,5 +112,17 @@ public class UIWindow extends UIObject {
     public void toggleMinimize(){
         isMinimized = !isMinimized;
         nk_window_collapse(context,name, (isMinimized? 1 : 0));
+    }
 
-    }}
+    public void setPos(Vector2f pos) {
+        this.pos = pos;
+        isCreated = false;
+        reset = true;
+    }
+
+    public void setSize(Vector2f size) {
+        this.size = size;
+        isCreated = false;
+        reset = true;
+    }
+}

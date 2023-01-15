@@ -103,9 +103,11 @@ public class Pathfinding extends Component {
     public Vector2f interpolate(Vector2f start, Vector2f end, float percent){
         if(pathType == PathType.HYPOTENUSE)
         {
-            /*System.out.println("Start: " + start);
-            System.out.println("End: " + end);
-            System.out.println("Percent: " + percent);*/
+            /*
+            Logger.log("Start: " + start);
+            Logger.log("End: " + end);
+            Logger.log("Percent: " + percent);
+            */
             return new Vector2f(start.x() + (end.x() - start.x()) * percent, start.y() + (end.y() - start.y()) * percent);
         }
         else if(pathType == PathType.XY)

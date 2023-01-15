@@ -1,5 +1,6 @@
 package JE.Scene;
 
+import JE.Logging.Logger;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Lights.Light;
@@ -61,7 +62,7 @@ public class SceneState {
                 }
                 if (ignoreThis)
                     continue;
-                System.out.println("Saving " + go.getClass().getSimpleName());
+                Logger.log("Saving " + go.getClass().getSimpleName());
                 oos.writeObject(go);
             }
             bao.close();
@@ -69,7 +70,7 @@ public class SceneState {
             bytes = bao.toByteArray();
 
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Logger.log(e.getMessage());
         }
         return bytes;
     }
@@ -90,7 +91,7 @@ public class SceneState {
                 }
                 if (ignoreThis)
                     continue;
-                System.out.println("Saving " + go.getClass().getSimpleName());
+                Logger.log("Saving " + go.getClass().getSimpleName());
                 oos.writeObject(go);
             }
             bao.close();
@@ -120,7 +121,7 @@ public class SceneState {
                 }
                 if (ignoreThis)
                     continue;
-                System.out.println("Saving " + go.getClass().getSimpleName());
+                Logger.log("Saving " + go.getClass().getSimpleName());
                 oos.writeObject(go);
             }
             bao.close();

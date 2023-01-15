@@ -1,6 +1,7 @@
 package JE.Audio;
 
 import JE.Audio.Filters.SoundFilter;
+import JE.Logging.Logger;
 import JE.Objects.Components.Base.Component;
 import JE.Resources.Resource;
 import JE.Resources.ResourceType;
@@ -47,7 +48,7 @@ public sealed class AudioSource extends Component permits AudioSourcePlayer {
 
         // Generate source
         sourceID = alGenSources();
-        System.out.println("Source:" + sourceID);
+        Logger.log("Source:" + sourceID);
         alSourcei(sourceID, AL10.AL_BUFFER, Window.audioBuffer);
         alSourcei(sourceID, AL10.AL_LOOPING, loops?1:0);
 

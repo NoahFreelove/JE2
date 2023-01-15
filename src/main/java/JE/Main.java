@@ -1,6 +1,7 @@
 package JE;
 
 
+import JE.Logging.Logger;
 import JE.Objects.Common.Player;
 import JE.Objects.Lights.PointLight;
 import JE.Scene.Scene;
@@ -49,11 +50,11 @@ public class Main {
         elements.add(new StyledCheckbox());
         scene.addUI(new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
-                new Vector2i(100,100), elements));
+                new Vector2f(100,100), elements));
 
         /*Manager.AddKeyPressedCallback((key, mods) -> {
             if(key == Keyboard.nameToCode("F")){
-                System.out.println(Manager.getFPS());
+                Logger.log(Manager.getFPS());
             }
         });*/
 

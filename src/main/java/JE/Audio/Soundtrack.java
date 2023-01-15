@@ -1,5 +1,6 @@
 package JE.Audio;
 
+import JE.Logging.Logger;
 import JE.Manager;
 import JE.Utility.Watcher;
 
@@ -15,7 +16,6 @@ public class Soundtrack {
     int currentTrack = 0;
     AudioSourcePlayer activeTrack;
     Watcher trackEndWatcher = () -> {
-        //System.out.println(activeTrack.getDecimal());
         if(activeTrack.getDecimal() >=0.999f)
         {
             //nextTrack();
@@ -23,8 +23,8 @@ public class Soundtrack {
     };
 
     public Soundtrack(AudioSourcePlayer... tracks){
-        System.out.println(tracks[0].getDuration());
-        System.out.println(tracks[1].getDuration());
+        Logger.log(tracks[0].getDuration());
+        Logger.log(tracks[1].getDuration());
         trackList.addAll(Arrays.asList(tracks));
 
 

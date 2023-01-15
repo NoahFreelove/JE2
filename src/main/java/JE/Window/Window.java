@@ -53,7 +53,7 @@ public class Window {
 
     }
     public static void CloseWindow(int code){
-        System.out.println("Closing window with code: " + code);
+        Logger.log("Closing window with code: " + code);
         glfwSetWindowShouldClose(windowHandle, true);
     }
 
@@ -66,7 +66,7 @@ public class Window {
         Objects.requireNonNull(glfwSetErrorCallback(new GLFWErrorCallback() {
             @Override
             public void invoke(int i, long l) {
-                System.out.println("Error: " + i + " " + l);
+                Logger.log("Error: " + i + " " + l);
             }
         })).free();
     }
