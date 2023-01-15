@@ -1,28 +1,28 @@
 package JE.Objects.Lights;
 
-import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.GizmoParent;
 import JE.Objects.Gizmos.Gizmo;
+import JE.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class PointLight extends GameObject {
-    public Vector4f color = new Vector4f(1,1,1,1);
-    public float intensity = 1;
-    public float constant = 5f;
-    public float linear = 0.09f;
-    public float quadratic = 0.5f;
-    public float radius = 5;
-    public Vector3f ambient = new Vector3f(0.1f, 0.1f, 0.1f);
+public class PointLight extends Light {
     public Vector3f diffuse = new Vector3f(0.8f, 0.8f, 0.8f);
-    public Vector3f specular = new Vector3f(1.0f, 1.0f, 1.0f);
+    public float radius = 5;
 
     public PointLight(){
-        super();
+        super(new Vector4f(1,1,1,1), 1,1);
+        this.type = 1;
+        this.intensity = 1f;
+    }
+
+    @Override
+    protected void setLightSpecific(ShaderProgram shaderProgram, int index) {
+        shaderProgram.setUniform3f("lights[" + index + "].diffuse", diffuse);
+        shaderProgram.setUniform1f("lights[" + index + "].radius", radius);
     }
 
     public GizmoParent getRangeGizmo(){

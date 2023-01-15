@@ -3,6 +3,7 @@ package JE.Scene;
 import JE.Audio.AudioSourcePlayer;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
+import JE.Objects.Lights.Light;
 import JE.Objects.Lights.PointLight;
 import JE.UI.UIObjects.UIObject;
 import org.jbox2d.common.Vec2;
@@ -10,7 +11,7 @@ import org.jbox2d.common.Vec2;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class World {
-    public CopyOnWriteArrayList<PointLight> lights = new CopyOnWriteArrayList<>();
+    public CopyOnWriteArrayList<Light> lights = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<GameObject> gameObjects = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<Gizmo> gizmos = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<AudioSourcePlayer> sounds = new CopyOnWriteArrayList<>();

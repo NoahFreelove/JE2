@@ -3,7 +3,7 @@ package JE.Scene;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Gizmos.GizmoParent;
-import JE.Objects.Lights.PointLight;
+import JE.Objects.Lights.Light;
 import JE.Rendering.Camera;
 import JE.UI.UIObjects.UIObject;
 import JE.Utility.Watcher;
@@ -60,20 +60,20 @@ public class Scene {
         world.gameObjects.remove(gameObject);
     }
 
-    public void addLight(PointLight light){
+    public void addLight(Light light){
         if(light == null)
             return;
         if(world.lights.contains(light))
             return;
         world.lights.add(light);
     }
-    public void addLight(PointLight... lights){
-        for(PointLight light : lights){
+    public void addLight(Light... lights){
+        for(Light light : lights){
             addLight(light);
         }
     }
-    public void addLight(ArrayList<PointLight> lights){
-        for(PointLight light : lights){
+    public void addLight(ArrayList<Light> lights){
+        for(Light light : lights){
             addLight(light);
         }
     }
@@ -97,7 +97,7 @@ public class Scene {
         world.UI.remove(ui);
     }
 
-    public void removeLight(PointLight light){
+    public void removeLight(Light light){
         if(light == null)
             return;
         if(!world.lights.contains(light))

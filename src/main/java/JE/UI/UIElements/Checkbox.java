@@ -1,10 +1,13 @@
 package JE.UI.UIElements;
+
 import JE.Window.UIHandler;
+
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.nuklear.Nuklear.nk_checkbox_label;
+
 public class Checkbox extends UIElement {
     public boolean isChecked = false;
     public String label = "Checkbox";

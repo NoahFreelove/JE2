@@ -32,7 +32,6 @@ public class SpriteRenderer extends Renderer {
         }, new ShaderProgram());
         vao = spriteCoordVAO;
 
-
     }
 
     @Override

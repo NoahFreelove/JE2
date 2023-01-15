@@ -5,6 +5,7 @@ import JE.Manager;
 import JE.Objects.Components.Base.Component;
 import JE.Objects.Components.Base.ComponentRestrictions;
 import JE.Objects.Components.Common.Transform;
+import JE.Objects.Lights.Light;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderLayout;
@@ -70,9 +71,7 @@ public class Renderer extends Component {
         vao.shaderProgram.setUniform2f("world_scale", new Vector2f(t.scale));
         vao.shaderProgram.setUniform3f("world_rotation", new Vector3f(t.rotation));
 
-        vao.shaderProgram.setUniform1i("light_count", Manager.activeScene().world.lights.size());
         vao.shaderProgram.setUniform4f("base_color", baseColor);
-
 
         if(vao.shaderProgram.supportsLighting)
             setLighting();
@@ -84,23 +83,12 @@ public class Renderer extends Component {
         vao.Disable();
     }
 
+    @GLThread
     private void setLighting() {
+        vao.shaderProgram.setUniform1i("light_count", Manager.activeScene().world.lights.size());
         for (int i = 0; i <Manager.activeScene().world.lights.size(); i++) {
-            PointLight light = Manager.activeScene().world.lights.get(i);
-            Transform lightTransform = light.getTransform();
-            vao.shaderProgram.setUniform3f("lights[" + i + "].position", new Vector3f(lightTransform.position, lightTransform.zPos));
-            vao.shaderProgram.setUniform4f("lights[" + i + "].color", light.color);
-            vao.shaderProgram.setUniform1f("lights[" + i + "].constant", light.constant);
-            vao.shaderProgram.setUniform1f("lights[" + i + "].linear", light.linear);
-            vao.shaderProgram.setUniform1f("lights[" + i + "].intensity", light.intensity);
-            vao.shaderProgram.setUniform1f("lights[" + i + "].quadratic", light.quadratic);
-            vao.shaderProgram.setUniform3f("lights[" + i + "].ambient", light.ambient);
-            vao.shaderProgram.setUniform3f("lights[" + i + "].diffuse", light.diffuse);
-            vao.shaderProgram.setUniform3f("lights[" + i + "].specular", light.specular);
-            vao.shaderProgram.setUniform1f("lights[" + i + "].radius", light.radius);
-
-            /*vao.shaderProgram.setUniform4f("lights[" + i + "].color", Manager.getActiveScene().world.lights.get(i).color);
-            vao.shaderProgram.setUniform2f("lights[" + i + "].intensity", Manager.getActiveScene().world.lights.get(i).size);*/
+            Light light = Manager.activeScene().world.lights.get(i);
+            light.setLighting(vao.shaderProgram, i);
         }
     }
 

@@ -10,6 +10,7 @@ import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
 import JE.Rendering.Texture;
 import JE.UI.UIObjects.UIWindow;
 import JE.Window.Window;
+
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 

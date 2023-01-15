@@ -4,17 +4,18 @@
 
 in vec2 UV;
 in vec3 FragPos;
+
 struct Light{
     vec3 position;
     vec4 color;
-	float constant;
-	float linear;
-	float quadratic;
 	float intensity;
 	vec3 ambient;
 	vec3 diffuse;
-	vec3 specular;
     float radius;
+    int has_bounds;
+    vec2 bound_pos;
+    vec2 bound_range;
+    int type; // 0 - completely lit | 1 - point light | 2 - area light
 };
 
 uniform mat4 model;
@@ -33,8 +34,9 @@ void main(){
     vec3 total_light = vec3(0,0,0);
 
     for(int i = 0; i < light_count; i++){
+        Light light = lights[i];
 
-        vec3 lightDir = lights[i].position - FragPos;
+        vec3 lightDir = light.position - FragPos;
 
         // Calculate the distance between the fragment and the light position
         float dist = length(lightDir);
@@ -47,12 +49,33 @@ void main(){
         // Look up the normal from the normal map
         vec3 normal = texture(JE_Normal, UV).rgb;
 
-        // Calculate the diffuse lighting
-        float diffuse = abs(dot(lightDir, normal));
+        float diffuse = 1;
+        float falloff = 1;
+        float intensity = lights[i].intensity;
 
-        // Calculate the falloff factor using the smoothstep function
-        float falloff = smoothstep(lights[i].radius, lights[i].radius - 2, dist);
-        total_light += lights[i].color.rgb * diffuse * falloff * lights[i].intensity / (dist * dist);
+        if(light.type == 1){
+            // Calculate the falloff factor using the smoothstep function
+            falloff = smoothstep(light.radius, light.radius - 2, dist);
+            // Calculate the diffuse lighting
+            diffuse = abs(dot(lightDir, normal));
+        }
+        else if (light.type == 2){
+            dist = 1;
+            if(light.has_bounds == 1){
+                if(world_position.x < light.bound_pos.x || world_position.x > light.bound_pos.x + light.bound_range.x){
+                    intensity = 0;
+                }
+                else if(world_position.y < light.bound_pos.y || world_position.y > light.bound_pos.y + light.bound_range.y){
+                    intensity = 0;
+                }
+            }
+        }
+        else if (light.type == 0){
+            dist = 1;
+            intensity = 1;
+        }
+
+        total_light += light.color.rgb * diffuse * falloff * intensity / (dist * dist);
     }
     color = texture(JE_Texture, UV) * vec4(total_light, 1.0);
 }

@@ -2,6 +2,7 @@ package JE.Scene;
 
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
+import JE.Objects.Lights.Light;
 import JE.Objects.Lights.PointLight;
 
 import java.io.*;
@@ -72,16 +73,16 @@ public class SceneState {
         }
         return bytes;
     }
-    private static byte[] saveLights(Scene scene, PointLight[] ignore) {
+    private static byte[] saveLights(Scene scene, Light[] ignore) {
         byte[] bytes = new byte[0];
         try {
 
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bao);
 
-            for (PointLight go : scene.world.lights) {
+            for (Light go : scene.world.lights) {
                 boolean ignoreThis = false;
-                for (PointLight ig : ignore) {
+                for (Light ig : ignore) {
                     if (go == ig) {
                         ignoreThis = true;
                         break;
