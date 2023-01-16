@@ -37,12 +37,11 @@ public class Texture implements Serializable {
         GenerateTexture();
     }
 
-    public  Texture(String filepath, Vector2i size){
+    /*public  Texture(String filepath, Vector2i size){
         resource = new Resource("texture",filepath, ResourceType.TEXTURE);
-        resource.bundle.imageSize = size;
         resource.bundle.filepath = filepath;
         GenerateTexture();
-    }
+    }*/
 
     public Texture(ByteBuffer bb, Vector2i size){
         resource = new Resource("texture",bb,size, ResourceType.TEXTURE);

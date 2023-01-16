@@ -30,9 +30,9 @@ public class Player extends Sprite {
     public Camera camera;
     public Player(){
         super();
-        Texture t = new Texture("bin/texture1.png", new Vector2i(64,64));
+        Texture t = new Texture("bin/texture1.png");
         setTexture(t);
-        setNormalTexture(new Texture("bin/texture1_N.png", new Vector2i(64,64)));
+        setNormalTexture(new Texture("bin/texture1_N.png"));
         getTransform().zPos = 2;
         setShader(new LightSpriteShader());
         addComponent(camera = new Camera());

@@ -1,13 +1,17 @@
 package JE.UI.UIObjects;
 
+import JE.IO.FileInput.IOUtil;
+import JE.IO.FileInput.ImageProcessor;
 import JE.Manager;
+import JE.Rendering.Texture;
+import JE.Resources.ResourceBundle;
 import JE.UI.UIElements.UIElement;
 import JE.Window.UIHandler;
 import org.joml.Vector2f;
-import org.lwjgl.nuklear.NkContext;
-import org.lwjgl.nuklear.NkRect;
-import org.lwjgl.nuklear.NkWindow;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.nuklear.*;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -27,6 +31,10 @@ public class UIWindow extends UIObject {
     private boolean closedFromWindow = false;
 
     public boolean reset = false;
+
+    NkImage nkImage = NkImage.create();
+    ResourceBundle textureBundle = ImageProcessor.ProcessImage("bin/texture1.png",false);
+    Texture text = new Texture(textureBundle.imageData, textureBundle.imageSize);
 
     public CopyOnWriteArrayList<UIElement> children = new CopyOnWriteArrayList<>();
 
@@ -89,12 +97,20 @@ public class UIWindow extends UIObject {
             }
         }
 
+        nk_image_id(text.generatedTextureID,nkImage);
 
         if (nk_begin(context, name, nk_rect(pos.x, pos.y, size.x, size.y, rect), windowOptions)) {
             isCreated = true;
             closedFromWindow = false;
 
+            nk_layout_row_begin(context, NK_STATIC, 128,1);
+            nk_layout_row_push(context, 128);
+            nk_button_image(context, nkImage);
+
+            //nk_group_end(context);
+
             nk_layout_row_dynamic(context, 30, 1);
+
             children.forEach(UIElement::requestRender);
         }
 
