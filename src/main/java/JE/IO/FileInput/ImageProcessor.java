@@ -31,22 +31,24 @@ public class ImageProcessor {
         if(filepath == null)
         {
             Logger.log(new ImageProcessError(true));
-            return null;
+            return rb;
         }
         if(filepath.equals("") || new File(filepath).isDirectory() || !new File(filepath).exists())
         {
             Logger.log(new ImageProcessError(true));
-            return null;
+            return rb;
         }
 
         IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
         IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
         IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
         STBImage.stbi_set_flip_vertically_on_load(flip);
+
         STBImage.stbi_set_unpremultiply_on_load(true);
         ByteBuffer image = STBImage.stbi_load(filepath, widthBuf, heightBuf, channelsBuf, 4);
         if (image == null) {
             image = BufferUtils.createByteBuffer(1);
+            rb.imageData = image;
             Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason()));
             return rb;
         }

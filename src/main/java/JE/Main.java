@@ -6,7 +6,9 @@ import JE.Objects.Common.Player;
 import JE.Objects.Lights.PointLight;
 import JE.Scene.Scene;
 import JE.UI.UIElements.*;
+import JE.UI.UIElements.Buttons.ImageButton;
 import JE.UI.UIElements.Buttons.StyledButton;
+import JE.UI.UIElements.Buttons.TextImageButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
 import JE.UI.UIElements.Sliders.Slider;
 import JE.UI.UIElements.Sliders.StyledSlider;
@@ -45,6 +47,7 @@ public class Main {
 
         ArrayList<UIElement> elements = new ArrayList<>();
         StyledSlider coolSlider = new StyledSlider();
+        elements.add(new ImageButton("bin/texture1.png").setDimensions(new Vector2f(256,256)));
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
         elements.add(new StyledCheckbox());

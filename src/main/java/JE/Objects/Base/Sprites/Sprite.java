@@ -19,14 +19,19 @@ public class Sprite extends GameObject {
         sr.setRestrictions(new ComponentRestrictions(false,true,false));
         setShader(new SpriteShader());
     }
-    public void setShader(ShaderProgram sp){
+    public Sprite setShader(ShaderProgram sp){
         sr.getSpriteVAO().shaderProgram = sp;
         sr.getVAO().shaderProgram = sp;
+        return this;
     }
-    public void setTexture(Texture t){
+    public Sprite setTexture(Texture t){
         sr.setTexture(t);
+        return this;
     }
-    public void setNormalTexture(Texture t){sr.setNormalTexture(t);}
+    public Sprite setNormalTexture(Texture t){
+        sr.setNormalTexture(t);
+        return this;
+    }
     public void setVertices(Vector2f[] vertices){
         sr.getSpriteVAO().setVertices(vertices);
     }

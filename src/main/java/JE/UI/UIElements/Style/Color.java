@@ -47,4 +47,28 @@ public class Color {
     public NkColor nkColor(){
         return nkColor.set((byte) (r*127), (byte) (g*127), (byte) (b*127), (byte) (a*127));
     }
+    public float r(){
+        return r;
+    }
+    public float g(){
+        return g;
+    }
+    public float b(){
+        return b;
+    }
+    public float a(){
+        return a;
+    }
+    public float r255(){
+        return r*255;
+    }
+    public float g255(){
+        return g*255;
+    }
+    public float b255(){
+        return b*255;
+    }
+    public float a255(){
+        return a*255;
+    }
 }

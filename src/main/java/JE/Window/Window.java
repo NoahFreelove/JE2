@@ -59,6 +59,10 @@ public class Window {
 
     public static void Loop(){
         WindowLoop();
+        Destroy();
+    }
+
+    private static void Destroy(){
         UIHandler.destroy();
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
