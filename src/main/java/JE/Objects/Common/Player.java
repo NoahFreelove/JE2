@@ -32,7 +32,7 @@ public class Player extends Sprite {
         super();
         Texture t = new Texture("bin/texture1.png");
         setTexture(t);
-        setNormalTexture(new Texture("bin/texture1_N.png"));
+        //setNormalTexture(new Texture("bin/texture1_N.png"));
         getTransform().zPos = 2;
         setShader(new LightSpriteShader());
         addComponent(camera = new Camera());

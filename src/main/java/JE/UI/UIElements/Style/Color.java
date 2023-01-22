@@ -65,16 +65,19 @@ public class Color {
     public float a(){
         return a;
     }
-    public float r255(){
-        return r*255;
+    public int r255(){
+        return (int) (r*255);
     }
-    public float g255(){
-        return g*255;
+    public int g255(){
+        return (int) (g*255);
     }
-    public float b255(){
-        return b*255;
+    public int b255(){
+        return (int) (b*255);
     }
-    public float a255(){
-        return a*255;
+    public int a255(){
+        return (int) (a*255);
+    }
+    public int getRGB(){
+        return (r255() << 16 | g255() << 8 | b255());
     }
 }

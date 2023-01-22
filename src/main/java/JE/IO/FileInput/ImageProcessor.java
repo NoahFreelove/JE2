@@ -3,6 +3,7 @@ package JE.IO.FileInput;
 import JE.Annotations.GLThread;
 import JE.Logging.Errors.ImageProcessError;
 import JE.Logging.Logger;
+import JE.Rendering.Texture;
 import JE.Resources.Resource;
 import JE.Resources.ResourceBundle;
 import org.joml.Vector2i;
@@ -44,6 +45,7 @@ public class ImageProcessor {
         IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
         STBImage.stbi_set_flip_vertically_on_load(flip);
 
+
         STBImage.stbi_set_unpremultiply_on_load(true);
         ByteBuffer image = STBImage.stbi_load(filepath, widthBuf, heightBuf, channelsBuf, 4);
         if (image == null) {
@@ -56,46 +58,33 @@ public class ImageProcessor {
         rb.imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
         return rb;
     }
-
-
-    public static ResourceBundle generateNormalImage(ResourceBundle textureBundle){
-        ResourceBundle normalBundle = new ResourceBundle();
-        normalBundle.filepath = textureBundle.filepath;
-        normalBundle.imageSize = new Vector2i(textureBundle.imageSize);
-
-        try {
-            BufferedImage bi = ImageIO.read(new File(textureBundle.filepath));
-            BufferedImage normal = new BufferedImage(bi.getWidth(), bi.getHeight(), bi.getType());
-
-
-            for (int x = 0; x < bi.getWidth(); x++) {
-                for (int y = 0; y < bi.getHeight(); y++) {
-                    int rgb = bi.getRGB(x, y);
-                    int r = (rgb >> 16) & 0xFF;
-                    int g = (rgb >> 8) & 0xFF;
-                    int b = (rgb & 0xFF);
-
-                    float xNormal = (r - 128) / 128f;
-                    float yNormal = (g - 128) / 128f;
-                    float zNormal = (b - 128) / 128f;
-
-                    int rNormal = (int) (128 + (xNormal * 128f));
-                    int gNormal = (int) (128 + (yNormal * 128f));
-                    int bNormal = (int) (128 + (zNormal * 128f));
-
-                    int normalRGB = (rNormal << 16) | (gNormal << 8) | bNormal;
-                    normal.setRGB(x, y, normalRGB);
-                }
-            }
-            normalBundle.imageData = BufferUtils.createByteBuffer(normal.getWidth() * normal.getHeight() * 4);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(bi, "png", baos);
-            normalBundle.imageData = BufferUtils.createByteBuffer(baos.size());
-            normalBundle.imageData.put(baos.toByteArray());}
-        catch (IOException e){
-            Logger.log(e.getMessage());
+    public static ResourceBundle generateSolidColorImage(Vector2i size, int color){
+        ResourceBundle rb = new ResourceBundle();
+        rb.imageSize = size;
+        rb.imageData = BufferUtils.createByteBuffer(size.x * size.y * 4);
+        for (int i = 0; i < size.x * size.y; i++) {
+            rb.imageData.put((byte) ((color >> 16) & 0xFF));
+            rb.imageData.put((byte) ((color >> 8) & 0xFF));
+            rb.imageData.put((byte) (color & 0xFF));
+            rb.imageData.put((byte) ((color >> 24) & 0xFF));
         }
+        rb.imageData.flip();
+        return rb;
+    }
 
-        return normalBundle;
+
+    public static ResourceBundle generateNormalMap(Texture originalTexture){
+        ResourceBundle rb = originalTexture.resource.bundle;
+        ResourceBundle rb2 = new ResourceBundle();
+        rb2.imageSize = rb.imageSize;
+        rb2.imageData = BufferUtils.createByteBuffer(rb.imageSize.x * rb.imageSize.y * 4);
+        for (int i = 0; i < rb.imageSize.x * rb.imageSize.y; i++) {
+            rb2.imageData.put((byte) 127);
+            rb2.imageData.put((byte) 127);
+            rb2.imageData.put((byte) 255);
+            rb2.imageData.put((byte) 255);
+        }
+        rb2.imageData.flip();
+        return rb2;
     }
 }

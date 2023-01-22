@@ -64,6 +64,7 @@ public class Window {
 
     private static void Destroy(){
         UIHandler.destroy();
+
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
         glfwTerminate();
@@ -73,6 +74,7 @@ public class Window {
                 Logger.log("Error: " + i + " " + l);
             }
         })).free();
+
     }
 
     private static void InitializeWindow(WindowPreferences wp) {
@@ -172,9 +174,6 @@ public class Window {
         CreateOpenAL();
     }
 
-
-
-
     public static void CreateOpenAL() {
         String audioDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         audioDevice = alcOpenDevice(audioDeviceName);
@@ -229,6 +228,7 @@ public class Window {
             glfwSwapBuffers(windowHandle);
 
         }
+
     }
 
     public static void onPreferenceUpdated(WindowPreferences wp){

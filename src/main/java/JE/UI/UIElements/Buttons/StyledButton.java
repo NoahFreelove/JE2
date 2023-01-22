@@ -23,7 +23,7 @@ public class StyledButton extends Button{
         super(text, onClickEvent);
     }
 
-    public StyledButton(String text, Runnable onClickEvent, StyleInfo style) {
+    public StyledButton(String text, StyleInfo style, Runnable onClickEvent) {
         super(text, onClickEvent);
         this.style = style;
     }

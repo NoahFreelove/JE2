@@ -517,6 +517,7 @@ public class UIHandler {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+        glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
         glDisable(GL_SCISSOR_TEST);
     }
@@ -533,7 +534,6 @@ public class UIHandler {
         glDeleteBuffers(ebo);
         nk_buffer_free(cmds);
         nk_free(ctx);
-
 
         GL.setCapabilities(null);
     }

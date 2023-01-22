@@ -3,6 +3,7 @@ package JE;
 
 import JE.Logging.Logger;
 import JE.Objects.Common.Player;
+import JE.Objects.Common.Square;
 import JE.Objects.Lights.PointLight;
 import JE.Scene.Scene;
 import JE.UI.UIElements.*;
@@ -10,8 +11,10 @@ import JE.UI.UIElements.Buttons.ImageButton;
 import JE.UI.UIElements.Buttons.StyledButton;
 import JE.UI.UIElements.Buttons.TextImageButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
+import JE.UI.UIElements.PreBuilt.FPSCounter;
 import JE.UI.UIElements.Sliders.Slider;
 import JE.UI.UIElements.Sliders.StyledSlider;
+import JE.UI.UIElements.Style.Color;
 import JE.UI.UIObjects.UIWindow;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -35,6 +38,9 @@ public class Main {
         player.setPosition(-1,0);
         scene.add(player);
         scene.activeCamera = player.camera;
+        Square square = new Square();
+        square.setColor(Color.createColor(1,1,0));
+        scene.add(square);
 
         PointLight light = new PointLight();
         light.getTransform().position = new Vector2f(0,0);
@@ -43,11 +49,11 @@ public class Main {
         light.radius = 5;
 
         scene.addLight(light);
-        //scene.addGizmo(light.getRangeGizmo());
 
         ArrayList<UIElement> elements = new ArrayList<>();
         StyledSlider coolSlider = new StyledSlider();
-        elements.add(new Label("JE2!"));
+        FPSCounter counter = new FPSCounter("FPS: ");
+        elements.add(counter);
         //elements.add(new ImageButton("bin/texture1.png").setDimensions(new Vector2f(256,256)));
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
