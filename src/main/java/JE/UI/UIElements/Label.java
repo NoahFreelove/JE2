@@ -1,13 +1,15 @@
 package JE.UI.UIElements;
 
+import JE.UI.UIElements.Style.Color;
 import JE.Window.UIHandler;
+import org.lwjgl.nuklear.NkUserFont;
 
-import static org.lwjgl.nuklear.Nuklear.NK_TEXT_ALIGN_LEFT;
-import static org.lwjgl.nuklear.Nuklear.nk_label;
+import static org.lwjgl.nuklear.Nuklear.*;
 
 public class Label extends UIElement {
     public int alignment = NK_TEXT_ALIGN_LEFT;
     public String text = "";
+    public Color textColor = Color.WHITE;
 
     public Label() {
     }
@@ -20,13 +22,13 @@ public class Label extends UIElement {
         this.alignment = alignment;
     }
 
-    public Label(int alignment, String text) {
+    public Label(String text,int alignment) {
         this.alignment = alignment;
         this.text = text;
     }
 
     @Override
     protected void render() {
-        nk_label(UIHandler.ctx,text,alignment);
+        nk_label_colored(UIHandler.ctx,text,alignment, textColor.nkColor());
     }
 }

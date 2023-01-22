@@ -47,7 +47,8 @@ public class Main {
 
         ArrayList<UIElement> elements = new ArrayList<>();
         StyledSlider coolSlider = new StyledSlider();
-        elements.add(new ImageButton("bin/texture1.png").setDimensions(new Vector2f(256,256)));
+        elements.add(new Label("JE2!"));
+        //elements.add(new ImageButton("bin/texture1.png").setDimensions(new Vector2f(256,256)));
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
         elements.add(new StyledCheckbox());

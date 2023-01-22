@@ -22,7 +22,7 @@ public class UIWindow extends UIObject {
     // Will reset to this position upon showing window from a hidden state. definitely a feature.
     private Vector2f pos = new Vector2f(50,50);
     private Vector2f size = new Vector2f(200,200);
-    public Color backgroundColor = Color.createColor(0.1f,0.1f,0.1f,1f);
+    private Color backgroundColor = Color.createColor(0.1f,0.1f,0.1f,1f);
     private boolean isMinimized = false;
     private boolean closedFromWindow = false;
 
@@ -92,11 +92,10 @@ public class UIWindow extends UIObject {
         if (nk_begin(context, name, nk_rect(pos.x, pos.y, size.x, size.y, rect), windowOptions)) {
             isCreated = true;
             closedFromWindow = false;
-            // set background color
-
+            // align elements
+            nk_layout_row_dynamic(context, 20, 1);
             window = context.style().window();
             window.fixed_background().data().color().set((byte) backgroundColor.r255(), (byte) backgroundColor.g255(), (byte) backgroundColor.b255(), (byte) backgroundColor.a255());
-
 
             children.forEach((uiElement -> {
                 uiElement.requestRender();
@@ -130,5 +129,9 @@ public class UIWindow extends UIObject {
         this.size = size;
         isCreated = false;
         reset = true;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 }

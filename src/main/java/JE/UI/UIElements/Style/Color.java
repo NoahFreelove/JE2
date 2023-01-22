@@ -3,6 +3,12 @@ package JE.UI.UIElements.Style;
 import org.lwjgl.nuklear.NkColor;
 
 public class Color {
+    public static final Color WHITE = Color.createColor(1,1,1,1);
+    public static final Color BLACK = Color.createColor(0,0,0,1);
+    public static final Color RED = Color.createColor(1,0,0,1);
+    public static final Color GREEN = Color.createColor(0,1,0,1);
+    public static final Color BLUE = Color.createColor(0,0,1,1);
+
     float r;
     float g;
     float b;
@@ -45,7 +51,7 @@ public class Color {
     }
 
     public NkColor nkColor(){
-        return nkColor.set((byte) (r*127), (byte) (g*127), (byte) (b*127), (byte) (a*127));
+        return nkColor.set((byte) (r*255), (byte) (g*255), (byte) (b*255), (byte) (a*255));
     }
     public float r(){
         return r;

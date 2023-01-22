@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryUtil.memAddress;
 public class UIHandler {
     static ByteBuffer ttf; // Storage for font data
     public static NkContext ctx = NkContext.create(); // Create a Nuklear context, it is used everywhere.
-    static NkUserFont default_font = NkUserFont.create(); // This is the Nuklear font object used for rendering text.
+    public static NkUserFont default_font = NkUserFont.create(); // This is the Nuklear font object used for rendering text.
  
     static NkBuffer cmds = NkBuffer.create(); // Stores a list of drawing commands that will be passed to OpenGL to render the interface.
     static NkDrawNullTexture null_texture = NkDrawNullTexture.create(); // An empty texture used for drawing.
