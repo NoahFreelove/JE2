@@ -74,7 +74,7 @@ public class Window {
                 Logger.log("Error: " + i + " " + l);
             }
         })).free();
-
+        System.exit(0);
     }
 
     private static void InitializeWindow(WindowPreferences wp) {

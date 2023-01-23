@@ -1,5 +1,7 @@
 package JE.UI.UIElements.Style;
 
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.nuklear.NkColor;
 
 public class Color {
@@ -79,5 +81,8 @@ public class Color {
     }
     public int getRGB(){
         return (r255() << 16 | g255() << 8 | b255());
+    }
+    public Vector4f getVec4(){
+        return new Vector4f(r,g,b,a);
     }
 }

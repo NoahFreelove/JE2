@@ -39,9 +39,9 @@ public class ShaderProgram implements Serializable {
 
                 "#version 330 core\n" +
                         "out vec4 FragColor;" +
-                        "uniform vec4 baseColor;\n" +
+                        "uniform vec4 base_color;\n" +
                         "void main(){\n" +
-                        "  FragColor = baseColor;\n" +
+                        "  FragColor = base_color;\n" +
                         "}");
     }
     public ShaderProgram(boolean s){}
