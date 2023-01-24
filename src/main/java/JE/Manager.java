@@ -64,7 +64,7 @@ public class Manager {
         return new Vector2i(preferences.windowSize.x(), preferences.windowSize.y());
     }
 
-    public static void AddKeyPressedCallback(KeyPressedEvent e){
+    public static void addKeyPressedCallback(KeyPressedEvent e){
         Keyboard.keyPressedEvents.add(e);
     }
 

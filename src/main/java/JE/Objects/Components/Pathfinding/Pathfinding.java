@@ -19,6 +19,8 @@ public class Pathfinding extends Component {
     public PathFindLoopType loopType = PathFindLoopType.LOOP;
     public boolean isPathfinding = false;
     public boolean isPathfindingComplete = false;
+    public Runnable onPathfindingComplete = () -> {};
+    public boolean hasCalledOnPathfindingComplete = false;
     public Vector2f objectStartPoint = new Vector2f();
     public float speed = 1f;
     public float percent = 0f;
@@ -48,6 +50,9 @@ public class Pathfinding extends Component {
                     }
                 }else{
                     isPathfindingComplete = true;
+                    if(!hasCalledOnPathfindingComplete)
+                        onPathfindingComplete.run();
+                    hasCalledOnPathfindingComplete = true;
                 }
             }
         }
@@ -65,6 +70,9 @@ public class Pathfinding extends Component {
                     }
                 }else{
                     isPathfindingComplete = true;
+                    if(!hasCalledOnPathfindingComplete)
+                        onPathfindingComplete.run();
+                    hasCalledOnPathfindingComplete = true;
                 }
             }
         }
@@ -89,6 +97,7 @@ public class Pathfinding extends Component {
         percent = 0;
         isPathfindingComplete = false;
         isPathfinding = false;
+        hasCalledOnPathfindingComplete = false;
     }
 
     public void Next(){
@@ -101,6 +110,10 @@ public class Pathfinding extends Component {
     }
 
     public Vector2f interpolate(Vector2f start, Vector2f end, float percent){
+
+        boolean withinX = (Math.abs(start.x() - end.x()) <= successRadius);
+        boolean withinY = (Math.abs(start.y() - end.y()) <= successRadius);
+
         if(pathType == PathType.HYPOTENUSE)
         {
             /*
@@ -112,22 +125,34 @@ public class Pathfinding extends Component {
         }
         else if(pathType == PathType.XY)
         {
-            if(Math.abs(start.x() - end.x()) <= successRadius)
+
+            if(withinY && withinX)
+                return end;
+
+            // If completed x
+            if(withinX)
             {
-                return new Vector2f(start.x(), start.y() + (end.y() - start.y()) * percent);
+                return new Vector2f(start.x(), start.y() + posNeg((end.y() - start.y()))  * speed);
             }
-            return new Vector2f(start.x() + (end.x() - start.x()) * percent, start.y());
+            // if not completed x
+            // add movespeed to x
+            return new Vector2f(start.x() + posNeg(end.x() - start.x()) * speed, start.y());
         }
         else if(pathType == PathType.YX)
         {
 
-            if(Math.abs(start.y() - end.y()) <= successRadius)
+            if(withinX)
             {
-                return new Vector2f(start.x() + (end.x() - start.x()) * percent, start.y());
+                return new Vector2f(start.x() + posNeg(end.x() - start.x()) * speed, start.y());
             }
-            return new Vector2f(start.x(), start.y() + (end.y() - start.y()) * percent);
+            return new Vector2f(start.x(), start.y() + posNeg(end.y() - start.y()) * speed);
         }
         return new Vector2f(0,0);
+    }
+    private float posNeg(float f){
+        if(f < 0)
+            return -1;
+        return 1;
     }
 
     @Override
