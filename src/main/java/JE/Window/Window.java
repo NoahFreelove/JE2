@@ -4,27 +4,25 @@ import JE.IO.UserInput.Keyboard;
 import JE.IO.UserInput.Mouse;
 import JE.Logging.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
-
-import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import org.lwjgl.system.MemoryStack;
 
-import java.nio.*;
+import java.nio.IntBuffer;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.AL10.alGenBuffers;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     private static long windowHandle = 0;
@@ -39,6 +37,8 @@ public class Window {
     public static final CopyOnWriteArrayList<Runnable> actionQueue = new CopyOnWriteArrayList<>();
     public static Pipeline pipeline = new DefaultPipeline();
     public static int audioBuffer = 0;
+    private static double deltaTime = 0;
+    private static int fpsLimit = 60;
 
     public static void createWindow(WindowPreferences wp) {
 
@@ -205,8 +205,14 @@ public class Window {
         glEnable(GL_COLOR_MATERIAL);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthFunc(GL_LEQUAL);
+
+        //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
+
+            // limit every frame to 1/60 seconds without sleeping
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            double startTime = glfwGetTime();
 
             UIHandler.frameStart();
 
@@ -222,11 +228,14 @@ public class Window {
 
             glfwPollEvents();
             pipeline.onStart();
+
             // ui render must be after objects because bugs.
             UIHandler.renderNuklear();
 
             glfwSwapBuffers(windowHandle);
 
+            deltaTime = glfwGetTime() - startTime;
+            //Logger.log((int)(1/deltaTime) + " fps");
         }
 
     }
@@ -254,7 +263,7 @@ public class Window {
         return windowHandle;
     }
     public static float deltaTime(){
-        return pipeline.deltaTime;
+        return (float)deltaTime;
     }
     public static long handle()
     {

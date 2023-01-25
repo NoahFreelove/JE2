@@ -45,10 +45,12 @@ public class Camera extends Component {
     public Matrix4f getModel(Transform t){
         Matrix4f model = new Matrix4f().identity();
         model.translate(t.position.x(), t.position.y(), t.zPos);
-        model = model.rotate(t.rotation.x, new Vector3f(1, 0, 0));
-        model = model.rotate(t.rotation.y, new Vector3f(0, 1, 0));
-        model = model.rotate(t.rotation.z, new Vector3f(0, 0, 1));
-        model = model.scale(t.scale.x, t.scale.y, 1);
+        // rotate about the center of the object, not the bottom right corner
+        Vector2f spriteSize = t.scale;
+        model.translate(spriteSize.x()/2 , spriteSize.y()/2, 0);
+        model.rotate((float) Math.toRadians(t.rotation.z()), 0, 0, 1);
+        model.translate(-spriteSize.x()/2, -spriteSize.y()/2, 0);
+        model.scale(t.scale.x(), t.scale.y(), 1);
         return model;
     }
 

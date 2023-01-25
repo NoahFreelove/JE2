@@ -7,8 +7,6 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 public abstract class Pipeline {
 
-    public float deltaTime = 1f;
-    double startTime = 1f;
     int gcThreshold = 1000;
 
     @GLThread
@@ -16,15 +14,12 @@ public abstract class Pipeline {
 
     @GLThread
     public final void onStart(){
-        startTime = glfwGetTime();
         run();
         onEnd();
     }
 
     @GLThread
     protected void onEnd(){
-        double endTime = glfwGetTime();
-        deltaTime = (float)(endTime - startTime);
 
         if(Manager.activeScene().world.gameObjects.size() > gcThreshold)
         {

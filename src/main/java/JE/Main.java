@@ -32,7 +32,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main {
 
     public static void main(String[] args) {
-        Manager.start(new WindowPreferences(new Vector2i(1920,1080), "JE2", false, true));
+        Manager.start(new WindowPreferences(new Vector2i(1280,720), "JE2", false, true));
 
         Scene scene = new Scene();
         Manager.setScene(scene);

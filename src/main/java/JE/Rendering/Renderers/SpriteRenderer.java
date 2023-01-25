@@ -1,6 +1,8 @@
 package JE.Rendering.Renderers;
 
 import JE.Annotations.GLThread;
+import JE.Logging.Errors.ShaderError;
+import JE.Logging.Logger;
 import JE.Manager;
 import JE.Objects.Components.Common.Transform;
 import JE.Rendering.Camera;
@@ -64,6 +66,10 @@ public class SpriteRenderer extends Renderer {
     @Override
     @GLThread
     public void Render(Transform t, int additionalBufferSize, Camera camera){
+        if(vao.shaderProgram.programID <= 0) {
+            Logger.log(new ShaderError("PROGRAM ID IS INVALID FOR SPRITE RENDERER"));
+            return;
+        }
         texture.activateTexture(GL_TEXTURE0);
         normal.activateTexture(GL_TEXTURE1);
         glUniform1i(glGetUniformLocation(vao.shaderProgram.programID, "JE_Texture"), 0);
