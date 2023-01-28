@@ -1,5 +1,6 @@
 package JE.Scene;
 
+import JE.Annotations.RequireNonNull;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
@@ -10,6 +11,7 @@ import JE.UI.UIObjects.UIObject;
 import JE.Utility.Watcher;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -36,6 +38,10 @@ public class Scene {
             return;
         }
         world.gameObjects.add(newGameObject);
+        for (GameObject child :
+                newGameObject.getChildren()) {
+            add(child);
+        }
         newGameObject.linkedScene = this;
         newGameObject.componentGameObjectAddedToScene(this);
     }
@@ -53,14 +59,20 @@ public class Scene {
         }
     }
 
+    @RequireNonNull
     public void remove(GameObject gameObject)
     {
-        if(gameObject == null)
-            return;
+        Objects.requireNonNull(gameObject);
         if(!world.gameObjects.contains(gameObject))
             return;
         gameObject.destroy();
         gameObject.componentDestroy();
+
+        for (GameObject child :
+                gameObject.getChildren()) {
+            child.destroy();
+            child.componentDestroy();
+        }
         world.gameObjects.remove(gameObject);
     }
 

@@ -1,5 +1,7 @@
 package JE.Objects.Base;
 
+import JE.Annotations.Nullable;
+import JE.Annotations.RequireNonNull;
 import JE.Logging.Errors.GameObjectError;
 import JE.Logging.Logger;
 import JE.Objects.Components.Base.Component;
@@ -13,6 +15,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -26,6 +29,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
  **/
 public class GameObject implements Serializable {
+    private GameObject parent = this;
+    private ArrayList<GameObject> children = new ArrayList<>();
+
     private boolean active = true;
     private Identity identity = new Identity();
     public Renderer renderer = null;
@@ -239,4 +245,43 @@ public class GameObject implements Serializable {
     public void setLightLayer(int lightLayer) {
         this.lightLayer = lightLayer;
     }
+
+    public GameObject getParent(){
+        return parent;
+    }
+
+    public GameObject[] getChildren(){
+        return children.toArray(GameObject[]::new);
+    }
+
+    @RequireNonNull
+    public void setParent(GameObject parent){
+        Objects.requireNonNull(parent);
+        if(this.parent !=null)
+            this.parent.removeChild(this);
+
+        this.parent = parent;
+        if(parent == this){
+            return;
+        }
+        parent.addChild(this);
+    }
+
+    private void addChild(GameObject gameObject) {
+        if(!children.contains(gameObject))
+            children.add(gameObject);
+    }
+
+    private void removeChild(GameObject gameObject) {
+        children.remove(gameObject);
+    }
+
+    @Nullable
+    public GameObject getChild(int index){
+        if(children.size()-1>=index){
+            return children.get(index);
+        }
+        return null;
+    }
+
 }

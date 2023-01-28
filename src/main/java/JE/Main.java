@@ -29,6 +29,7 @@ import org.joml.Vector2i;
 import org.joml.Vector4i;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
@@ -44,7 +45,6 @@ public class Main {
 
         Player player = new Player();
         player.setPosition(2,1);
-        scene.add(player);
         scene.activeCamera = player.camera;
         scene.activeCamera.viewportSize = new Vector4i(0,0,1000,1000);
 
@@ -66,6 +66,9 @@ public class Main {
                     ambient.affectedLayers[0] = 1;
                 }
                 else ambient.affectedLayers[0] = 0;
+            }
+            else if(key == Keyboard.nameToCode("E")){
+                System.out.println(Arrays.toString(player.getChildren()));
             }
         });
 
@@ -92,7 +95,8 @@ public class Main {
         go.renderer.setDrawMode(GL_LINE_LOOP);
         go.addComponent(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position, new Vector2f(1,1)));
         go.renderer.baseColor = Color.BLUE;
-        scene.add(go);
+        go.setParent(player);
+        scene.add(player);
 
         Sprite floor2 = new Sprite();
         floor2.setTexture(new Texture("bin/texture2.png"));
