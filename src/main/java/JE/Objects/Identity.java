@@ -1,4 +1,4 @@
-package JE.Objects.Base;
+package JE.Objects;
 
 import java.io.Serializable;
 

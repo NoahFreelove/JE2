@@ -4,7 +4,6 @@ import JE.Audio.AudioSourcePlayer;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Lights.Light;
-import JE.Objects.Lights.PointLight;
 import JE.UI.UIObjects.UIObject;
 import org.jbox2d.common.Vec2;
 
@@ -17,4 +16,7 @@ public class World {
     public CopyOnWriteArrayList<AudioSourcePlayer> sounds = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<UIObject> UI = new CopyOnWriteArrayList<>();
     public org.jbox2d.dynamics.World physicsWorld = new org.jbox2d.dynamics.World(new Vec2(0,-9.8f));
+    public World(){
+        physicsWorld.setAllowSleep(false);
+    }
 }

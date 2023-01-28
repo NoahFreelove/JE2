@@ -1,54 +1,73 @@
 package JE;
 
 
+import JE.IO.UserInput.KeyReleasedEvent;
+import JE.IO.UserInput.Keyboard;
 import JE.Logging.Logger;
 import JE.Objects.Base.GameObject;
+import JE.Objects.Base.Sprite;
 import JE.Objects.Common.Player;
-import JE.Objects.Common.Square;
+import JE.Objects.Components.Physics.PhysicsBody;
+import JE.Objects.Lights.AmbientLight;
+import JE.Objects.Lights.AreaLight;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Renderers.ShapeRenderer;
+import JE.Rendering.Shaders.ShaderProgram;
+import JE.Rendering.Texture;
 import JE.Scene.Scene;
-import JE.UI.UIElements.*;
-import JE.UI.UIElements.Buttons.ImageButton;
 import JE.UI.UIElements.Buttons.StyledButton;
-import JE.UI.UIElements.Buttons.TextImageButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
 import JE.UI.UIElements.PreBuilt.FPSCounter;
-import JE.UI.UIElements.Sliders.Slider;
 import JE.UI.UIElements.Sliders.StyledSlider;
 import JE.UI.UIElements.Style.Color;
+import JE.UI.UIElements.UIElement;
 import JE.UI.UIObjects.UIWindow;
 import JE.Window.WindowPreferences;
+import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
-import org.joml.Vector4f;
+import org.joml.Vector4i;
 
 import java.util.ArrayList;
 
 import static org.lwjgl.nuklear.Nuklear.*;
-import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_CLOSABLE;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 
 public class Main {
 
     public static void main(String[] args) {
-        Manager.start(new WindowPreferences(new Vector2i(1280,720), "JE2", false, true));
+        Manager.start(new WindowPreferences(new Vector2i(1000,1000), "JE2", false, true));
+        Logger.logErrors = false;
 
         Scene scene = new Scene();
         Manager.setScene(scene);
 
         Player player = new Player();
-        player.setPosition(-1,0);
+        player.setPosition(2,1);
         scene.add(player);
         scene.activeCamera = player.camera;
+        scene.activeCamera.viewportSize = new Vector4i(0,0,1000,1000);
 
-        PointLight light = new PointLight();
-        light.getTransform().position = new Vector2f(0,0);
-        light.color = new Vector4f(1,1,1,1);
-        light.intensity = 10f;
-        light.radius = 5;
+        /*PointLight pointLight = new PointLight();
+        pointLight.getTransform().position = new Vector2f(0,0);
+        pointLight.intensity = 15;
+        pointLight.radius = 15;
+        scene.addLight(pointLight);*/
 
-        scene.addLight(light);
+        /*AreaLight areaLight = new AreaLight();
+        scene.addLight(areaLight);*/
+
+        AmbientLight ambient = new AmbientLight();
+        scene.addLight(ambient);
+
+        Manager.addKeyReleasedCallback((key, mods) -> {
+            if(key == Keyboard.nameToCode("Q")){
+                if(ambient.affectedLayers[0] == 0){
+                    ambient.affectedLayers[0] = 1;
+                }
+                else ambient.affectedLayers[0] = 0;
+            }
+        });
 
         ArrayList<UIElement> elements = new ArrayList<>();
         StyledSlider coolSlider = new StyledSlider();
@@ -62,29 +81,33 @@ public class Main {
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2f(100,100), elements));
 
-        /*Manager.AddKeyPressedCallback((key, mods) -> {
-            if(key == Keyboard.nameToCode("F")){
-                Logger.log(Manager.getFPS());
-            }
-        });*/
         GameObject go = new GameObject();
         go.addComponent(new ShapeRenderer());
         ((ShapeRenderer)go.renderer).setPoints(new Vector2f[]{
-                // create hexagon
-                new Vector2f(0, 0.5f),
-                new Vector2f(0.5f, 0.25f),
-                new Vector2f(0.5f, -0.25f),
-                new Vector2f(0, -0.5f),
-                new Vector2f(-0.5f, -0.25f),
-                new Vector2f(-0.5f, 0.25f),
-                new Vector2f(0, 0.5f)
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
         });
         go.renderer.setDrawMode(GL_LINE_LOOP);
-        go.renderer.baseColor = Color.BLUE.getVec4();
+        go.addComponent(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position, new Vector2f(1,1)));
+        go.renderer.baseColor = Color.BLUE;
         scene.add(go);
-        /*ShaderTestSceneCustomData data = new ShaderTestSceneCustomData();
-        data.baseColor = new Vector4f(0,1,0,1);
-        data.sceneLights.add(new PointLight(new Vector2f(0,0), new Vector4f(1,1,1,1), 5f,5));
-        ShaderDebugger.TestShader(new LightSpriteShader(),data);*/
+
+        Sprite floor2 = new Sprite();
+        floor2.setTexture(new Texture("bin/texture2.png"));
+        floor2.setScale(6,1);
+        floor2.setPosition(-1,-4f);
+        floor2.addComponent(new PhysicsBody().create(BodyType.STATIC, floor2.getTransform().position, new Vector2f(6,1)));
+        scene.add(floor2);
+
+        for (int i = 0; i < 5; i++) {
+            Sprite staticFloor = new Sprite(ShaderProgram.lightSpriteShader());
+            staticFloor.setTexture(new Texture("bin/texture2.png"));
+            staticFloor.setScale(1,1);
+            staticFloor.setPosition(i+5,i-3);
+            staticFloor.addComponent(new PhysicsBody().create(BodyType.STATIC, staticFloor.getTransform().position, new Vector2f(1,1)));
+            scene.add(staticFloor);
+        }
     }
 }

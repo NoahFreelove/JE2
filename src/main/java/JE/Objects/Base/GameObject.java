@@ -4,13 +4,17 @@ import JE.Logging.Errors.GameObjectError;
 import JE.Logging.Logger;
 import JE.Objects.Components.Base.Component;
 import JE.Objects.Components.Common.Transform;
+import JE.Objects.Components.Physics.PhysicsBody;
+import JE.Objects.Identity;
 import JE.Rendering.Renderers.Renderer;
 import JE.Scene.Scene;
+import JE.Utility.JOMLtoJBOX;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  JE2 - GameObject
@@ -25,8 +29,11 @@ public class GameObject implements Serializable {
     private boolean active = true;
     private Identity identity = new Identity();
     public Renderer renderer = null;
+    public PhysicsBody physicsBody = null;
+    public Scene linkedScene = null;
+    private int lightLayer = 0;
 
-    private final ArrayList<Component> components = new ArrayList<>(){{
+    private final CopyOnWriteArrayList<Component> components = new CopyOnWriteArrayList<>(){{
         add(new Transform());
     }};
 
@@ -37,19 +44,23 @@ public class GameObject implements Serializable {
     }
 
     public void setPosition(Vector2f pos){
-        getTransform().position = new Vector2f(pos);
+        getTransform().setPosition(new Vector2f(pos));
     }
     public void setPosition(float x,float y)
     {
-        getTransform().position = new Vector2f(x,y);
+        getTransform().setPosition(new Vector2f(x,y));
     }
 
     public void setScale(Vector2f scale){
-        getTransform().scale = new Vector2f(scale);
+        getTransform().setScale(new Vector2f(scale));
     }
     public void setScale(float x,float y)
     {
-        getTransform().scale = new Vector2f(x,y);
+        getTransform().setScale(new Vector2f(x,y));
+    }
+    public void setRotation(float z)
+    {
+        getTransform().setRotation(new Vector3f(0,0,z));
     }
 
     public void setTransform(Transform transform){
@@ -90,9 +101,13 @@ public class GameObject implements Serializable {
         }
 
 
-        if(c instanceof Renderer)
+        if(c instanceof Renderer r)
         {
-            renderer = (Renderer) c;
+            renderer = r;
+        }
+        else if(c instanceof PhysicsBody p)
+        {
+            physicsBody = p;
         }
         c.parentObject = this;
         c.onAddedToGameObject(this);
@@ -141,18 +156,16 @@ public class GameObject implements Serializable {
     public void componentAwake(){
         if(!active)
             return;
-        for(Component c : components){
+        components.forEach((c)->{
             if(!c.getActive())
-                continue;
+                return;
             c.awake();
-        }
+        });
+
+
     }
     public void componentDestroy(){
-        for(Component c : components){
-            if(!c.getActive())
-                continue;
-            c.destroy();
-        }
+        components.forEach(Component::destroy);
     }
     public void componentUnload(Scene oldScene, Scene newScene){
         for(Component c : components){
@@ -178,11 +191,19 @@ public class GameObject implements Serializable {
     }
 
     public void destroy(){
-
     }
     public void unload(){}
 
     public void preRender(){}
+    public final void physicsUpdate(){
+        if(physicsBody !=null)
+        {
+            Vector2f adjustedPos = new Vector2f(getTransform().position);
+            adjustedPos.x += physicsBody.getSize().x/2;
+            adjustedPos.y += physicsBody.getSize().y/2;
+            physicsBody.body.setTransform(JOMLtoJBOX.vec2(adjustedPos), getTransform().rotation.z());
+        }
+    }
 
     public Identity getIdentity() {
         return new Identity(identity.name, identity.tag);
@@ -191,7 +212,7 @@ public class GameObject implements Serializable {
         this.identity = identity;
     }
 
-    public ArrayList<Component> getComponents() {
+    public CopyOnWriteArrayList<Component> getComponents() {
         return components;
     }
 
@@ -209,5 +230,13 @@ public class GameObject implements Serializable {
             awake();
             componentAwake();
         }
+    }
+
+    public int getLightLayer() {
+        return lightLayer;
+    }
+
+    public void setLightLayer(int lightLayer) {
+        this.lightLayer = lightLayer;
     }
 }

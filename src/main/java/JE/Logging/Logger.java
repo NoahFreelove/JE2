@@ -15,6 +15,8 @@ public class Logger {
     public static ArrayList<Class> ignoreList = new ArrayList<>();
 
     public static boolean log = true;
+    public static boolean logPetty = false;
+
     public static boolean showTime = false;
     public static boolean stackTrace = false;
 

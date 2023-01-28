@@ -19,7 +19,7 @@ public class VAO implements Serializable {
     protected int vertexBufferID = 0;
     protected int location;
 
-    public ShaderProgram shaderProgram = new ShaderProgram();
+    public ShaderProgram shaderProgram = ShaderProgram.invalidShader();
     protected int dataSize = 1;
 
     public VAO(){

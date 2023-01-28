@@ -15,40 +15,63 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 
-public class ShaderProgram implements Serializable {
-    public int programID;
-    private int vertexShaderID;
-    private int fragmentShaderID;
-    public boolean vertexCompileStatus;
-    public boolean fragmentCompileStatus;
+public final class ShaderProgram implements Serializable {
+    public int programID = -1;
+
     public boolean supportsLighting = false;
+    public volatile boolean attemptedCompile = false;
+
     public String vertex;
     public String fragment;
+    public boolean vertexCompileStatus;
+    public boolean fragmentCompileStatus;
+    private int vertexShaderID;
+    private int fragmentShaderID;
 
-    public ShaderProgram(){
-        CreateShader(
-                "#version 330 core\n" +
-                        "layout(location = 0) in vec2 vertexPos;\n" +
-                        "\n" +
-                        "uniform mat4 MVP;\n" +
-                        "uniform vec3 world_position;\n" +
-                        "void main(){\n" +
-                        "  vec4 pos = MVP * vec4(vertexPos, world_position.z, 1);\n" +
-                        "  gl_Position = pos;\n" +
-                        "}",
+    // TODO: future testing to see if multiple objects can shader the same shader
+    /*public static final ShaderProgram defaultShader = defaultShader();
+    public static final ShaderProgram spriteShader = spriteShader();
+    public static final ShaderProgram lightSpriteShader = lightSpriteShader();*/
 
-                "#version 330 core\n" +
-                        "out vec4 FragColor;" +
-                        "uniform vec4 base_color;\n" +
-                        "void main(){\n" +
-                        "  FragColor = base_color;\n" +
-                        "}");
+    private ShaderProgram(){}
+
+
+    public static ShaderProgram invalidShader(){
+        return new ShaderProgram();
     }
-    public ShaderProgram(boolean s){}
 
+    public static ShaderProgram defaultShader(){
+        ShaderProgram sp = new ShaderProgram();
+        sp.createShader(ShaderRegistry.DEFAULT_VERTEX, ShaderRegistry.DEFAULT_FRAGMENT);
+        return sp;
+    }
+    public static ShaderProgram spriteShader(){
+        ShaderProgram sp = new ShaderProgram();
+        sp.createShader(ShaderRegistry.SPRITE_VERTEX, ShaderRegistry.SPRITE_FRAGMENT);
+        return sp;
+    }
+    public static ShaderProgram lightSpriteShader(){
+        ShaderProgram sp = new ShaderProgram();
+        sp.createShader(ShaderRegistry.LIGHTSPRITE_VERTEX, ShaderRegistry.LIGHTSPRITE_FRAGMENT);
+        sp.supportsLighting = true;
+        return sp;
+    }
 
-    public ShaderProgram(String vertexShader, String fragmentShader){
-        CreateShader(vertexShader, fragmentShader);
+    public ShaderProgram(String vertexShader, String fragmentShader, boolean supportsLighting){
+        createShader(vertexShader, fragmentShader);
+        this.supportsLighting = supportsLighting;
+    }
+    public ShaderProgram(File vertexShader, File fragmentShader, boolean supportsLighting){
+        createShader(vertexShader, fragmentShader);
+        this.supportsLighting = supportsLighting;
+    }
+
+    @GLThread
+    public static ShaderProgram ShaderProgramNow(String vert, String frag, boolean supportsLighting){
+        ShaderProgram sp = new ShaderProgram();
+        sp.createShaderNow(vert,frag);
+        sp.supportsLighting = supportsLighting;
+        return sp;
     }
 
     @GLThread
@@ -86,9 +109,9 @@ public class ShaderProgram implements Serializable {
         glUniform3f(location, value.x, value.y, value.z);
     }
 
-    public void CreateShader(File vertex, File fragment){
-        String vertexShader = "";
-        String fragmentShader = "";
+    public void createShader(File vertex, File fragment){
+        StringBuilder vertexShader = new StringBuilder();
+        StringBuilder fragmentShader = new StringBuilder();
 
         FileInputStream vertexStream = null;
         FileInputStream fragmentStream = null;
@@ -99,37 +122,42 @@ public class ShaderProgram implements Serializable {
 
             int data = vertexStream.read();
             while(data != -1){
-                vertexShader += (char)data;
+                vertexShader.append((char) data);
                 data = vertexStream.read();
             }
 
             data = fragmentStream.read();
             while(data != -1){
-                fragmentShader += (char)data;
+                fragmentShader.append((char) data);
                 data = fragmentStream.read();
             }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
             try {
-                vertexStream.close();
-                fragmentStream.close();
+                if(vertexStream !=null)
+                    vertexStream.close();
+                if(fragmentStream !=null)
+                    fragmentStream.close();
             } catch (Exception e){
                 e.printStackTrace();
             }
         }
-        CreateShader(vertexShader, fragmentShader);
+        createShader(vertexShader.toString(), fragmentShader.toString());
     }
 
-    public void CreateShader(String vertex, String fragment) {
+    public void createShader(String vertex, String fragment) {
         this.vertex = vertex;
         this.fragment = fragment;
-        Runnable r = () -> CreateShaderNow(vertex,fragment);
+        Runnable r = () -> createShaderNow(vertex,fragment);
         Manager.queueGLFunction(r);
     }
 
     @GLThread
-    public void CreateShaderNow(String vertex, String fragment){
+    public void createShaderNow(String vertex, String fragment){
+        this.vertex = vertex;
+        this.fragment = fragment;
+        this.attemptedCompile = true;
         vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
         fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -156,7 +184,7 @@ public class ShaderProgram implements Serializable {
         glValidateProgram(programID);
     }
 
-    public void DeleteShader(){
+    public void destroy(){
         Runnable r = () -> {
             glDetachShader(programID, vertexShaderID);
             glDetachShader(programID, fragmentShaderID);
@@ -167,8 +195,20 @@ public class ShaderProgram implements Serializable {
         Manager.queueGLFunction(r);
     }
 
+    /**
+     * activate the shader program. very important to do before drawing the object
+     * @return true if program was successfully activated
+     */
     @GLThread
-    public void use(){
-        glUseProgram(programID);
+    public boolean use(){
+        if(!valid()){
+            Logger.log(ShaderError.invalidProgramIDError);
+        }
+        else glUseProgram(programID);
+        return valid();
     }
+    public boolean valid(){
+        return (programID >0);
+    }
+
 }

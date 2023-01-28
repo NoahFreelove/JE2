@@ -1,5 +1,6 @@
 package JE.Rendering.Shaders.Debugging;
 
+import JE.Annotations.PerformanceWarning;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Common.CameraRig;
@@ -9,20 +10,27 @@ import JE.Scene.Scene;
 import org.joml.Vector2f;
 
 public class ShaderDebugger {
+
+    @PerformanceWarning(Severity = 3, Reason = "Will stop current thread until GL Thread processes shader")
     public static ShaderDebugInfo VerifyShader(ShaderProgram shader){
         boolean allGood = true;
         ShaderDebugInfo sdi = new ShaderDebugInfo();
+
+        // shaders compile on a different thread, so we wait for the GL thread to compile before testing. Otherwise, it will dismiss it as invalid
+        // Will delay max 1 frame (in theory).
+        while (!shader.attemptedCompile && !shader.valid());
+
         if(!shader.vertexCompileStatus){
             allGood = false;
-            sdi.info += "Vertex Shader failed to compile";
+            sdi.info.append("Vertex Shader failed to compile\n");
         }
         if(!shader.fragmentCompileStatus){
             allGood = false;
-            sdi.info += "Fragment Shader failed to compile";
+            sdi.info.append("Fragment Shader failed to compile\n");
         }
 
-        checkErrors(shader.vertex.split("\r"),true,sdi);
-        checkErrors(shader.fragment.split("\r"),false,sdi);
+        checkErrors(shader.vertex.split("\n"),true,sdi);
+        checkErrors(shader.fragment.split("\n"),false,sdi);
 
         sdi.isGood = allGood;
         return sdi;
@@ -55,21 +63,24 @@ public class ShaderDebugger {
             // check if lines don't have a semicolon
             if(!line.contains(";")){
                 // if it doesn't require a semicolon, then it's fine
-                if(line.contains("void main") || line.contains("#define") || line.contains("#version") || line.contains("attribute") || line.contains("uniform") || line.contains("varying") || line.contains("gl_Position") || line.contains("gl_FragColor") || line.contains("{") || line.contains("}")){
+                if(line.contains("void main") || line.contains("#define") || line.contains("#version") ||
+                        line.contains("attribute") || line.contains("uniform") || line.contains("varying")
+                        || line.contains("{") || line.contains("}") ||  line.startsWith("//")){
                     continue;
                 }
 
-                sdi.info += "Line " + (i+1) + " is missing a semicolon\n";
+                sdi.info.append("Line ").append(i + 1).append(" is missing a semicolon\n");
+
                 sdi.isGood = false;
             }
 
             if(line.contains("attribute") && !isVertex){
-                sdi.info += "Line " + (i+1) + " has an attribute in the fragment shader\n";
+                sdi.info.append("Line ").append(i + 1).append(" has an attribute in the fragment shader\n");
                 sdi.isGood = false;
             }
         }
         if(bracketCount != 0){
-            sdi.info += "Brackets are not balanced\n";
+            sdi.info.append("Brackets are not balanced\n");
             sdi.isGood = false;
         }
     }

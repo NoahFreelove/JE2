@@ -61,13 +61,11 @@ void main(){
         }
         else if (light.type == 2){
             dist = 1;
-            if(light.has_bounds == 1){
-                if(world_position.x < light.bound_pos.x || world_position.x > light.bound_pos.x + light.bound_range.x){
-                    intensity = 0;
-                }
-                else if(world_position.y < light.bound_pos.y || world_position.y > light.bound_pos.y + light.bound_range.y){
-                    intensity = 0;
-                }
+            if(world_position.x < light.bound_pos.x || world_position.x > light.bound_pos.x + light.bound_range.x){
+                intensity = 0;
+            }
+            else if(world_position.y < light.bound_pos.y || world_position.y > light.bound_pos.y + light.bound_range.y){
+                intensity = 0;
             }
         }
         else if (light.type == 0){

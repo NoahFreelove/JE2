@@ -10,15 +10,17 @@ public class Keyboard {
     private static final boolean[] keys = new boolean[1024];
 
     public static void keyPressed(int code) {
-        if(code >= keys.length)
-            return;
-        keys[code] = true;
+        if(within(0,keys.length,code))
+            keys[code] = true;
     }
 
     public static void keyReleased(int code) {
-        if(code >= keys.length)
-            return;
-        keys[code] = false;
+        if(within(0,keys.length,code))
+            keys[code] = false;
+    }
+
+    public static boolean within(int min, int max, int v){
+        return v >= min && v <= max;
     }
 
     public static boolean isKeyPressed(int code) {

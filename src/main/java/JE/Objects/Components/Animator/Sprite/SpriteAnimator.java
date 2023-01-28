@@ -2,7 +2,7 @@ package JE.Objects.Components.Animator.Sprite;
 
 import JE.Logging.Errors.JE2Error;
 import JE.Logging.Logger;
-import JE.Objects.Base.Sprites.Sprite;
+import JE.Objects.Base.Sprite;
 import JE.Objects.Components.Base.Component;
 
 import java.util.ArrayList;

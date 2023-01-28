@@ -3,9 +3,9 @@ package JE.Objects.Lights;
 import JE.Objects.Gizmos.GizmoParent;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Rendering.Shaders.ShaderProgram;
+import JE.UI.UIElements.Style.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -14,7 +14,7 @@ public class PointLight extends Light {
     public float radius = 5;
 
     public PointLight(){
-        super(new Vector4f(1,1,1,1), 1,1);
+        super(Color.WHITE, 1,1);
         this.type = 1;
     }
 

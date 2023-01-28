@@ -3,6 +3,7 @@ package JE.Logging.Errors;
 public class JE2Error {
     protected String NAME;
     protected String MESSAGE;
+    protected boolean petty = false;
 
     public JE2Error(){
         MESSAGE = "Unknown Error";

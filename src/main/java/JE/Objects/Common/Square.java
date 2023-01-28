@@ -1,8 +1,8 @@
 package JE.Objects.Common;
 
 import JE.IO.FileInput.ImageProcessor;
-import JE.Objects.Base.Sprites.Sprite;
-import JE.Rendering.Shaders.BuiltIn.SpriteShader;
+import JE.Objects.Base.Sprite;
+import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Resources.Resource;
 import JE.Resources.ResourceType;
@@ -13,7 +13,7 @@ public class Square extends Sprite {
     private Vector2i size = new Vector2i(64,64);
     private Color color = Color.WHITE;
     public Square (){
-        setShader(new SpriteShader());
+        super(ShaderProgram.spriteShader());
         setColor(color);
         remakeTexture();
     }

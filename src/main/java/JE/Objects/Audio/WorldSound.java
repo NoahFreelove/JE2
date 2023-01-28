@@ -4,6 +4,7 @@ import JE.Audio.AudioSourcePlayer;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
+import JE.UI.UIElements.Style.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -37,7 +38,7 @@ public class WorldSound extends GameObject {
         }
         Gizmo rangeGizmo = new Gizmo();
         rangeGizmo.setVertices(vertices);
-        rangeGizmo.setBaseColor(new Vector4f(1,1,1,1));
+        rangeGizmo.setBaseColor(Color.createColor(1,1,1,1));
         rangeGizmo.setDrawMode(GL_LINES);
         rangeGizmo.getTransform().position = getTransform().position;
         return rangeGizmo;

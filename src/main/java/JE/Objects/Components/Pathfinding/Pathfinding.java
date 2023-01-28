@@ -5,6 +5,7 @@ import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Base.Component;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Gizmos.GizmoParent;
+import JE.UI.UIElements.Style.Color;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -198,7 +199,7 @@ public class Pathfinding extends Component {
             pointGizmos[i] = new Gizmo();
             pointGizmos[i].getTransform().position = path[i];
             pointGizmos[i].getTransform().scale = new Vector2f(0.1f,0.1f);
-            pointGizmos[i].renderer.baseColor = new Vector4f(0,0,1,1);
+            pointGizmos[i].renderer.baseColor = Color.BLUE;
         }
         GizmoParent gp = new GizmoParent(pointGizmos);
 
@@ -232,7 +233,7 @@ public class Pathfinding extends Component {
 
         Gizmo outlineGizmo = new Gizmo();
         outlineGizmo.setVertices(outline2);
-        outlineGizmo.setBaseColor(new Vector4f(0.6f,0.7f,0.9f,0.2f));
+        outlineGizmo.setBaseColor(Color.MAGENTA);
         outlineGizmo.setDrawMode(GL_POLYGON);
         gp.gizmos.add(outlineGizmo);
         return gp;

@@ -26,8 +26,7 @@ public class DefaultPipeline extends Pipeline{
 
             if(gameObject.renderer != null)
             {
-                gameObject.renderer.getVAO().shaderProgram.use();
-                gameObject.renderer.Render(gameObject.getTransform(),0, Manager.getCamera());
+                gameObject.renderer.Render(gameObject,0, Manager.getCamera());
             }
         });
     }
@@ -39,7 +38,7 @@ public class DefaultPipeline extends Pipeline{
                 continue;
             if (gizmo.renderer != null) {
                 gizmo.onDraw();
-                gizmo.renderer.Render(gizmo.getTransform());
+                gizmo.renderer.Render(gizmo);
             }
         }
     }

@@ -2,6 +2,7 @@ package JE.Objects.Gizmos;
 
 import JE.IO.UserInput.Mouse;
 import JE.Objects.Base.GameObject;
+import JE.UI.UIElements.Style.Color;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -13,7 +14,7 @@ public class MoveGizmo extends Gizmo{
 
     public MoveGizmo(){
         super();
-        setBaseColor(new Vector4f(1,0,0,0.5f));
+        setBaseColor(Color.createColor(1,0,0,0.5f));
 
         Mouse.mousePressedEvents.add((button, mods) -> {
             if(controlledObject == null)

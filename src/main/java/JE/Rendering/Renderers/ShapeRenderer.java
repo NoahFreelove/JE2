@@ -2,6 +2,7 @@ package JE.Rendering.Renderers;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
+import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Common.Transform;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderProgram;
@@ -13,25 +14,25 @@ public class ShapeRenderer extends Renderer{
     private final VAO2f pointVAO;
 
     public ShapeRenderer(){
-        pointVAO = new VAO2f(new Vector2f[]{}, new ShaderProgram());
+        pointVAO = new VAO2f(new Vector2f[]{}, ShaderProgram.defaultShader());
         vao = pointVAO;
     }
 
     @Override
     @GLThread
-    public void Render(Transform t) {
+    public void Render(GameObject t) {
         Render(t, 0);
     }
 
     @Override
     @GLThread
-    public void Render(Transform t, int additionalBufferSize) {
+    public void Render(GameObject t, int additionalBufferSize) {
         Render(t,additionalBufferSize, Manager.getCamera());
     }
 
     @Override
     @GLThread
-    public void Render(Transform t, int additionalBufferSize, Camera camera){
+    public void Render(GameObject t, int additionalBufferSize, Camera camera){
         pointVAO.Enable(1);
         super.Render(t, pointVAO.getVertices().length*2+additionalBufferSize, camera);
         pointVAO.Disable();

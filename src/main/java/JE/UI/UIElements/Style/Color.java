@@ -1,15 +1,23 @@
 package JE.UI.UIElements.Style;
 
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.nuklear.NkColor;
 
 public class Color {
+
+    public static final Color TRANSPARENT = Color.createColor(0,0,0,0);
     public static final Color WHITE = Color.createColor(1,1,1,1);
     public static final Color BLACK = Color.createColor(0,0,0,1);
+    public static final Color GREY = Color.createColor(0.6f,0.6f,0.6f);
+    public static final Color DARK_GREY = Color.createColor(0.3f,0.3f,0.3f);
+
     public static final Color RED = Color.createColor(1,0,0,1);
     public static final Color GREEN = Color.createColor(0,1,0,1);
     public static final Color BLUE = Color.createColor(0,0,1,1);
+
+    public static final Color YELLOW = Color.createColor(1,1,0,1);
+    public static final Color CYAN = Color.createColor(0,1,1,1);
+    public static final Color MAGENTA = Color.createColor(1,0,1,1);
 
     float r;
     float g;
@@ -36,6 +44,40 @@ public class Color {
     }
     public static Color createColor255(int r, int g, int b){
         return new Color(r/255f,g/255f,b/255f,1);
+    }
+    public static Color createColorHSV(float h, float s, float v, float a){
+        float c = v*s;
+        float x = c*(1-Math.abs((h/60)%2-1));
+        float m = v-c;
+        float r = 0;
+        float g = 0;
+        float b = 0;
+        if(h >= 0 && h < 60){
+            r = c;
+            g = x;
+            b = 0;
+        }else if(h >= 60 && h < 120){
+            r = x;
+            g = c;
+            b = 0;
+        }else if(h >= 120 && h < 180){
+            r = 0;
+            g = c;
+            b = x;
+        }else if(h >= 180 && h < 240){
+            r = 0;
+            g = x;
+            b = c;
+        }else if(h >= 240 && h < 300){
+            r = x;
+            g = 0;
+            b = c;
+        }else if(h >= 300 && h < 360){
+            r = c;
+            g = 0;
+            b = x;
+        }
+        return new Color(r+m,g+m,b+m,a);
     }
     public static Color createColorHex(String hex){
         hex = hex.replace("#","");
@@ -81,6 +123,9 @@ public class Color {
     }
     public int getRGB(){
         return (r255() << 16 | g255() << 8 | b255());
+    }
+    public String getHex(){
+        return String.format("#%02x%02x%02x",r255(),g255(),b255());
     }
     public Vector4f getVec4(){
         return new Vector4f(r,g,b,a);

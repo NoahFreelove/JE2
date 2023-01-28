@@ -1,18 +1,20 @@
 package JE.Objects.Common;
 
-import JE.IO.UserInput.KeyReleasedEvent;
 import JE.IO.UserInput.Keyboard;
 import JE.Manager;
-import JE.Objects.Base.Identity;
-import JE.Objects.Base.Sprites.Sprite;
+import JE.Objects.Components.Physics.PhysicsBody;
+import JE.Objects.Identity;
+import JE.Objects.Base.Sprite;
 import JE.Rendering.Camera;
-import JE.Rendering.Shaders.BuiltIn.LightSprite.LightSpriteShader;
+import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.UI.UIObjects.UIWindow;
 import JE.Window.Window;
 
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
+import org.joml.Vector4i;
 
 public class Player extends Sprite {
 
@@ -28,43 +30,39 @@ public class Player extends Sprite {
     float moveSpeed = 5f;
 
     public Camera camera;
+    public PhysicsBody pb;
     public Player(){
-        super();
+        super(ShaderProgram.lightSpriteShader());
         Texture t = new Texture("bin/texture1.png");
         setTexture(t);
-        //setNormalTexture(new Texture("bin/texture1_N.png"));
         getTransform().zPos = 2;
-        setShader(new LightSpriteShader());
         addComponent(camera = new Camera());
-        //camera.viewportSize = new Vector4i(0,0,640,720);
         camera.parentObject = this;
         setIdentity(new Identity("Player","Player"));
 
         camera.positionOffset = new Vector2f(0.5f * getTransform().scale.x(),0.4f * getTransform().scale.y());
 
-        Keyboard.keyReleasedEvents.add(new KeyReleasedEvent() {
-            @Override
-            public void invoke(int key, int mods) {
-                if(Keyboard.nameToCode("F") == key){
-                    ((UIWindow)Manager.activeScene().world.UI.get(0)).toggleVisibility();
-                }
+        Keyboard.keyReleasedEvents.add((key, mods) -> {
+            if(Keyboard.nameToCode("F") == key){
+                ((UIWindow)Manager.activeScene().world.UI.get(0)).toggleVisibility();
             }
         });
+        addComponent(pb = new PhysicsBody().create(BodyType.DYNAMIC, getTransform().position, new Vector2f(1,1)));
     }
 
     @Override
     public void update(){
         if(Keyboard.isKeyPressed(a) || Keyboard.isKeyPressed(LEFT)){
             getTransform().position.x -= moveSpeed * Window.deltaTime();
+            //pb.body.setLinearVelocity(new Vec2(-moveSpeed,pb.body.getLinearVelocity().y));
         }
         if(Keyboard.isKeyPressed(d) || Keyboard.isKeyPressed(RIGHT)){
             getTransform().position.x += moveSpeed * Window.deltaTime();
+            //pb.body.setLinearVelocity(new Vec2(moveSpeed,pb.body.getLinearVelocity().y));
         }
         if(Keyboard.isKeyPressed(w) || Keyboard.isKeyPressed(UP)){
-            getTransform().position.y += moveSpeed * Window.deltaTime();
-        }
-        if(Keyboard.isKeyPressed(s) || Keyboard.isKeyPressed(DOWN)){
-            getTransform().position.y -= moveSpeed * Window.deltaTime();
+            if(pb.onGround)
+                pb.body.setLinearVelocity(new Vec2(pb.body.getLinearVelocity().x,moveSpeed*1));
         }
     }
 

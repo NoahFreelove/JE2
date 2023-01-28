@@ -1,5 +1,6 @@
 package JE.Scene;
 
+import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Gizmos.Gizmo;
 import JE.Objects.Gizmos.GizmoParent;
@@ -35,6 +36,7 @@ public class Scene {
             return;
         }
         world.gameObjects.add(newGameObject);
+        newGameObject.linkedScene = this;
         newGameObject.componentGameObjectAddedToScene(this);
     }
 
@@ -57,6 +59,8 @@ public class Scene {
             return;
         if(!world.gameObjects.contains(gameObject))
             return;
+        gameObject.destroy();
+        gameObject.componentDestroy();
         world.gameObjects.remove(gameObject);
     }
 
@@ -137,6 +141,9 @@ public class Scene {
 
     public void update(){
         world.gameObjects.forEach(GameObject::update);
+        world.gameObjects.forEach(GameObject::physicsUpdate);
+        world.physicsWorld.step(Manager.deltaTime(),6,2);
+
         world.gameObjects.forEach(GameObject::componentUpdate);
         world.UI.forEach(UIObject::update);
     }

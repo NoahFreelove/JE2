@@ -4,6 +4,7 @@ import JE.Annotations.GLThread;
 import JE.Logging.Errors.ShaderError;
 import JE.Logging.Logger;
 import JE.Manager;
+import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Common.Transform;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderProgram;
@@ -24,14 +25,14 @@ public class SpriteRenderer extends Renderer {
     private Texture texture = new Texture();
     private Texture normal = new Texture();
 
-    public SpriteRenderer(){
+    public SpriteRenderer(ShaderProgram shader){
         super();
         spriteCoordVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
-        }, new ShaderProgram());
+        }, shader);
         vao = spriteCoordVAO;
 
     }
@@ -53,30 +54,28 @@ public class SpriteRenderer extends Renderer {
 
     @Override
     @GLThread
-    public void Render(Transform t) {
-        Render(t, 0);
+    public void Render(GameObject gameObject) {
+        Render(gameObject, 0);
     }
 
     @Override
     @GLThread
-    public void Render(Transform t, int additionalBufferSize) {
-        Render(t,additionalBufferSize,Manager.getCamera());
+    public void Render(GameObject gameObject, int additionalBufferSize) {
+        Render(gameObject,additionalBufferSize,Manager.getCamera());
     }
 
     @Override
     @GLThread
-    public void Render(Transform t, int additionalBufferSize, Camera camera){
-        if(vao.shaderProgram.programID <= 0) {
-            Logger.log(new ShaderError("PROGRAM ID IS INVALID FOR SPRITE RENDERER"));
+    public void Render(GameObject gameObject, int additionalBufferSize, Camera camera){
+        if(!vao.shaderProgram.use())
             return;
-        }
         texture.activateTexture(GL_TEXTURE0);
         normal.activateTexture(GL_TEXTURE1);
         glUniform1i(glGetUniformLocation(vao.shaderProgram.programID, "JE_Texture"), 0);
         glUniform1i(glGetUniformLocation(vao.shaderProgram.programID, "JE_Normal"), 1);
 
         spriteCoordVAO.Enable(1);
-        super.Render(t, spriteCoordVAO.getVertices().length*2+additionalBufferSize, camera);
+        super.Render(gameObject, spriteCoordVAO.getVertices().length*2+additionalBufferSize, camera);
         spriteCoordVAO.Disable();
     }
 

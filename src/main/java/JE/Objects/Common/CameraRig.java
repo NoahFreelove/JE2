@@ -1,7 +1,6 @@
 package JE.Objects.Common;
 
 import JE.Objects.Base.GameObject;
-import JE.Objects.Base.Identity;
 import JE.Rendering.Camera;
 
 public class CameraRig extends GameObject {

@@ -14,7 +14,6 @@ public class Camera extends Component {
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1;
     public Vector4i viewportSize = Manager.defaultViewport();
-
     public Camera(){
     }
 
@@ -45,12 +44,15 @@ public class Camera extends Component {
     public Matrix4f getModel(Transform t){
         Matrix4f model = new Matrix4f().identity();
         model.translate(t.position.x(), t.position.y(), t.zPos);
-        // rotate about the center of the object, not the bottom right corner
         Vector2f spriteSize = t.scale;
-        model.translate(spriteSize.x()/2 , spriteSize.y()/2, 0);
+
+        model.translate(spriteSize.x()/2, spriteSize.y()/2, 0);
         model.rotate((float) Math.toRadians(t.rotation.z()), 0, 0, 1);
         model.translate(-spriteSize.x()/2, -spriteSize.y()/2, 0);
+
+
         model.scale(t.scale.x(), t.scale.y(), 1);
+        model.scale(1, 1, 1);
         return model;
     }
 
@@ -64,7 +66,13 @@ public class Camera extends Component {
     public Matrix4f getOrtho(){
         Matrix4f projection = new Matrix4f().identity();
         float aspect = (float) viewportSize.z / (float) viewportSize.w;
-        projection = projection.ortho(-aspect, aspect, -1,1f, 0f, 1000);
+        float width = 4;
+        float height = width/aspect;
+        float near = -1;
+        float far = 1000;
+        // take viewport position into account
+        projection = projection.translate(viewportSize.x, viewportSize.y, 0);
+        projection = projection.ortho(-width/2, width/2, -height/2f, height/2f, near, far);
         projection = projection.scale(0.5f*zoomMultiplier);
         return projection;
     }

@@ -47,6 +47,4 @@ public class Component implements Serializable {
     public void destroy(){}
     public void onAddedToGameObject(GameObject gameObject){}
     public void gameObjectAddedToScene(Scene scene){}
-
-
 }
