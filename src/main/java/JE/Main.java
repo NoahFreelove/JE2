@@ -1,7 +1,6 @@
 package JE;
 
 
-import JE.IO.UserInput.KeyReleasedEvent;
 import JE.IO.UserInput.Keyboard;
 import JE.Logging.Logger;
 import JE.Objects.Base.GameObject;
@@ -9,14 +8,13 @@ import JE.Objects.Base.Sprite;
 import JE.Objects.Common.Player;
 import JE.Objects.Components.Physics.PhysicsBody;
 import JE.Objects.Lights.AmbientLight;
-import JE.Objects.Lights.AreaLight;
-import JE.Objects.Lights.PointLight;
 import JE.Rendering.Renderers.ShapeRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Scene.Scene;
 import JE.UI.UIElements.Buttons.StyledButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
+import JE.UI.UIElements.UIImage;
 import JE.UI.UIElements.PreBuilt.FPSCounter;
 import JE.UI.UIElements.Sliders.StyledSlider;
 import JE.UI.UIElements.Style.Color;
@@ -80,6 +78,7 @@ public class Main {
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
         elements.add(new StyledCheckbox());
+        elements.add(new UIImage("bin/texture1.png"));
         scene.addUI(new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2f(100,100), elements));
@@ -104,6 +103,7 @@ public class Main {
         floor2.setPosition(-1,-4f);
         floor2.addComponent(new PhysicsBody().create(BodyType.STATIC, floor2.getTransform().position, new Vector2f(6,1)));
         scene.add(floor2);
+        //floor2.physicsBody.setFriction(5);
 
         for (int i = 0; i < 5; i++) {
             Sprite staticFloor = new Sprite(ShaderProgram.lightSpriteShader());

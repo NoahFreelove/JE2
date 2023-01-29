@@ -41,7 +41,6 @@ public class Player extends Sprite {
         setIdentity(new Identity("Player","Player"));
 
         camera.positionOffset = new Vector2f(0.5f * getTransform().scale.x(),0.4f * getTransform().scale.y());
-
         Keyboard.keyReleasedEvents.add((key, mods) -> {
             if(Keyboard.nameToCode("F") == key){
                 ((UIWindow)Manager.activeScene().world.UI.get(0)).toggleVisibility();

@@ -16,15 +16,15 @@ import static org.lwjgl.nuklear.Nuklear.nk_end;
 public class UIWindow extends UIObject {
     private final NkContext context = ctx;
     public String name = "Window";
-    public int windowOptions = NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE;
+    public int windowOptions = NK_WINDOW_TITLE | NK_WINDOW_BORDER | NK_WINDOW_MINIMIZABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE;
     private NkStyleWindow window;
     private NkRect rect = NkRect.create();
     // Will reset to this position upon showing window from a hidden state. definitely a feature.
-    private Vector2f pos = new Vector2f(50,50);
-    private Vector2f size = new Vector2f(200,200);
-    private Color backgroundColor = Color.createColor(0.1f,0.1f,0.1f,1f);
+    private Vector2f pos = new Vector2f(50, 50);
+    private Vector2f size = new Vector2f(200, 200);
+    private Color backgroundColor = Color.createColor(0.1f, 0.1f, 0.1f, 1f);
     private boolean isMinimized = false;
-    private boolean closedFromWindow = false;
+    public boolean closedFromWindow = false;
 
     public boolean reset = false;
 
@@ -68,23 +68,21 @@ public class UIWindow extends UIObject {
 
     @Override
     public void render() {
-        if(reset)
-        {
+        if (reset) {
             reset = false;
             return;
         }
-        if(isCreated){
-            if(!isAlive){
+        if (isCreated) {
+            if (!isAlive) {
                 Manager.activeScene().removeUI(this);
                 return;
             }
 
-            if(isVisible && nk_window_is_closed(context,name) && !closedFromWindow)
-            {
+            if (isVisible && nk_window_is_closed(context, name) && !closedFromWindow) {
                 closedFromWindow = true;
                 isVisible = false;
             }
-            if(!isVisible){
+            if (!isVisible) {
                 return;
             }
         }
@@ -106,17 +104,24 @@ public class UIWindow extends UIObject {
         nk_end(context);
     }
 
-    public void closeWindow(){
+    public void closeWindow() {
         isAlive = false;
     }
 
-    public void toggleVisibility(){
+    public void toggleVisibility() {
         closedFromWindow = true;
         isVisible = !isVisible;
     }
-    public void toggleMinimize(){
+
+    public void toggleMinimize() {
         isMinimized = !isMinimized;
-        nk_window_collapse(context,name, (isMinimized? 1 : 0));
+        nk_window_collapse(context, name, (isMinimized ? 1 : 0));
+    }
+
+    public void setMinimized(boolean v)
+    {
+        isMinimized = v;
+        nk_window_collapse(context, name, (isMinimized ? 1 : 0));
     }
 
     public void setPos(Vector2f pos) {
@@ -129,6 +134,11 @@ public class UIWindow extends UIObject {
         this.size = size;
         isCreated = false;
         reset = true;
+    }
+
+    public void openWindow(){
+        isVisible = true;
+        closedFromWindow = false;
     }
 
     public void setBackgroundColor(Color backgroundColor) {

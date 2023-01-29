@@ -45,6 +45,8 @@ public class PhysicsBody extends Component {
         shape.setRadius(0.001f);
 
         activeFixture = body.createFixture(shape, 1.0f);
+        activeFixture.setRestitution(0);
+
         hasInitialized = true;
         return this;
     }
@@ -66,6 +68,12 @@ public class PhysicsBody extends Component {
             return;
         bodyDef.type = type;
         body.setType(type);
+    }
+    public void setFriction(float v){
+        if(!hasInitialized)
+            return;
+
+        activeFixture.setFriction(v);
     }
 
     @Override
