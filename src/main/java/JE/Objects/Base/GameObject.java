@@ -76,7 +76,7 @@ public class GameObject implements Serializable {
     public boolean addComponent(Component c){
         Objects.requireNonNull(c);
 
-        if(c.parentObject !=null)
+        if(c.parentObject() !=null)
         {
             Logger.log(new GameObjectError(this, "Can't Add Component. This Component already has a parent."));
             return false;
@@ -115,7 +115,7 @@ public class GameObject implements Serializable {
         {
             physicsBody = p;
         }
-        c.parentObject = this;
+        c.setParentObject(this);
         c.onAddedToGameObject(this);
         return components.add(c);
     }
@@ -135,7 +135,7 @@ public class GameObject implements Serializable {
             return false;
         }
 
-        if(c.parentObject != this){
+        if(c.parentObject() != this){
             Logger.log(new GameObjectError(this, "Can't Remove Component. This GameObject does not own component: " + c.getClass().getName()));
             return false;
         }
@@ -204,10 +204,10 @@ public class GameObject implements Serializable {
     public final void physicsUpdate(){
         if(physicsBody !=null)
         {
-            Vector2f adjustedPos = new Vector2f(getTransform().position);
+            Vector2f adjustedPos = new Vector2f(getTransform().position());
             adjustedPos.x += physicsBody.getSize().x/2;
             adjustedPos.y += physicsBody.getSize().y/2;
-            physicsBody.body.setTransform(JOMLtoJBOX.vec2(adjustedPos), getTransform().rotation.z());
+            physicsBody.body.setTransform(JOMLtoJBOX.vec2(adjustedPos), getTransform().rotation().z());
         }
     }
 

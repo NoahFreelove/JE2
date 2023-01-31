@@ -1,7 +1,7 @@
 package JE.Window;
 
-import JE.IO.UserInput.Keyboard;
-import JE.IO.UserInput.Mouse;
+import JE.IO.UserInput.Keyboard.Keyboard;
+import JE.IO.UserInput.Mouse.Mouse;
 import JE.Manager;
 import JE.UI.UIObjects.UIObject;
 import org.lwjgl.nuklear.*;
@@ -261,8 +261,8 @@ public class UIHandler {
         Keyboard.keyReleasedEvents.add((key, mods) -> keyboardInput(false,key));
 
         glfwSetCursorPosCallback(win, (window, xpos, ypos) -> nk_input_motion(ctx, (int)xpos, (int)ypos));
-        Mouse.mousePressedEvents.add((button, mods) -> mouseInput(button,true));
-        Mouse.mouseReleasedEvents.add((button, mods) -> mouseInput(button,false));
+        Mouse.mousePressedEvents.add((button, mods) -> mouseInput(button.ordinal(),true));
+        Mouse.mouseReleasedEvents.add((button, mods) -> mouseInput(button.ordinal(),false));
 
         nk_init(ctx, ALLOCATOR, null);
         ctx.clip()

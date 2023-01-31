@@ -152,10 +152,15 @@ public class Scene {
     }
 
     public void update(){
-        world.gameObjects.forEach(GameObject::update);
-        world.gameObjects.forEach(GameObject::physicsUpdate);
-        world.physicsWorld.step(Manager.deltaTime(),6,2);
+        update(true);
+    }
 
+    public void update(boolean physicsUpdate) {
+        world.gameObjects.forEach(GameObject::update);
+        if (physicsUpdate){
+            world.gameObjects.forEach(GameObject::physicsUpdate);
+            world.physicsWorld.step(Manager.deltaTime(), 6, 2);
+        }
         world.gameObjects.forEach(GameObject::componentUpdate);
         world.UI.forEach(UIObject::update);
     }

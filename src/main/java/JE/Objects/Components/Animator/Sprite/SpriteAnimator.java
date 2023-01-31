@@ -22,10 +22,10 @@ public class SpriteAnimator extends Component {
 
     @Override
     public void update() {
-        if(parentObject==null)
+        if(parentObject()==null)
             return;
         try {
-            spriteAnimationTimelines.get(state).AnimUpdate((Sprite)parentObject);
+            spriteAnimationTimelines.get(state).AnimUpdate((Sprite)parentObject());
         }
         catch (Exception e){
             Logger.log(new JE2Error("Sprite Animator", "Could not update animation as parent object could not be cast to a sprite"));

@@ -1,4 +1,4 @@
-package JE.IO.UserInput;
+package JE.IO.UserInput.Keyboard;
 
 
 public interface KeyPressedEvent {

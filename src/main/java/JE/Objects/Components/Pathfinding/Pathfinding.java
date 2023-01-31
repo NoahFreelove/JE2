@@ -105,7 +105,7 @@ public class Pathfinding extends Component {
         target = getNextPoint();
     }
     private void nextPointCheck(){
-        if(parentObject.getTransform().position.distance(target) <= successRadius){
+        if(parentObject().getTransform().position().distance(target) <= successRadius){
             Next();
         }
     }
@@ -161,7 +161,7 @@ public class Pathfinding extends Component {
         if(!isPathfinding)
             return;
 
-        parentObject.getTransform().position = interpolate(parentObject.getTransform().position, target, percent);
+        parentObject().getTransform().setPosition(interpolate(parentObject().getTransform().position(), target, percent));
         percent = clamp(percent + speed*Manager.deltaTime(),0,1);
 
         nextPointCheck();
@@ -173,7 +173,6 @@ public class Pathfinding extends Component {
     }
     @Override
     public void onAddedToGameObject(GameObject o){
-        objectStartPoint = o.getTransform().position;
     }
     public void setIsRelative(boolean isRelative){
         for (Vector2f v :
@@ -197,8 +196,8 @@ public class Pathfinding extends Component {
         Gizmo[] pointGizmos = new Gizmo[path.length];
         for (int i = 0; i < path.length; i++) {
             pointGizmos[i] = new Gizmo();
-            pointGizmos[i].getTransform().position = path[i];
-            pointGizmos[i].getTransform().scale = new Vector2f(0.1f,0.1f);
+            pointGizmos[i].getTransform().setPosition(path[i]);
+            pointGizmos[i].getTransform().setScale(new Vector2f(0.1f,0.1f));
             pointGizmos[i].renderer.baseColor = Color.BLUE;
         }
         GizmoParent gp = new GizmoParent(pointGizmos);

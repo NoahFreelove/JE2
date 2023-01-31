@@ -6,10 +6,10 @@ import org.joml.*;
 import java.lang.Math;
 
 public class Transform extends Component {
-    public Vector2f position;
-    public float zPos = 1;
-    public Vector3f rotation;
-    public Vector2f scale;
+    private Vector2f position;
+    private float zPos = 1;
+    private Vector3f rotation;
+    private Vector2f scale;
 
     public Transform(){
         position = new Vector2f();
@@ -51,6 +51,24 @@ public class Transform extends Component {
 
     public void setScale(float x, float y){
         this.scale = new Vector2f(x, y);
+    }
+
+    public float zPos()
+    {
+        return zPos;
+    }
+
+    public void setZPos(float zPos)
+    {
+        this.zPos = zPos;
+    }
+
+    public void translateX(float x){
+        position.x += x;
+    }
+
+    public void translateY(float y){
+        position.y += y;
     }
 
     public Vector3f lookAt(Vector2f target){

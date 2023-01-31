@@ -18,16 +18,14 @@ public class Soundtrack {
     Watcher trackEndWatcher = () -> {
         if(activeTrack.getDecimal() >=0.999f)
         {
-            //nextTrack();
+            nextTrack();
         }
     };
 
     public Soundtrack(AudioSourcePlayer... tracks){
-        Logger.log(tracks[0].getDuration());
-        Logger.log(tracks[1].getDuration());
+        /*Logger.log(tracks[0].getDuration());
+        Logger.log(tracks[1].getDuration());*/
         trackList.addAll(Arrays.asList(tracks));
-
-
 
         trackList.forEach(soundPlayer -> soundPlayer.setLoops(false));
         activeTrack = trackList.get(0);

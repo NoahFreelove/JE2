@@ -68,9 +68,9 @@ public class Renderer extends Component {
         vao.shaderProgram.setUniformMatrix4f("model", camera.getModel(t).get(BufferUtils.createFloatBuffer(16)));
         vao.shaderProgram.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
         vao.shaderProgram.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
-        vao.shaderProgram.setUniform3f("world_position", new Vector3f(t.position, t.zPos));
-        vao.shaderProgram.setUniform2f("world_scale", new Vector2f(t.scale));
-        vao.shaderProgram.setUniform3f("world_rotation", new Vector3f(t.rotation));
+        vao.shaderProgram.setUniform3f("world_position", new Vector3f(t.position(), t.zPos()));
+        vao.shaderProgram.setUniform2f("world_scale", new Vector2f(t.scale()));
+        vao.shaderProgram.setUniform3f("world_rotation", new Vector3f(t.rotation()));
 
         vao.shaderProgram.setUniform4f("base_color", baseColor.getVec4());
 

@@ -18,7 +18,7 @@ import java.io.Serializable;
  **/
 public class Component implements Serializable {
     protected ComponentRestrictions restrictions = new ComponentRestrictions();
-    public GameObject parentObject;
+    private GameObject parentObject;
 
     public ComponentRestrictions getRestrictions(){
         return restrictions;
@@ -47,4 +47,12 @@ public class Component implements Serializable {
     public void destroy(){}
     public void onAddedToGameObject(GameObject gameObject){}
     public void gameObjectAddedToScene(Scene scene){}
+    public GameObject parentObject(){
+        return parentObject;
+    }
+    public void setParentObject(GameObject newParent){
+        if(parentObject !=null)
+            parentObject.removeComponent(this);
+        this.parentObject = newParent;
+    }
 }

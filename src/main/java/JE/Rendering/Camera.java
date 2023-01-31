@@ -43,22 +43,22 @@ public class Camera extends Component {
 
     public Matrix4f getModel(Transform t){
         Matrix4f model = new Matrix4f().identity();
-        model.translate(t.position.x(), t.position.y(), t.zPos);
-        Vector2f spriteSize = t.scale;
+        model.translate(t.position().x(), t.position().y(), t.zPos());
+        Vector2f spriteSize = t.scale();
 
         model.translate(spriteSize.x()/2, spriteSize.y()/2, 0);
-        model.rotate((float) Math.toRadians(t.rotation.z()), 0, 0, 1);
+        model.rotate((float) Math.toRadians(t.rotation().z()), 0, 0, 1);
         model.translate(-spriteSize.x()/2, -spriteSize.y()/2, 0);
 
 
-        model.scale(t.scale.x(), t.scale.y(), 1);
+        model.scale(t.scale().x(), t.scale().y(), 1);
         model.scale(1, 1, 1);
         return model;
     }
 
 
     public Matrix4f getViewMatrix(){
-        Vector2f position =  parentObject.getTransform().position;
+        Vector2f position =  parentObject.getTransform().position();
         Vector2f finalPos = new Vector2f(position.x + positionOffset.x, position.y + positionOffset.y);
         return new Matrix4f().identity().translate(-finalPos.x(), -finalPos.y(), -zPos);
     }

@@ -7,14 +7,13 @@ An OpenGL remake of JEngine, a JavaFX based game engine.
 - Shaders ✅
 - Textures ✅
 - Simple lighting ✅
-- Audio ✅ (WIP)
+- Audio ✅
 - GUI✅ (WIP)
 - Physics✅
 
 ## Planned Features
 (In order of priority)
 - Finalize GUI implementation
-- Make audio implementation work better
 - Physics
 - Networking (WIP)
 - 3D Rendering

@@ -1,10 +1,10 @@
 package JE.Objects.Gizmos;
 
-import JE.IO.UserInput.Mouse;
+import JE.IO.UserInput.Mouse.Mouse;
+import JE.IO.UserInput.Mouse.MouseButton;
 import JE.Objects.Base.GameObject;
 import JE.UI.UIElements.Style.Color;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 public class MoveGizmo extends Gizmo{
     GameObject controlledObject;
@@ -19,9 +19,9 @@ public class MoveGizmo extends Gizmo{
         Mouse.mousePressedEvents.add((button, mods) -> {
             if(controlledObject == null)
                 return;
-            if(button == Mouse.nameToCode("LEFT")){
+            if(button == MouseButton.LEFT){
                 Vector2f cursorPos = Mouse.getMouseWorldPosition();
-                Vector2f bottomLeft = controlledObject.getTransform().position;
+                Vector2f bottomLeft = controlledObject.getTransform().position();
                 Vector2f topRight = new Vector2f(bottomLeft.x()+1,bottomLeft.y()+1);
                 if(cursorPos.x() >= bottomLeft.x() && cursorPos.x() <= topRight.x() && cursorPos.y() >= bottomLeft.y() && cursorPos.y() <= topRight.y()){
                     interacting = true;
@@ -32,7 +32,7 @@ public class MoveGizmo extends Gizmo{
         Mouse.mouseReleasedEvents.add((button, mods) -> {
             if(controlledObject == null)
                 return;
-            if(button == Mouse.nameToCode("LEFT")){
+            if(button == MouseButton.LEFT){
                 interacting = false;
             }
         });
@@ -46,15 +46,15 @@ public class MoveGizmo extends Gizmo{
         if(!interacting)
         {
             prevMousePos = Mouse.getMouseWorldPosition();
-            getTransform().position = controlledObject.getTransform().position;
+            getTransform().setPosition(controlledObject.getTransform().position());
             return;
         }
-        controlledObject.getTransform().position.add(Mouse.getMouseWorldPosition().sub(prevMousePos));
+        controlledObject.getTransform().setPosition(controlledObject.getTransform().position().add(Mouse.getMouseWorldPosition().sub(prevMousePos)));
         prevMousePos = Mouse.getMouseWorldPosition();
     }
 
     public void setControlledObject(GameObject object){
         this.controlledObject = object;
-        getTransform().position = controlledObject.getTransform().position;
+        getTransform().setPosition(controlledObject.getTransform().position());
     }
 }

@@ -3,6 +3,7 @@ package JE.Objects.Components.Physics;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Base.Component;
+import JE.Sample.Objects.Player;
 import JE.Utility.JOMLtoJBOX;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -85,7 +86,7 @@ public class PhysicsBody extends Component {
     public void update() {
         if(!hasInitialized)
             return;
-        if (parentObject != null && body !=null)
+        if (parentObject() != null && body !=null)
         {
             Vector2f pos = JOMLtoJBOX.vector2f(body.getPosition());
 
@@ -94,9 +95,10 @@ public class PhysicsBody extends Component {
             adjustedPos.x -= getSize().x /2;
             adjustedPos.y -= getSize().y/2;
 
-            parentObject.getTransform().position = adjustedPos;
+            parentObject().getTransform().setPosition(adjustedPos);
+
             if(!fixedRotation)
-                parentObject.getTransform().rotation = new Vector3f(0,0, body.getAngle());
+                parentObject().getTransform().setRotation(new Vector3f(0,0, body.getAngle()));
 
             onGround = false;
             if(body.getType() == BodyType.DYNAMIC){
@@ -105,13 +107,16 @@ public class PhysicsBody extends Component {
                 Vec2 pos2 = body.getPosition();
                 pos2.y -= 0.5f;
                 aabb.lowerBound.set(pos2);
-                pos2.y += 0.2f;
+                // Somehow this works, but I don't know why...
+                pos2.y -= 0.2f;
                 aabb.upperBound.set(pos2);
                 Manager.activeScene().world.physicsWorld.queryAABB((fixture) -> {
-                    if(fixture.getBody().getType() == BodyType.STATIC){
+                    if(fixture.getBody() != body)
+                    {
                         onGround = true;
+                        return true;
                     }
-                    return true;
+                    return false;
                 }, aabb);
             }
         }

@@ -34,11 +34,11 @@ public class PointLight extends Light {
         rangeGizmo.setVertices(vertices);
         rangeGizmo.setBaseColor(color);
         rangeGizmo.setDrawMode(GL_LINES);
-        rangeGizmo.getTransform().position = new Vector2f(getTransform().position.x+0.5f,getTransform().position.y+0.5f);
+        rangeGizmo.getTransform().setPosition(new Vector2f(getTransform().position().x+0.5f,getTransform().position().y+0.5f));
 
         Gizmo pointGizmo = new Gizmo();
-        pointGizmo.getTransform().scale = new Vector2f(0.5f,0.5f);
-        pointGizmo.getTransform().position = new Vector2f(getTransform().position.x+0.25f,getTransform().position.y+0.25f);
+        pointGizmo.getTransform().setScale(new Vector2f(0.5f,0.5f));
+        pointGizmo.getTransform().setPosition(new Vector2f(getTransform().position().x+0.25f,getTransform().position().y+0.25f));
         pointGizmo.renderer.baseColor = color;
 
         return new GizmoParent(pointGizmo, rangeGizmo);

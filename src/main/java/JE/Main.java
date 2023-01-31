@@ -1,11 +1,10 @@
 package JE;
 
-
-import JE.IO.UserInput.Keyboard;
+import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.Logging.Logger;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Base.Sprite;
-import JE.Objects.Common.Player;
+import JE.Sample.Objects.Player;
 import JE.Objects.Components.Physics.PhysicsBody;
 import JE.Objects.Lights.AmbientLight;
 import JE.Rendering.Renderers.ShapeRenderer;
@@ -47,7 +46,7 @@ public class Main {
         scene.activeCamera.viewportSize = new Vector4i(0,0,1000,1000);
 
         /*PointLight pointLight = new PointLight();
-        pointLight.getTransform().position = new Vector2f(0,0);
+        pointLight.getTransform().setPosition(new Vector2f(0,0));
         pointLight.intensity = 15;
         pointLight.radius = 15;
         scene.addLight(pointLight);*/
@@ -92,7 +91,7 @@ public class Main {
                 new Vector2f(0,1)
         });
         go.renderer.setDrawMode(GL_LINE_LOOP);
-        go.addComponent(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position, new Vector2f(1,1)));
+        go.addComponent(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position(), new Vector2f(1,1)));
         go.renderer.baseColor = Color.BLUE;
         go.setParent(player);
         scene.add(player);
@@ -101,17 +100,17 @@ public class Main {
         floor2.setTexture(new Texture("bin/texture2.png"));
         floor2.setScale(6,1);
         floor2.setPosition(-1,-4f);
-        floor2.addComponent(new PhysicsBody().create(BodyType.STATIC, floor2.getTransform().position, new Vector2f(6,1)));
+        floor2.addComponent(new PhysicsBody().create(BodyType.STATIC, floor2.getTransform().position(), new Vector2f(6,1)));
         scene.add(floor2);
-        //floor2.physicsBody.setFriction(5);
 
         for (int i = 0; i < 5; i++) {
             Sprite staticFloor = new Sprite(ShaderProgram.lightSpriteShader());
             staticFloor.setTexture(new Texture("bin/texture2.png"));
             staticFloor.setScale(1,1);
             staticFloor.setPosition(i+5,i-3);
-            staticFloor.addComponent(new PhysicsBody().create(BodyType.STATIC, staticFloor.getTransform().position, new Vector2f(1,1)));
+            staticFloor.addComponent(new PhysicsBody().create(BodyType.STATIC, staticFloor.getTransform().position(), new Vector2f(1,1)));
             scene.add(staticFloor);
         }
     }
+
 }

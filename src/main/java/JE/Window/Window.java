@@ -1,7 +1,8 @@
 package JE.Window;
 
-import JE.IO.UserInput.Keyboard;
-import JE.IO.UserInput.Mouse;
+import JE.IO.UserInput.Keyboard.Keyboard;
+import JE.IO.UserInput.Mouse.Mouse;
+import JE.IO.UserInput.Mouse.MouseButton;
 import JE.Logging.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -19,6 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.AL10.alGenBuffers;
+import static org.lwjgl.openal.AL10.alGenSources;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
@@ -36,12 +38,11 @@ public class Window {
     public static int monitorHeight;
     public static final CopyOnWriteArrayList<Runnable> actionQueue = new CopyOnWriteArrayList<>();
     public static Pipeline pipeline = new DefaultPipeline();
-    public static int audioBuffer = 0;
     private static double deltaTime = 0;
     private static int fpsLimit = 60;
 
     public static void createWindow(WindowPreferences wp) {
-
+        CreateOpenAL();
         Thread t = new Thread(() -> {
             InitializeWindow(wp);
             hasInit = true;
@@ -111,10 +112,10 @@ public class Window {
 
         glfwSetMouseButtonCallback(windowHandle, (windowHandle, button, action, mods) -> {
             if(action == GLFW_PRESS){
-                Mouse.mousePressedEvents.forEach(e -> e.invoke(button, mods));
+                Mouse.mousePressedEvents.forEach(e -> e.invoke(MouseButton.values()[button], mods));
             }
             else if(action == GLFW_RELEASE){
-                Mouse.mouseReleasedEvents.forEach(e -> e.invoke(button, mods));
+                Mouse.mouseReleasedEvents.forEach(e -> e.invoke(MouseButton.values()[button], mods));
             }
         });
 
@@ -150,8 +151,8 @@ public class Window {
         Keyboard.keyPressedEvents.add((key, mods) -> Keyboard.keyPressed(key));
         Keyboard.keyReleasedEvents.add((key, mods) -> Keyboard.keyReleased(key));
 
-        Mouse.mousePressedEvents.add((button, mods) -> Mouse.mousePressed(button));
-        Mouse.mouseReleasedEvents.add((button, mods) -> Mouse.mouseReleased(button));
+        Mouse.mousePressedEvents.add((button, mods) -> Mouse.mousePressed(button.ordinal()));
+        Mouse.mouseReleasedEvents.add((button, mods) -> Mouse.mouseReleased(button.ordinal()));
 
         GLCapabilities caps = GL.createCapabilities();
 
@@ -171,7 +172,7 @@ public class Window {
         }
         UIHandler.init();
 
-        CreateOpenAL();
+
     }
 
     public static void CreateOpenAL() {
@@ -192,7 +193,6 @@ public class Window {
             assert alCapabilities.OpenAL10 : "OpenAL 1.0 is not supported";
         }
 
-        audioBuffer = alGenBuffers();
     }
 
     private static void WindowLoop() {

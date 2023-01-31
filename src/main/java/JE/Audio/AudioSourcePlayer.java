@@ -1,5 +1,6 @@
 package JE.Audio;
 
+import JE.Manager;
 import JE.Scene.Scene;
 import JE.Scene.World;
 
@@ -16,7 +17,11 @@ public final class AudioSourcePlayer extends AudioSource {
     }
 
     public void play(){
-
+        if(worldRef == null)
+        {
+            worldRef = Manager.activeScene().world;
+            worldRef.sounds.add(this);
+        }
         playSound();
     }
 
@@ -27,6 +32,8 @@ public final class AudioSourcePlayer extends AudioSource {
     @Override
     public void destroy(){
         stopSound();
+        if(worldRef !=null)
+            worldRef.sounds.remove(this);
     }
 
     @Override

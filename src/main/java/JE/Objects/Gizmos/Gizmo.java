@@ -12,7 +12,7 @@ public class Gizmo extends Sprite {
         super();
         renderer.baseColor = Color.WHITE;
         renderer.setDrawMode(GL_POLYGON);
-        getTransform().zPos = 10;
+        getTransform().setZPos(10);
     }
 
 

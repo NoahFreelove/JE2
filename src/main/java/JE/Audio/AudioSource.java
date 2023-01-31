@@ -15,6 +15,7 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.AL_SAMPLE_OFFSET;
+import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
 
 public sealed class AudioSource extends Component permits AudioSourcePlayer {
     private int sourceID;
@@ -26,6 +27,10 @@ public sealed class AudioSource extends Component permits AudioSourcePlayer {
     private boolean loops;
 
     private SoundFilter filter;
+
+    private int audioBuffer;
+    private float duration = 0;
+
 
     public AudioSource(){
         super();
@@ -43,13 +48,14 @@ public sealed class AudioSource extends Component permits AudioSourcePlayer {
     }
     private void generateAudioBuffer(){
 
+        alcMakeContextCurrent(Window.audioContext());
 
-        alBufferData(Window.audioBuffer, audioResource.bundle.format, audioResource.bundle.soundData, audioResource.bundle.sampleRate);
+        this.audioBuffer = alGenBuffers();
+        alBufferData(audioBuffer, audioResource.bundle.format, audioResource.bundle.soundData, audioResource.bundle.sampleRate);
 
         // Generate source
         sourceID = alGenSources();
-        Logger.log("Source:" + sourceID);
-        alSourcei(sourceID, AL10.AL_BUFFER, Window.audioBuffer);
+        alSourcei(sourceID, AL10.AL_BUFFER, audioBuffer);
         alSourcei(sourceID, AL10.AL_LOOPING, loops?1:0);
 
         alSourcei(sourceID, AL_POSITION, 0);
@@ -57,7 +63,7 @@ public sealed class AudioSource extends Component permits AudioSourcePlayer {
         setMaxGain(1);
         setGain(1);
         setFilter(new SoundFilter());
-
+        duration = getDuration();
     }
 
     protected void delete(){
@@ -125,6 +131,11 @@ public sealed class AudioSource extends Component permits AudioSourcePlayer {
         alSourcef(sourceID,AL_MAX_GAIN, maxGain);
     }
     public int getBufferPosition(){
+        // get alError
+        int error = alGetError();
+        if(error != AL_NO_ERROR){
+            Logger.log("Error: " + error);
+        }
         return alGetSourcei(sourceID, AL_SAMPLE_OFFSET);
     }
     public void setAttribute3f(int attribute, Vector3f value)
@@ -133,20 +144,22 @@ public sealed class AudioSource extends Component permits AudioSourcePlayer {
     }
     public int getSourceSize(){
         IntBuffer size = BufferUtils.createIntBuffer(1);
-        alGetBufferi(Window.audioBuffer,AL_SIZE,size);
+        alGetBufferi(audioBuffer,AL_SIZE,size);
         return size.get();
     }
 
     public float getDuration(){
-        IntBuffer ib = BufferUtils.createIntBuffer(1);
-        alGetBufferi(Window.audioBuffer,AL_SIZE,ib);
-        return (float)ib.get()/ (float)audioResource.bundle.sampleRate;
+
+        return audioResource.bundle.soundData.capacity() / (float)audioResource.bundle.sampleRate;
     }
     public float getPositionTime(){
 
         return (float)getBufferPosition() / (float)audioResource.bundle.sampleRate;
     }
+    public float duration(){
+        return duration;
+    }
     public float getDecimal(){
-        return getPositionTime() / getDuration();
+        return getPositionTime() / getDuration() *2;
     }
 }

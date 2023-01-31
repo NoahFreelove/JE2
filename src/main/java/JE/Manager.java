@@ -1,8 +1,8 @@
 package JE;
 
-import JE.IO.UserInput.KeyPressedEvent;
-import JE.IO.UserInput.KeyReleasedEvent;
-import JE.IO.UserInput.Keyboard;
+import JE.IO.UserInput.Keyboard.KeyPressedEvent;
+import JE.IO.UserInput.Keyboard.KeyReleasedEvent;
+import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.Rendering.Camera;
 import JE.Scene.Scene;
 import JE.Window.Window;

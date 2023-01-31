@@ -20,7 +20,7 @@ public abstract class Light extends GameObject {
 
     @GLThread
     public final void setLighting(ShaderProgram shaderProgram, int index){
-        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getTransform().position, getTransform().zPos));
+        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getTransform().position(), getTransform().zPos()));
         shaderProgram.setUniform1i("lights[" + index + "].type", type);
         shaderProgram.setUniform4f("lights[" + index + "].color", color.getVec4());
         shaderProgram.setUniform1f("lights[" + index + "].intensity", intensity);
@@ -29,7 +29,7 @@ public abstract class Light extends GameObject {
 
     @GLThread
     public final void hideLighting(ShaderProgram shaderProgram, int index){
-        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getTransform().position, getTransform().zPos));
+        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getTransform().position(), getTransform().zPos()));
         shaderProgram.setUniform1i("lights[" + index + "].type", type);
         shaderProgram.setUniform4f("lights[" + index + "].color", Color.TRANSPARENT.getVec4());
         shaderProgram.setUniform1f("lights[" + index + "].intensity", 0);

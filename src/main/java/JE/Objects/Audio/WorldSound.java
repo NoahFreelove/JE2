@@ -20,8 +20,8 @@ public class WorldSound extends GameObject {
 
     @Override
     public void update(){
-        Vector2f cameraPos = Manager.getCamera().parentObject.getTransform().position;
-        Vector2f worldPos = getTransform().position;
+        Vector2f cameraPos = Manager.getCamera().parentObject.getTransform().position();
+        Vector2f worldPos = getTransform().position();
         Vector3f distance = new Vector3f(worldPos.x - cameraPos.x, worldPos.y - cameraPos.y,0);
         // Calculate rolloff
         float rolloff = 1 / (distance.length() * distance.length()) * soundPlayer.range;
@@ -40,7 +40,7 @@ public class WorldSound extends GameObject {
         rangeGizmo.setVertices(vertices);
         rangeGizmo.setBaseColor(Color.createColor(1,1,1,1));
         rangeGizmo.setDrawMode(GL_LINES);
-        rangeGizmo.getTransform().position = getTransform().position;
+        rangeGizmo.getTransform().setPosition(getTransform().position());
         return rangeGizmo;
     }
 }

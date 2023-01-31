@@ -1,4 +1,6 @@
-package JE.IO.UserInput;
+package JE.IO.UserInput.Keyboard;
+
+import JE.IO.UserInput.Keyboard.Combos.KeyCombo;
 
 import java.util.ArrayList;
 
@@ -25,6 +27,10 @@ public class Keyboard {
 
     public static boolean isKeyPressed(int code) {
         return keys[code];
+    }
+
+    public static boolean isComboPressed(KeyCombo combo){
+        return combo.or(keys);
     }
 
     public static int nameToCode(String keyName) {

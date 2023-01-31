@@ -93,7 +93,7 @@ public class ShaderDebugger {
 
         // Test Object
         GameObject testObject = new GameObject();
-        testObject.getTransform().position = new Vector2f(-0.5f, -0.5f);
+        testObject.getTransform().setPosition(new Vector2f(-0.5f, -0.5f));
         scene.add(testObject);
         scene.add(data.otherObjects);
 

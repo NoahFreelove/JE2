@@ -1,6 +1,8 @@
 package JE.Rendering.Renderers;
 
+import JE.Annotations.ForceShowInInspector;
 import JE.Annotations.GLThread;
+import JE.Annotations.Nullable;
 import JE.Logging.Errors.ShaderError;
 import JE.Logging.Logger;
 import JE.Manager;
@@ -22,7 +24,11 @@ import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer {
     private final VAO2f spriteCoordVAO;
+
+    @ForceShowInInspector
     private Texture texture = new Texture();
+
+    @ForceShowInInspector
     private Texture normal = new Texture();
 
     public SpriteRenderer(ShaderProgram shader){
@@ -34,7 +40,6 @@ public class SpriteRenderer extends Renderer {
                 new Vector2f(0,1)
         }, shader);
         vao = spriteCoordVAO;
-
     }
 
     @Override
