@@ -48,7 +48,7 @@ public final class AudioSourcePlayer extends AudioSource {
 
     @Override
     public void gameObjectAddedToScene(Scene scene) {
-        /*worldRef = scene.world;
-        worldRef.sounds.add(this);*/
+        worldRef = scene.world;
+        worldRef.sounds.add(this);
     }
 }

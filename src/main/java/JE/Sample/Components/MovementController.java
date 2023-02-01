@@ -12,6 +12,7 @@ public class MovementController extends Component {
 
     public float moveSpeed = 5f;
     public float jumpVelocity = 5f;
+    public boolean masterCanMove = true;
     public boolean enableJump = true;
     public boolean canMoveUp = true;
     public boolean canMoveDown = true;
@@ -20,6 +21,7 @@ public class MovementController extends Component {
 
     public boolean physicsBased = true;
     public boolean absoluteXPositioning = true;
+    public boolean absoluteYPositioning = false;
 
     volatile boolean isHugging = false;
 
@@ -27,6 +29,8 @@ public class MovementController extends Component {
 
     @Override
     public void update() {
+        if(!masterCanMove)
+            return;
         if(parentObject() == null)
             return;
 
@@ -54,11 +58,28 @@ public class MovementController extends Component {
                         parentObject().physicsBody.body.setLinearVelocity(new Vec2(0,parentObject().physicsBody.body.getLinearVelocity().y));
                     }
                 }
+                if(absoluteYPositioning){
+                    if(!Keyboard.isComboPressed(UP) && !Keyboard.isComboPressed(DOWN)){
+                        parentObject().physicsBody.body.setLinearVelocity(new Vec2(parentObject().physicsBody.body.getLinearVelocity().x,0));
+                    }
+                }
                 if(enableJump)
                 {
-                    if(Keyboard.isComboPressed(ComboList.UP)){
+                    if(Keyboard.isComboPressed(UP)){
                         if(parentObject().physicsBody.onGround)
                             parentObject().physicsBody.body.setLinearVelocity(new Vec2(parentObject().physicsBody.body.getLinearVelocity().x,jumpVelocity));
+                    }
+                }
+                else {
+                    if(canMoveUp){
+                        if(Keyboard.isComboPressed(UP)){
+                            parentObject().physicsBody.body.setLinearVelocity(new Vec2(parentObject().physicsBody.body.getLinearVelocity().x,moveSpeed));
+                        }
+                    }
+                }
+                if(canMoveDown){
+                    if(Keyboard.isComboPressed(DOWN)){
+                        parentObject().physicsBody.body.setLinearVelocity(new Vec2(parentObject().physicsBody.body.getLinearVelocity().x,-moveSpeed));
                     }
                 }
             }

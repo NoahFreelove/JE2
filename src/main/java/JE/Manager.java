@@ -21,7 +21,7 @@ public class Manager {
     public static Camera getCamera(){
         return activeScene.activeCamera;
     }
-
+    private static Scene queuedScene;
     public static void setWindowPreferences(WindowPreferences wp){
         preferences = wp;
         Window.onPreferenceUpdated(preferences);
@@ -52,6 +52,23 @@ public class Manager {
         activeScene.unload(activeScene, s);
         activeScene = s;
         s.start();
+    }
+
+    public static void setScene(Scene s, boolean waitFrame){
+        if(waitFrame)
+        {
+            queuedScene = s;
+            Window.queuedScene = true;
+        }
+        else {
+            setScene(s);
+        }
+
+    }
+    public static void setQueuedScene(){
+        activeScene.unload(activeScene, queuedScene);
+        activeScene = queuedScene;
+        queuedScene.start();
     }
 
     public static void queueGLFunction(Runnable r){

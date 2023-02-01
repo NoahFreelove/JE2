@@ -4,6 +4,7 @@ import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.IO.UserInput.Mouse.Mouse;
 import JE.IO.UserInput.Mouse.MouseButton;
 import JE.Logging.Logger;
+import JE.Manager;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
@@ -40,6 +41,8 @@ public class Window {
     public static Pipeline pipeline = new DefaultPipeline();
     private static double deltaTime = 0;
     private static int fpsLimit = 60;
+    public static boolean queuedScene = false;
+    private static boolean waitedFrame = false;
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
@@ -210,7 +213,6 @@ public class Window {
         while ( !glfwWindowShouldClose(windowHandle) ) {
 
             // limit every frame to 1/60 seconds without sleeping
-
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             double startTime = glfwGetTime();
 
@@ -235,9 +237,18 @@ public class Window {
             glfwSwapBuffers(windowHandle);
 
             deltaTime = glfwGetTime() - startTime;
-            //Logger.log((int)(1/deltaTime) + " fps");
+            if(queuedScene){
+                if(waitedFrame)
+                {
+                    Manager.setQueuedScene();
+                    queuedScene = false;
+                    waitedFrame = false;
+                }
+                else {
+                    waitedFrame = true;
+                }
+            }
         }
-
     }
 
     public static void onPreferenceUpdated(WindowPreferences wp){

@@ -31,6 +31,9 @@ public class StyledButton extends Button{
     @Override
     protected void render() {
         button.draw_begin();
+        button.text_normal().set(style.textColor.nkColor());
+        button.text_hover().set(style.textColor.nkColor());
+        button.text_active().set(style.textColor.nkColor());
 
         if(isActive()){
             button.normal().data().color().set(style.normalColor.nkColor());

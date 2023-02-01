@@ -28,10 +28,11 @@ public class ImageProcessor {
 
         public static ResourceBundle ProcessImage(String filepath,boolean flip){
         ResourceBundle rb = new ResourceBundle();
-
         if(filepath == null)
         {
             Logger.log(new ImageProcessError(true));
+            rb.imageData = BufferUtils.createByteBuffer(1);
+            rb.imageSize = new Vector2i(1,1);
             return rb;
         }
         if(filepath.equals("") || new File(filepath).isDirectory() || !new File(filepath).exists())

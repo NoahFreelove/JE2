@@ -4,6 +4,7 @@ import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.Logging.Logger;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Base.Sprite;
+import JE.Objects.Components.Physics.BoxCollider;
 import JE.Sample.Objects.Player;
 import JE.Objects.Components.Physics.PhysicsBody;
 import JE.Objects.Lights.AmbientLight;
@@ -90,8 +91,10 @@ public class Main {
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         });
+        go.getTransform().translateY(-1.5f);
         go.renderer.setDrawMode(GL_LINE_LOOP);
-        go.addComponent(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position(), new Vector2f(1,1)));
+        //go.addComponent(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position(), new Vector2f(1,1)));
+        go.addComponent(new BoxCollider().create(go.getTransform().position(), new Vector2f(1,1)));
         go.renderer.baseColor = Color.BLUE;
         go.setParent(player);
         scene.add(player);

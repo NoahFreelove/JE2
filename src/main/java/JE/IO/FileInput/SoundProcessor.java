@@ -51,12 +51,12 @@ public class SoundProcessor {
         bundle.channels = channels;
         bundle.soundData = rawAudioBuffer;
 
-        System.out.println("Sound loaded: " + filePath);
+        /*System.out.println("Sound loaded: " + filePath);
         System.out.println("Channels: " + channels);
         System.out.println("Sample Rate: " + sampleRate);
         System.out.println("Format: " + format);
         System.out.println("Buffer: " + rawAudioBuffer);
-        System.out.println("Buffer Size: " + rawAudioBuffer.capacity());
+        System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
         return bundle;
     }
 }
