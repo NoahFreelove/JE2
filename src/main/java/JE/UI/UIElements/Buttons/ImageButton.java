@@ -53,22 +53,14 @@ public class ImageButton extends UIElement {
     @Override
     protected void render() {
         nk_image_id(text.generatedTextureID,img);
-
-        nk_layout_row_template_begin(UIHandler.ctx, dimensions.y);
-        nk_layout_row_template_push_dynamic(UIHandler.ctx);
+        nk_layout_row_template_begin(UIHandler.ctx, text.resource.bundle.imageSize.y);
+        nk_layout_row_template_push_static(UIHandler.ctx, text.resource.bundle.imageSize.x);
         nk_layout_row_template_end(UIHandler.ctx);
-
-        nk_layout_row_begin(UIHandler.ctx, NK_STATIC, dimensions.y,1);
-        nk_layout_row_push(UIHandler.ctx, dimensions.x);
 
         if(nk_button_image(ctx, img)) {
             if(isActive())
                 onClickEvent.run();
         }
-        nk_layout_row_end(UIHandler.ctx);
-
-        
-
 
     }
 

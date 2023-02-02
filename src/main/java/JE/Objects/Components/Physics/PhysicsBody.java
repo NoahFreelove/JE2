@@ -3,7 +3,6 @@ package JE.Objects.Components.Physics;
 import JE.Manager;
 import JE.Objects.Base.GameObject;
 import JE.Objects.Components.Base.Component;
-import JE.Sample.Objects.Player;
 import JE.Utility.JOMLtoJBOX;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.shapes.PolygonShape;

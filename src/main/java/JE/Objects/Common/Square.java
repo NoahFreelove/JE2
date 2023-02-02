@@ -9,6 +9,8 @@ import JE.Resources.ResourceType;
 import JE.UI.UIElements.Style.Color;
 import org.joml.Vector2i;
 
+import static JE.IO.FileInput.ImageProcessor.generateSolidColorImage;
+
 public class Square extends Sprite {
     private Vector2i size = new Vector2i(64,64);
     private Color color = Color.WHITE;
@@ -29,7 +31,7 @@ public class Square extends Sprite {
     }
 
     private void remakeTexture(){
-        Texture t = new Texture(new Resource("square", ImageProcessor.generateSolidColorImage(size, color.getRGB()), ResourceType.TEXTURE));
+        Texture t = generateSolidColorImage(size,color.getRGB(), "square");
         setTexture(t);
         setNormalTexture(ImageProcessor.generateNormalMap(t));
     }

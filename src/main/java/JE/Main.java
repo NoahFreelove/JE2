@@ -12,6 +12,7 @@ import JE.Rendering.Renderers.ShapeRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Scene.Scene;
+import JE.UI.UIElements.Buttons.ImageButton;
 import JE.UI.UIElements.Buttons.StyledButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
 import JE.UI.UIElements.UIImage;
@@ -78,7 +79,7 @@ public class Main {
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
         elements.add(new StyledCheckbox());
-        elements.add(new UIImage("bin/texture1.png"));
+        elements.add(new ImageButton("bin/texture1.png"));
         scene.addUI(new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2f(100,100), elements));

@@ -6,6 +6,7 @@ import JE.Logging.Logger;
 import JE.Rendering.Texture;
 import JE.Resources.Resource;
 import JE.Resources.ResourceBundle;
+import JE.Resources.ResourceType;
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -71,6 +72,10 @@ public class ImageProcessor {
         }
         rb.imageData.flip();
         return rb;
+    }
+
+    public static Texture generateSolidColorImage(Vector2i size, int color, String textureName){
+        return new Texture(new Resource(textureName, generateSolidColorImage(size,color), ResourceType.TEXTURE));
     }
 
 
