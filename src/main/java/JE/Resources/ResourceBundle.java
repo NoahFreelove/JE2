@@ -11,16 +11,15 @@ public class ResourceBundle implements Serializable {
     // General
     public String filepath;
 
-
     // Texture
-    public Vector2i imageSize;
-    public ByteBuffer imageData;
+    public transient Vector2i imageSize;
+    public transient ByteBuffer imageData;
 
     // Sound
-    public ShortBuffer soundData;
-    public int format;
-    public int sampleRate;
-    public int channels;
-    public boolean isPlaying = false;
+    public transient ShortBuffer soundData;
+    public transient int format;
+    public transient int sampleRate;
+    public transient int channels;
+    public transient boolean isPlaying = false;
 
 }

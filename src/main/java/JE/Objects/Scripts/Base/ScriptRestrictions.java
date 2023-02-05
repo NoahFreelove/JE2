@@ -1,25 +1,25 @@
-package JE.Objects.Components.Base;
+package JE.Objects.Scripts.Base;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ComponentRestrictions implements Serializable {
+public class ScriptRestrictions implements Serializable {
     public boolean canHaveMultiple = true;
     public boolean canBeDisabled = true;
     public boolean canBeRemoved = true;
     public ArrayList<Class> permittedClasses = new ArrayList<>();
     public boolean restrictClasses = false;
 
-    public ComponentRestrictions(){}
+    public ScriptRestrictions(){}
 
 
-    public ComponentRestrictions(boolean canHaveMultiple, boolean canBeDisabled, boolean canBeRemoved){
+    public ScriptRestrictions(boolean canHaveMultiple, boolean canBeDisabled, boolean canBeRemoved){
         this.canHaveMultiple = canHaveMultiple;
         this.canBeDisabled = canBeDisabled;
         this.canBeRemoved = canBeRemoved;
     }
-    public ComponentRestrictions(boolean canHaveMultiple, boolean canBeDisabled, boolean canBeRemoved, Class[] permittedClasses, boolean restrictClasses){
+    public ScriptRestrictions(boolean canHaveMultiple, boolean canBeDisabled, boolean canBeRemoved, Class[] permittedClasses, boolean restrictClasses){
         this.canHaveMultiple = canHaveMultiple;
         this.canBeDisabled = canBeDisabled;
         this.canBeRemoved = canBeRemoved;

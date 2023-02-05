@@ -36,10 +36,10 @@ public class UIImage extends UIElement {
         if(text == null)
             return;
         nk_image_id(text.generatedTextureID,img);
-        nk_layout_row_template_begin(UIHandler.ctx, text.resource.bundle.imageSize.y);
-        nk_layout_row_template_push_static(UIHandler.ctx, text.resource.bundle.imageSize.x);
-        nk_layout_row_template_end(UIHandler.ctx);
-        nk_image(UIHandler.ctx, img);
+        nk_layout_row_template_begin(UIHandler.nuklearContext, text.resource.bundle.imageSize.y);
+        nk_layout_row_template_push_static(UIHandler.nuklearContext, text.resource.bundle.imageSize.x);
+        nk_layout_row_template_end(UIHandler.nuklearContext);
+        nk_image(UIHandler.nuklearContext, img);
 
     }
 }

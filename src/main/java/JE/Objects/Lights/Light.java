@@ -1,12 +1,14 @@
 package JE.Objects.Lights;
 
 import JE.Annotations.GLThread;
-import JE.Objects.Base.GameObject;
+import JE.Manager;
+import JE.Objects.Scripts.Base.Script;
 import JE.Rendering.Shaders.ShaderProgram;
+import JE.Scene.Scene;
 import JE.UI.UIElements.Style.Color;
 import org.joml.Vector3f;
 
-public abstract class Light extends GameObject {
+public abstract class Light extends Script {
     protected Color color;
     public float intensity;
     public int type;
@@ -20,7 +22,9 @@ public abstract class Light extends GameObject {
 
     @GLThread
     public final void setLighting(ShaderProgram shaderProgram, int index){
-        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getTransform().position(), getTransform().zPos()));
+        if(getAttachedObject() == null)
+            return;
+        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getAttachedObject().getTransform().position(), getAttachedObject().getTransform().zPos()));
         shaderProgram.setUniform1i("lights[" + index + "].type", type);
         shaderProgram.setUniform4f("lights[" + index + "].color", color.getVec4());
         shaderProgram.setUniform1f("lights[" + index + "].intensity", intensity);
@@ -29,7 +33,9 @@ public abstract class Light extends GameObject {
 
     @GLThread
     public final void hideLighting(ShaderProgram shaderProgram, int index){
-        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getTransform().position(), getTransform().zPos()));
+        if(getAttachedObject() == null)
+            return;
+        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getAttachedObject().getTransform().position(), getAttachedObject().getTransform().zPos()));
         shaderProgram.setUniform1i("lights[" + index + "].type", type);
         shaderProgram.setUniform4f("lights[" + index + "].color", Color.TRANSPARENT.getVec4());
         shaderProgram.setUniform1f("lights[" + index + "].intensity", 0);
@@ -42,4 +48,14 @@ public abstract class Light extends GameObject {
 
     @GLThread
     protected abstract void setLightSpecific(ShaderProgram shaderProgram, int index);
+
+    @Override
+    public void gameObjectAddedToScene(Scene scene) {
+        scene.addLight(this);
+    }
+
+    @Override
+    public void start() {
+        Manager.activeScene().addLight(this);
+    }
 }

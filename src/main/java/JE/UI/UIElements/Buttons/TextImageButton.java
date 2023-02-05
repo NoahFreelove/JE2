@@ -54,15 +54,15 @@ public class TextImageButton extends UIElement {
     @Override
     protected void render() {
         nk_image_id(texture.generatedTextureID,img);
-        nk_layout_row_template_begin(UIHandler.ctx, texture.resource.bundle.imageSize.y);
-        nk_layout_row_template_push_static(UIHandler.ctx, texture.resource.bundle.imageSize.x);
-        nk_layout_row_template_end(UIHandler.ctx);
+        nk_layout_row_template_begin(UIHandler.nuklearContext, texture.resource.bundle.imageSize.y);
+        nk_layout_row_template_push_static(UIHandler.nuklearContext, texture.resource.bundle.imageSize.x);
+        nk_layout_row_template_end(UIHandler.nuklearContext);
 
-        if(nk_button_image(UIHandler.ctx, img)){
+        if(nk_button_image(UIHandler.nuklearContext, img)){
             if(isActive())
                 onClickEvent.run();
         }
-        nk_label(UIHandler.ctx, text,NK_TEXT_ALIGN_CENTERED);
+        nk_label(UIHandler.nuklearContext, text,NK_TEXT_ALIGN_CENTERED);
     }
 
     public TextImageButton setDimensions(Vector2f dim){

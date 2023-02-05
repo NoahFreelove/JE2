@@ -1,4 +1,4 @@
-package JE.Objects.Components.Pathfinding;
+package JE.Objects.Scripts.Pathfinding;
 
 public enum PathType {
     // Will go directly towards target

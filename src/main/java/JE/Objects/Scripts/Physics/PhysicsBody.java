@@ -1,8 +1,7 @@
-package JE.Objects.Components.Physics;
+package JE.Objects.Scripts.Physics;
 
 import JE.Manager;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Components.Base.Component;
+import JE.Objects.Scripts.Base.Script;
 import JE.Utility.JOMLtoJBOX;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -13,20 +12,21 @@ import org.jbox2d.dynamics.Fixture;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class PhysicsBody extends Component {
-    public org.jbox2d.dynamics.BodyDef bodyDef;
-    public org.jbox2d.dynamics.Body body;
-    public Fixture activeFixture;
-    public boolean hasInitialized = false;
+public class PhysicsBody extends Script {
+    public transient org.jbox2d.dynamics.BodyDef bodyDef;
+    public transient org.jbox2d.dynamics.Body body;
+    public transient Fixture activeFixture;
+    private boolean hasInitialized = false;
     public boolean onGround = false;
     public boolean fixedRotation = true;
     private Vector2f size = new Vector2f(1,1);
+    private BodyType mode = BodyType.DYNAMIC;
 
     public PhysicsBody(){
         super();
     }
     
-    public PhysicsBody create(BodyType defaultState, Vector2f initialPosition, Vector2f initialSize){
+    private PhysicsBody create(BodyType defaultState, Vector2f initialPosition, Vector2f initialSize){
         bodyDef = new BodyDef();
         this.size = new Vector2f(initialSize);
         bodyDef.type = defaultState;
@@ -63,11 +63,16 @@ public class PhysicsBody extends Component {
         activeFixture = body.createFixture(shape, 1.0f);
     }
 
-    public void setMode(BodyType type){
+    public PhysicsBody setMode(BodyType type){
         if(!hasInitialized)
-            return;
+        {
+            mode = type;
+            return this;
+        }
         bodyDef.type = type;
+        this.mode = type;
         body.setType(type);
+        return this;
     }
     public void setFriction(float v){
         if(!hasInitialized)
@@ -77,16 +82,25 @@ public class PhysicsBody extends Component {
     }
 
     @Override
-    public void onAddedToGameObject(GameObject gameObject) {
-        body.setUserData(gameObject);
+    public void start() {
+        updateOnScriptUpdate = false;
+        if(!hasInitialized()){
+            create(mode, getAttachedObject().getTransform().position(), getAttachedObject().getTransform().scale());
+        }
+        body.setUserData(getAttachedObject());
+
     }
 
     @Override
     public void update() {
         if(!hasInitialized)
             return;
-        if (parentObject() != null && body !=null)
+
+        if (body !=null)
         {
+            if(mode == BodyType.STATIC)
+                return;
+
             Vector2f pos = JOMLtoJBOX.vector2f(body.getPosition());
 
             Vector2f adjustedPos =  new Vector2f(pos);
@@ -94,10 +108,10 @@ public class PhysicsBody extends Component {
             adjustedPos.x -= getSize().x /2;
             adjustedPos.y -= getSize().y/2;
 
-            parentObject().getTransform().setPosition(adjustedPos);
+            getAttachedObject().getTransform().setPosition(adjustedPos);
 
             if(!fixedRotation)
-                parentObject().getTransform().setRotation(new Vector3f(0,0, body.getAngle()));
+                getAttachedObject().getTransform().setRotation(new Vector3f(0,0, body.getAngle()));
 
             onGround = false;
             if(body.getType() == BodyType.DYNAMIC){
@@ -121,17 +135,8 @@ public class PhysicsBody extends Component {
         }
     }
 
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void awake() {
-
-    }
-
     public Vector2f getSize() {
         return size;
     }
+    public boolean hasInitialized(){return hasInitialized;}
 }

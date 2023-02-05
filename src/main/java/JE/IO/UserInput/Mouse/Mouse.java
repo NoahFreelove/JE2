@@ -51,7 +51,7 @@ public class Mouse {
         return new Vector2f((float) x.get(), (float) y.get());
     }
     public static Vector2f getMouseWorldPosition() {
-        return getMouseWorldPosition(Manager.getCamera());
+        return getMouseWorldPosition(Manager.getMainCamera());
     }
     public static Vector2f getMouseWorldPosition(Camera c){
         Vector2f cursorPos = getMousePosition();

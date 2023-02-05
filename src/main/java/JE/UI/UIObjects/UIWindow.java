@@ -9,12 +9,12 @@ import org.lwjgl.nuklear.*;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static JE.Window.UIHandler.ctx;
+import static JE.Window.UIHandler.nuklearContext;
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.nuklear.Nuklear.nk_end;
 
 public class UIWindow extends UIObject {
-    private final NkContext context = ctx;
+    private final NkContext context = nuklearContext;
     public String name = "Window";
     public int windowOptions = NK_WINDOW_TITLE | NK_WINDOW_BORDER | NK_WINDOW_MINIMIZABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE;
     private NkStyleWindow window;

@@ -22,7 +22,7 @@ public class FPSCounter extends Label {
 
     @Override
     protected void render() {
-        nk_label_colored(UIHandler.ctx,text + fps,alignment, textColor.nkColor());
+        nk_label_colored(UIHandler.nuklearContext,text + fps,alignment, textColor.nkColor());
     }
 
     public void start(){

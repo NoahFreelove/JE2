@@ -4,6 +4,7 @@ import JE.Annotations.GLThread;
 import JE.Manager;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Resources.Resource;
+import JE.Resources.ResourceBundle;
 import JE.Resources.ResourceType;
 import org.joml.Vector2i;
 import org.lwjgl.opengl.GL13;
@@ -20,7 +21,7 @@ import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 public class Texture implements Serializable {
-    public Resource resource;
+    public transient Resource resource;
     public int generatedTextureID = -1;
 
     public Texture(){
@@ -28,6 +29,11 @@ public class Texture implements Serializable {
     }
     public Texture(Resource resource){
         this.resource = resource;
+        GenerateTexture();
+    }
+
+    public Texture(ResourceBundle bundle){
+        this.resource = new Resource("resource", bundle, ResourceType.TEXTURE);
         GenerateTexture();
     }
 

@@ -1,11 +1,8 @@
 package JE.Rendering.Shaders.Debugging;
 
-import JE.Objects.Base.GameObject;
+import JE.Objects.GameObject;
 import JE.Objects.Lights.Light;
-import JE.Objects.Lights.PointLight;
 import JE.UI.UIElements.Style.Color;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 

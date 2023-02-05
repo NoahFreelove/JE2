@@ -6,7 +6,7 @@ import JE.Window.UIHandler;
 import org.lwjgl.nuklear.NkStyleToggle;
 
 public class StyledCheckbox extends Checkbox{
-    NkStyleToggle toggle = UIHandler.ctx.style().checkbox();
+    NkStyleToggle toggle = UIHandler.nuklearContext.style().checkbox();
     public StyleInfo style = new StyleInfo();
 
     public StyledCheckbox() {}

@@ -16,10 +16,8 @@ public class Manager {
     private static WindowPreferences preferences = new WindowPreferences();
     private static Scene activeScene = new Scene();
 
-    private static Vector4i defaultViewport = new Vector4i(0,0,1280,720);
-
-    public static Camera getCamera(){
-        return activeScene.activeCamera;
+    public static Camera getMainCamera(){
+        return activeScene.mainCamera();
     }
     private static Scene queuedScene;
     public static void setWindowPreferences(WindowPreferences wp){
@@ -99,7 +97,7 @@ public class Manager {
 
     public static void setWindowSize(Vector2i size){
         preferences.windowSize = size;
-        defaultViewport = new Vector4i(defaultViewport.x(), defaultViewport.y(), size.x, size.y);
+        //defaultViewport = new Vector4i(defaultViewport.x(), defaultViewport.y(), size.x, size.y);
         Window.onPreferenceUpdated(preferences);
     }
     public static float deltaTime(){
@@ -110,6 +108,6 @@ public class Manager {
     }
 
     public static Vector4i defaultViewport(){
-        return defaultViewport;
+        return new Vector4i(0,0,preferences.windowSize.x(),preferences.windowSize.y());
     }
 }

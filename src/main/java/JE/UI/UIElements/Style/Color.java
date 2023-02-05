@@ -3,7 +3,9 @@ package JE.UI.UIElements.Style;
 import org.joml.Vector4f;
 import org.lwjgl.nuklear.NkColor;
 
-public class Color {
+import java.io.Serializable;
+
+public class Color implements Serializable {
 
     public static final Color TRANSPARENT = Color.createColor(0,0,0,0);
     public static final Color WHITE = Color.createColor(1,1,1,1);
@@ -23,7 +25,7 @@ public class Color {
     float g;
     float b;
     float a;
-    NkColor nkColor = NkColor.create();
+    transient NkColor nkColor = NkColor.create();
     private Color(){}
     private Color(float r, float g, float b, float a){
         this.r = r;

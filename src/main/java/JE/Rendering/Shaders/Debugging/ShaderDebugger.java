@@ -2,8 +2,8 @@ package JE.Rendering.Shaders.Debugging;
 
 import JE.Annotations.PerformanceWarning;
 import JE.Manager;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Common.CameraRig;
+import JE.Objects.GameObject;
+import JE.Rendering.Camera;
 import JE.Rendering.Renderers.Renderer;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Scene.Scene;
@@ -101,12 +101,13 @@ public class ShaderDebugger {
         Renderer r = new Renderer();
         r.getVAO().setShaderProgram(shader);
         r.baseColor = data.baseColor;
-        testObject.addComponent(r);
+        testObject.addScript(r);
 
         // Setup Camera
-        CameraRig cameraRig = new CameraRig();
+        GameObject cameraRig = new GameObject();
+        cameraRig.addScript(new Camera());
+        scene.setCamera(cameraRig.getScript(Camera.class));
         scene.add(cameraRig);
-        scene.activeCamera = cameraRig.camera;
 
         return scene;
     }

@@ -1,6 +1,8 @@
 package JE.Utility;
 
-public class Delayer {
+import java.io.Serializable;
+
+public class Delayer implements Serializable {
     public boolean activated = false;
     private long duration;
     private long startTimestamp;

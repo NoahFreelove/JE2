@@ -1,13 +1,12 @@
-package JE.Objects.Components.Animator.Sprite;
+package JE.Objects.Scripts.Animator.Sprite;
 
 import JE.Logging.Errors.JE2Error;
 import JE.Logging.Logger;
-import JE.Objects.Base.Sprite;
-import JE.Objects.Components.Base.Component;
+import JE.Objects.Scripts.Base.Script;
 
 import java.util.ArrayList;
 
-public class SpriteAnimator extends Component {
+public class SpriteAnimator extends Script {
     private final ArrayList<SpriteAnimationTimeline> spriteAnimationTimelines = new ArrayList<>();
     public int state = 0;
 
@@ -22,10 +21,10 @@ public class SpriteAnimator extends Component {
 
     @Override
     public void update() {
-        if(parentObject()==null)
+        if(getAttachedObject()==null)
             return;
         try {
-            spriteAnimationTimelines.get(state).AnimUpdate((Sprite)parentObject());
+            spriteAnimationTimelines.get(state).AnimUpdate(getAttachedObject().getSpriteRenderer());
         }
         catch (Exception e){
             Logger.log(new JE2Error("Sprite Animator", "Could not update animation as parent object could not be cast to a sprite"));

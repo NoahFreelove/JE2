@@ -2,20 +2,20 @@ package JE;
 
 import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.Logging.Logger;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Base.Sprite;
-import JE.Objects.Components.Physics.BoxCollider;
-import JE.Sample.Objects.Player;
-import JE.Objects.Components.Physics.PhysicsBody;
+import JE.Objects.GameObject;
+import JE.Objects.Lights.PointLight;
+import JE.Rendering.Camera;
+import JE.Rendering.Texture;
+import JE.Sample.Scripts.MovementController;
+import JE.Sample.Objects.PlayerScript;
+import JE.Objects.Scripts.Physics.PhysicsBody;
 import JE.Objects.Lights.AmbientLight;
 import JE.Rendering.Renderers.ShapeRenderer;
 import JE.Rendering.Shaders.ShaderProgram;
-import JE.Rendering.Texture;
 import JE.Scene.Scene;
 import JE.UI.UIElements.Buttons.ImageButton;
 import JE.UI.UIElements.Buttons.StyledButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
-import JE.UI.UIElements.UIImage;
 import JE.UI.UIElements.PreBuilt.FPSCounter;
 import JE.UI.UIElements.Sliders.StyledSlider;
 import JE.UI.UIElements.Style.Color;
@@ -25,7 +25,6 @@ import JE.Window.WindowPreferences;
 import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
-import org.joml.Vector4i;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,24 +39,27 @@ public class Main {
         Logger.logErrors = false;
 
         Scene scene = new Scene();
-        Manager.setScene(scene);
 
-        Player player = new Player();
+        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture("bin/texture1.png"));
+        player.addScript(new PhysicsBody());
+        player.addScript(new PlayerScript());
+        PointLight p = new PointLight();
+        p.radius = 5f;
+        p.intensity = 2f;
+        player.addScript(p);
+
+        MovementController mc = new MovementController();
+        mc.physicsBased = true;
+        mc.canMoveDown = false;
+        player.addScript(mc);
+        player.addScript(new Camera());
         player.setPosition(2,1);
-        scene.activeCamera = player.camera;
-        scene.activeCamera.viewportSize = new Vector4i(0,0,1000,1000);
+        scene.setCamera(player.getScript(Camera.class));
 
-        /*PointLight pointLight = new PointLight();
-        pointLight.getTransform().setPosition(new Vector2f(0,0));
-        pointLight.intensity = 15;
-        pointLight.radius = 15;
-        scene.addLight(pointLight);*/
 
-        /*AreaLight areaLight = new AreaLight();
-        scene.addLight(areaLight);*/
-
+        GameObject ambientObject = new GameObject();
         AmbientLight ambient = new AmbientLight();
-        scene.addLight(ambient);
+        ambientObject.addScript(ambient);
 
         Manager.addKeyReleasedCallback((key, mods) -> {
             if(key == Keyboard.nameToCode("Q")){
@@ -85,36 +87,27 @@ public class Main {
                 new Vector2f(100,100), elements));
 
         GameObject go = new GameObject();
-        go.addComponent(new ShapeRenderer());
-        ((ShapeRenderer)go.renderer).setPoints(new Vector2f[]{
+        go.addScript(new ShapeRenderer());
+        ((ShapeRenderer)go.getRenderer()).setPoints(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         });
         go.getTransform().translateY(-1.5f);
-        go.renderer.setDrawMode(GL_LINE_LOOP);
-        //go.addComponent(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position(), new Vector2f(1,1)));
-        go.addComponent(new BoxCollider().create(go.getTransform().position(), new Vector2f(1,1)));
-        go.renderer.baseColor = Color.BLUE;
-        go.setParent(player);
+        go.getRenderer().setDrawMode(GL_LINE_LOOP);
+        //go.addScript(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position(), new Vector2f(1,1)));
+        go.getRenderer().baseColor = Color.BLUE;
+        scene.add(go);
+
         scene.add(player);
 
-        Sprite floor2 = new Sprite();
-        floor2.setTexture(new Texture("bin/texture2.png"));
-        floor2.setScale(6,1);
-        floor2.setPosition(-1,-4f);
-        floor2.addComponent(new PhysicsBody().create(BodyType.STATIC, floor2.getTransform().position(), new Vector2f(6,1)));
-        scene.add(floor2);
+        GameObject floor = GameObject.Sprite(ShaderProgram.spriteShader(), new Texture("bin/texture2.png"));
+        floor.setScale(6,1);
+        floor.setPosition(-1,-4f);
+        floor.addScript(new PhysicsBody().setMode(BodyType.STATIC));
+        scene.add(floor);
 
-        for (int i = 0; i < 5; i++) {
-            Sprite staticFloor = new Sprite(ShaderProgram.lightSpriteShader());
-            staticFloor.setTexture(new Texture("bin/texture2.png"));
-            staticFloor.setScale(1,1);
-            staticFloor.setPosition(i+5,i-3);
-            staticFloor.addComponent(new PhysicsBody().create(BodyType.STATIC, staticFloor.getTransform().position(), new Vector2f(1,1)));
-            scene.add(staticFloor);
-        }
+        Manager.setScene(scene);
     }
-
 }

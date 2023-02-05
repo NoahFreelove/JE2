@@ -2,12 +2,8 @@ package JE.Rendering.Renderers;
 
 import JE.Annotations.ForceShowInInspector;
 import JE.Annotations.GLThread;
-import JE.Annotations.Nullable;
-import JE.Logging.Errors.ShaderError;
-import JE.Logging.Logger;
 import JE.Manager;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Components.Common.Transform;
+import JE.Objects.GameObject;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
@@ -31,8 +27,17 @@ public class SpriteRenderer extends Renderer {
     @ForceShowInInspector
     private Texture texture = new Texture();
 
-    @ForceShowInInspector
+    //@ForceShowInInspector
     private Texture normal = new Texture();
+
+    public SpriteRenderer() {
+        spriteCoordVAO = new VAO2f(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        }, ShaderProgram.spriteShader());
+    }
 
     public SpriteRenderer(ShaderProgram shader){
         super();
@@ -69,7 +74,7 @@ public class SpriteRenderer extends Renderer {
     @Override
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize) {
-        Render(gameObject,additionalBufferSize,Manager.getCamera());
+        Render(gameObject,additionalBufferSize,Manager.getMainCamera());
     }
 
     @Override

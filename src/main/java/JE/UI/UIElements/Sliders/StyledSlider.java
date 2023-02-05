@@ -5,7 +5,7 @@ import JE.Window.UIHandler;
 import org.lwjgl.nuklear.NkStyleSlider;
 
 public class StyledSlider extends Slider{
-    NkStyleSlider slider = UIHandler.ctx.style().slider();
+    NkStyleSlider slider = UIHandler.nuklearContext.style().slider();
     public StyleInfo style = new StyleInfo();
 
     public StyledSlider() {

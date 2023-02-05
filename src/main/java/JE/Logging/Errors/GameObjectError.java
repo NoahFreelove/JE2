@@ -1,6 +1,6 @@
 package JE.Logging.Errors;
 
-import JE.Objects.Base.GameObject;
+import JE.Objects.GameObject;
 
 public class GameObjectError extends JE2Error {
     public GameObjectError(){

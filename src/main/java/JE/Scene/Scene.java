@@ -2,22 +2,21 @@ package JE.Scene;
 
 import JE.Annotations.RequireNonNull;
 import JE.Manager;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Gizmos.Gizmo;
-import JE.Objects.Gizmos.GizmoParent;
+import JE.Objects.GameObject;
 import JE.Objects.Lights.Light;
 import JE.Rendering.Camera;
 import JE.UI.UIObjects.UIObject;
 import JE.Utility.Watcher;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class Scene {
+public class Scene implements Serializable {
 
-    public Camera activeCamera = new Camera();
+    private Camera activeCamera = new Camera();
 
     public final World world = new World();
 
@@ -26,7 +25,6 @@ public class Scene {
     public void clear(){
         world.gameObjects.clear();
         world.lights.clear();
-        world.gizmos.clear();
         world.physicsWorld = new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,-9.8f));
     }
 
@@ -43,7 +41,7 @@ public class Scene {
             add(child);
         }
         newGameObject.linkedScene = this;
-        newGameObject.componentGameObjectAddedToScene(this);
+        newGameObject.scriptParentAdded(this);
     }
 
     public void add(GameObject... newGameObjects)
@@ -65,13 +63,11 @@ public class Scene {
         Objects.requireNonNull(gameObject);
         if(!world.gameObjects.contains(gameObject))
             return;
-        gameObject.destroy();
-        gameObject.componentDestroy();
+        gameObject.scriptDestroy();
 
         for (GameObject child :
                 gameObject.getChildren()) {
-            child.destroy();
-            child.componentDestroy();
+            child.scriptDestroy();
         }
         world.gameObjects.remove(gameObject);
     }
@@ -121,57 +117,31 @@ public class Scene {
         world.lights.remove(light);
     }
 
-    public void addGizmo(Gizmo gizmo){
-        if(gizmo == null)
-            return;
-        if(world.gizmos.contains(gizmo))
-            return;
-        world.gizmos.add(gizmo);
-    }
-
-    public void addGizmo(Gizmo... gizmos){
-        for(Gizmo gizmo : gizmos){
-            addGizmo(gizmo);
-        }
-    }
-    public void addGizmo(ArrayList<Gizmo> gizmos){
-        for(Gizmo gizmo : gizmos){
-            addGizmo(gizmo);
-        }
-    }
-    public void addGizmo(GizmoParent gp){
-        addGizmo(gp.gizmos);
-    }
-
-    public void removeGizmo(Gizmo gizmo){
-        if(gizmo == null)
-            return;
-        if(!world.gizmos.contains(gizmo))
-            return;
-        world.gizmos.remove(gizmo);
-    }
-
     public void update(){
         update(true);
     }
 
     public void update(boolean physicsUpdate) {
-        world.gameObjects.forEach(GameObject::update);
         if (physicsUpdate){
-            world.gameObjects.forEach(GameObject::physicsUpdate);
             world.physicsWorld.step(Manager.deltaTime(), 6, 2);
+            world.gameObjects.forEach(GameObject::physicsUpdate);
         }
-        world.gameObjects.forEach(GameObject::componentUpdate);
+        world.gameObjects.forEach(GameObject::scriptUpdate);
         world.UI.forEach(UIObject::update);
     }
 
     public void start(){
-        world.gameObjects.forEach(GameObject::start);
-        world.gameObjects.forEach(GameObject::componentStart);
+        world.gameObjects.forEach(GameObject::scriptStart);
     }
 
     public void unload(Scene oldScene, Scene newScene) {
-        world.gameObjects.forEach(GameObject::unload);
-        world.gameObjects.forEach(gameObject -> gameObject.componentUnload(oldScene,newScene));
+        world.gameObjects.forEach(gameObject -> gameObject.scriptUnload(oldScene,newScene));
+    }
+
+    public Camera mainCamera() {
+        return activeCamera;
+    }
+    public void setCamera(Camera cam){
+        this.activeCamera = cam;
     }
 }

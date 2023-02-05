@@ -1,6 +1,6 @@
-package JE.Objects.Components.Animator.Sprite;
+package JE.Objects.Scripts.Animator.Sprite;
 
-import JE.Objects.Base.Sprite;
+import JE.Rendering.Renderers.SpriteRenderer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +40,7 @@ public class SpriteAnimationTimeline {
         currentFrameDuration = 0;
     }
 
-    public void AnimUpdate(Sprite sprite){
+    public void AnimUpdate(SpriteRenderer sprite){
         float newDelta = new Date().getTime() - updateDelta;
         updateDelta = new Date().getTime();
 

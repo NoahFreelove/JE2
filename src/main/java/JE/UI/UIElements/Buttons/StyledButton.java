@@ -5,7 +5,7 @@ import JE.Window.UIHandler;
 import org.lwjgl.nuklear.NkStyleButton;
 
 public class StyledButton extends Button{
-    NkStyleButton button = UIHandler.ctx.style().button();
+    NkStyleButton button = UIHandler.nuklearContext.style().button();
     public StyleInfo style = new StyleInfo();
 
     public StyledButton() {

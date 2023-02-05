@@ -4,7 +4,7 @@ import JE.Manager;
 import JE.Scene.Scene;
 import JE.Scene.World;
 
-public final class AudioSourcePlayer extends AudioSource {
+public non-sealed class AudioSourcePlayer extends AudioSource {
     private World worldRef;
     public float range = 1f;
 

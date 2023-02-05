@@ -5,7 +5,9 @@ import JE.Logging.Errors.ShaderLayoutError;
 import JE.Logging.Logger;
 import JE.Rendering.VertexBuffers.VAO;
 
-public class ShaderLayout{
+import java.io.Serializable;
+
+public class ShaderLayout implements Serializable {
     private VAO vao;
     private int location;
 

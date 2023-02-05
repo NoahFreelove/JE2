@@ -1,7 +1,6 @@
 package JE.Window;
 
 import JE.Manager;
-import JE.Objects.Gizmos.Gizmo;
 import JE.Utility.Watcher;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -24,23 +23,15 @@ public class DefaultPipeline extends Pipeline{
                 return;
             gameObject.preRender();
 
-            if(gameObject.renderer != null)
+            if(gameObject.getRenderer() != null)
             {
-                gameObject.renderer.Render(gameObject,0, Manager.getCamera());
+                gameObject.getRenderer().Render(gameObject,0, Manager.getMainCamera());
             }
         });
     }
 
     @Override
     public void renderGUI() {
-        for (Gizmo gizmo : Manager.activeScene().world.gizmos) {
-            if (gizmo == null)
-                continue;
-            if (gizmo.renderer != null) {
-                gizmo.onDraw();
-                gizmo.renderer.Render(gizmo);
-            }
-        }
     }
 
     @Override

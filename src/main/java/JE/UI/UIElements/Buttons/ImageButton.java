@@ -3,15 +3,13 @@ package JE.UI.UIElements.Buttons;
 import JE.IO.FileInput.ImageProcessor;
 import JE.Rendering.Texture;
 import JE.Resources.ResourceBundle;
-import JE.UI.UIElements.Style.StyleInfo;
 import JE.UI.UIElements.UIElement;
 import JE.Window.UIHandler;
 import org.joml.Vector2f;
 import org.lwjgl.nuklear.NkImage;
 import org.lwjgl.nuklear.NkRect;
-import org.lwjgl.nuklear.NkStyleButton;
 
-import static JE.Window.UIHandler.ctx;
+import static JE.Window.UIHandler.nuklearContext;
 import static org.lwjgl.nuklear.Nuklear.*;
 
 public class ImageButton extends UIElement {
@@ -53,11 +51,11 @@ public class ImageButton extends UIElement {
     @Override
     protected void render() {
         nk_image_id(text.generatedTextureID,img);
-        nk_layout_row_template_begin(UIHandler.ctx, text.resource.bundle.imageSize.y);
-        nk_layout_row_template_push_static(UIHandler.ctx, text.resource.bundle.imageSize.x);
-        nk_layout_row_template_end(UIHandler.ctx);
+        nk_layout_row_template_begin(UIHandler.nuklearContext, text.resource.bundle.imageSize.y);
+        nk_layout_row_template_push_static(UIHandler.nuklearContext, text.resource.bundle.imageSize.x);
+        nk_layout_row_template_end(UIHandler.nuklearContext);
 
-        if(nk_button_image(ctx, img)) {
+        if(nk_button_image(nuklearContext, img)) {
             if(isActive())
                 onClickEvent.run();
         }

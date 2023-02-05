@@ -1,6 +1,5 @@
-package JE.Objects.Components.Animator.Sprite;
+package JE.Objects.Scripts.Animator.Sprite;
 
-import JE.Objects.Base.Sprite;
 import JE.Rendering.Renderers.SpriteRenderer;
 import JE.Rendering.Texture;
 
@@ -14,10 +13,9 @@ public class SpriteAnimationFrame {
         this.duration = durationInMilliseconds;
     }
 
-    public void Activate(Sprite sprite){
-        SpriteRenderer sr = (SpriteRenderer)sprite.renderer;
-        if(sr == null)
+    public void Activate(SpriteRenderer sprite){
+        if(sprite == null)
             return;
-        sr.setTexture(texture);
+        sprite.setTexture(texture);
     }
 }

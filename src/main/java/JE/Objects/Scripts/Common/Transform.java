@@ -1,15 +1,19 @@
-package JE.Objects.Components.Common;
+package JE.Objects.Scripts.Common;
 
-import JE.Objects.Components.Base.Component;
+import JE.Objects.Scripts.Base.Script;
+import JE.Objects.Scripts.Physics.PhysicsBody;
+import JE.Utility.JOMLtoJBOX;
 import org.joml.*;
 
 import java.lang.Math;
 
-public class Transform extends Component {
+public class Transform extends Script {
     private Vector2f position;
     private float zPos = 1;
     private Vector3f rotation;
     private Vector2f scale;
+
+    private PhysicsBody physicsBody;
 
     public Transform(){
         position = new Vector2f();
@@ -80,15 +84,31 @@ public class Transform extends Component {
 
     @Override
     public void start() {
-
+        physicsBody = getAttachedObject().getScript(PhysicsBody.class);
     }
 
     @Override
     public void update() {
+        if(physicsBody !=null)
+        {
+            if(!physicsBody.hasInitialized())
+                return;
+            Vector2f adjustedPos = new Vector2f(position());
+            adjustedPos.x += physicsBody.getSize().x/2;
+            adjustedPos.y += physicsBody.getSize().y/2;
+            physicsBody.body.setTransform(JOMLtoJBOX.vec2(adjustedPos), rotation().z());
+        }
     }
 
     @Override
     public void awake() {
 
+    }
+
+    @Override
+    public void onForeignScriptAdded(Script script) {
+        if(script instanceof PhysicsBody pb){
+            physicsBody = pb;
+        }
     }
 }

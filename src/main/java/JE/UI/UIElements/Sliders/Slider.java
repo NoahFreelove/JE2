@@ -7,7 +7,6 @@ import org.lwjgl.BufferUtils;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.nuklear.Nuklear.nk_slider_float;
-import static org.lwjgl.nuklear.Nuklear.nnk_progress;
 
 public class Slider extends UIElement {
     public float v = .5f;
@@ -43,10 +42,10 @@ public class Slider extends UIElement {
         fb.put(0,v);
         if(!isActive())
         {
-            nk_slider_float(UIHandler.ctx, min, fb, max, (inactiveStrict? 0 : step));
+            nk_slider_float(UIHandler.nuklearContext, min, fb, max, (inactiveStrict? 0 : step));
             return;
         }
-        nk_slider_float(UIHandler.ctx, min, fb, max, step);
+        nk_slider_float(UIHandler.nuklearContext, min, fb, max, step);
 
         v = fb.get(0);
         if(v != prev)

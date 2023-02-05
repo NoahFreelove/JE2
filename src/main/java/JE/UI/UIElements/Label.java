@@ -2,7 +2,6 @@ package JE.UI.UIElements;
 
 import JE.UI.UIElements.Style.Color;
 import JE.Window.UIHandler;
-import org.lwjgl.nuklear.NkUserFont;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 
@@ -29,6 +28,6 @@ public class Label extends UIElement {
 
     @Override
     protected void render() {
-        nk_label_colored(UIHandler.ctx,text,alignment, textColor.nkColor());
+        nk_label_colored(UIHandler.nuklearContext,text,alignment, textColor.nkColor());
     }
 }

@@ -38,7 +38,7 @@ public class Checkbox extends UIElement {
     protected void render() {
         boolean prev = isChecked;
         bb.put(0,(byte) (isChecked? 1 : 0));
-        nk_checkbox_label(UIHandler.ctx, label, bb);
+        nk_checkbox_label(UIHandler.nuklearContext, label, bb);
         if(!isActive())
             return;
         isChecked = ((int)(bb.get(0)) == 1);

@@ -2,10 +2,9 @@ package JE.Rendering.Renderers;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Components.Base.Component;
-import JE.Objects.Components.Base.ComponentRestrictions;
-import JE.Objects.Components.Common.Transform;
+import JE.Objects.GameObject;
+import JE.Objects.Scripts.Base.Script;
+import JE.Objects.Scripts.Common.Transform;
 import JE.Objects.Lights.Light;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderLayout;
@@ -20,16 +19,12 @@ import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL20.*;
 
-public class Renderer extends Component {
+public class Renderer extends Script {
     protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Color baseColor = Color.WHITE;
 
     protected int drawMode = GL_POLYGON;
-
-    public Renderer(){
-        restrictions = new ComponentRestrictions(false, true, true);
-    }
 
     public void SetShader(ShaderProgram shader){
         vao.setShaderProgram(shader);
@@ -40,12 +35,12 @@ public class Renderer extends Component {
     @GLThread
     public void Render(GameObject t)
     {
-        Render(t,0, Manager.getCamera());
+        Render(t,0, Manager.getMainCamera());
     }
 
     @GLThread
     public void Render(GameObject t, int additionalBufferSize) {
-        Render(t,additionalBufferSize, Manager.getCamera());
+        Render(t,additionalBufferSize, Manager.getMainCamera());
     }
 
     public void enableLayouts(){

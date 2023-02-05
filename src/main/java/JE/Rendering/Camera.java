@@ -1,21 +1,18 @@
 package JE.Rendering;
 
 import JE.Manager;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Components.Base.Component;
-import JE.Objects.Components.Common.Transform;
+import JE.Objects.Scripts.Base.Script;
+import JE.Objects.Scripts.Common.Transform;
 import org.joml.*;
 
 import java.lang.Math;
 
-public class Camera extends Component {
-    public GameObject parentObject = new GameObject();
+public class Camera extends Script {
     public float zPos = 100;
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1;
     public Vector4i viewportSize = Manager.defaultViewport();
-    public Camera(){
-    }
+
 
     @Override
     public void update() {
@@ -58,7 +55,7 @@ public class Camera extends Component {
 
 
     public Matrix4f getViewMatrix(){
-        Vector2f position =  parentObject.getTransform().position();
+        Vector2f position =  getAttachedObject().getTransform().position();
         Vector2f finalPos = new Vector2f(position.x + positionOffset.x, position.y + positionOffset.y);
         return new Matrix4f().identity().translate(-finalPos.x(), -finalPos.y(), -zPos);
     }

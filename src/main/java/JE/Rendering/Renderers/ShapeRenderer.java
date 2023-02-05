@@ -2,8 +2,7 @@ package JE.Rendering.Renderers;
 
 import JE.Annotations.GLThread;
 import JE.Manager;
-import JE.Objects.Base.GameObject;
-import JE.Objects.Components.Common.Transform;
+import JE.Objects.GameObject;
 import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.VertexBuffers.VAO2f;
@@ -27,7 +26,7 @@ public class ShapeRenderer extends Renderer{
     @Override
     @GLThread
     public void Render(GameObject t, int additionalBufferSize) {
-        Render(t,additionalBufferSize, Manager.getCamera());
+        Render(t,additionalBufferSize, Manager.getMainCamera());
     }
 
     @Override

@@ -23,7 +23,7 @@ public class Button extends UIElement {
 
     @Override
     protected void render() {
-        if(nk_button_label(UIHandler.ctx, text)){
+        if(nk_button_label(UIHandler.nuklearContext, text)){
             if(!isActive())
                 return;
             onClickEvent.run();

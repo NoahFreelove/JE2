@@ -2,7 +2,7 @@ package JE.Audio;
 
 import JE.Audio.Filters.SoundFilter;
 import JE.Logging.Logger;
-import JE.Objects.Components.Base.Component;
+import JE.Objects.Scripts.Base.Script;
 import JE.Resources.Resource;
 import JE.Resources.ResourceType;
 import JE.Window.Window;
@@ -17,7 +17,7 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.AL_SAMPLE_OFFSET;
 import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
 
-public sealed class AudioSource extends Component permits AudioSourcePlayer {
+public sealed class AudioSource extends Script permits AudioSourcePlayer {
     private int sourceID;
 
     private Resource audioResource;
