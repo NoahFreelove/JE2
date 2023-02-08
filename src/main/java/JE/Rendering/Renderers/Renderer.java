@@ -55,21 +55,26 @@ public class Renderer extends Script {
 
         glViewport(camera.viewportSize.x, camera.viewportSize.y, camera.viewportSize.z, camera.viewportSize.w);
         PreRender();
-        if(!vao.shaderProgram.use())
+        ShaderProgram shader = vao.getShaderProgram();
+        if(!shader.use())
             return;
         Transform t = gameObject.getTransform();
 
-        vao.shaderProgram.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
-        vao.shaderProgram.setUniformMatrix4f("model", camera.getModel(t).get(BufferUtils.createFloatBuffer(16)));
-        vao.shaderProgram.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
-        vao.shaderProgram.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
-        vao.shaderProgram.setUniform3f("world_position", new Vector3f(t.position(), t.zPos()));
-        vao.shaderProgram.setUniform2f("world_scale", new Vector2f(t.scale()));
-        vao.shaderProgram.setUniform3f("world_rotation", new Vector3f(t.rotation()));
+        shader.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("model", camera.getModel(t).get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniform3f("world_position", new Vector3f(t.position(), t.zPos()));
+        shader.setUniform2f("world_scale", new Vector2f(t.scale()));
+        shader.setUniform3f("world_rotation", new Vector3f(t.rotation()));
+        shader.setUniform4f("base_color", baseColor.getVec4());
 
-        vao.shaderProgram.setUniform4f("base_color", baseColor.getVec4());
+        if (shader.supportsTextures)
+        {
+            vao.getShaderProgram().setUniform1i("use_texture", (shader.supportsTextures? 1 : 0));
+        }
 
-        if(vao.shaderProgram.supportsLighting)
+        if(shader.supportsLighting)
             setLighting(gameObject.getLightLayer());
 
         vao.Enable(0);
@@ -81,19 +86,20 @@ public class Renderer extends Script {
 
     @GLThread
     private void setLighting(int selectedLayer) {
-        vao.shaderProgram.setUniform1i("light_count", Manager.activeScene().world.lights.size());
+        vao.getShaderProgram().setUniform1i("light_count", Manager.activeScene().world.lights.size());
+
         for (int i = 0; i <Manager.activeScene().world.lights.size(); i++) {
             Light light = Manager.activeScene().world.lights.get(i);
             boolean found = false;
             for (int layer : light.affectedLayers) {
                 if (layer == selectedLayer) {
-                    light.setLighting(vao.shaderProgram, i);
+                    light.setLighting(vao.getShaderProgram(), i);
                     found = true;
                     break;
                 }
             }
             if(!found)
-                light.hideLighting(vao.shaderProgram, i);
+                light.hideLighting(vao.getShaderProgram(), i);
         }
     }
 
@@ -120,6 +126,6 @@ public class Renderer extends Script {
 
     @Override
     public void destroy() {
-        getVAO().shaderProgram.destroy();
+        getVAO().getShaderProgram().destroy();
     }
 }

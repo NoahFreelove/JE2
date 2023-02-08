@@ -19,7 +19,7 @@ public class VAO implements Serializable {
     protected int vertexBufferID = 0;
     protected int location;
 
-    public ShaderProgram shaderProgram = ShaderProgram.invalidShader();
+    protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
     protected int dataSize = 1;
 
     public VAO(){
@@ -90,5 +90,8 @@ public class VAO implements Serializable {
 
     public void setShaderProgram(ShaderProgram sp){
         this.shaderProgram = sp;
+    }
+    public ShaderProgram getShaderProgram(){
+        return shaderProgram;
     }
 }

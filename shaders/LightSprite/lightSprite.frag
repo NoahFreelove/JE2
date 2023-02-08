@@ -24,6 +24,7 @@ uniform int light_count;
 uniform Light lights[MAX_LIGHTS];
 uniform sampler2D JE_Texture;
 uniform sampler2D JE_Normal;
+uniform int use_texture;
 uniform vec3 world_position;
 uniform vec4 base_color;
 
@@ -75,5 +76,10 @@ void main(){
 
         total_light += light.color.rgb * diffuse * falloff * intensity / (dist * dist);
     }
-    color = texture(JE_Texture, UV) * vec4(total_light, 1.0);
+    if(use_texture == 1){
+        color = texture(JE_Texture, UV) * vec4(total_light, 1.0);
+    }
+    else if (use_texture == 0){
+        color = base_color * vec4(total_light, 1.0);
+    }
 }

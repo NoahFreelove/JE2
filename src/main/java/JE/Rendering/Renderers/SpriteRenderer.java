@@ -79,18 +79,17 @@ public class SpriteRenderer extends Renderer {
 
     @Override
     @GLThread
-    public void Render(GameObject gameObject, int additionalBufferSize, Camera camera){
-        if(!vao.shaderProgram.use())
+    public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
+        if (!vao.getShaderProgram().use())
             return;
 
         texture.activateTexture(GL_TEXTURE0);
         normal.activateTexture(GL_TEXTURE1);
-        glUniform1i(glGetUniformLocation(vao.shaderProgram.programID, "JE_Texture"), 0);
-        glUniform1i(glGetUniformLocation(vao.shaderProgram.programID, "JE_Normal"), 1);
+        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
+        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (tile ? GL_REPEAT : GL_CLAMP_TO_EDGE));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (tile ? GL_REPEAT : GL_CLAMP_TO_EDGE));
-        // if we tile, the coordinates are in the range of 0-1, so we need to multiply them by the texture size
-
 
         spriteCoordVAO.Enable(1);
         super.Render(gameObject, spriteCoordVAO.getVertices().length*2+additionalBufferSize, camera);

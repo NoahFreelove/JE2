@@ -32,12 +32,19 @@ public record ShaderRegistry() {
             "}";
 
     public static String SPRITE_FRAGMENT = "#version 330 core\n" +
-            "out vec4 FragColor;" +
+            "out vec4 FragColor;\n" +
             "uniform sampler2D JE_Texture;\n" +
             "in vec2 UV;\n" +
+            "uniform int use_texture;\n" +
+            "uniform vec4 base_color;\n" +
             "\n" +
             "void main(){\n" +
-            "  FragColor = texture(JE_Texture, UV);\n" +
+            "    if(use_texture == 1){\n" +
+            "        FragColor = texture(JE_Texture, UV);\n" +
+            "    }\n" +
+            "    else if (use_texture == 0){\n" +
+            "        FragColor = base_color;\n" +
+            "    }\n" +
             "}";
 
     public static String LIGHTSPRITE_VERTEX = "#version 330 core\n" +
@@ -90,6 +97,7 @@ public record ShaderRegistry() {
             "uniform Light lights[MAX_LIGHTS];\n" +
             "uniform sampler2D JE_Texture;\n" +
             "uniform sampler2D JE_Normal;\n" +
+            "uniform int use_texture;\n" +
             "uniform vec3 world_position;\n" +
             "uniform vec4 base_color;\n" +
             "\n" +
@@ -141,7 +149,12 @@ public record ShaderRegistry() {
             "\n" +
             "        total_light += light.color.rgb * diffuse * falloff * intensity / (dist * dist);\n" +
             "    }\n" +
-            "    color = texture(JE_Texture, UV) * vec4(total_light, 1.0);\n" +
+            "    if(use_texture == 1){\n" +
+            "        color = texture(JE_Texture, UV) * vec4(total_light, 1.0);\n" +
+            "    }\n" +
+            "    else if (use_texture == 0){\n" +
+            "        color = base_color * vec4(total_light, 1.0);\n" +
+            "    }\n" +
             "}";
 
 }

@@ -19,6 +19,7 @@ public final class ShaderProgram implements Serializable {
     public int programID = -1;
 
     public boolean supportsLighting = false;
+    public boolean supportsTextures = false;
     public volatile boolean attemptedCompile = false;
 
     public String vertex;
@@ -48,11 +49,13 @@ public final class ShaderProgram implements Serializable {
     public static ShaderProgram spriteShader(){
         ShaderProgram sp = new ShaderProgram();
         sp.createShader(ShaderRegistry.SPRITE_VERTEX, ShaderRegistry.SPRITE_FRAGMENT);
+        sp.supportsTextures = true;
         return sp;
     }
     public static ShaderProgram lightSpriteShader(){
         ShaderProgram sp = new ShaderProgram();
         sp.createShader(ShaderRegistry.LIGHTSPRITE_VERTEX, ShaderRegistry.LIGHTSPRITE_FRAGMENT);
+        sp.supportsTextures = true;
         sp.supportsLighting = true;
         return sp;
     }

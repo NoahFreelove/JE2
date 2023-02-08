@@ -3,7 +3,7 @@ package JE.Utility;
 import java.io.Serializable;
 
 public class Delayer implements Serializable {
-    public boolean activated = false;
+    public boolean triggered = false;
     private long duration;
     private long startTimestamp;
     public Delayer(long durationInMilliseconds){
@@ -11,17 +11,21 @@ public class Delayer implements Serializable {
         this.startTimestamp = System.currentTimeMillis();
     }
     public boolean check(){
-        if(activated)
+        if(triggered)
             return false;
         long currTime = System.currentTimeMillis();
         if(currTime - startTimestamp >= duration){
-            activated = true;
+            triggered = true;
             return true;
         }
         return false;
     }
     public void reset(){
-        activated = false;
+        triggered = false;
         startTimestamp = System.currentTimeMillis();
+    }
+    public void setDuration(long duration)
+    {
+        this.duration = duration;
     }
 }

@@ -95,6 +95,8 @@ public class Main {
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         });
+        go.getRenderer().getVAO().setShaderProgram(ShaderProgram.lightSpriteShader());
+        go.getRenderer().getVAO().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
         go.getRenderer().setDrawMode(GL_LINE_LOOP);
         //go.addScript(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position(), new Vector2f(1,1)));
