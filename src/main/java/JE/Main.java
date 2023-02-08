@@ -35,7 +35,7 @@ import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 public class Main {
 
     public static void main(String[] args) {
-        Manager.start(new WindowPreferences(new Vector2i(1000,1000), "JE2", false, true));
+        Manager.start(new WindowPreferences(new Vector2i(800,800), "JE2", false, true));
         Logger.logErrors = false;
 
         Scene scene = new Scene();
@@ -44,6 +44,7 @@ public class Main {
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
         PointLight p = new PointLight();
+        p.offset = new Vector2f(0.5f,0.5f);
         p.radius = 5f;
         p.intensity = 2f;
         player.addScript(p);
@@ -59,7 +60,7 @@ public class Main {
 
         GameObject ambientObject = new GameObject();
         AmbientLight ambient = new AmbientLight();
-        ambientObject.addScript(ambient);
+        //ambientObject.addScript(ambient);
 
         Manager.addKeyReleasedCallback((key, mods) -> {
             if(key == Keyboard.nameToCode("Q")){
@@ -102,7 +103,7 @@ public class Main {
 
         scene.add(player);
 
-        GameObject floor = GameObject.Sprite(ShaderProgram.spriteShader(), new Texture("bin/texture2.png"));
+        GameObject floor = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture("bin/texture2.png"));
         floor.setScale(6,1);
         floor.setPosition(-1,-4f);
         floor.addScript(new PhysicsBody().setMode(BodyType.STATIC));

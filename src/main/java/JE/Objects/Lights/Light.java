@@ -6,6 +6,7 @@ import JE.Objects.Scripts.Base.Script;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Scene.Scene;
 import JE.UI.UIElements.Style.Color;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public abstract class Light extends Script {
@@ -13,6 +14,7 @@ public abstract class Light extends Script {
     public float intensity;
     public int type;
     public int[] affectedLayers = new int[]{0};
+    public Vector2f offset = new Vector2f(0,0);
 
     public Light(Color color, float intensity, int type) {
         this.color = color;
@@ -24,7 +26,7 @@ public abstract class Light extends Script {
     public final void setLighting(ShaderProgram shaderProgram, int index){
         if(getAttachedObject() == null)
             return;
-        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getAttachedObject().getTransform().position(), getAttachedObject().getTransform().zPos()));
+        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(new Vector2f(getAttachedObject().getTransform().position()).add(offset), getAttachedObject().getTransform().zPos()));
         shaderProgram.setUniform1i("lights[" + index + "].type", type);
         shaderProgram.setUniform4f("lights[" + index + "].color", color.getVec4());
         shaderProgram.setUniform1f("lights[" + index + "].intensity", intensity);
