@@ -51,7 +51,7 @@ public class VAO2f extends VAO {
 
     public void setVertices(Vector2f[] vertices){
         this.vertices = vertices;
-        QueueGenerateBuffers();
+        QueueChangeBuffer();
     }
 
 

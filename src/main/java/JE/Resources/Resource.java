@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 
 public class Resource implements Serializable {
-    public ResourceBundle bundle;
+    public transient ResourceBundle bundle;
 
     public final String name;
     public final ResourceType type;

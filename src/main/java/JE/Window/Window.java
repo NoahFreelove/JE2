@@ -232,7 +232,6 @@ public class Window {
             pipeline.onStart();
 
             // ui render must be after objects because bugs.
-            UIHandler.renderNuklear();
 
             glfwSwapBuffers(windowHandle);
 

@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Script {
-    protected VAO vao = new VAO();
+    protected transient VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Color baseColor = Color.WHITE;
-
-    protected int drawMode = GL_POLYGON;
+    protected boolean scale = true;
+    protected int drawMode = GL_TRIANGLE_STRIP;
 
     public void SetShader(ShaderProgram shader){
         vao.setShaderProgram(shader);
@@ -60,8 +60,8 @@ public class Renderer extends Script {
             return;
         Transform t = gameObject.getTransform();
 
-        shader.setUniformMatrix4f("MVP", camera.MVPOrtho(t).get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniformMatrix4f("model", camera.getModel(t).get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("MVP", camera.MVPOrtho(t,scale).get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("model", camera.getModel(t,scale).get(BufferUtils.createFloatBuffer(16)));
         shader.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
         shader.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
         shader.setUniform3f("world_position", new Vector3f(t.position(), t.zPos()));

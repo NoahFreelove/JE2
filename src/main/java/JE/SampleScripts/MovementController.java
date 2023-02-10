@@ -1,4 +1,4 @@
-package JE.Sample.Scripts;
+package JE.SampleScripts;
 
 import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.Objects.Scripts.Base.Script;

@@ -56,6 +56,7 @@ public class ImageProcessor {
             Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason()));
             return rb;
         }
+        image.flip();
         rb.imageData = image;
         rb.imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
         return rb;

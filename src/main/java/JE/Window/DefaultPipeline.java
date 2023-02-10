@@ -11,7 +11,7 @@ public class DefaultPipeline extends Pipeline{
         runQueuedEvents();
         updateScene();
         renderObjects();
-        renderGUI();
+        renderUI();
         checkWatchers();
         pollEvents();
     }
@@ -31,7 +31,8 @@ public class DefaultPipeline extends Pipeline{
     }
 
     @Override
-    public void renderGUI() {
+    public void renderUI() {
+        UIHandler.renderNuklear();
     }
 
     @Override

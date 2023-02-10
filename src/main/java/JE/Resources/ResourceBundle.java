@@ -9,7 +9,7 @@ import java.nio.ShortBuffer;
 public class ResourceBundle implements Serializable {
 
     // General
-    public String filepath;
+    public transient String filepath;
 
     // Texture
     public transient Vector2i imageSize;

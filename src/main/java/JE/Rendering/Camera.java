@@ -33,12 +33,12 @@ public class Camera extends Script {
     }
 
     public Matrix4f MVPPerspective(Transform t){
-        Matrix4f model = getModel(t);
+        Matrix4f model = getModel(t, true);
         Matrix4f view = getViewMatrix();
         return new Matrix4f().mul(getPerspective()).mul(view).mul(model);
     }
 
-    public Matrix4f getModel(Transform t){
+    public Matrix4f getModel(Transform t, boolean scale){
         Matrix4f model = new Matrix4f().identity();
         model.translate(t.position().x(), t.position().y(), t.zPos());
         Vector2f spriteSize = t.scale();
@@ -47,9 +47,9 @@ public class Camera extends Script {
         model.rotate((float) Math.toRadians(t.rotation().z()), 0, 0, 1);
         model.translate(-spriteSize.x()/2, -spriteSize.y()/2, 0);
 
+        if(scale)
+            model.scale(t.scale().x(), t.scale().y(), 1);
 
-        model.scale(t.scale().x(), t.scale().y(), 1);
-        model.scale(1, 1, 1);
         return model;
     }
 
@@ -75,8 +75,8 @@ public class Camera extends Script {
     }
 
 
-    public Matrix4f MVPOrtho(Transform t){
-        Matrix4f model = getModel(t);
+    public Matrix4f MVPOrtho(Transform t, boolean scale){
+        Matrix4f model = getModel(t,scale);
         Matrix4f view = getViewMatrix();
 
         return new Matrix4f().mul(getOrtho()).mul(view).mul(model);

@@ -35,12 +35,12 @@ public final class GameObject implements Serializable {
     public transient Scene linkedScene = null;
     private transient GameObject parent = this;
     private transient ArrayList<GameObject> children = new ArrayList<>();
-    private transient final CopyOnWriteArrayList<Script> scripts = new CopyOnWriteArrayList<>();
+    private transient CopyOnWriteArrayList<Script> scripts = new CopyOnWriteArrayList<>();
     private transient Renderer rendererRef = null;
     private transient PhysicsBody physicsBodyRef = null;
+    private transient Identity identity = new Identity();
 
     private boolean active = true;
-    private Identity identity = new Identity();
     private int lightLayer = 0;
 
     public GameObject(){
@@ -80,6 +80,9 @@ public final class GameObject implements Serializable {
     @RequireNonNull
     public boolean addScript(Script script){
         Objects.requireNonNull(script);
+
+        if(scripts == null)
+            scripts = new CopyOnWriteArrayList<>();
 
         if(script.getAttachedObject() !=null)
         {
@@ -357,4 +360,11 @@ public final class GameObject implements Serializable {
         return physicsBodyRef;
     }
 
+    public void setChildren(ArrayList<GameObject> children) {
+        this.children = children;
+    }
+
+    public void setScripts(CopyOnWriteArrayList<Script> scripts) {
+        this.scripts = scripts;
+    }
 }

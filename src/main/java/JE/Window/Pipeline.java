@@ -3,8 +3,6 @@ package JE.Window;
 import JE.Annotations.GLThread;
 import JE.Manager;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-
 public abstract class Pipeline {
 
     int gcThreshold = 1000;
@@ -29,7 +27,7 @@ public abstract class Pipeline {
     @GLThread
     public abstract void renderObjects(); // GameObjects
     @GLThread
-    public abstract void renderGUI(); // UI / Gizmos
+    public abstract void renderUI(); // UI / Gizmos
     @GLThread
     public abstract void runQueuedEvents(); // GL thread events
     @GLThread

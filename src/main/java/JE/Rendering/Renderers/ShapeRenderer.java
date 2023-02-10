@@ -10,7 +10,7 @@ import org.joml.Vector2f;
 
 
 public class ShapeRenderer extends Renderer{
-    private final VAO2f pointVAO;
+    private transient final VAO2f pointVAO;
 
     public ShapeRenderer(){
         pointVAO = new VAO2f(new Vector2f[]{}, ShaderProgram.defaultShader());

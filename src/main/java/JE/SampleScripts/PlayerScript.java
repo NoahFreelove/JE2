@@ -1,4 +1,4 @@
-package JE.Sample.Objects;
+package JE.SampleScripts;
 
 import JE.Objects.Scripts.Base.Script;
 import JE.Rendering.Camera;

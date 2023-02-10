@@ -21,14 +21,13 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer {
-    private final VAO2f spriteCoordVAO;
-    public boolean tile = false;
+    private transient final VAO2f spriteCoordVAO;
 
-    @ForceShowInInspector
-    private Texture texture = new Texture();
 
-    //@ForceShowInInspector
-    private Texture normal = new Texture();
+    private transient Texture texture = new Texture();
+    private String textureFp;
+    private transient Texture normal = new Texture();
+    private String normalFp;
 
     public SpriteRenderer() {
         spriteCoordVAO = new VAO2f(new Vector2f[]{
@@ -37,6 +36,7 @@ public class SpriteRenderer extends Renderer {
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         }, ShaderProgram.spriteShader());
+
     }
 
     public SpriteRenderer(ShaderProgram shader){
@@ -88,28 +88,27 @@ public class SpriteRenderer extends Renderer {
         glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
         glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (tile ? GL_REPEAT : GL_CLAMP_TO_EDGE));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (tile ? GL_REPEAT : GL_CLAMP_TO_EDGE));
 
         spriteCoordVAO.Enable(1);
-        super.Render(gameObject, spriteCoordVAO.getVertices().length*2+additionalBufferSize, camera);
+        super.Render(gameObject, 0, camera);
         spriteCoordVAO.Disable();
     }
 
 
     public void setTexture(Texture texture){
         setTexture(texture, spriteCoordVAO.getVertices(), true);
+        textureFp = texture.resource.bundle.filepath;
+
     }
 
-    public void setTexture(ByteBuffer texture, Vector2i size){
-        setTexture(new Texture(texture, size), spriteCoordVAO.getVertices(), false);
-    }
 
     public void setNormalTexture(Texture texture) {
         this.normal = texture;
+        normalFp = texture.resource.bundle.filepath;
+
     }
 
-    public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
+    private void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
         this.texture = texture;
         Runnable r = () ->{
             if(softSet) return;
@@ -122,4 +121,34 @@ public class SpriteRenderer extends Renderer {
     public Texture getTexture(){ return texture; }
     public Texture getNormalTexture(){ return normal; }
 
+    @Override
+    public void onLoaded() {
+        System.out.println("Loaded: " + textureFp);
+        setTexture(new Texture(textureFp));
+        setNormalTexture(new Texture(normalFp));
+    }
+
+    public void customTile(Vector2f scale){
+        spriteCoordVAO.setVertices(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1),
+                new Vector2f(0,0),
+                new Vector2f(scale.x(),0),
+                new Vector2f(scale.x(),scale.y()),
+                new Vector2f(0,scale.y()),
+
+        });
+        this.scale = false;
+    }
+
+    public void defaultTile(){
+        customTile(getAttachedObject().getTransform().scale());
+    }
+
+    public void disableTile(){
+        customTile(new Vector2f(1,1));
+        this.scale = true;
+    }
 }

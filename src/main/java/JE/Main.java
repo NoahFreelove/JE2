@@ -5,9 +5,10 @@ import JE.Logging.Logger;
 import JE.Objects.GameObject;
 import JE.Objects.Lights.PointLight;
 import JE.Rendering.Camera;
+import JE.Rendering.Renderers.SpriteRenderer;
 import JE.Rendering.Texture;
-import JE.Sample.Scripts.MovementController;
-import JE.Sample.Objects.PlayerScript;
+import JE.SampleScripts.MovementController;
+import JE.SampleScripts.PlayerScript;
 import JE.Objects.Scripts.Physics.PhysicsBody;
 import JE.Objects.Lights.AmbientLight;
 import JE.Rendering.Renderers.ShapeRenderer;
@@ -105,8 +106,10 @@ public class Main {
 
         scene.add(player);
 
-        GameObject floor = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture("bin/texture2.png"));
+        GameObject floor = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture("bin/texture1.png"));
         floor.setScale(6,1);
+        floor.getSpriteRenderer().defaultTile();
+
         floor.setPosition(-1,-4f);
         floor.addScript(new PhysicsBody().setMode(BodyType.STATIC));
         scene.add(floor);

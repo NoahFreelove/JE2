@@ -49,10 +49,19 @@ public class VAO implements Serializable {
         Manager.queueGLFunction(r);
     }
 
+    protected void QueueChangeBuffer(){
+        Runnable r = this::GenerateBuffers;
+        Manager.queueGLFunction(r);
+    }
+
     @GLThread
     private void GenerateBuffers(){
-        this.data = dataConversion();
         vertexBufferID = glGenBuffers();
+        changeBuffer();
+    }
+    @GLThread
+    protected void changeBuffer(){
+        this.data = dataConversion();
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
         FloatBuffer fb = BufferUtils.createFloatBuffer(data.length * dataSize);
         for (float v : data) {
@@ -82,7 +91,7 @@ public class VAO implements Serializable {
 
     public void setData(float[] data){
         this.data = data;
-        QueueGenerateBuffers();
+        QueueChangeBuffer();
     }
     public float[] getData(){
         return data;

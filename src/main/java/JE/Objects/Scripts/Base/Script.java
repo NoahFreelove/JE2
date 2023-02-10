@@ -49,6 +49,7 @@ public class Script implements Serializable {
     public void onForeignScriptAdded(Script script){}
     public void onAddedToGameObject(GameObject gameObject){}
     public void gameObjectAddedToScene(Scene scene){}
+    public void onLoaded(){}
     public GameObject getAttachedObject(){
         return parentObject;
     }
