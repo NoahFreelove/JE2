@@ -1,6 +1,6 @@
 package JE.Scene;
 
-import JE.Audio.AudioSourcePlayer;
+import JE.Objects.Audio.AudioSourcePlayer;
 import JE.Objects.GameObject;
 import JE.Objects.Lights.Light;
 import JE.UI.UIObjects.UIObject;

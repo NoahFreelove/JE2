@@ -1,6 +1,5 @@
-package JE.Audio;
+package JE.Objects.Audio;
 
-import JE.Logging.Logger;
 import JE.Manager;
 import JE.Utility.Watcher;
 

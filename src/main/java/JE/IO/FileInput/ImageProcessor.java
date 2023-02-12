@@ -1,8 +1,7 @@
 package JE.IO.FileInput;
 
-import JE.Annotations.GLThread;
-import JE.Logging.Errors.ImageProcessError;
-import JE.Logging.Logger;
+import JE.IO.Logging.Errors.ImageProcessError;
+import JE.IO.Logging.Logger;
 import JE.Rendering.Texture;
 import JE.Resources.Resource;
 import JE.Resources.ResourceBundle;
@@ -11,14 +10,7 @@ import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.awt.image.renderable.RenderedImageFactory;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -78,7 +70,6 @@ public class ImageProcessor {
     public static Texture generateSolidColorImage(Vector2i size, int color, String textureName){
         return new Texture(new Resource(textureName, generateSolidColorImage(size,color), ResourceType.TEXTURE));
     }
-
 
     public static ResourceBundle generateNormalMap(Texture originalTexture){
         ResourceBundle rb = originalTexture.resource.bundle;

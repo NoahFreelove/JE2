@@ -218,7 +218,6 @@ public class Scene implements Serializable {
             return scene;
         }
 
-
         private static Object FromString( String s ) throws IOException, ClassNotFoundException {
             s = s.replace("[","").replace("]","");
             String[] split = s.split(", ");

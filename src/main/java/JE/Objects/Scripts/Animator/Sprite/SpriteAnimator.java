@@ -1,7 +1,7 @@
 package JE.Objects.Scripts.Animator.Sprite;
 
-import JE.Logging.Errors.JE2Error;
-import JE.Logging.Logger;
+import JE.IO.Logging.Errors.JE2Error;
+import JE.IO.Logging.Logger;
 import JE.Objects.Scripts.Base.Script;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package JE.Objects.Scripts.Base;
 
-import JE.Logging.Errors.ScriptError;
-import JE.Logging.Logger;
+import JE.IO.Logging.Errors.ScriptError;
+import JE.IO.Logging.Logger;
 import JE.Objects.GameObject;
 import JE.Scene.Scene;
 

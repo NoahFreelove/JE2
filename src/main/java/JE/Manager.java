@@ -42,7 +42,7 @@ public class Manager {
     }
 
     public static void quit(){
-        Window.CloseWindow(WindowCloseReason.WINDOW_CLOSE_USER_REQUEST);
+        Window.closeWindow(WindowCloseReason.WINDOW_CLOSE_USER_REQUEST);
         System.exit(WindowCloseReason.WINDOW_CLOSE_USER_REQUEST);
     }
 

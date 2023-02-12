@@ -1,11 +1,15 @@
 package JE.Objects.Scripts.Physics;
 
 import JE.Manager;
+import JE.Objects.GameObject;
 import JE.Objects.Scripts.Base.Script;
 import JE.Utility.JOMLtoJBOX;
 import org.jbox2d.collision.AABB;
+import org.jbox2d.collision.RayCastInput;
+import org.jbox2d.collision.RayCastOutput;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
@@ -45,8 +49,8 @@ public class PhysicsBody extends Script {
         shape.setRadius(0.001f);
 
         activeFixture = body.createFixture(shape, 1.0f);
-        activeFixture.setRestitution(0);
-
+       /* activeFixture.setUserData(getAttachedObject());
+        body.setUserData(getAttachedObject());*/
         hasInitialized = true;
         return this;
     }
@@ -139,4 +143,40 @@ public class PhysicsBody extends Script {
         return size;
     }
     public boolean hasInitialized(){return hasInitialized;}
+
+    public Raycast raycast(Vector2f start, Vector2f end, int layerMask){
+        // Do a box 2d Raycast
+        RayCastInput input = new RayCastInput();
+        input.p1.set(JOMLtoJBOX.vec2(start));
+        input.p2.set(JOMLtoJBOX.vec2(end));
+        input.maxFraction = 1;
+
+        float closestFraction = 1;
+        org.jbox2d.dynamics.Fixture closestFixture = null;
+        GameObject userData = null;
+        org.jbox2d.collision.RayCastOutput output = new org.jbox2d.collision.RayCastOutput();
+        for(Body b = Manager.activeScene().world.physicsWorld.getBodyList(); b != null; b = b.getNext()){
+            if(b.getUserData() != null && b.getUserData() instanceof GameObject localData){
+                // ignore if hit self
+                if(localData == getAttachedObject())
+                    continue;
+
+                RayCastOutput tempOutput = new RayCastOutput();
+                if(b.getFixtureList().raycast(tempOutput, input, 0) && tempOutput.fraction < closestFraction) {
+                    if (localData.getLayer() == layerMask)
+                    {
+                        closestFixture = b.getFixtureList();
+                        userData = (JE.Objects.GameObject) b.getUserData();
+                        output.fraction = tempOutput.fraction;
+                        output.normal.set(tempOutput.normal);
+                        break;
+                    }
+                }
+            }
+        }
+        if(closestFixture != null){
+            return new Raycast(true, userData, JOMLtoJBOX.vector2f(output.normal));
+        }
+        return new Raycast(false, null, null);
+    }
 }

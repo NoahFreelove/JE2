@@ -1,12 +1,14 @@
 package JE;
 
 import JE.IO.UserInput.Keyboard.Keyboard;
-import JE.Logging.Logger;
+import JE.IO.Logging.Logger;
+import JE.IO.UserInput.Mouse.Mouse;
 import JE.Objects.GameObject;
 import JE.Objects.Lights.PointLight;
+import JE.Objects.Scripts.Physics.Raycast;
 import JE.Rendering.Camera;
-import JE.Rendering.Renderers.SpriteRenderer;
 import JE.Rendering.Texture;
+import JE.SampleScripts.FloorFactory;
 import JE.SampleScripts.MovementController;
 import JE.SampleScripts.PlayerScript;
 import JE.Objects.Scripts.Physics.PhysicsBody;
@@ -23,9 +25,9 @@ import JE.UI.UIElements.Style.Color;
 import JE.UI.UIElements.UIElement;
 import JE.UI.UIObjects.UIWindow;
 import JE.Window.WindowPreferences;
-import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
+import org.joml.Vector4i;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +39,7 @@ public class Main {
 
     public static void main(String[] args) {
         Manager.start(new WindowPreferences(new Vector2i(800,800), "JE2", false, true));
-        Logger.logErrors = false;
+        Logger.logErrors = true;
 
         Scene scene = new Scene();
 
@@ -48,20 +50,19 @@ public class Main {
         p.offset = new Vector2f(0.5f,0.5f);
         p.radius = 5f;
         p.intensity = 2f;
-        player.addScript(p);
+        //player.addScript(p);
 
         MovementController mc = new MovementController();
         mc.physicsBased = true;
         mc.canMoveDown = false;
         player.addScript(mc);
         player.addScript(new Camera());
-        player.setPosition(2,1);
+        player.setPosition(2,0 );
         scene.setCamera(player.getScript(Camera.class));
-
-
         GameObject ambientObject = new GameObject();
         AmbientLight ambient = new AmbientLight();
-        //ambientObject.addScript(ambient);
+        ambientObject.addScript(ambient);
+        scene.add(ambientObject);
 
         Manager.addKeyReleasedCallback((key, mods) -> {
             if(key == Keyboard.nameToCode("Q")){
@@ -71,7 +72,12 @@ public class Main {
                 else ambient.affectedLayers[0] = 0;
             }
             else if(key == Keyboard.nameToCode("E")){
-                System.out.println(Arrays.toString(player.getChildren()));
+                Vector2f pos = new Vector2f(player.getTransform().position());
+                Vector2f mousePos = Mouse.getMouseWorldPosition();
+                Vector2f dir = mousePos.sub(pos).normalize();
+
+                Raycast r = player.getScript(PhysicsBody.class).raycast(player.getTransform().position().add(0.1f,0.1f),pos.add(dir.mul(2)),0);
+                System.out.println(r.gameObjectHit());
             }
         });
 
@@ -79,7 +85,6 @@ public class Main {
         StyledSlider coolSlider = new StyledSlider();
         FPSCounter counter = new FPSCounter("FPS: ");
         elements.add(counter);
-        //elements.add(new ImageButton("bin/texture1.png").setDimensions(new Vector2f(256,256)));
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
         elements.add(new StyledCheckbox());
@@ -96,24 +101,27 @@ public class Main {
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         });
+        go.addScript(new PhysicsBody());
         go.getRenderer().getVAO().setShaderProgram(ShaderProgram.lightSpriteShader());
         go.getRenderer().getVAO().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
         go.getRenderer().setDrawMode(GL_LINE_LOOP);
-        //go.addScript(new PhysicsBody().create(BodyType.DYNAMIC, go.getTransform().position(), new Vector2f(1,1)));
         go.getRenderer().baseColor = Color.BLUE;
         scene.add(go);
 
         scene.add(player);
 
-        GameObject floor = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture("bin/texture1.png"));
-        floor.setScale(6,1);
-        floor.getSpriteRenderer().defaultTile();
-
-        floor.setPosition(-1,-4f);
-        floor.addScript(new PhysicsBody().setMode(BodyType.STATIC));
-        scene.add(floor);
+        scene.add(FloorFactory.createFloor(new Vector2f(-2,-4), new Vector2f(6,1)));
+        GameObject right = FloorFactory.createFloor(new Vector2f(4,-3), new Vector2f(1,4));
+        //right.setLayer(1);
+        scene.add(right);
+        scene.add(FloorFactory.createFloor(new Vector2f(-3,-3), new Vector2f(1,4)));
+        scene.add(FloorFactory.createFloor(new Vector2f(-2,1), new Vector2f(6,1)));
 
         Manager.setScene(scene);
+        go.getPhysicsBody().activeFixture.setRestitution(0.5f);
+        go.getPhysicsBody().activeFixture.setDensity(0.1f);
+        go.getPhysicsBody().activeFixture.m_friction = 0.1f;
+
     }
 }

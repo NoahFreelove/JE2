@@ -1,8 +1,8 @@
 package JE.Rendering.Shaders;
 
 import JE.Annotations.GLThread;
-import JE.Logging.Errors.ShaderLayoutError;
-import JE.Logging.Logger;
+import JE.IO.Logging.Errors.ShaderLayoutError;
+import JE.IO.Logging.Logger;
 import JE.Rendering.VertexBuffers.VAO;
 
 import java.io.Serializable;

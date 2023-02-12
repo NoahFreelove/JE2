@@ -3,6 +3,7 @@ package JE.Rendering;
 import JE.Manager;
 import JE.Objects.Scripts.Base.Script;
 import JE.Objects.Scripts.Common.Transform;
+import JE.UI.UIElements.Style.Color;
 import org.joml.*;
 
 import java.lang.Math;
@@ -12,7 +13,7 @@ public class Camera extends Script {
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1;
     public Vector4i viewportSize = Manager.defaultViewport();
-
+    public Color backgroundColor = Color.RED;
 
     @Override
     public void update() {

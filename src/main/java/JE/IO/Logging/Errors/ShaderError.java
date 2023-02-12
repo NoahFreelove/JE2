@@ -1,4 +1,4 @@
-package JE.Logging.Errors;
+package JE.IO.Logging.Errors;
 
 public class ShaderError extends JE2Error {
     public static ShaderError invalidProgramIDError;

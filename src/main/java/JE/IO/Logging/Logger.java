@@ -1,6 +1,6 @@
-package JE.Logging;
+package JE.IO.Logging;
 
-import JE.Logging.Errors.JE2Error;
+import JE.IO.Logging.Errors.JE2Error;
 
 import java.util.ArrayList;
 import java.util.Date;

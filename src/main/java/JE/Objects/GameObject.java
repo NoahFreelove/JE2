@@ -3,8 +3,8 @@ package JE.Objects;
 import JE.Annotations.Nullable;
 import JE.Annotations.RequireNonNull;
 import JE.IO.FileInput.ImageProcessor;
-import JE.Logging.Errors.GameObjectError;
-import JE.Logging.Logger;
+import JE.IO.Logging.Errors.GameObjectError;
+import JE.IO.Logging.Logger;
 import JE.Objects.Scripts.Base.ScriptRestrictions;
 import JE.Objects.Scripts.Base.Script;
 import JE.Objects.Scripts.Common.Transform;
@@ -41,7 +41,7 @@ public final class GameObject implements Serializable {
     private transient Identity identity = new Identity();
 
     private boolean active = true;
-    private int lightLayer = 0;
+    private int layer = 0;
 
     public GameObject(){
         Transform t = new Transform();
@@ -278,12 +278,12 @@ public final class GameObject implements Serializable {
         }
     }
 
-    public int getLightLayer() {
-        return lightLayer;
+    public int getLayer() {
+        return layer;
     }
 
-    public void setLightLayer(int lightLayer) {
-        this.lightLayer = lightLayer;
+    public void setLayer(int layer) {
+        this.layer = layer;
     }
 
     public GameObject getParent(){

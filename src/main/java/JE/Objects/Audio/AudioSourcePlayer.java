@@ -1,4 +1,4 @@
-package JE.Audio;
+package JE.Objects.Audio;
 
 import JE.Manager;
 import JE.Scene.Scene;

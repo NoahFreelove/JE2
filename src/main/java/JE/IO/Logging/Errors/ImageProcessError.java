@@ -1,4 +1,4 @@
-package JE.Logging.Errors;
+package JE.IO.Logging.Errors;
 
 public class ImageProcessError extends JE2Error {
     public ImageProcessError(){

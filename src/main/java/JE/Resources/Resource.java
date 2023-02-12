@@ -2,8 +2,8 @@ package JE.Resources;
 
 import JE.IO.FileInput.ImageProcessor;
 import JE.IO.FileInput.SoundProcessor;
-import JE.Logging.Errors.ResourceError;
-import JE.Logging.Logger;
+import JE.IO.Logging.Errors.ResourceError;
+import JE.IO.Logging.Logger;
 import org.joml.Vector2i;
 
 import java.io.Serializable;

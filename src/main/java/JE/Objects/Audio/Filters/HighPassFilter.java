@@ -1,4 +1,4 @@
-package JE.Audio.Filters;
+package JE.Objects.Audio.Filters;
 
 import org.lwjgl.openal.EXTEfx;
 

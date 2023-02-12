@@ -1,4 +1,4 @@
-package JE.Logging.Errors;
+package JE.IO.Logging.Errors;
 
 public class IOError extends JE2Error {
 

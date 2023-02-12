@@ -1,8 +1,8 @@
 package JE.Rendering.Shaders;
 
 import JE.Annotations.GLThread;
-import JE.Logging.Logger;
-import JE.Logging.Errors.ShaderError;
+import JE.IO.Logging.Logger;
+import JE.IO.Logging.Errors.ShaderError;
 import JE.Manager;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

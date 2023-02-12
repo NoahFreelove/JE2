@@ -5,5 +5,4 @@ public record ComboList() {
     public static final KeyCombo DOWN = new KeyCombo(83,264);
     public static final KeyCombo LEFT = new KeyCombo(65,263);
     public static final KeyCombo RIGHT = new KeyCombo(68,262);
-
 }

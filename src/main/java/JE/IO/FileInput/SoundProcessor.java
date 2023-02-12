@@ -1,6 +1,6 @@
 package JE.IO.FileInput;
 
-import JE.Logging.Logger;
+import JE.IO.Logging.Logger;
 import JE.Resources.ResourceBundle;
 import JE.Window.Window;
 import org.lwjgl.openal.AL10;

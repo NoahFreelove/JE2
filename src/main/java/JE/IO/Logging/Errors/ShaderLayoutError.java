@@ -1,4 +1,4 @@
-package JE.Logging.Errors;
+package JE.IO.Logging.Errors;
 
 public class ShaderLayoutError extends ShaderError{
     public ShaderLayoutError(String message) {

@@ -1,4 +1,4 @@
-package JE.Audio.Filters;
+package JE.Objects.Audio.Filters;
 
 public abstract class IntensityFilter extends SoundFilter {
     protected float intensity = 1f;

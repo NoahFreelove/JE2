@@ -2,8 +2,8 @@ package JE.UI;
 
 import JE.Annotations.GLThread;
 import JE.IO.FileInput.IOUtil;
-import JE.Logging.Errors.IOError;
-import JE.Logging.Logger;
+import JE.IO.Logging.Errors.IOError;
+import JE.IO.Logging.Logger;
 import JE.Manager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.nuklear.NkUserFont;

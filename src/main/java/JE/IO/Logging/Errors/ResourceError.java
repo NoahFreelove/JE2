@@ -1,4 +1,4 @@
-package JE.Logging.Errors;
+package JE.IO.Logging.Errors;
 
 public class ResourceError extends JE2Error {
     protected String NAME;

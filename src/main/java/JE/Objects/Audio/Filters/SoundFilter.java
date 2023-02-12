@@ -1,6 +1,6 @@
-package JE.Audio.Filters;
+package JE.Objects.Audio.Filters;
 
-import JE.Audio.AudioSource;
+import JE.Objects.Audio.AudioSource;
 import org.lwjgl.openal.EXTEfx;
 
 public class SoundFilter {

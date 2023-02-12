@@ -1,7 +1,7 @@
-package JE.Audio;
+package JE.Objects.Audio;
 
-import JE.Audio.Filters.SoundFilter;
-import JE.Logging.Logger;
+import JE.Objects.Audio.Filters.SoundFilter;
+import JE.IO.Logging.Logger;
 import JE.Objects.Scripts.Base.Script;
 import JE.Resources.Resource;
 import JE.Resources.ResourceType;

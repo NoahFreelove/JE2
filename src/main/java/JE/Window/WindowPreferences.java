@@ -11,6 +11,10 @@ public class WindowPreferences {
     public WindowPreferences(){}
 
     public WindowPreferences(Vector2i windowSize, String windowTitle, boolean windowResizable, boolean vSync) {
+        if(windowSize.x <100 || windowSize.y < 100){
+            windowSize.x = 100;
+            windowSize.y = 100;
+        }
         this.windowSize = windowSize;
         this.windowTitle = windowTitle;
         this.windowResizable = windowResizable;

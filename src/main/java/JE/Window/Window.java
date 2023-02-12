@@ -3,8 +3,9 @@ package JE.Window;
 import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.IO.UserInput.Mouse.Mouse;
 import JE.IO.UserInput.Mouse.MouseButton;
-import JE.Logging.Logger;
+import JE.IO.Logging.Logger;
 import JE.Manager;
+import JE.UI.UIElements.Style.Color;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
@@ -47,21 +48,21 @@ public class Window {
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
         Thread t = new Thread(() -> {
-            InitializeWindow(wp);
+            initializeWindow(wp);
             hasInit = true;
             monitorHeight = glfwGetVideoMode(glfwGetPrimaryMonitor()).height();
             monitorWidth = glfwGetVideoMode(glfwGetPrimaryMonitor()).width();
-            Loop();
+            loop();
         });
         t.start();
 
     }
-    public static void CloseWindow(int code){
+    public static void closeWindow(int code){
         Logger.log("Closing window with code: " + code);
         glfwSetWindowShouldClose(windowHandle, true);
     }
 
-    public static void Loop(){
+    public static void loop(){
         WindowLoop();
         Destroy();
     }
@@ -81,7 +82,7 @@ public class Window {
         System.exit(0);
     }
 
-    private static void InitializeWindow(WindowPreferences wp) {
+    private static void initializeWindow(WindowPreferences wp) {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -212,7 +213,6 @@ public class Window {
         //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
 
-            // limit every frame to 1/60 seconds without sleeping
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             double startTime = glfwGetTime();
 
@@ -224,14 +224,12 @@ public class Window {
 
                 glfwGetWindowSize(windowHandle, width, height);
                 glViewport(0, 0, width.get(0), height.get(0));
-
-                glClearColor(0, 0, 0, 1);
+                Color clear = Manager.activeScene().mainCamera().backgroundColor;
+                glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
             }
 
             glfwPollEvents();
             pipeline.onStart();
-
-            // ui render must be after objects because bugs.
 
             glfwSwapBuffers(windowHandle);
 

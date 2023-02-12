@@ -75,7 +75,7 @@ public class Renderer extends Script {
         }
 
         if(shader.supportsLighting)
-            setLighting(gameObject.getLightLayer());
+            setLighting(gameObject.getLayer());
 
         vao.Enable(0);
         enableLayouts();
