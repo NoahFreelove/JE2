@@ -5,6 +5,7 @@ import JE.IO.Logging.Logger;
 import JE.IO.UserInput.Mouse.Mouse;
 import JE.Objects.GameObject;
 import JE.Objects.Lights.PointLight;
+import JE.Objects.Scripts.Base.Script;
 import JE.Objects.Scripts.Physics.Raycast;
 import JE.Rendering.Camera;
 import JE.Rendering.Texture;
@@ -25,6 +26,7 @@ import JE.UI.UIElements.Style.Color;
 import JE.UI.UIElements.UIElement;
 import JE.UI.UIObjects.UIWindow;
 import JE.Window.WindowPreferences;
+
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4i;

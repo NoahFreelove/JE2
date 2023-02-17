@@ -2,8 +2,10 @@ package JE.Objects.Scripts.Base;
 
 import JE.IO.Logging.Errors.ScriptError;
 import JE.IO.Logging.Logger;
+import JE.Manager;
 import JE.Objects.GameObject;
 import JE.Scene.Scene;
+import org.lwjgl.glfw.GLFWVulkan;
 
 import java.io.Serializable;
 

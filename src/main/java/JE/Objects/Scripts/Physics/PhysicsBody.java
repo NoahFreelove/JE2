@@ -92,8 +92,8 @@ public class PhysicsBody extends Script {
             create(mode, getAttachedObject().getTransform().position(), getAttachedObject().getTransform().scale());
         }
         body.setUserData(getAttachedObject());
-
     }
+
 
     @Override
     public void update() {

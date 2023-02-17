@@ -21,7 +21,6 @@ public class Camera extends Script {
 
     @Override
     public void start() {
-
     }
 
     @Override
