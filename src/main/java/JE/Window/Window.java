@@ -6,8 +6,10 @@ import JE.IO.UserInput.Mouse.MouseButton;
 import JE.IO.Logging.Logger;
 import JE.Manager;
 import JE.UI.UIElements.Style.Color;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -210,13 +212,16 @@ public class Window {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthFunc(GL_LEQUAL);
 
+
+
         //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            double startTime = glfwGetTime();
 
+            glfwPollEvents();
             UIHandler.frameStart();
+            double startTime = glfwGetTime();
 
             try (MemoryStack stack = stackPush()) {
                 IntBuffer width  = stack.mallocInt(1);
@@ -228,12 +233,18 @@ public class Window {
                 glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
             }
 
-            glfwPollEvents();
             pipeline.onStart();
 
             glfwSwapBuffers(windowHandle);
 
-            deltaTime = glfwGetTime() - startTime;
+            deltaTime = (glfwGetTime() - startTime);
+
+            // If the window was moved or resized, the delta time will be very large.
+            // This is to prevent that and physics from breaking.
+            // This is a very temporary fix.
+            if(deltaTime()>= 0.1){
+                deltaTime = 0;
+            }
             if(queuedScene){
                 if(waitedFrame)
                 {

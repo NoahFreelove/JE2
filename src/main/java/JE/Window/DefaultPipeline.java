@@ -13,7 +13,6 @@ public class DefaultPipeline extends Pipeline{
         renderObjects();
         renderUI();
         checkWatchers();
-        pollEvents();
     }
 
     @Override
@@ -43,7 +42,6 @@ public class DefaultPipeline extends Pipeline{
 
     @Override
     public void pollEvents() {
-        glfwPollEvents();
     }
 
     @Override

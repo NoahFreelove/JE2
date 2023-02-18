@@ -5,6 +5,7 @@ import JE.Objects.Identity;
 import JE.Objects.Scripts.Physics.PhysicsBody;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
+import JE.Resources.ResourceLoader;
 import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 
@@ -20,6 +21,6 @@ public class FloorFactory {
         return floor;
     }
     public static GameObject createFloor(Vector2f pos, Vector2f size){
-        return createFloor(new Texture("bin/texture1.png"), ShaderProgram.spriteShader(), pos, size);
+        return createFloor(new Texture(ResourceLoader.get("texture2.png")), ShaderProgram.spriteShader(), pos, size);
     }
 }
