@@ -5,6 +5,7 @@ import JE.IO.Logging.Logger;
 import JE.Manager;
 import JE.Objects.GameObject;
 import JE.Scene.Scene;
+import JE.Utility.Loadable;
 import org.lwjgl.glfw.GLFWVulkan;
 
 import java.io.Serializable;
@@ -18,15 +19,12 @@ import java.io.Serializable;
  You can think of it as a script you attach to your objects.
  Scripts MUST have a default constructor if you want to use *future* JE2 save and load features
  **/
-public class Script implements Serializable {
+public class Script implements Serializable, Loadable {
     protected ScriptRestrictions restrictions = new ScriptRestrictions();
-    private GameObject parentObject;
+    private transient GameObject parentObject;
 
     public ScriptRestrictions getRestrictions(){
         return restrictions;
-    }
-    public void setRestrictions(ScriptRestrictions restrictions){
-        this.restrictions = restrictions;
     }
 
     private boolean active = true;
@@ -41,6 +39,11 @@ public class Script implements Serializable {
         }
         active = newState;
     }
+
+    public void setRestrictions(ScriptRestrictions restrictions){
+        this.restrictions = restrictions;
+    }
+
     public boolean getActive(){return active;}
 
     public void update(){}
@@ -51,7 +54,6 @@ public class Script implements Serializable {
     public void onForeignScriptAdded(Script script){}
     public void onAddedToGameObject(GameObject gameObject){}
     public void gameObjectAddedToScene(Scene scene){}
-    public void onLoaded(){}
     public GameObject getAttachedObject(){
         return parentObject;
     }
@@ -60,4 +62,7 @@ public class Script implements Serializable {
             parentObject.removeScript(this);
         this.parentObject = newParent;
     }
+
+    @Override
+    public void load() {}
 }

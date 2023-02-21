@@ -3,6 +3,7 @@ package JE.Rendering.VertexBuffers;
 import JE.Annotations.GLThread;
 import JE.Manager;
 import JE.Rendering.Shaders.ShaderProgram;
+import JE.Utility.Loadable;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -14,10 +15,10 @@ import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
-public class VAO implements Serializable {
+public class VAO implements Serializable, Loadable {
     protected float[] data = {};
-    protected int vertexBufferID = 0;
-    protected int location;
+    protected transient int vertexBufferID = 0;
+    protected transient int location;
 
     protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
     protected int dataSize = 1;
@@ -102,5 +103,12 @@ public class VAO implements Serializable {
     }
     public ShaderProgram getShaderProgram(){
         return shaderProgram;
+    }
+
+    @Override
+    public void load(){
+        if(shaderProgram != null)
+            shaderProgram.load();
+        QueueGenerateBuffers();
     }
 }

@@ -7,9 +7,11 @@ import JE.Objects.Identity;
 import JE.Objects.Lights.Light;
 import JE.Objects.Scripts.Base.Script;
 import JE.Rendering.Camera;
+import JE.Resources.ResourceLoader;
 import JE.UI.UIObjects.UIObject;
 import JE.Utility.Watcher;
 
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -149,90 +151,10 @@ public class Scene implements Serializable {
         this.activeCamera = cam;
     }
 
-    public void loadFromFile(String filepath){
-        World w = SceneLoader.loadFromFile(filepath).world;
-        world.gameObjects = w.gameObjects;
+    public Scene load(String worldPath){
+        String fullPath = ResourceLoader.get(worldPath);
+        return this;
     }
 
-    private static class SceneLoader{
-        public static Scene loadFromFile(String filePath){
-            Scene scene = new Scene();
-            try {
-                Scanner scanner = new Scanner(new FileInputStream(filePath));
-                boolean inScript = false;
-                GameObject go = null;
-                Script sc = null;
-
-                while (scanner.hasNext()){
-                    String next = scanner.nextLine().replace("\n","");
-
-                    if(next.equals("SCRIPT")){
-                        if(sc !=null)
-                        {
-                            if(go!=null)
-                                go.addScript(sc);
-                        }
-                        inScript = true;
-                        String className = scanner.nextLine();
-                        sc = (Script) Class.forName(className).cast(FromString(scanner.nextLine()));
-                    }
-
-                    if(next.equals("OBJECT")) {
-
-                        if (go != null)
-                        {
-                            if(inScript){
-                                go.addScript(sc);
-                            }
-                            scene.add(go);
-                        }
-                        inScript = false;
-                        go = new GameObject();
-
-                        go.setIdentity(new Identity(scanner.nextLine(), scanner.nextLine()));
-                        go = (GameObject) FromString(scanner.nextLine());
-                        go.setChildren(new ArrayList<>());
-                        go.setScripts(new CopyOnWriteArrayList<>());
-                    }
-                }
-
-                if (go != null)
-                {
-                    if(inScript){
-                        go.addScript(sc);
-                    }
-
-                    scene.add(go);
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-
-            for (GameObject gameObject :
-                    scene.world.gameObjects) {
-                for (Script script :
-                        gameObject.getScripts()) {
-                    script.onLoaded();
-                }
-            }
-            return scene;
-        }
-
-        private static Object FromString( String s ) throws IOException, ClassNotFoundException {
-            s = s.replace("[","").replace("]","");
-            String[] split = s.split(", ");
-            byte[] bytes = new byte[split.length];
-            for (int i = 0; i < split.length; i++) {
-                bytes[i] = Byte.parseByte(split[i]);
-            }
-            System.out.println("PARSED: " + Arrays.toString(bytes));
-
-            ObjectInputStream Object_Input_Stream = new ObjectInputStream( new ByteArrayInputStream(bytes) );
-            Object Demo_Object  = Object_Input_Stream.readObject();
-            Object_Input_Stream.close();
-            return Demo_Object;
-        }
-
-    }
 }
 

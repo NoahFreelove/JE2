@@ -15,11 +15,11 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 public class ImageProcessor {
-    public static ResourceBundle ProcessImage(String filepath) {
-        return ProcessImage(filepath,true);
+    public static ResourceBundle processImage(String filepath) {
+        return processImage(filepath,true);
     }
 
-        public static ResourceBundle ProcessImage(String filepath,boolean flip){
+    public static ResourceBundle processImage(String filepath, boolean flip){
         ResourceBundle rb = new ResourceBundle();
         if(filepath == null)
         {
@@ -53,6 +53,39 @@ public class ImageProcessor {
         rb.imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
         return rb;
     }
+
+    public static ResourceBundle processImage(byte[] data, boolean flip){
+        ResourceBundle rb = new ResourceBundle();
+        if(data == null)
+        {
+            Logger.log(new ImageProcessError(true));
+            rb.imageData = BufferUtils.createByteBuffer(1);
+            rb.imageSize = new Vector2i(1,1);
+            return rb;
+        }
+
+        IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
+        IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
+        IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
+        STBImage.stbi_set_flip_vertically_on_load(flip);
+        STBImage.stbi_set_unpremultiply_on_load(true);
+        ByteBuffer putData = BufferUtils.createByteBuffer(data.length);
+        putData.put(data);
+        putData.flip();
+        ByteBuffer image = STBImage.stbi_load_from_memory(putData, widthBuf, heightBuf, channelsBuf, 4);
+
+        if (image == null) {
+            image = BufferUtils.createByteBuffer(1);
+            rb.imageData = image;
+            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason()));
+            return rb;
+        }
+        image.flip();
+        rb.imageData = image;
+        rb.imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
+        return rb;
+    }
+
     public static ResourceBundle generateSolidColorImage(Vector2i size, int color){
         ResourceBundle rb = new ResourceBundle();
         rb.imageSize = size;

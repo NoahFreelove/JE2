@@ -1,5 +1,6 @@
 package JE.Scene;
 
+import JE.Annotations.Nullable;
 import JE.Objects.Audio.AudioSourcePlayer;
 import JE.Objects.GameObject;
 import JE.Objects.Lights.Light;
@@ -17,5 +18,14 @@ public class World implements Serializable {
     public org.jbox2d.dynamics.World physicsWorld = new org.jbox2d.dynamics.World(new Vec2(0,-9.8f));
     public World(){
         physicsWorld.setAllowSleep(false);
+    }
+
+    @Nullable
+    public GameObject getObjectByID(long id){
+        for (GameObject gameObject : gameObjects) {
+            if(gameObject.identity().uniqueID == id)
+                return gameObject;
+        }
+        return null;
     }
 }

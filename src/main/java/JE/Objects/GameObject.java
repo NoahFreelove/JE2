@@ -38,7 +38,7 @@ public final class GameObject implements Serializable {
     private transient CopyOnWriteArrayList<Script> scripts = new CopyOnWriteArrayList<>();
     private transient Renderer rendererRef = null;
     private transient PhysicsBody physicsBodyRef = null;
-    private transient Identity identity = new Identity();
+    private Identity identity = new Identity();
 
     private boolean active = true;
     private int layer = 0;
@@ -223,7 +223,7 @@ public final class GameObject implements Serializable {
 
     public void preRender(){}
 
-    public Identity getIdentity() {
+    public Identity identity() {
         return new Identity(identity.name, identity.tag);
     }
     public void setIdentity(Identity identity) {

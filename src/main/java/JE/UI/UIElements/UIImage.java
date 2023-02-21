@@ -28,7 +28,7 @@ public class UIImage extends UIElement {
     }
 
     public void setImage(String filepath){
-        this.text = new Texture(new Resource("texture", ImageProcessor.ProcessImage(filepath, false), ResourceType.TEXTURE));
+        this.text = new Texture(new Resource("texture", ImageProcessor.processImage(filepath, false), ResourceType.TEXTURE));
     }
 
     @Override

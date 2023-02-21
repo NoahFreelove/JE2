@@ -17,13 +17,30 @@ public class Resource implements Serializable {
 
     public boolean hasBeenLoaded = false;
 
+    public Resource(String name, byte[] data, ResourceType type) {
+        this.name = name;
+        this.type = type;
+        bundle = new ResourceBundle();
+        switch (type) {
+            case TEXTURE -> {
+                bundle = ImageProcessor.processImage(data, true);
+                ResourceManager.textures.add(this);
+            }
+            case SOUND -> {
+                bundle = SoundProcessor.ProcessSound(data);
+                ResourceManager.sounds.add(this);
+            }
+        }
+        hasBeenLoaded = true;
+    }
+
     public Resource(String name, String path, ResourceType type) {
         this.name = name;
         this.type = type;
         bundle = new ResourceBundle();
         switch (type) {
             case TEXTURE -> {
-                bundle = ImageProcessor.ProcessImage(path);
+                bundle = ImageProcessor.processImage(path);
                 ResourceManager.textures.add(this);
             }
             case SOUND -> {

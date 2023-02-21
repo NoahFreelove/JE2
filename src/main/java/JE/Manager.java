@@ -11,10 +11,13 @@ import JE.Window.WindowPreferences;
 import org.joml.Vector2i;
 import org.joml.Vector4i;
 
+import java.util.ArrayList;
+
 public class Manager {
 
     private static WindowPreferences preferences = new WindowPreferences();
     private static Scene activeScene = new Scene();
+    public static ArrayList<Scene> buildScenes = new ArrayList<>();
 
     public static Camera getMainCamera(){
         return activeScene.mainCamera();
@@ -50,6 +53,13 @@ public class Manager {
         activeScene.unload(activeScene, s);
         activeScene = s;
         s.start();
+    }
+
+    public static void setScene(int i){
+        Scene newScene = buildScenes.get(i);
+        activeScene.unload(activeScene, newScene);
+        activeScene = newScene;
+        newScene.start();
     }
 
     public static void setScene(Scene s, boolean waitFrame){
@@ -109,5 +119,8 @@ public class Manager {
 
     public static Vector4i defaultViewport(){
         return new Vector4i(0,0,preferences.windowSize.x(),preferences.windowSize.y());
+    }
+    public static void addBuildScene(Scene s){
+        buildScenes.add(s);
     }
 }

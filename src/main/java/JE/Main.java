@@ -17,6 +17,7 @@ import JE.SampleScripts.FloorFactory;
 import JE.SampleScripts.MovementController;
 import JE.SampleScripts.PlayerScript;
 import JE.Scene.Scene;
+import JE.Manager;
 import JE.UI.UIElements.Buttons.ImageButton;
 import JE.UI.UIElements.Buttons.StyledButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
@@ -38,11 +39,12 @@ public class Main {
 
     public static void main(String[] args) {
         Manager.start(new WindowPreferences(new Vector2i(800,800), "JE2", false, true));
+
         Logger.logErrors = true;
 
         Scene scene = new Scene();
 
-        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture(ResourceLoader.get("texture1.png")));
+        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture(ResourceLoader.getBytes("texture1.png")));
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
         PointLight p = new PointLight();
@@ -100,6 +102,10 @@ public class Main {
                 new Vector2f(0,1)
         });
         go.addScript(new PhysicsBody());
+        go.getPhysicsBody().defaultRestitution = 0.5f;
+        go.getPhysicsBody().defaultDensity = 0.1f;
+        go.getPhysicsBody().defaultFriction = 0.05f;
+
         go.getRenderer().getVAO().setShaderProgram(ShaderProgram.lightSpriteShader());
         go.getRenderer().getVAO().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
@@ -114,8 +120,6 @@ public class Main {
         scene.add(FloorFactory.createFloor(new Vector2f(-2,1), new Vector2f(6,1)));
 
         Manager.setScene(scene);
-        go.getPhysicsBody().activeFixture.setRestitution(0.5f);
-        go.getPhysicsBody().activeFixture.setDensity(0.1f);
-        go.getPhysicsBody().activeFixture.m_friction = 0.1f;
+
     }
 }

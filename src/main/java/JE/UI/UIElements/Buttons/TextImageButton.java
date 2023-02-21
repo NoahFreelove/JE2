@@ -24,27 +24,27 @@ public class TextImageButton extends UIElement {
     }
 
     public TextImageButton(String text, String filepath) {
-        this.textureBundle = ImageProcessor.ProcessImage(filepath,false);
+        this.textureBundle = ImageProcessor.processImage(filepath,false);
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.text = text;
     }
 
     public TextImageButton(String text, String filepath, Vector2f dimensions) {
-        this.textureBundle = ImageProcessor.ProcessImage(filepath,false);
+        this.textureBundle = ImageProcessor.processImage(filepath,false);
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.dimensions = dimensions;
         this.text = text;
     }
 
     public TextImageButton(String text, String filepath, Runnable onClickEvent) {
-        this.textureBundle = ImageProcessor.ProcessImage(filepath,false);
+        this.textureBundle = ImageProcessor.processImage(filepath,false);
         this.onClickEvent = onClickEvent;
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.text = text;
     }
 
     public TextImageButton(String text, String filepath, Runnable onClickEvent, Vector2f dimensions) {
-        this.textureBundle = ImageProcessor.ProcessImage(filepath,false);
+        this.textureBundle = ImageProcessor.processImage(filepath,false);
         this.onClickEvent = onClickEvent;
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.dimensions = dimensions;

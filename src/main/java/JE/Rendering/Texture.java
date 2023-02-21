@@ -44,6 +44,11 @@ public class Texture implements Serializable {
         GenerateTexture();
     }
 
+    public Texture(byte[] data){
+        resource = new Resource("texture",data, ResourceType.TEXTURE);
+        GenerateTexture();
+    }
+
     public Texture(ByteBuffer bb, Vector2i size){
         resource = new Resource("texture",bb,size, ResourceType.TEXTURE);
         GenerateTexture();

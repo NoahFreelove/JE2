@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Script {
-    protected transient VAO vao = new VAO();
+    protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Color baseColor = Color.WHITE;
     protected boolean scale = true;
@@ -127,5 +127,11 @@ public class Renderer extends Script {
     @Override
     public void destroy() {
         getVAO().getShaderProgram().destroy();
+    }
+
+    @Override
+    public void load(){
+        if(vao !=null)
+            vao.load();
     }
 }

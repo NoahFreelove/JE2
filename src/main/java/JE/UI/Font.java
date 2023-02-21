@@ -48,6 +48,25 @@ public class Font {
         }
     }
 
+    public Font(byte[] data, boolean createNow){
+        try {
+            fontData = BufferUtils.createByteBuffer(data.length);
+            fontData.put(data);
+            fontData.flip();
+        }
+        catch (Exception e){
+            Logger.log(new IOError("Error loading font from byte buffer. Size: " + data.length));
+            fontData = BufferUtils.createByteBuffer(1);
+        }
+        if(!createNow)
+        {
+            Manager.queueGLFunction(this::generateFont);
+        }
+        else {
+            generateFont();
+        }
+    }
+
     @GLThread
     private void generateFont(){
         int BITMAP_W = 1024;

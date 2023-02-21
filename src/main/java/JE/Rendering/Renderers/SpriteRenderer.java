@@ -21,8 +21,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer {
-    private transient final VAO2f spriteCoordVAO;
-
+    private final VAO2f spriteCoordVAO;
 
     private transient Texture texture = new Texture();
     private String textureFp;
@@ -40,7 +39,6 @@ public class SpriteRenderer extends Renderer {
     }
 
     public SpriteRenderer(ShaderProgram shader){
-        super();
         spriteCoordVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
@@ -122,10 +120,13 @@ public class SpriteRenderer extends Renderer {
     public Texture getNormalTexture(){ return normal; }
 
     @Override
-    public void onLoaded() {
+    public void load() {
         System.out.println("Loaded: " + textureFp);
         setTexture(new Texture(textureFp));
         setNormalTexture(new Texture(normalFp));
+        if(spriteCoordVAO !=null)
+            spriteCoordVAO.load();
+        super.load();
     }
 
     public void customTile(Vector2f scale){

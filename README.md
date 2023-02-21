@@ -25,7 +25,7 @@ An OpenGL remake of JEngine, a JavaFX based game engine.
 
 ### Advantages over JEngine
 - Much lower memory usage (not creating new objects every frame)
-- More control over objects and components
+- More control over objects and scripts
 - Uses a much better physics library
 - Easy audio playback + Filters
 - Improved, controlled Lighting

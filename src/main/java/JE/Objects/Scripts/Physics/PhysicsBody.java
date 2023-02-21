@@ -26,6 +26,10 @@ public class PhysicsBody extends Script {
     private Vector2f size = new Vector2f(1,1);
     private BodyType mode = BodyType.DYNAMIC;
 
+    public float defaultRestitution = 0;
+    public float defaultDensity = 1;
+    public float defaultFriction = 1f;
+
     public PhysicsBody(){
         super();
     }
@@ -49,8 +53,9 @@ public class PhysicsBody extends Script {
         shape.setRadius(0.001f);
 
         activeFixture = body.createFixture(shape, 1.0f);
-       /* activeFixture.setUserData(getAttachedObject());
-        body.setUserData(getAttachedObject());*/
+        activeFixture.setRestitution(defaultRestitution);
+        activeFixture.setDensity(defaultDensity);
+        activeFixture.m_friction = defaultFriction;
         hasInitialized = true;
         return this;
     }

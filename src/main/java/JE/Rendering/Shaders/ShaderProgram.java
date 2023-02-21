@@ -4,6 +4,7 @@ import JE.Annotations.GLThread;
 import JE.IO.Logging.Logger;
 import JE.IO.Logging.Errors.ShaderError;
 import JE.Manager;
+import JE.Utility.Loadable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -15,19 +16,19 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 
-public final class ShaderProgram implements Serializable {
-    public int programID = -1;
+public final class ShaderProgram implements Serializable, Loadable {
+    public transient int programID = -1;
 
     public boolean supportsLighting = false;
     public boolean supportsTextures = false;
-    public volatile boolean attemptedCompile = false;
+    public transient volatile boolean attemptedCompile = false;
 
     public String vertex;
     public String fragment;
-    public boolean vertexCompileStatus;
-    public boolean fragmentCompileStatus;
-    private int vertexShaderID;
-    private int fragmentShaderID;
+    public transient boolean vertexCompileStatus;
+    public transient boolean fragmentCompileStatus;
+    private transient int vertexShaderID;
+    private transient int fragmentShaderID;
 
     // TODO: future testing to see if multiple objects can shader the same shader
     /*public static final ShaderProgram defaultShader = defaultShader();
@@ -214,4 +215,8 @@ public final class ShaderProgram implements Serializable {
         return (programID >0);
     }
 
+    @Override
+    public void load() {
+        createShader(vertex, fragment);
+    }
 }
