@@ -17,7 +17,6 @@ import JE.SampleScripts.FloorFactory;
 import JE.SampleScripts.MovementController;
 import JE.SampleScripts.PlayerScript;
 import JE.Scene.Scene;
-import JE.Manager;
 import JE.UI.UIElements.Buttons.ImageButton;
 import JE.UI.UIElements.Buttons.StyledButton;
 import JE.UI.UIElements.Checkboxes.StyledCheckbox;
@@ -28,7 +27,7 @@ import JE.UI.UIElements.UIElement;
 import JE.UI.UIObjects.UIWindow;
 import JE.Window.WindowPreferences;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
@@ -38,20 +37,17 @@ import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 public class Main {
 
     public static void main(String[] args) {
-        Manager.start(new WindowPreferences(new Vector2i(800,800), "JE2", false, true));
+        Manager.start(new WindowPreferences(800,800, "JE2", false, true));
 
         Logger.logErrors = true;
 
         Scene scene = new Scene();
 
-        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture(ResourceLoader.getBytes("texture1.png")));
+        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture(ResourceLoader.getBytes("texture1.png")), new Texture(ResourceLoader.getBytes("texture1_N.png")));
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
-        PointLight p = new PointLight();
-        p.offset = new Vector2f(0.5f,0.5f);
-        p.radius = 5f;
-        p.intensity = 2f;
-        //player.addScript(p);
+
+        scene.add(PointLight.pointLightObject(new Vector2f(1,-1), new Vector3f(1,1,1), 10, 1f));
 
         MovementController mc = new MovementController();
         mc.physicsBased = true;
@@ -60,19 +56,11 @@ public class Main {
         player.addScript(new Camera());
         player.setPosition(2,0 );
         scene.setCamera(player.getScript(Camera.class));
-        GameObject ambientObject = new GameObject();
-        AmbientLight ambient = new AmbientLight();
-        ambientObject.addScript(ambient);
-        scene.add(ambientObject);
+
+        //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
 
         Manager.addKeyReleasedCallback((key, mods) -> {
-            if(key == Keyboard.nameToCode("Q")){
-                if(ambient.affectedLayers[0] == 0){
-                    ambient.affectedLayers[0] = 1;
-                }
-                else ambient.affectedLayers[0] = 0;
-            }
-            else if(key == Keyboard.nameToCode("E")){
+           if(key == Keyboard.nameToCode("E")){
                 Vector2f pos = new Vector2f(player.getTransform().position());
                 Vector2f mousePos = Mouse.getMouseWorldPosition();
                 Vector2f dir = mousePos.sub(pos).normalize();
@@ -88,7 +76,7 @@ public class Main {
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
         elements.add(new StyledCheckbox());
-        elements.add(new ImageButton(ResourceLoader.get("texture1.png")));
+        elements.add(new ImageButton(ResourceLoader.getBytes("texture1.png")));
         scene.addUI(new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2f(100,100), elements));
@@ -102,7 +90,7 @@ public class Main {
                 new Vector2f(0,1)
         });
         go.addScript(new PhysicsBody());
-        go.getPhysicsBody().defaultRestitution = 0.5f;
+        go.getPhysicsBody().defaultRestitution = 0.8f;
         go.getPhysicsBody().defaultDensity = 0.1f;
         go.getPhysicsBody().defaultFriction = 0.05f;
 

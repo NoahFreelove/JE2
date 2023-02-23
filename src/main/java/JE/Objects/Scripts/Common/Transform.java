@@ -8,37 +8,51 @@ import org.joml.*;
 import java.lang.Math;
 
 public class Transform extends Script {
-    private Vector2f position;
+    private Vector3f position;
     private float zPos = 1;
     private Vector3f rotation;
-    private Vector2f scale;
+    private Vector3f scale;
 
     private PhysicsBody physicsBody;
 
     public Transform(){
-        position = new Vector2f();
+        position = new Vector3f();
         rotation = new Vector3f();
-        scale = new Vector2f(1, 1);
+        scale = new Vector3f(1,1,1);
     }
 
     public Vector2f position(){
+        return new Vector2f(position.x, position.y);
+    }
+    public Vector3f position3D(){
         return position;
     }
-
     public Vector3f rotation(){
         return rotation;
     }
 
     public Vector2f scale(){
+        return new Vector2f(scale.x, scale.y);
+    }
+
+    public Vector3f scale3D(){
         return scale;
     }
 
     public void setPosition(Vector2f position){
+        this.position = new Vector3f(position.x, position.y, this.position.z);
+    }
+
+    public void setPosition(Vector3f position){
         this.position = position;
     }
 
     public void setPosition(float x, float y){
-        this.position = new Vector2f(x, y);
+        this.position = new Vector3f(x, y, position.z);
+    }
+
+    public void setPosition(float x, float y, float z){
+        this.position = new Vector3f(x, y, z);
     }
 
     public void setRotation(Vector3f rotation){
@@ -50,21 +64,29 @@ public class Transform extends Script {
     }
 
     public void setScale(Vector2f scale){
+        this.scale = new Vector3f(scale.x, scale.y, this.scale.z);
+    }
+
+    public void setScale(Vector3f scale){
         this.scale = scale;
     }
 
     public void setScale(float x, float y){
-        this.scale = new Vector2f(x, y);
+        this.scale = new Vector3f(x, y, scale.z);
+    }
+
+    public void setScale(float x, float y, float z){
+        this.scale = new Vector3f(x, y, z);
     }
 
     public float zPos()
     {
-        return zPos;
+        return position.z();
     }
 
     public void setZPos(float zPos)
     {
-        this.zPos = zPos;
+        this.position.z = zPos;
     }
 
     public void translateX(float x){
@@ -75,12 +97,21 @@ public class Transform extends Script {
         position.y += y;
     }
 
+    public void translateZ(float z){
+        position.z += z;
+    }
+
     public Vector3f lookAt(Vector2f target){
-        Vector2f direction = new Vector2f(target).sub(position);
+        Vector2f direction = new Vector2f(target).sub(position());
         float angle = (float) Math.atan2(direction.y, direction.x);
         return new Vector3f(0, 0, (float) Math.toDegrees(angle));
     }
 
+    public Vector3f lookAt(Vector3f target){
+        Vector3f direction = new Vector3f(target).sub(position3D());
+        float angle = (float) Math.atan2(direction.y, direction.x);
+        return new Vector3f(0, 0, (float) Math.toDegrees(angle));
+    }
 
     @Override
     public void start() {

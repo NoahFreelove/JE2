@@ -21,6 +21,6 @@ public class FloorFactory {
         return floor;
     }
     public static GameObject createFloor(Vector2f pos, Vector2f size){
-        return createFloor(new Texture(ResourceLoader.getBytes("texture2.png")), ShaderProgram.spriteShader(), pos, size);
+        return createFloor(new Texture(ResourceLoader.getBytes("texture2.png")), ShaderProgram.lightSpriteShader(), pos, size);
     }
 }

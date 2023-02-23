@@ -86,7 +86,6 @@ public class SpriteRenderer extends Renderer {
         glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
         glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
 
-
         spriteCoordVAO.Enable(1);
         super.Render(gameObject, 0, camera);
         spriteCoordVAO.Disable();
@@ -96,17 +95,14 @@ public class SpriteRenderer extends Renderer {
     public void setTexture(Texture texture){
         setTexture(texture, spriteCoordVAO.getVertices(), true);
         textureFp = texture.resource.bundle.filepath;
-
     }
-
 
     public void setNormalTexture(Texture texture) {
         this.normal = texture;
         normalFp = texture.resource.bundle.filepath;
-
     }
 
-    private void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
+    public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
         this.texture = texture;
         Runnable r = () ->{
             if(softSet) return;

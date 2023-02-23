@@ -19,6 +19,7 @@ import org.joml.Vector3f;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -332,12 +333,15 @@ public final class GameObject implements Serializable {
         return sprite;
     }
     public static GameObject Sprite(ShaderProgram shaderProgram, Texture texture){
+        return Sprite(shaderProgram, texture, new Texture(ImageProcessor.generateNormalMap(texture)));
+    }
+
+    public static GameObject Sprite(ShaderProgram shaderProgram, Texture texture, Texture normal){
         GameObject sprite = new GameObject();
         sprite.addScript(new SpriteRenderer(shaderProgram));
         if (sprite.getSpriteRenderer() != null) {
             sprite.getSpriteRenderer().setTexture(texture);
-            sprite.getSpriteRenderer().setNormalTexture(new Texture(ImageProcessor.generateNormalMap(texture)));
-
+            sprite.getSpriteRenderer().setNormalTexture(normal);
         }
         return sprite;
     }

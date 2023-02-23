@@ -20,4 +20,24 @@ public class WindowPreferences {
         this.windowResizable = windowResizable;
         this.vSync = vSync;
     }
+
+    public WindowPreferences(int xSize, int ySize, String windowTitle){
+        if(xSize <100 || ySize < 100){
+            xSize = 100;
+            ySize = 100;
+        }
+        this.windowSize = new Vector2i(xSize, ySize);
+        this.windowTitle = windowTitle;
+    }
+
+    public WindowPreferences(int xSize, int ySize, String windowTitle, boolean windowResizable, boolean vSync){
+        if(xSize <100 || ySize < 100){
+            xSize = 100;
+            ySize = 100;
+        }
+        this.windowSize = new Vector2i(xSize, ySize);
+        this.windowTitle = windowTitle;
+        this.windowResizable = windowResizable;
+        this.vSync = vSync;
+    }
 }

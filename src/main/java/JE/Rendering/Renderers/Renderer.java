@@ -24,7 +24,7 @@ public class Renderer extends Script {
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Color baseColor = Color.WHITE;
     protected boolean scale = true;
-    protected int drawMode = GL_TRIANGLE_STRIP;
+    protected int drawMode = GL_TRIANGLE_FAN;
 
     public void SetShader(ShaderProgram shader){
         vao.setShaderProgram(shader);

@@ -40,7 +40,17 @@ public class Scene implements Serializable {
             return;
         if(world.gameObjects.contains(newGameObject)) {
             return;
+
         }
+
+        for (Script s :
+                newGameObject.getScripts()) {
+            if (s instanceof Light light)
+            {
+                addLight(light);
+            }
+        }
+
         world.gameObjects.add(newGameObject);
         for (GameObject child :
                 newGameObject.getChildren()) {

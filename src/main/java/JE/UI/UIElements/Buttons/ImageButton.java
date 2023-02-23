@@ -29,6 +29,11 @@ public class ImageButton extends UIElement {
         this.text = new Texture(textureBundle.imageData, textureBundle.imageSize);
     }
 
+    public ImageButton(byte[] text) {
+        this.textureBundle = ImageProcessor.processImage(text,false);
+        this.text = new Texture(textureBundle.imageData, textureBundle.imageSize);
+    }
+
     public ImageButton(String filepath, Vector2f dimensions) {
         this.textureBundle = ImageProcessor.processImage(filepath,false);
         this.text = new Texture(textureBundle.imageData, textureBundle.imageSize);

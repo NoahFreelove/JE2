@@ -13,7 +13,7 @@ public class Camera extends Script {
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1;
     public Vector4i viewportSize = Manager.defaultViewport();
-    public Color backgroundColor = Color.RED;
+    public Color backgroundColor = Color.BLACK;
 
     @Override
     public void update() {
@@ -40,7 +40,7 @@ public class Camera extends Script {
 
     public Matrix4f getModel(Transform t, boolean scale){
         Matrix4f model = new Matrix4f().identity();
-        model.translate(t.position().x(), t.position().y(), t.zPos());
+        model.translate(t.position3D());
         Vector2f spriteSize = t.scale();
 
         model.translate(spriteSize.x()/2, spriteSize.y()/2, 0);
@@ -65,8 +65,8 @@ public class Camera extends Script {
         float aspect = (float) viewportSize.z / (float) viewportSize.w;
         float width = 4;
         float height = width/aspect;
-        float near = -1;
-        float far = 1000;
+        float near = 0;
+        float far = 100;
         // take viewport position into account
         projection = projection.translate(viewportSize.x, viewportSize.y, 0);
         projection = projection.ortho(-width/2, width/2, -height/2f, height/2f, near, far);
