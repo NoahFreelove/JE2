@@ -219,7 +219,6 @@ public class Window {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            glfwPollEvents();
             UIHandler.frameStart();
             double startTime = glfwGetTime();
 
@@ -233,6 +232,7 @@ public class Window {
                 glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
             }
 
+            glfwPollEvents();
             pipeline.onStart();
 
             glfwSwapBuffers(windowHandle);
