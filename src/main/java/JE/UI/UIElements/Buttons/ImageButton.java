@@ -45,13 +45,23 @@ public class ImageButton extends UIElement {
         this.onClickEvent = onClickEvent;
         this.text = new Texture(textureBundle.imageData, textureBundle.imageSize);
     }
+    public ImageButton(byte[] texture, Runnable onClickEvent) {
+        this.textureBundle = ImageProcessor.processImage(texture,false);
+        this.onClickEvent = onClickEvent;
+        this.text = new Texture(textureBundle.imageData, textureBundle.imageSize);
+    }
     public ImageButton(String filepath, Runnable onClickEvent, Vector2f dimensions) {
         this.textureBundle = ImageProcessor.processImage(filepath,false);
         this.onClickEvent = onClickEvent;
         this.text = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.dimensions = dimensions;
     }
-
+    public ImageButton(byte[] texture, Runnable onClickEvent, Vector2f dimensions) {
+        this.textureBundle = ImageProcessor.processImage(texture,false);
+        this.onClickEvent = onClickEvent;
+        this.text = new Texture(textureBundle.imageData, textureBundle.imageSize);
+        this.dimensions = dimensions;
+    }
 
     @Override
     protected void render() {

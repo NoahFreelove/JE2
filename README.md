@@ -1,5 +1,5 @@
 # JEngine 2
-An OpenGL remake of JEngine, a JavaFX based game engine.
+An OpenGL upgrade of JEngine, a JavaFX based game engine.
 
 ## Features
 - Easy setup✅
@@ -14,7 +14,6 @@ An OpenGL remake of JEngine, a JavaFX based game engine.
 ## Planned Features
 (In order of priority)
 - Finalize GUI implementation
-- Physics
 - Networking (WIP)
 - 3D Rendering
 

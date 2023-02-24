@@ -23,28 +23,28 @@ public class TextImageButton extends UIElement {
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
     }
 
-    public TextImageButton(String text, String filepath) {
-        this.textureBundle = ImageProcessor.processImage(filepath,false);
+    public TextImageButton(String text, byte[] texture) {
+        this.textureBundle = ImageProcessor.processImage(texture,false);
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.text = text;
     }
 
-    public TextImageButton(String text, String filepath, Vector2f dimensions) {
-        this.textureBundle = ImageProcessor.processImage(filepath,false);
+    public TextImageButton(String text, byte[] texture, Vector2f dimensions) {
+        this.textureBundle = ImageProcessor.processImage(texture,false);
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.dimensions = dimensions;
         this.text = text;
     }
 
-    public TextImageButton(String text, String filepath, Runnable onClickEvent) {
-        this.textureBundle = ImageProcessor.processImage(filepath,false);
+    public TextImageButton(String text, byte[] texture, Runnable onClickEvent) {
+        this.textureBundle = ImageProcessor.processImage(texture,false);
         this.onClickEvent = onClickEvent;
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.text = text;
     }
 
-    public TextImageButton(String text, String filepath, Runnable onClickEvent, Vector2f dimensions) {
-        this.textureBundle = ImageProcessor.processImage(filepath,false);
+    public TextImageButton(String text, byte[] texture, Runnable onClickEvent, Vector2f dimensions) {
+        this.textureBundle = ImageProcessor.processImage(texture,false);
         this.onClickEvent = onClickEvent;
         this.texture = new Texture(textureBundle.imageData, textureBundle.imageSize);
         this.dimensions = dimensions;

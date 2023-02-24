@@ -9,11 +9,10 @@ import java.lang.Math;
 
 public class Transform extends Script {
     private Vector3f position;
-    private float zPos = 1;
     private Vector3f rotation;
     private Vector3f scale;
 
-    private PhysicsBody physicsBody;
+    private transient PhysicsBody physicsBody;
 
     public Transform(){
         position = new Vector3f();

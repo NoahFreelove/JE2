@@ -22,11 +22,10 @@ import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer {
     private final VAO2f spriteCoordVAO;
-
     private transient Texture texture = new Texture();
-    private String textureFp;
+    private String textureFp = "";
     private transient Texture normal = new Texture();
-    private String normalFp;
+    private String normalFp = "";
 
     public SpriteRenderer() {
         spriteCoordVAO = new VAO2f(new Vector2f[]{
