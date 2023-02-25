@@ -41,9 +41,9 @@ public class StyledCheckbox extends Checkbox{
     @Override
     protected void render() {
         toggle.draw_begin();
-        if(isActive()){
+        if(isChecked){
             toggle.active().data().color().set(style.pressedColor.nkColor());
-            toggle.normal().data().color().set(style.normalColor.nkColor());
+            toggle.normal().data().color().set(style.pressedColor.nkColor());
             toggle.hover().data().color().set(style.hoverColor.nkColor());
         }
         else {

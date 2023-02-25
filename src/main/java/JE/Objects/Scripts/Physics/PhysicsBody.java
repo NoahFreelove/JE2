@@ -20,8 +20,8 @@ public class PhysicsBody extends Script {
     public transient org.jbox2d.dynamics.BodyDef bodyDef;
     public transient org.jbox2d.dynamics.Body body;
     public transient Fixture activeFixture;
-    private boolean hasInitialized = false;
-    public boolean onGround = false;
+    private transient boolean hasInitialized = false;
+    public transient boolean onGround = false;
     public boolean fixedRotation = true;
     private Vector2f size = new Vector2f(1,1);
     private BodyType mode = BodyType.DYNAMIC;

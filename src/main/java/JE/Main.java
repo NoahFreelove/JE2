@@ -23,6 +23,7 @@ import JE.UI.UIElements.Checkboxes.StyledCheckbox;
 import JE.UI.UIElements.PreBuilt.FPSCounter;
 import JE.UI.UIElements.Sliders.StyledSlider;
 import JE.UI.UIElements.Style.Color;
+import JE.UI.UIElements.TextField;
 import JE.UI.UIElements.UIElement;
 import JE.UI.UIObjects.UIWindow;
 import JE.Window.WindowPreferences;
@@ -70,6 +71,7 @@ public class Main {
         });
 
         ArrayList<UIElement> elements = new ArrayList<>();
+        elements.add(new TextField(32));
         StyledSlider coolSlider = new StyledSlider();
         FPSCounter counter = new FPSCounter("FPS: ");
         elements.add(counter);

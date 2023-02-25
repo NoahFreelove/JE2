@@ -1,5 +1,6 @@
 package JE.Window;
 
+import JE.IO.UserInput.Keyboard.KeyPressedEvent;
 import JE.IO.UserInput.Keyboard.Keyboard;
 import JE.IO.UserInput.Mouse.Mouse;
 import JE.Manager;
@@ -144,6 +145,7 @@ public class UIHandler {
                 nk_input_scroll(nuklearContext, scroll);
             }
         });
+
         glfwSetCharCallback(win, (window, codepoint) -> nk_input_unicode(nuklearContext, codepoint));
 
         Keyboard.keyPressedEvents.add((key, mods) -> keyboardInput(true,key));
@@ -302,6 +304,7 @@ public class UIHandler {
         } else if (mouse.ungrab()) {
             glfwSetInputMode(Window.handle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
+
 
         nk_input_end(nuklearContext);
     }

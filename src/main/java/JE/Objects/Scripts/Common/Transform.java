@@ -1,6 +1,7 @@
 package JE.Objects.Scripts.Common;
 
 import JE.Objects.Scripts.Base.Script;
+import JE.Objects.Scripts.Base.ScriptRestrictions;
 import JE.Objects.Scripts.Physics.PhysicsBody;
 import JE.Utility.JOMLtoJBOX;
 import org.joml.*;
@@ -18,6 +19,7 @@ public class Transform extends Script {
         position = new Vector3f();
         rotation = new Vector3f();
         scale = new Vector3f(1,1,1);
+        setRestrictions(new ScriptRestrictions(false,false,false));
     }
 
     public Vector2f position(){
