@@ -20,10 +20,12 @@ import java.io.Serializable;
  Scripts MUST have a default constructor if you want to use *future* JE2 save and load features
  **/
 public class Script implements Serializable, Loadable {
-    protected ScriptRestrictions restrictions = new ScriptRestrictions();
+    protected transient ScriptRestrictions restrictions = new ScriptRestrictions();
     private transient GameObject parentObject;
 
     public ScriptRestrictions getRestrictions(){
+        if(restrictions == null)
+            this.restrictions = new ScriptRestrictions();
         return restrictions;
     }
 
@@ -52,7 +54,8 @@ public class Script implements Serializable, Loadable {
     public void unload(Scene oldScene, Scene newScene){}
     public void destroy(){}
     public void onForeignScriptAdded(Script script){}
-    public void onAddedToGameObject(GameObject gameObject){}
+    public void onAddedToGameObject(GameObject gameObject){
+    }
     public void gameObjectAddedToScene(Scene scene){}
     public GameObject getAttachedObject(){
         return parentObject;
@@ -63,6 +66,7 @@ public class Script implements Serializable, Loadable {
         this.parentObject = newParent;
     }
 
-    @Override
-    public void load() {}
+    public void load() {
+        this.restrictions = new ScriptRestrictions();
+    }
 }

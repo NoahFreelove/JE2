@@ -8,10 +8,13 @@ import JE.Rendering.Camera;
 import JE.Rendering.Shaders.ShaderProgram;
 import JE.Rendering.Texture;
 import JE.Rendering.VertexBuffers.VAO2f;
+import JE.Resources.ResourceLoader;
+import JE.Resources.ResourceManager;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
@@ -26,6 +29,7 @@ public class SpriteRenderer extends Renderer {
     private String textureFp = "";
     private transient Texture normal = new Texture();
     private String normalFp = "";
+    private int defaultShaderIndex = 1;
 
     public SpriteRenderer() {
         spriteCoordVAO = new VAO2f(new Vector2f[]{
@@ -79,7 +83,6 @@ public class SpriteRenderer extends Renderer {
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
         if (!vao.getShaderProgram().use())
             return;
-
         texture.activateTexture(GL_TEXTURE0);
         normal.activateTexture(GL_TEXTURE1);
         glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
@@ -116,12 +119,20 @@ public class SpriteRenderer extends Renderer {
 
     @Override
     public void load() {
-        System.out.println("Loaded: " + textureFp);
-        setTexture(new Texture(textureFp));
-        setNormalTexture(new Texture(normalFp));
         if(spriteCoordVAO !=null)
+        {
+            spriteCoordVAO.getShaderProgram().presetIndex = defaultShaderIndex;
+            vao.getShaderProgram().presetIndex = defaultShaderIndex;
+            vao = spriteCoordVAO;
             spriteCoordVAO.load();
+            vao.load();
+        }
         super.load();
+        /*System.out.println("Loaded: " + textureFp);
+        System.out.println("Loaded: " + normalFp);*/
+        setTexture(new Texture(ResourceLoader.getBytes(textureFp)));
+        setNormalTexture(new Texture(ResourceLoader.getBytes(normalFp)));
+
     }
 
     public void customTile(Vector2f scale){

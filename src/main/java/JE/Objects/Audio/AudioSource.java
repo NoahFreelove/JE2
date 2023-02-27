@@ -22,15 +22,14 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
     private Resource audioResource;
 
-    private boolean isPlaying = false;
+    private transient boolean isPlaying = false;
 
     private boolean loops;
 
     private SoundFilter filter;
 
-    private int audioBuffer;
-    private float duration = 0;
-
+    private transient int audioBuffer;
+    private transient float duration = 0;
 
     public AudioSource(){
         super();

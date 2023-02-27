@@ -135,9 +135,12 @@ public final class GameObject implements Serializable {
             Logger.log(new GameObjectError(this, "Can't Remove Null Script."));
             return false;
         }
-        if(c == scripts.get(0)){
-            Logger.log(new GameObjectError(this, "Can't Remove transform Script."));
-            return false;
+        if(scripts.size()>0)
+        {
+            if(c == scripts.get(0)){
+                Logger.log(new GameObjectError(this, "Can't Remove transform Script."));
+                return false;
+            }
         }
         if(!c.getRestrictions().canBeRemoved)
         {
@@ -264,6 +267,12 @@ public final class GameObject implements Serializable {
         return scripts.get(i);
     }
 
+    public void setScript(int i, Script script){
+        if(scripts.get(i).getClass() == script.getClass()){
+            scripts.set(i, script);
+        }
+    }
+
     @Override
     public String toString() {
         return identity.toString();
@@ -368,7 +377,8 @@ public final class GameObject implements Serializable {
         this.children = children;
     }
 
-    public void setScripts(CopyOnWriteArrayList<Script> scripts) {
-        this.scripts = scripts;
+    public void setScripts(ArrayList<Script> scripts) {
+        this.scripts.clear();
+        this.scripts.addAll(scripts);
     }
 }

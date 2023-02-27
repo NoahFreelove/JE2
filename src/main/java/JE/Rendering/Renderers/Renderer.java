@@ -75,7 +75,9 @@ public class Renderer extends Script {
         }
 
         if(shader.supportsLighting)
+        {
             setLighting(gameObject.getLayer());
+        }
 
         vao.Enable(0);
         enableLayouts();
@@ -131,6 +133,7 @@ public class Renderer extends Script {
 
     @Override
     public void load(){
+        super.load();
         if(vao !=null)
             vao.load();
     }

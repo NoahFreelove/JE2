@@ -12,7 +12,7 @@ import org.joml.Vector3f;
 public abstract class Light extends Script {
     protected Color color;
     public float intensity;
-    public int type;
+    private final transient int type;
     public int[] affectedLayers = new int[]{0};
     public Vector2f offset = new Vector2f(0,0);
 

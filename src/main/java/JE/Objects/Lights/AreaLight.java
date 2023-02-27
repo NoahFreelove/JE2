@@ -9,7 +9,6 @@ public class AreaLight extends Light {
     public Vector2f boundSize = new Vector2f(10,10);
     public AreaLight() {
         super(Color.WHITE,1,2);
-        this.type = 2;
     }
 
     @Override

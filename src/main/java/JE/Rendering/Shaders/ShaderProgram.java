@@ -25,6 +25,7 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     public String vertex;
     public String fragment;
+    public int presetIndex = 0;
     public transient boolean vertexCompileStatus;
     public transient boolean fragmentCompileStatus;
     private transient int vertexShaderID;
@@ -44,23 +45,31 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     public static ShaderProgram defaultShader(){
         ShaderProgram sp = new ShaderProgram();
-        sp.createShader(ShaderRegistry.DEFAULT_VERTEX, ShaderRegistry.DEFAULT_FRAGMENT);
+        sp.setDefaultShader();
         return sp;
+    }
+    private void setDefaultShader(){
+        createShader(ShaderRegistry.DEFAULT_VERTEX, ShaderRegistry.DEFAULT_FRAGMENT);
     }
     public static ShaderProgram spriteShader(){
         ShaderProgram sp = new ShaderProgram();
-        sp.createShader(ShaderRegistry.SPRITE_VERTEX, ShaderRegistry.SPRITE_FRAGMENT);
-        sp.supportsTextures = true;
+        sp.setSpriteShader();
         return sp;
+    }
+    private void setSpriteShader(){
+        createShader(ShaderRegistry.SPRITE_VERTEX, ShaderRegistry.SPRITE_FRAGMENT);
+        supportsTextures = true;
     }
     public static ShaderProgram lightSpriteShader(){
         ShaderProgram sp = new ShaderProgram();
-        sp.createShader(ShaderRegistry.LIGHTSPRITE_VERTEX, ShaderRegistry.LIGHTSPRITE_FRAGMENT);
-        sp.supportsTextures = true;
-        sp.supportsLighting = true;
+        sp.setLightSpriteShader();
         return sp;
     }
-
+    private void setLightSpriteShader(){
+        createShader(ShaderRegistry.LIGHTSPRITE_VERTEX, ShaderRegistry.LIGHTSPRITE_FRAGMENT);
+        supportsLighting = true;
+        supportsTextures = true;
+    }
     public ShaderProgram(String vertexShader, String fragmentShader, boolean supportsLighting){
         createShader(vertexShader, fragmentShader);
         this.supportsLighting = supportsLighting;
@@ -217,6 +226,28 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     @Override
     public void load() {
-        createShader(vertex, fragment);
+        /*if(vertex == null || fragment == null)
+        {
+            System.out.println("Preset:" + presetIndex);
+            switch (presetIndex)
+            {
+                case 0 -> setDefaultShader();
+                case 1 -> setSpriteShader();
+                case 2 -> {
+                    System.out.println("setting 2");
+                    setLightSpriteShader();
+                }
+            }
+        }
+        else
+            createShader(vertex, fragment);*/
+        switch (presetIndex)
+        {
+            case 0 -> setDefaultShader();
+            case 1 -> setSpriteShader();
+            case 2 -> {
+                setLightSpriteShader();
+            }
+        }
     }
 }

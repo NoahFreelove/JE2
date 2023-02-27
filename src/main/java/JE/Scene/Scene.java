@@ -6,6 +6,7 @@ import JE.Objects.GameObject;
 import JE.Objects.Identity;
 import JE.Objects.Lights.Light;
 import JE.Objects.Scripts.Base.Script;
+import JE.Objects.Scripts.Common.Transform;
 import JE.Rendering.Camera;
 import JE.Resources.ResourceLoader;
 import JE.UI.UIObjects.UIObject;
@@ -161,9 +162,60 @@ public class Scene implements Serializable {
         this.activeCamera = cam;
     }
 
-    public Scene load(String worldPath){
-        String fullPath = ResourceLoader.get(worldPath);
+    public Scene load(String filepath){
+        ArrayList<String> lines = new ArrayList<>();
+
+        try {
+            Scanner scanner = new Scanner(new File(filepath));
+
+            // read all lines to String[]
+            while (scanner.hasNextLine()) {
+                lines.add(scanner.nextLine());
+            }
+        }catch (Exception e){
+            System.out.println("error while reading from file: " + filepath);
+            e.printStackTrace();
+        }
+
+        GameObject gameObject = new GameObject();
+        for (String line : lines) {
+            if(line.equals("start"))
+                gameObject = new GameObject();
+            else if(line.equals("end"))
+                add(gameObject);
+            else if(line.startsWith("id:"))
+                gameObject.setIdentity((Identity)deserialize(line.substring(3)));
+            else{
+                Script readScript = (Script) deserialize(line);
+                readScript.load();
+
+                if(readScript instanceof Transform t){
+                    t.setAttachedObject(gameObject);
+                    gameObject.setScript(0,t);
+                }
+                else {
+                    gameObject.addScript(readScript);
+                }
+            }
+        }
+
         return this;
+    }
+
+
+    private static Object deserialize(String input){
+        try {
+            byte[] bytes = Base64.getDecoder().decode(input);
+            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            Object o = ois.readObject();
+            ois.close();
+            return o;
+        }
+        catch (Exception ignore){
+            System.out.println("error deserializing: " + input);
+            return new Object();
+        }
     }
 
 }

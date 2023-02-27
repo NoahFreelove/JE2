@@ -55,7 +55,12 @@ public class Camera extends Script {
 
 
     public Matrix4f getViewMatrix(){
-        Vector2f position =  getAttachedObject().getTransform().position();
+        Vector2f position;
+        if(getAttachedObject() == null) {
+            position = new Vector2f(0, 0);
+        }
+        else
+            position = getAttachedObject().getTransform().position();
         Vector2f finalPos = new Vector2f(position.x + positionOffset.x, position.y + positionOffset.y);
         return new Matrix4f().identity().translate(-finalPos.x(), -finalPos.y(), -zPos);
     }

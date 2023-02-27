@@ -108,7 +108,9 @@ public class VAO implements Serializable, Loadable {
     @Override
     public void load(){
         if(shaderProgram != null)
+        {
             shaderProgram.load();
+        }
         QueueGenerateBuffers();
     }
 }

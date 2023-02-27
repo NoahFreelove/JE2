@@ -29,6 +29,12 @@ public class Mouse {
         buttons[button] = false;
     }
 
+    public static boolean isPressed(int button){
+        if(button >= buttons.length)
+            return false;
+        return buttons[button];
+    }
+
     public static int nameToCode(String buttonName){
         buttonName = buttonName.toUpperCase();
         return switch (buttonName){

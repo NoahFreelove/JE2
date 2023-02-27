@@ -143,4 +143,10 @@ public class Transform extends Script {
             physicsBody = pb;
         }
     }
+
+    @Override
+    public void load(){
+        super.load();
+        setRestrictions(new ScriptRestrictions(false,false,false));
+    }
 }

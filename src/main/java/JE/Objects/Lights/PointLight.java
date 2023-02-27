@@ -14,7 +14,6 @@ public class PointLight extends Light {
 
     public PointLight(){
         super(Color.WHITE, 1, 1);
-        this.type = 1;
     }
 
     @Override
