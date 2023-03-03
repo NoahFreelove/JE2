@@ -96,6 +96,39 @@ public class Color implements Serializable {
         return new Color(1-c.r,1-c.g,1-c.b,c.a);
     }
 
+    public void set(float r, float g, float b, float a){
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    public void set(Color c){
+        this.r = c.r;
+        this.g = c.g;
+        this.b = c.b;
+        this.a = c.a;
+    }
+
+    public void set(float r, float g, float b){
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+
+    public void set255(int r, int g, int b, int a){
+        this.r = r/255f;
+        this.g = g/255f;
+        this.b = b/255f;
+        this.a = a/255f;
+    }
+
+    public void set255(int r, int g, int b){
+        this.r = r/255f;
+        this.g = g/255f;
+        this.b = b/255f;
+    }
+
     public NkColor nkColor(){
         return nkColor.set((byte) (r*255), (byte) (g*255), (byte) (b*255), (byte) (a*255));
     }

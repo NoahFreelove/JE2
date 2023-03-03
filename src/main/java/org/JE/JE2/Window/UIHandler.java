@@ -37,6 +37,7 @@ public class UIHandler {
     public static boolean nuklearReady = false;
     public static NkContext nuklearContext = NkContext.create(); // Create a Nuklear context, it is used everywhere.
     public static Font default_font;
+    public static Font active_font = default_font;
     static NkBuffer cmds = NkBuffer.create(); // Stores a list of drawing commands that will be passed to OpenGL to render the interface.
     static NkDrawNullTexture null_texture = NkDrawNullTexture.create(); // An empty texture used for drawing.
  

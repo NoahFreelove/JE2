@@ -91,13 +91,12 @@ public class UIWindow extends UIObject {
             isCreated = true;
             closedFromWindow = false;
             // align elements
-            nk_layout_row_dynamic(context, 20, 1);
             window = context.style().window();
             window.fixed_background().data().color().set((byte) backgroundColor.r255(), (byte) backgroundColor.g255(), (byte) backgroundColor.b255(), (byte) backgroundColor.a255());
 
             children.forEach((uiElement -> {
+                nk_layout_row_dynamic(context, 20, 1);
                 uiElement.requestRender();
-
             }));
         }
 

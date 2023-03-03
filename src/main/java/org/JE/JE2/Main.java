@@ -70,7 +70,9 @@ public class Main {
         });
 
         ArrayList<UIElement> elements = new ArrayList<>();
-        elements.add(new TextField(32));
+        TextField t = new TextField(32);
+        t.setValue("adasd");
+        elements.add(t);
         StyledSlider coolSlider = new StyledSlider();
         FPSCounter counter = new FPSCounter("FPS: ");
         elements.add(counter);

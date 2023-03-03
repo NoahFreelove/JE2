@@ -31,6 +31,7 @@ public class Font {
     private NkUserFont nkFont = NkUserFont.create();
     private ByteBuffer fontData;
     public boolean created = false;
+    public int fontHeight = 18;
     public Font(String filepath, boolean createNow){
         try {
             fontData = IOUtil.ioResourceToByteBuffer(filepath, 512*1024);
@@ -72,7 +73,6 @@ public class Font {
         int BITMAP_W = 1024;
         int BITMAP_H = 1024;
 
-        int FONT_HEIGHT = 18;
         int fontTexID   = glGenTextures();
 
         STBTTFontinfo fontInfo = STBTTFontinfo.create();
@@ -83,7 +83,7 @@ public class Font {
 
         try (MemoryStack stack = stackPush()) {
             stbtt_InitFont(fontInfo, fontData);
-            scale = stbtt_ScaleForPixelHeight(fontInfo, FONT_HEIGHT);
+            scale = stbtt_ScaleForPixelHeight(fontInfo, fontHeight);
 
             IntBuffer d = stack.mallocInt(1);
             stbtt_GetFontVMetrics(fontInfo, null, d, null);
@@ -94,7 +94,7 @@ public class Font {
             STBTTPackContext pc = STBTTPackContext.malloc(stack);
             stbtt_PackBegin(pc, bitmap, BITMAP_W, BITMAP_H, 0, 1, NULL);
             stbtt_PackSetOversampling(pc, 4, 4);
-            stbtt_PackFontRange(pc, fontData, 0, FONT_HEIGHT, 32, cdata);
+            stbtt_PackFontRange(pc, fontData, 0, fontHeight, 32, cdata);
             stbtt_PackEnd(pc);
 
             // Convert R8 to RGBA8
@@ -141,7 +141,7 @@ public class Font {
             }
             return text_width;
         })
-                .height(FONT_HEIGHT)
+                .height(fontHeight)
                 .query((handle, font_height, glyph, codepoint, next_codepoint) -> {
                     try (MemoryStack stack = stackPush()) {
                         FloatBuffer x = stack.floats(0.0f);
@@ -157,7 +157,7 @@ public class Font {
 
                         ufg.width(q.x1() - q.x0());
                         ufg.height(q.y1() - q.y0());
-                        ufg.offset().set(q.x0(), q.y0() + (FONT_HEIGHT + descent));
+                        ufg.offset().set(q.x0(), q.y0() + (fontHeight + descent));
                         ufg.xadvance(advance.get(0) * scale);
                         ufg.uv(0).set(q.s0(), q.t0());
                         ufg.uv(1).set(q.s1(), q.t1());
