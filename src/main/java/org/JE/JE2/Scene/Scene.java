@@ -8,6 +8,7 @@ import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Objects.Scripts.Base.Script;
 import org.JE.JE2.Objects.Scripts.Common.Transform;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Resources.ResourceLoader;
 import org.JE.JE2.UI.UIObjects.UIObject;
 import org.JE.JE2.Utility.Watcher;
 
@@ -158,10 +159,9 @@ public class Scene implements Serializable {
     }
 
     public Scene load(String filepath){
-        ArrayList<String> lines = new ArrayList<>();
-
-        try {
-            Scanner scanner = new Scanner(new File(filepath));
+        ArrayList<String> lines = new ArrayList<>(List.of(ResourceLoader.getBytesAsString(filepath)));
+        /*try {
+            Scanner scanner = new Scanner(new File());
 
             // read all lines to String[]
             while (scanner.hasNextLine()) {
@@ -170,7 +170,7 @@ public class Scene implements Serializable {
         }catch (Exception e){
             System.out.println("error while reading from file: " + filepath);
             e.printStackTrace();
-        }
+        }*/
 
         GameObject gameObject = new GameObject();
         for (String line : lines) {

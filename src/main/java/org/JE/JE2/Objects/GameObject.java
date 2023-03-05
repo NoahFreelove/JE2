@@ -127,6 +127,7 @@ public final class GameObject implements Serializable {
         notifyScriptsForeign(script);
         return scripts.add(script);
     }
+
     @RequireNonNull
     public boolean removeScript(Script c){
         if(c == null)
@@ -229,6 +230,12 @@ public final class GameObject implements Serializable {
     public Identity identity() {
         return new Identity(identity.name, identity.tag);
     }
+
+    public void setIdentity(String name, String tag){
+        identity.name = name;
+        identity.tag = tag;
+    }
+
     public void setIdentity(Identity identity) {
         this.identity = identity;
     }

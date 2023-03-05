@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ResourceLoader {
     @Nullable
@@ -35,6 +37,10 @@ public class ResourceLoader {
         catch (Exception e){
             return new byte[]{};
         }
+    }
+
+    public static String[] getBytesAsString(String path){
+        return new String(getBytes(path)).split("\n");
     }
 
     /**
