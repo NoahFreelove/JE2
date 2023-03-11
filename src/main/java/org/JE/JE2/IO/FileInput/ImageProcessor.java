@@ -45,7 +45,7 @@ public class ImageProcessor {
         if (image == null) {
             image = BufferUtils.createByteBuffer(1);
             rb.imageData = image;
-            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason()));
+            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nFilepath:" + filepath));
             return rb;
         }
         image.flip();
@@ -77,7 +77,8 @@ public class ImageProcessor {
         if (image == null) {
             image = BufferUtils.createByteBuffer(1);
             rb.imageData = image;
-            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason()));
+            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nbytes:" + data.length));
+
             return rb;
         }
         image.flip();

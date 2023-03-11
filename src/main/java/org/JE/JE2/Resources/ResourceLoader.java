@@ -26,7 +26,9 @@ public class ResourceLoader {
         try {
             InputStream stream = ResourceLoader.class.getResourceAsStream(path);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
+
+            // buffer should be large enough to hold the entire file
+            byte[] buffer = new byte[stream.available() + 1];
             int length;
             while ((length = stream.read(buffer)) != -1) {
                 byteArrayOutputStream.write(buffer, 0, length);
@@ -60,6 +62,9 @@ public class ResourceLoader {
      * @return The resource as a byte array
      */
     public static byte[] getBytes(String path){
+        System.out.println(path);
+        System.out.println(new File( path).getAbsolutePath());
+        System.out.println(getResource("/" + path).length);
         return getResource("/" + path);
     }
 }

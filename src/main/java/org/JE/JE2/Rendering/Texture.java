@@ -18,7 +18,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class Texture implements Serializable {
     public Resource resource;
     public int generatedTextureID = -1;
-
+    public boolean valid = false;
     public Texture(){
     }
     public Texture(Resource resource){
@@ -48,6 +48,8 @@ public class Texture implements Serializable {
     }
 
     public void GenerateTexture(){
+        if(resource.bundle.imageData.limit() == 1)
+            return;
         Runnable r = () -> {
             if(resource == null)
                 return;
@@ -63,6 +65,7 @@ public class Texture implements Serializable {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
             glGenerateMipmap(GL_TEXTURE_2D);
+            valid = true;
         };
         Manager.queueGLFunction(r);
     }
@@ -70,6 +73,8 @@ public class Texture implements Serializable {
 
     @GLThread
     public void activateTexture(int textureSlot){
+        if(!valid)
+            return;
         glActiveTexture(textureSlot);
         glBindTexture(GL_TEXTURE_2D, generatedTextureID);
     }

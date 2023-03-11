@@ -160,6 +160,7 @@ public class Scene implements Serializable {
 
     public Scene load(String filepath){
         ArrayList<String> lines = new ArrayList<>(List.of(ResourceLoader.getBytesAsString(filepath)));
+
         /*try {
             Scanner scanner = new Scanner(new File());
 
