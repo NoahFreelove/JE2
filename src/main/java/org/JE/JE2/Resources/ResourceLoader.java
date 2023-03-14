@@ -62,9 +62,9 @@ public class ResourceLoader {
      * @return The resource as a byte array
      */
     public static byte[] getBytes(String path){
-        System.out.println(path);
+        /*System.out.println(path);
         System.out.println(new File( path).getAbsolutePath());
-        System.out.println(getResource("/" + path).length);
+        System.out.println(getResource("/" + path).length);*/
         return getResource("/" + path);
     }
 }

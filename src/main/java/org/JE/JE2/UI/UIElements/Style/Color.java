@@ -132,6 +132,9 @@ public class Color implements Serializable {
     public NkColor nkColor(){
         return nkColor.set((byte) (r*255), (byte) (g*255), (byte) (b*255), (byte) (a*255));
     }
+    public void setNkColor(NkColor color){
+        this.nkColor = color;
+    }
     public float r(){
         return r;
     }
@@ -164,5 +167,10 @@ public class Color implements Serializable {
     }
     public Vector4f getVec4(){
         return new Vector4f(r,g,b,a);
+    }
+
+    @Override
+    public String toString(){
+        return "("+r + ", " + g + ", " + b + ", " + a + ")";
     }
 }
