@@ -38,7 +38,6 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     private ShaderProgram(){}
 
-
     public static ShaderProgram invalidShader(){
         return new ShaderProgram();
     }
@@ -85,6 +84,14 @@ public final class ShaderProgram implements Serializable, Loadable {
         sp.createShaderNow(vert,frag);
         sp.supportsLighting = supportsLighting;
         return sp;
+    }
+
+    public static ShaderProgram getProgramFromIndex(int i){
+        return switch (i){
+            case 1 -> spriteShader();
+            case 2 -> lightSpriteShader();
+            default -> defaultShader();
+        };
     }
 
     @GLThread
@@ -215,7 +222,7 @@ public final class ShaderProgram implements Serializable, Loadable {
     @GLThread
     public boolean use(){
         if(!valid()){
-            Logger.log(ShaderError.invalidProgramIDError);
+            Logger.log(ShaderError.invalidProgramIDError, true);
         }
         else glUseProgram(programID);
         return valid();

@@ -198,7 +198,6 @@ public class Scene implements Serializable {
         return this;
     }
 
-
     private static Object deserialize(String input){
         try {
             byte[] bytes = Base64.getDecoder().decode(input);

@@ -15,7 +15,7 @@ public class LoadTest {
         Camera camera = new Camera();
         cam.addScript(camera);
         Scene loaded = new Scene();
-        loaded.load("src/main/resources/scene.JEScene");
+        loaded.load("coolscene.JEScene");
 
         loaded.add(PointLight.pointLightObject(new Vector2f(0,0), new Vector3f(0.8f,0.8f,0.8f), 3, 5));
         loaded.add(cam);

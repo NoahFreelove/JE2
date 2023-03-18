@@ -60,6 +60,7 @@ public class VAO implements Serializable, Loadable {
         vertexBufferID = glGenBuffers();
         changeBuffer();
     }
+
     @GLThread
     protected void changeBuffer(){
         this.data = dataConversion();
@@ -85,6 +86,7 @@ public class VAO implements Serializable, Loadable {
         glBindBuffer(GL20.GL_ARRAY_BUFFER, vertexBufferID);
         glVertexAttribPointer(location, dataSize, GL_FLOAT, false, 0, 0);
     }
+
     @GLThread
     public void Disable(){
         glDisableVertexAttribArray(location);

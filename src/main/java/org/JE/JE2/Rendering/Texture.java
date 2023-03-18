@@ -19,6 +19,7 @@ public class Texture implements Serializable {
     public Resource resource;
     public int generatedTextureID = -1;
     public boolean valid = false;
+    public int forceValidateMode = 0;
     public Texture(){
     }
     public Texture(Resource resource){
@@ -65,17 +66,22 @@ public class Texture implements Serializable {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
             glGenerateMipmap(GL_TEXTURE_2D);
-            valid = true;
+            if(forceValidateMode>0){
+                valid = forceValidateMode == 1;
+            }
+            else
+                valid = true;
         };
         Manager.queueGLFunction(r);
     }
 
 
     @GLThread
-    public void activateTexture(int textureSlot){
+    public boolean activateTexture(int textureSlot){
         if(!valid)
-            return;
+            return false;
         glActiveTexture(textureSlot);
         glBindTexture(GL_TEXTURE_2D, generatedTextureID);
+        return true;
     }
 }

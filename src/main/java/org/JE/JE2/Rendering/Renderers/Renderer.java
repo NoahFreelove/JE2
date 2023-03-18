@@ -1,6 +1,8 @@
 package org.JE.JE2.Rendering.Renderers;
 
+import org.JE.JE2.Annotations.EditorEnum;
 import org.JE.JE2.Annotations.GLThread;
+import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Base.Script;
@@ -20,11 +22,17 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Script {
+    @HideFromInspector
     protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Color baseColor = Color.WHITE;
     protected boolean scale = true;
+
+    @EditorEnum(values = {"Points", "Lines", "Line Loop", "Line Strip", "Triangles", "Triangle Strip", "Triangle Fan", "Quads", "Quad Strip", "Polygons"})
     protected int drawMode = GL_TRIANGLE_FAN;
+
+    @EditorEnum(values = {"Base Color", "Textured", "Textured with Lighting"})
+    public int defaultShaderIndex = 1;
 
     public void SetShader(ShaderProgram shader){
         vao.setShaderProgram(shader);
@@ -52,7 +60,6 @@ public class Renderer extends Script {
 
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
-
         glViewport(camera.viewportSize.x, camera.viewportSize.y, camera.viewportSize.z, camera.viewportSize.w);
         PreRender();
         ShaderProgram shader = vao.getShaderProgram();

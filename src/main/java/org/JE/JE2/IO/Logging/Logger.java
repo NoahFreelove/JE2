@@ -58,9 +58,14 @@ public class Logger {
     public static void log(Object o){
         log(o.toString());
     }
-
     public static void log(JE2Error error){
+        log(error,false);
+    }
+
+    public static void log(JE2Error error, boolean petty){
         if(!logErrors)
+            return;
+        if(petty && !logPetty)
             return;
 
         if(enableIgnoreList)

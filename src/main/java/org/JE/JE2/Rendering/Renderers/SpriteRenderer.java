@@ -1,6 +1,7 @@
 package org.JE.JE2.Rendering.Renderers;
 
 import org.JE.JE2.Annotations.GLThread;
+import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Camera;
@@ -16,12 +17,15 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer {
+
+    @HideFromInspector
     private final VAO2f spriteCoordVAO;
+
     private transient Texture texture = new Texture();
     private String textureFp = "";
     private transient Texture normal = new Texture();
     private String normalFp = "";
-    private int defaultShaderIndex = 1;
+
 
     public SpriteRenderer() {
         spriteCoordVAO = new VAO2f(new Vector2f[]{
@@ -30,7 +34,6 @@ public class SpriteRenderer extends Renderer {
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         }, ShaderProgram.spriteShader());
-
     }
 
     public SpriteRenderer(ShaderProgram shader){
@@ -75,38 +78,39 @@ public class SpriteRenderer extends Renderer {
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
         if (!vao.getShaderProgram().use())
             return;
-        texture.activateTexture(GL_TEXTURE0);
-        normal.activateTexture(GL_TEXTURE1);
-        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
-        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
-
-        spriteCoordVAO.Enable(1);
-        super.Render(gameObject, 0, camera);
-        spriteCoordVAO.Disable();
+        if(texture.activateTexture(GL_TEXTURE0) && normal.activateTexture(GL_TEXTURE1))
+        {
+            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
+            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
+            spriteCoordVAO.Enable(1);
+            super.Render(gameObject, 0, camera);
+            spriteCoordVAO.Disable();
+        }
     }
-
 
     public void setTexture(Texture texture){
         setTexture(texture, spriteCoordVAO.getVertices(), true);
-        textureFp = texture.resource.bundle.filepath;
+        //textureFp = texture.resource.bundle.filepath;
     }
 
     public void setNormalTexture(Texture texture) {
         this.normal = texture;
-        normalFp = texture.resource.bundle.filepath;
+        //normalFp = texture.resource.bundle.filepath;
     }
 
     public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
         this.texture = texture;
+        if(softSet) return;
         Runnable r = () ->{
-            if(softSet) return;
             spriteCoordVAO.setVertices(textCoords);
         };
         Manager.queueGLFunction(r);
     }
+
     public VAO2f getSpriteVAO(){return spriteCoordVAO;}
 
     public Texture getTexture(){ return texture; }
+
     public Texture getNormalTexture(){ return normal; }
 
     @Override
@@ -120,11 +124,9 @@ public class SpriteRenderer extends Renderer {
             vao.load();
         }
         super.load();
-        /*System.out.println("Loaded: " + textureFp);
-        System.out.println("Loaded: " + normalFp);*/
+
         setTexture(new Texture(ResourceLoader.getBytes(textureFp)));
         setNormalTexture(new Texture(ResourceLoader.getBytes(normalFp)));
-
     }
 
     public void customTile(Vector2f scale){
@@ -149,5 +151,29 @@ public class SpriteRenderer extends Renderer {
     public void disableTile(){
         customTile(new Vector2f(1,1));
         this.scale = true;
+    }
+
+    public String getTextureFp() {
+        return textureFp;
+    }
+
+    public String getNormalFp() {
+        return normalFp;
+    }
+    public void invalidateTextures(){
+        normal.valid = false;
+        normal.forceValidateMode = 2;
+        texture.valid = false;
+        texture.forceValidateMode = 2;
+    }
+    public void forceValidateTextures(){
+        normal.valid = true;
+        normal.forceValidateMode = 1;
+        texture.valid = true;
+        texture.forceValidateMode = 1;
+    }
+
+    public void invalidateShader(){
+        vao.setShaderProgram(ShaderProgram.invalidShader());
     }
 }

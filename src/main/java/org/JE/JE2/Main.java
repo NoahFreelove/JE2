@@ -21,6 +21,7 @@ import org.JE.JE2.UI.UIElements.Buttons.StyledButton;
 import org.JE.JE2.UI.UIElements.Checkboxes.StyledCheckbox;
 import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.Sliders.StyledSlider;
+import org.JE.JE2.UI.UIElements.StringEventChanged;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIElements.TextField;
 import org.JE.JE2.UI.UIElements.UIElement;
@@ -71,7 +72,8 @@ public class Main {
 
         ArrayList<UIElement> elements = new ArrayList<>();
         TextField t = new TextField(32);
-        t.setValue("adasd");
+        /*t.eventChanged = System.out::println;
+        t.setValue("adasd");*/
         elements.add(t);
         StyledSlider coolSlider = new StyledSlider();
         FPSCounter counter = new FPSCounter("FPS: ");
