@@ -48,7 +48,7 @@ public class Main {
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
 
-        scene.add(PointLight.pointLightObject(new Vector2f(1,-1), new Vector3f(1,1,1), 10, 1f));
+        scene.add(PointLight.pointLightObject(new Vector2f(1,-1), new Vector3f(1,1,1), 12, 2f));
 
         MovementController mc = new MovementController();
         mc.physicsBased = true;

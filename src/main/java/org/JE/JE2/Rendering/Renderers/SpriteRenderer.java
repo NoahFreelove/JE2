@@ -22,9 +22,9 @@ public class SpriteRenderer extends Renderer {
     private final VAO2f spriteCoordVAO;
 
     private transient Texture texture = new Texture();
-    private String textureFp = "";
+    private String textureFilepath = "";
     private transient Texture normal = new Texture();
-    private String normalFp = "";
+    private String normalFilepath = "";
 
 
     public SpriteRenderer() {
@@ -78,14 +78,12 @@ public class SpriteRenderer extends Renderer {
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
         if (!vao.getShaderProgram().use())
             return;
-        if(texture.activateTexture(GL_TEXTURE0) && normal.activateTexture(GL_TEXTURE1))
-        {
-            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
-            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
-            spriteCoordVAO.Enable(1);
-            super.Render(gameObject, 0, camera);
-            spriteCoordVAO.Disable();
-        }
+        texture.activateTexture(GL_TEXTURE0); normal.activateTexture(GL_TEXTURE1);
+
+        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
+        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
+
+        spriteCoordVAO.Enable(1); super.Render(gameObject, 0, camera); spriteCoordVAO.Disable();
     }
 
     public void setTexture(Texture texture){
@@ -125,8 +123,8 @@ public class SpriteRenderer extends Renderer {
         }
         super.load();
 
-        setTexture(new Texture(ResourceLoader.getBytes(textureFp)));
-        setNormalTexture(new Texture(ResourceLoader.getBytes(normalFp)));
+        setTexture(new Texture(ResourceLoader.getBytes(textureFilepath)));
+        setNormalTexture(new Texture(ResourceLoader.getBytes(normalFilepath)));
     }
 
     public void customTile(Vector2f scale){
@@ -153,12 +151,12 @@ public class SpriteRenderer extends Renderer {
         this.scale = true;
     }
 
-    public String getTextureFp() {
-        return textureFp;
+    public String getTextureFilepath() {
+        return textureFilepath;
     }
 
-    public String getNormalFp() {
-        return normalFp;
+    public String getNormalFilepath() {
+        return normalFilepath;
     }
     public void invalidateTextures(){
         normal.valid = false;

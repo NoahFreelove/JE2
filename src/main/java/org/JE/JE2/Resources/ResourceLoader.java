@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class ResourceLoader {
     @Nullable
@@ -66,5 +67,20 @@ public class ResourceLoader {
         System.out.println(new File( path).getAbsolutePath());
         System.out.println(getResource("/" + path).length);*/
         return getResource("/" + path);
+    }
+
+    public static String[] readTextFile(String path){
+        // Use a scanner to read the file
+        StringBuilder sb = new StringBuilder();
+        try {
+            Scanner fileScanner = new Scanner(new File(path));
+            while (fileScanner.hasNextLine()) {
+                sb.append(fileScanner.nextLine()).append("\n");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return sb.toString().split("\n");
     }
 }

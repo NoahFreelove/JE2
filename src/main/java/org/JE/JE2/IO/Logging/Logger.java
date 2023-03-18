@@ -20,8 +20,11 @@ public class Logger {
     public static boolean showTime = false;
     public static boolean stackTrace = false;
 
-    public static void log(String message){
+    public static void log(String message, boolean petty){
         if(!log)
+            return;
+
+        if(petty && !logPetty)
             return;
 
         if(showTime){
@@ -34,6 +37,9 @@ public class Logger {
             // print caller of log function
             System.out.println("Called from: " + Thread.currentThread().getStackTrace()[2].getClassName() + "." + Thread.currentThread().getStackTrace()[2].getMethodName() + "()");
         }
+    }
+    public static void log(String message){
+        log(message, false);
     }
     public static void log(float f){
         log(f + "");
