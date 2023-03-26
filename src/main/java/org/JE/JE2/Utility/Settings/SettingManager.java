@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class SettingManager {
+public class SettingManager implements Serializable {
     private final ArrayList<SettingCategory> categories = new ArrayList<>();
 
     public SettingManager() {
@@ -26,12 +26,24 @@ public class SettingManager {
         return null;
     }
 
+    public SettingCategory[] getCategories() {
+        return categories.toArray(new SettingCategory[0]);
+    }
+
+    public ArrayList<SettingCategory> getCategoriesList() {
+        return categories;
+    }
+
     public SettingCategory getCategory(int index) {
         return categories.get(index);
     }
 
     public void addCategory(SettingCategory category) {
         categories.add(category);
+    }
+
+    public void addCategories(SettingCategory... categories) {
+        this.categories.addAll(List.of(categories));
     }
 
     public void saveToFile(String path){
@@ -93,8 +105,6 @@ public class SettingManager {
         return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
 
-
-
     public void tryLoadFromFile(String path){
         File file = new File(path);
         if(!file.exists()){
@@ -115,5 +125,16 @@ public class SettingManager {
                 i++;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (SettingCategory category : categories) {
+            builder.append("\n");
+            builder.append(category.toString()).append("\n");
+        }
+        builder.deleteCharAt(builder.length()-1);
+        return builder.toString();
     }
 }

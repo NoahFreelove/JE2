@@ -2,10 +2,11 @@ package org.JE.JE2.Utility.Settings;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Base64;
 
-public class Setting<T> {
+public class Setting<T> implements Serializable {
     private final ArrayList<SettingRunnable<T>> onChange = new ArrayList<>();
     private final String name;
     private T value;
@@ -69,5 +70,13 @@ public class Setting<T> {
             System.out.println("error deserializing: " + input);
             return new Object();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Setting{" +
+                "name='" + name + '\'' +
+                ", value=" + value +
+                '}';
     }
 }
