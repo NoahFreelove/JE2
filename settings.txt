@@ -1,0 +1,5 @@
+Category:Settings
+Press Count
+45
+Some String
+Str

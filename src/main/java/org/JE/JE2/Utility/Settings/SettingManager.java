@@ -58,7 +58,26 @@ public class SettingManager {
                 category.settings) {
             lines.add(setting.getName());
             try {
-                lines.add(serialize(setting.getValue()));
+                // if setting is a string, int, double, float, or boolean, just write it
+                if(setting.getValue() instanceof String){
+                    lines.add((String) setting.getValue());
+                }
+                else if(setting.getValue() instanceof Integer){
+                    lines.add(String.valueOf(setting.getValue()));
+                }
+                else if(setting.getValue() instanceof Double){
+                    lines.add(String.valueOf(setting.getValue()));
+                }
+                else if(setting.getValue() instanceof Float){
+                    lines.add(String.valueOf(setting.getValue()));
+                }
+                else if(setting.getValue() instanceof Boolean){
+                    lines.add(String.valueOf(setting.getValue()));
+                }
+                else {
+                    // last resort, it might be a serialized object
+                    lines.add(serialize(setting.getValue()));
+                }
             }catch (Exception e){
                 System.out.println("error serializing: " + setting.getName());
             }
@@ -74,20 +93,7 @@ public class SettingManager {
         return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
 
-    private static Object deserialize(String input){
-        try {
-            byte[] bytes = Base64.getDecoder().decode(input);
-            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Object o = ois.readObject();
-            ois.close();
-            return o;
-        }
-        catch (Exception ignore){
-            System.out.println("error deserializing: " + input);
-            return new Object();
-        }
-    }
+
 
     public void tryLoadFromFile(String path){
         File file = new File(path);
@@ -102,10 +108,10 @@ public class SettingManager {
             }
             else if(activeCat!=null) {
                 String settingName = lines[i].trim();
-                Object settingValue = deserialize(lines[i+1].trim());
+                String settingValue = lines[i+1].trim();
                 Setting<?> setting = activeCat.getSetting(settingName);
-                setting.setValueObject(settingValue);
-                //System.out.println("Set setting: " + settingName + " to " + setting.getValue());
+                setting.tryParse(settingValue);
+                System.out.println("Set setting: " + settingName + " to " + setting.getValue());
                 i++;
             }
         }
