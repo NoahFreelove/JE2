@@ -3,7 +3,7 @@ package org.JE.JE2.Rendering;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Resources.Resource;
-import org.JE.JE2.Resources.ResourceBundle;
+import org.JE.JE2.Resources.Bundles.ResourceBundle;
 import org.JE.JE2.Resources.ResourceType;
 import org.joml.Vector2i;
 
@@ -34,7 +34,7 @@ public class Texture implements Serializable {
 
     public Texture(String filepath){
         resource = new Resource("texture",filepath, ResourceType.TEXTURE);
-        resource.bundle.filepath = filepath;
+        resource.getBundle().setFilepath(filepath);
         GenerateTexture();
     }
 
@@ -49,7 +49,7 @@ public class Texture implements Serializable {
     }
 
     public void GenerateTexture(){
-        if(resource.bundle.imageData.limit() == 1)
+        if(resource.getTextureBundle().getImageData().limit() == 1)
             return;
         Runnable r = () -> {
             if(resource == null)
@@ -61,7 +61,7 @@ public class Texture implements Serializable {
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, resource.bundle.imageSize.x(), resource.bundle.imageSize.y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, resource.bundle.imageData);
+            glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, resource.getTextureBundle().getImageSize().x(), resource.getTextureBundle().getImageSize().y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, resource.getTextureBundle().getImageData());
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 

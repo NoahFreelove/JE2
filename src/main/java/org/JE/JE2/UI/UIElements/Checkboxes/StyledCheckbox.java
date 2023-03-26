@@ -1,6 +1,6 @@
 package org.JE.JE2.UI.UIElements.Checkboxes;
 
-import org.JE.JE2.UI.UIElements.BooleanEventChanged;
+import org.JE.JE2.UI.UIElements.ElementEventChanged;
 import org.JE.JE2.UI.UIElements.Style.StyleInfo;
 import org.JE.JE2.Window.UIHandler;
 import org.lwjgl.nuklear.NkStyleToggle;
@@ -29,11 +29,11 @@ public class StyledCheckbox extends Checkbox{
         this.style = style;
     }
 
-    public StyledCheckbox(boolean isChecked, String label, BooleanEventChanged onChange) {
+    public StyledCheckbox(boolean isChecked, String label, ElementEventChanged<Boolean> onChange) {
         super(isChecked, label, onChange);
     }
 
-    public StyledCheckbox(boolean isChecked, String label, BooleanEventChanged onChange, StyleInfo style) {
+    public StyledCheckbox(boolean isChecked, String label, ElementEventChanged<Boolean> onChange, StyleInfo style) {
         super(isChecked, label, onChange);
         this.style = style;
     }

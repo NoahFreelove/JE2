@@ -1,6 +1,7 @@
 package org.JE.JE2;
 
 import org.JE.JE2.IO.Logging.Logger;
+import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
@@ -21,11 +22,14 @@ import org.JE.JE2.UI.UIElements.Buttons.StyledButton;
 import org.JE.JE2.UI.UIElements.Checkboxes.StyledCheckbox;
 import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.Sliders.StyledSlider;
-import org.JE.JE2.UI.UIElements.StringEventChanged;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIElements.TextField;
 import org.JE.JE2.UI.UIElements.UIElement;
 import org.JE.JE2.UI.UIObjects.UIWindow;
+import org.JE.JE2.Utility.Settings.Setting;
+import org.JE.JE2.Utility.Settings.SettingCategory;
+import org.JE.JE2.Utility.Settings.SettingManager;
+import org.JE.JE2.Utility.Settings.SettingRunnable;
 import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -66,7 +70,7 @@ public class Main {
                 Vector2f mousePos = Mouse.getMouseWorldPosition();
                 Vector2f dir = mousePos.sub(pos).normalize();
                 Raycast r = player.getScript(PhysicsBody.class).raycast(player.getTransform().position().add(0.5f,0.1f),pos.add(dir.mul(2)),0);
-                System.out.println(r.gameObjectHit());
+                System.out.println((r.gameObjectHit() == null)? "Nothing" : r.gameObjectHit().identity());
             }
         });
 
@@ -94,6 +98,7 @@ public class Main {
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         });
+
         go.addScript(new PhysicsBody());
         go.getPhysicsBody().defaultRestitution = 0.8f;
         go.getPhysicsBody().defaultDensity = 0.1f;
@@ -114,5 +119,30 @@ public class Main {
 
         Manager.setScene(scene);
 
+        SettingManager settingManager = new SettingManager(new SettingCategory("Settings"));
+
+        Setting<Integer> setting = new Setting<>("Press Count", 0);
+        setting.addListener((name, value) -> {
+            System.out.println(name + " changed to " + value);
+        });
+        settingManager.getCategory(0).addSetting(setting);
+
+        Setting<String> setting2 = new Setting<>("Some String", "Str");
+        setting2.addListener((name, value) -> {
+            System.out.println(name + " changed to " + value);
+        });
+        settingManager.getCategory(0).addSetting(setting2);
+
+        Manager.addKeyReleasedCallback((key, mods) -> {
+            if(key == Keyboard.nameToCode("F1")){
+                setting.setValue(setting.getValue() + 1);
+            }
+            if(key == Keyboard.nameToCode("F2")){
+                settingManager.saveToFile("settings.txt");
+            }
+            if(key == Keyboard.nameToCode("F3")){
+                settingManager.tryLoadFromFile("settings.txt");
+            }
+        });
     }
 }

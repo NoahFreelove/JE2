@@ -40,44 +40,44 @@ public class Transform extends Script {
         return scale;
     }
 
-    public void setPosition(Vector2f position){
-        this.position = new Vector3f(position.x, position.y, this.position.z);
+    public Vector3f setPosition(Vector2f position){
+        return this.position.set(position.x, position.y, this.position.z);
     }
 
-    public void setPosition(Vector3f position){
-        this.position = position;
+    public Vector3f setPosition(Vector3f position){
+        return this.position.set(position);
     }
 
-    public void setPosition(float x, float y){
-        this.position = new Vector3f(x, y, position.z);
+    public Vector3f setPosition(float x, float y){
+        return this.position.set(x, y, this.position.z);
     }
 
-    public void setPosition(float x, float y, float z){
-        this.position = new Vector3f(x, y, z);
+    public Vector3f setPosition(float x, float y, float z){
+        return this.position.set(x, y, z);
     }
 
-    public void setRotation(Vector3f rotation){
-        this.rotation = rotation;
+    public Vector3f setRotation(Vector3f rotation){
+        return this.rotation.set(rotation);
     }
 
-    public void setRotation(float x, float y, float z){
-        this.rotation = new Vector3f(x, y, z);
+    public Vector3f setRotation(float x, float y, float z){
+        return this.rotation.set(x, y, z);
     }
 
-    public void setScale(Vector2f scale){
-        this.scale = new Vector3f(scale.x, scale.y, this.scale.z);
+    public Vector3f setScale(Vector2f scale){
+        return this.scale.set(scale.x, scale.y, this.scale.z);
     }
 
-    public void setScale(Vector3f scale){
-        this.scale = scale;
+    public Vector3f setScale(Vector3f scale){
+        return this.scale.set(scale);
     }
 
-    public void setScale(float x, float y){
-        this.scale = new Vector3f(x, y, scale.z);
+    public Vector3f setScale(float x, float y){
+        return this.scale.set(x, y, this.scale.z);
     }
 
-    public void setScale(float x, float y, float z){
-        this.scale = new Vector3f(x, y, z);
+    public Vector3f setScale(float x, float y, float z){
+        return this.scale.set(x, y, z);
     }
 
     public float zPos()

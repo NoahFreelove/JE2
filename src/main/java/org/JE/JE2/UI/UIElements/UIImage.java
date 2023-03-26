@@ -19,16 +19,7 @@ public class UIImage extends UIElement {
 
     public UIImage(Texture text) {
         super();
-        setImage(text.resource.bundle.filepath);
-    }
-    public UIImage(String filepath)
-    {
-        super();
-        setImage(filepath);
-    }
-
-    public void setImage(String filepath){
-        this.text = new Texture(new Resource("texture", ImageProcessor.processImage(filepath, false), ResourceType.TEXTURE));
+        this.text = text;
     }
 
     @Override
@@ -36,8 +27,8 @@ public class UIImage extends UIElement {
         if(text == null)
             return;
         nk_image_id(text.generatedTextureID,img);
-        nk_layout_row_template_begin(UIHandler.nuklearContext, text.resource.bundle.imageSize.y);
-        nk_layout_row_template_push_static(UIHandler.nuklearContext, text.resource.bundle.imageSize.x);
+        nk_layout_row_template_begin(UIHandler.nuklearContext, text.resource.getTextureBundle().getImageSize().y);
+        nk_layout_row_template_push_static(UIHandler.nuklearContext, text.resource.getTextureBundle().getImageSize().x);
         nk_layout_row_template_end(UIHandler.nuklearContext);
         nk_image(UIHandler.nuklearContext, img);
 

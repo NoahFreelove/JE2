@@ -17,11 +17,10 @@ import static org.lwjgl.nuklear.Nuklear.*;
 public class TextField extends UIElement {
     private final int maxLength;
     private ByteBuffer content;
-    private ByteBuffer prevContent;
-    private int prevLength = 0;
+    private String prevString = "";
     private NkPluginFilterI filter;
     private IntBuffer length;
-    public StringEventChanged eventChanged = null;
+    public ElementEventChanged<String> eventChanged = null;
     private int height;
 
     public TextField(int maxLength) {
@@ -53,37 +52,13 @@ public class TextField extends UIElement {
         length.rewind();
         nk_layout_row_dynamic(UIHandler.nuklearContext, height, 1);
 
+        prevString = getValue();
 
-        // I now realize that this fix could've been so much easier by just using the getValue() method. But its too late now.
-        prevContent = BufferUtils.createByteBuffer(maxLength);
-        prevContent.put(content);
-        content.flip();
-        prevContent.flip();
-        prevLength = length.get();
-        length.rewind();
         nk_edit_string(UIHandler.nuklearContext, NK_EDIT_FIELD, content, length, maxLength, filter);
 
-        // check if the content has changed
         if (eventChanged != null) {
-            // if all bytes are the same, then the content hasn't changed
-            boolean changed = false;
-
-            if(length.get() != prevLength)
-            {
-                changed = true;
-                length.rewind();
-            }
-            else {
-                for (int i = 0; i < content.limit(); i++) {
-                    if (content.get(i) != prevContent.get(i)) {
-                        changed = true;
-                        break;
-                    }
-                }
-            }
-            if (changed) {
+            if(!getValue().equals(prevString))
                 eventChanged.run(getValue());
-            }
         }
     }
 
@@ -104,8 +79,6 @@ public class TextField extends UIElement {
         // convert string to bytes
         byte[] bytes = value.getBytes(StandardCharsets.US_ASCII);
         content.clear();
-
-
         content.put(bytes);
         content.put((byte) 0);
         content.flip();

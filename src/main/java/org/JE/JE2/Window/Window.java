@@ -208,8 +208,6 @@ public class Window {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthFunc(GL_LEQUAL);
 
-
-
         //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
 
@@ -266,11 +264,11 @@ public class Window {
         });
     }
 
-
-
-
-
-    public static void QueueGLFunction(Runnable r) {
+    /**
+     * Equivalent to the JavaFX Platform.runLater() method. But way cooler.
+     * @param r The runnable to be executed on the main thread.
+     */
+    public static void queueGLFunction(Runnable r) {
         actionQueue.add(r);
     }
 

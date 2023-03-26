@@ -1,6 +1,6 @@
 package org.JE.JE2.UI.UIElements.Checkboxes;
 
-import org.JE.JE2.UI.UIElements.BooleanEventChanged;
+import org.JE.JE2.UI.UIElements.ElementEventChanged;
 import org.JE.JE2.UI.UIElements.UIElement;
 import org.JE.JE2.Window.UIHandler;
 
@@ -14,7 +14,7 @@ public class Checkbox extends UIElement {
     public boolean isChecked = false;
     public String label = "Checkbox";
     private final ByteBuffer bb = BufferUtils.createByteBuffer(1);
-    public BooleanEventChanged onChange = value -> {};
+    public ElementEventChanged<Boolean> onChange = value -> {};
 
     public Checkbox() {
     }
@@ -28,7 +28,7 @@ public class Checkbox extends UIElement {
         this.label = label;
     }
 
-    public Checkbox(boolean isChecked, String label, BooleanEventChanged onChange) {
+    public Checkbox(boolean isChecked, String label, ElementEventChanged<Boolean> onChange) {
         this.isChecked = isChecked;
         this.label = label;
         this.onChange = onChange;

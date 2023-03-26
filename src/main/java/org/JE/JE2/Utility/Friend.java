@@ -21,6 +21,7 @@ public class Friend {
         this.callback = null;
         this.obj = objects;
     }
+
     public Object[] get(){
         if(obj == null)
             return new Object[]{};
@@ -31,6 +32,7 @@ public class Friend {
         }
         return new Object[]{};
     }
+
     public void call(Object... args){
         StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[2];
         String callerClass = stackTrace.getClassName();

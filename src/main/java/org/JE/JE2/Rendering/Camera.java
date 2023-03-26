@@ -28,18 +28,21 @@ public class Camera extends Script {
 
     }
 
+    private final Matrix4f view = new Matrix4f();
     public Matrix4f getPerspective(){
-        return new Matrix4f().identity().perspective((float) Math.toRadians(45), (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y(), 0.1f, 100.0f);
+        view.identity();
+        return view.perspective((float) Math.toRadians(45), (float) Manager.getWindowSize().x() / (float) Manager.getWindowSize().y(), 0.1f, 100.0f);
     }
 
-    public Matrix4f MVPPerspective(Transform t){
+    /*public Matrix4f MVPPerspective(Transform t){
         Matrix4f model = getModel(t, true);
         Matrix4f view = getViewMatrix();
         return new Matrix4f().mul(getPerspective()).mul(view).mul(model);
-    }
+    }*/
 
+    private final Matrix4f model = new Matrix4f();
     public Matrix4f getModel(Transform t, boolean scale){
-        Matrix4f model = new Matrix4f().identity();
+        model.identity();
         model.translate(t.position3D());
         Vector2f spriteSize = t.scale();
 
@@ -53,37 +56,38 @@ public class Camera extends Script {
         return model;
     }
 
-
+    private final Vector2f position = new Vector2f();
     public Matrix4f getViewMatrix(){
-        Vector2f position;
+
         if(getAttachedObject() == null) {
-            position = new Vector2f(0, 0);
+            position.set(0,0);
         }
         else
-            position = getAttachedObject().getTransform().position();
-        Vector2f finalPos = new Vector2f(position.x + positionOffset.x, position.y + positionOffset.y);
-        return new Matrix4f().identity().translate(-finalPos.x(), -finalPos.y(), -zPos);
+            position.set(getAttachedObject().getTransform().position());
+        return new Matrix4f().identity().translate(-(position.x + positionOffset.x), -(position.y + positionOffset.y), -zPos);
     }
-
+    private final Matrix4f projection = new Matrix4f().identity();
     public Matrix4f getOrtho(){
-        Matrix4f projection = new Matrix4f().identity();
+        projection.identity();
         float aspect = (float) viewportSize.z / (float) viewportSize.w;
         float width = 4;
         float height = width/aspect;
         float near = 0;
         float far = 100;
         // take viewport position into account
-        projection = projection.translate(viewportSize.x, viewportSize.y, 0);
-        projection = projection.ortho(-width/2, width/2, -height/2f, height/2f, near, far);
-        projection = projection.scale(0.5f*zoomMultiplier);
+        projection.translate(viewportSize.x, viewportSize.y, 0);
+        projection.ortho(-width/2, width/2, -height/2f, height/2f, near, far);
+        projection.scale(0.5f*zoomMultiplier);
         return projection;
     }
 
 
+    private final Matrix4f mvpOrtho = new Matrix4f();
     public Matrix4f MVPOrtho(Transform t, boolean scale){
+        mvpOrtho.identity();
         Matrix4f model = getModel(t,scale);
         Matrix4f view = getViewMatrix();
 
-        return new Matrix4f().mul(getOrtho()).mul(view).mul(model);
+        return mvpOrtho.mul(getOrtho()).mul(view).mul(model);
     }
 }

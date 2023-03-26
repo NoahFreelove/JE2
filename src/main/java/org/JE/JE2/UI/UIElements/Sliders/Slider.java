@@ -1,5 +1,5 @@
 package org.JE.JE2.UI.UIElements.Sliders;
-import org.JE.JE2.UI.UIElements.FloatEventChanged;
+import org.JE.JE2.UI.UIElements.ElementEventChanged;
 import org.JE.JE2.UI.UIElements.UIElement;
 import org.JE.JE2.Window.UIHandler;
 import org.lwjgl.BufferUtils;
@@ -15,7 +15,7 @@ public class Slider extends UIElement {
     public float step = 0.1f;
 
     public boolean inactiveStrict = true;
-    public FloatEventChanged onChange = (newValue) -> {};
+    public ElementEventChanged<Float> onChange = (newValue) -> {};
 
     private final FloatBuffer fb = BufferUtils.createFloatBuffer(1);
 

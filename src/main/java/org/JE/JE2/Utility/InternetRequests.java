@@ -30,7 +30,6 @@ public class InternetRequests {
 
         connection.setDoOutput(true);
 
-
         connection.setRequestProperty("Content-Type", contentType);
         connection.setConnectTimeout(5000);
         connection.setReadTimeout(5000);

@@ -50,7 +50,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         alcMakeContextCurrent(Window.audioContext());
 
         this.audioBuffer = alGenBuffers();
-        alBufferData(audioBuffer, audioResource.bundle.format, audioResource.bundle.soundData, audioResource.bundle.sampleRate);
+        alBufferData(audioBuffer, audioResource.getAudioBundle().getFormat(), audioResource.getAudioBundle().getSoundData(), audioResource.getAudioBundle().getSampleRate());
 
         // Generate source
         sourceID = alGenSources();
@@ -87,7 +87,6 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
             alSourcePlay(sourceID);
             isPlaying = true;
         }
-        audioResource.bundle.isPlaying = isPlaying;
 
     }
 
@@ -96,7 +95,6 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
             alSourceStop(sourceID);
             isPlaying = false;
         }
-        audioResource.bundle.isPlaying = isPlaying;
     }
 
 
@@ -149,11 +147,11 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
     public float getDuration(){
 
-        return audioResource.bundle.soundData.capacity() / (float)audioResource.bundle.sampleRate;
+        return audioResource.getAudioBundle().getSoundData().capacity() / (float)audioResource.getAudioBundle().getSampleRate();
     }
     public float getPositionTime(){
 
-        return (float)getBufferPosition() / (float)audioResource.bundle.sampleRate;
+        return (float)getBufferPosition() / (float)audioResource.getAudioBundle().getSampleRate();
     }
     public float duration(){
         return duration;

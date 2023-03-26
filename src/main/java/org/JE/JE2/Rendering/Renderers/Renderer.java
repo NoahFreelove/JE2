@@ -71,9 +71,9 @@ public class Renderer extends Script {
         shader.setUniformMatrix4f("model", camera.getModel(t,scale).get(BufferUtils.createFloatBuffer(16)));
         shader.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
         shader.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniform3f("world_position", new Vector3f(t.position(), t.zPos()));
-        shader.setUniform2f("world_scale", new Vector2f(t.scale()));
-        shader.setUniform3f("world_rotation", new Vector3f(t.rotation()));
+        shader.setUniform3f("world_position", t.position3D());
+        shader.setUniform2f("world_scale", t.scale());
+        shader.setUniform3f("world_rotation", t.rotation());
         shader.setUniform4f("base_color", baseColor.getVec4());
 
         if (shader.supportsTextures)

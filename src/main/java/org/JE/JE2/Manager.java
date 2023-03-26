@@ -38,7 +38,7 @@ public class Manager {
     }
 
     /**
-     * Runs window with default settings.
+     * Runs window with "default" settings.
      */
     public static void run(){
         start(new WindowPreferences());
@@ -80,7 +80,7 @@ public class Manager {
     }
 
     public static void queueGLFunction(Runnable r){
-        Window.QueueGLFunction(r);
+        Window.queueGLFunction(r);
     }
 
     public static Scene activeScene(){return activeScene;}

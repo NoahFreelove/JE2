@@ -99,7 +99,9 @@ public class PhysicsBody extends Script {
         body.setUserData(getAttachedObject());
     }
 
-
+    private final Vector2f adjustedPos = new Vector2f();
+    private final Vector2f pos = new Vector2f();
+    private final Vec2 bodyPos = new Vec2();
     @Override
     public void update() {
         if(!hasInitialized)
@@ -109,10 +111,11 @@ public class PhysicsBody extends Script {
         {
             if(mode == BodyType.STATIC)
                 return;
+            bodyPos.set(body.getPosition());
 
-            Vector2f pos = JOMLtoJBOX.vector2f(body.getPosition());
+            pos.set(bodyPos.x,bodyPos.y);
 
-            Vector2f adjustedPos =  new Vector2f(pos);
+            adjustedPos.set(pos);
 
             adjustedPos.x -= getSize().x /2;
             adjustedPos.y -= getSize().y/2;
@@ -120,7 +123,7 @@ public class PhysicsBody extends Script {
             getAttachedObject().getTransform().setPosition(adjustedPos);
 
             if(!fixedRotation)
-                getAttachedObject().getTransform().setRotation(new Vector3f(0,0, body.getAngle()));
+                getAttachedObject().getTransform().setRotation(0,0, body.getAngle());
 
             onGround = false;
             if(body.getType() == BodyType.DYNAMIC){

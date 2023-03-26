@@ -1,7 +1,8 @@
 package org.JE.JE2.IO.FileInput;
 
 import org.JE.JE2.IO.Logging.Logger;
-import org.JE.JE2.Resources.ResourceBundle;
+import org.JE.JE2.Resources.Bundles.AudioBundle;
+import org.JE.JE2.Resources.Bundles.ResourceBundle;
 import org.JE.JE2.Window.Window;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
@@ -14,10 +15,14 @@ import java.nio.ShortBuffer;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryStack.stackPop;
 
-public class SoundProcessor {
-    public static ResourceBundle ProcessSound(String filePath)
+public class AudioProcessor {
+    public static AudioBundle ProcessSound(String filePath)
     {
-        ResourceBundle bundle = new ResourceBundle();
+        ShortBuffer soundData;
+        int format;
+        int sampleRate;
+        int channels;
+
         if(Window.audioContext() == -1)
             Window.CreateOpenAL();
 
@@ -31,26 +36,24 @@ public class SoundProcessor {
             Logger.log("Error loading sound file: " + filePath);
             stackPop();
             stackPop();
-            return bundle;
+            return new AudioBundle();
         }
 
-        int channels = channelsBuffer.get(0);
-        int sampleRate = sampleRateBuffer.get(0);
+        channels = channelsBuffer.get(0);
+        sampleRate = sampleRateBuffer.get(0);
 
         stackPop();
         stackPop();
 
         //Find correct format
-        int format = -1;
+        format = -1;
         if(channels == 1){
             format = AL10.AL_FORMAT_MONO16;
         }else if(channels == 2){
             format = AL10.AL_FORMAT_STEREO16;
         }
-        bundle.format = format;
-        bundle.sampleRate = sampleRate;
-        bundle.channels = channels;
-        bundle.soundData = rawAudioBuffer;
+
+        soundData = rawAudioBuffer;
 
         /*System.out.println("Sound loaded: " + filePath);
         System.out.println("Channels: " + channels);
@@ -58,12 +61,15 @@ public class SoundProcessor {
         System.out.println("Format: " + format);
         System.out.println("Buffer: " + rawAudioBuffer);
         System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
-        return bundle;
+        return new AudioBundle(soundData,format,sampleRate,channels);
     }
 
-    public static ResourceBundle ProcessSound(byte[] data)
+    public static AudioBundle ProcessSound(byte[] data)
     {
-        ResourceBundle bundle = new ResourceBundle();
+        ShortBuffer soundData;
+        int format;
+        int sampleRate;
+        int channels;
         if(Window.audioContext() == -1)
             Window.CreateOpenAL();
 
@@ -80,26 +86,24 @@ public class SoundProcessor {
             Logger.log("Error loading sound bytes size: " + data.length);
             stackPop();
             stackPop();
-            return bundle;
+            return new AudioBundle();
         }
 
-        int channels = channelsBuffer.get(0);
-        int sampleRate = sampleRateBuffer.get(0);
+        channels = channelsBuffer.get(0);
+        sampleRate = sampleRateBuffer.get(0);
 
         stackPop();
         stackPop();
 
         //Find correct format
-        int format = -1;
+        format = -1;
         if(channels == 1){
             format = AL10.AL_FORMAT_MONO16;
         }else if(channels == 2){
             format = AL10.AL_FORMAT_STEREO16;
         }
-        bundle.format = format;
-        bundle.sampleRate = sampleRate;
-        bundle.channels = channels;
-        bundle.soundData = rawAudioBuffer;
+
+        soundData = rawAudioBuffer;
 
         /*System.out.println("Sound loaded: " + filePath);
         System.out.println("Channels: " + channels);
@@ -107,6 +111,6 @@ public class SoundProcessor {
         System.out.println("Format: " + format);
         System.out.println("Buffer: " + rawAudioBuffer);
         System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
-        return bundle;
+        return new AudioBundle(soundData,format,sampleRate,channels);
     }
 }
