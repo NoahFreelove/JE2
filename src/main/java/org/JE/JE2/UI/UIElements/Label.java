@@ -8,7 +8,6 @@ import static org.lwjgl.nuklear.Nuklear.*;
 public class Label extends UIElement {
     public int alignment = NK_TEXT_ALIGN_LEFT;
     public String text = "";
-    public Color textColor = Color.WHITE;
 
     public Label() {
     }
@@ -28,6 +27,6 @@ public class Label extends UIElement {
 
     @Override
     protected void render() {
-        nk_label_colored(UIHandler.nuklearContext,text,alignment, textColor.nkColor());
+        nk_label_colored(UIHandler.nuklearContext,text,alignment, style.textColor.nkColor());
     }
 }

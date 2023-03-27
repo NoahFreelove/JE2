@@ -1,5 +1,7 @@
 package org.JE.JE2.UI.UIElements;
 
+import org.JE.JE2.UI.UIElements.Style.Color;
+import org.JE.JE2.Utility.Settings.Setting;
 import org.JE.JE2.Window.UIHandler;
 import org.joml.sampling.Callback2d;
 import org.lwjgl.BufferUtils;
@@ -21,6 +23,9 @@ public class TextField extends UIElement {
     private NkPluginFilterI filter;
     private IntBuffer length;
     public ElementEventChanged<String> eventChanged = null;
+    public Setting<String> watch = null;
+    private String title = null;
+
     private int height;
 
     public TextField(int maxLength) {
@@ -41,8 +46,34 @@ public class TextField extends UIElement {
         this.height = height;
     }
 
+    public TextField(int maxLength, int height, String defaultValue) {
+        this.maxLength = maxLength;
+        content = BufferUtils.createByteBuffer(maxLength + 1);
+        length = BufferUtils.createIntBuffer(1);
+        length.put(0);
+        filter = NkPluginFilter.create(Nuklear::nnk_filter_ascii);
+        this.height = height;
+        setValue(defaultValue);
+    }
+
+    public TextField(int maxLength, int height, String defaultValue, String title, Setting<String> bindedSetting) {
+        this.maxLength = maxLength;
+        content = BufferUtils.createByteBuffer(maxLength + 1);
+        length = BufferUtils.createIntBuffer(1);
+        length.put(0);
+        filter = NkPluginFilter.create(Nuklear::nnk_filter_ascii);
+        this.height = height;
+        setValue(defaultValue);
+        this.watch = bindedSetting;
+        this.title = title;
+    }
+
     @Override
     protected void render() {
+        if(watch != null)
+        {
+            setValue(watch.getValue());
+        }
         // This hacky fix is in place because nuklear library doesn't like non-null terminated strings
         content.flip();
         content.limit(maxLength);
@@ -50,16 +81,24 @@ public class TextField extends UIElement {
             content.put(length.get(0), (byte) 0);
         }
         length.rewind();
+        if(title != null){
+            nk_label_colored(UIHandler.nuklearContext, title, NK_TEXT_ALIGN_LEFT, Color.WHITE.nkColor());
+        }
         nk_layout_row_dynamic(UIHandler.nuklearContext, height, 1);
 
         prevString = getValue();
 
         nk_edit_string(UIHandler.nuklearContext, NK_EDIT_FIELD, content, length, maxLength, filter);
 
-        if (eventChanged != null) {
-            if(!getValue().equals(prevString))
+        if(!getValue().equals(prevString))
+        {
+            if (eventChanged != null) {
                 eventChanged.run(getValue());
+            }
+            if(watch != null)
+                watch.setValue(getValue());
         }
+
     }
 
     public static String get(ByteBuffer input){

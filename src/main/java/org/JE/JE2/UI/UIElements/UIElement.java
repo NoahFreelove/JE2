@@ -1,9 +1,12 @@
 package org.JE.JE2.UI.UIElements;
 
+import org.JE.JE2.UI.UIElements.Style.StyleInfo;
+
 public abstract class UIElement {
     protected abstract void render();
     private boolean isVisible = true;
     private boolean isActive = true;
+    protected StyleInfo style = new StyleInfo();
 
     public final void requestRender(){
         if(isVisible) {
@@ -25,5 +28,9 @@ public abstract class UIElement {
     }
     public boolean isVisible(){
         return isVisible;
+    }
+
+    public void setStyle(StyleInfo style){
+        this.style = style;
     }
 }

@@ -19,7 +19,7 @@ public class SettingCategory implements Serializable {
         this.categoryName = categoryName;
     }
 
-    public Setting[] getSettings() {
+    public Setting<?>[] getSettings() {
         return settings.toArray(new Setting[0]);
     }
 

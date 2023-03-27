@@ -1,7 +1,6 @@
 package org.JE.JE2;
 
 import org.JE.JE2.IO.Logging.Logger;
-import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
@@ -17,24 +16,16 @@ import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
-import org.JE.JE2.UI.UIElements.Buttons.ImageButton;
-import org.JE.JE2.UI.UIElements.Buttons.StyledButton;
-import org.JE.JE2.UI.UIElements.Checkboxes.StyledCheckbox;
-import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
-import org.JE.JE2.UI.UIElements.Sliders.StyledSlider;
+import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Style.Color;
-import org.JE.JE2.UI.UIElements.TextField;
-import org.JE.JE2.UI.UIElements.UIElement;
 import org.JE.JE2.UI.UIObjects.UIWindow;
+import org.JE.JE2.Utility.Settings.Limits.*;
 import org.JE.JE2.Utility.Settings.Setting;
 import org.JE.JE2.Utility.Settings.SettingCategory;
 import org.JE.JE2.Utility.Settings.SettingManager;
-import org.JE.JE2.Utility.Settings.SettingRunnable;
 import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
@@ -74,10 +65,10 @@ public class Main {
             }
         });
 
-        ArrayList<UIElement> elements = new ArrayList<>();
+        /*ArrayList<UIElement> elements = new ArrayList<>();
         TextField t = new TextField(32);
-        /*t.eventChanged = System.out::println;
-        t.setValue("adasd");*/
+        *//*t.eventChanged = System.out::println;
+        t.setValue("adasd");*//*
         elements.add(t);
         StyledSlider coolSlider = new StyledSlider();
         FPSCounter counter = new FPSCounter("FPS: ");
@@ -85,10 +76,12 @@ public class Main {
         elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
         elements.add(coolSlider);
         elements.add(new StyledCheckbox());
-        elements.add(new ImageButton(ResourceLoader.getBytes("texture1.png")));
-        scene.addUI(new UIWindow("Cool window",
+        elements.add(new ImageButton(ResourceLoader.getBytes("texture1.png")));*/
+
+        UIWindow uiWindow = new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
-                new Vector2f(100,100), elements));
+                new Vector2f(100,100));
+
 
         GameObject go = new GameObject();
         go.addScript(new ShapeRenderer());
@@ -121,17 +114,25 @@ public class Main {
 
         SettingManager settingManager = new SettingManager(new SettingCategory("Settings"));
 
-        Setting<Integer> setting = new Setting<>("Press Count", 0);
-        setting.addListener((name, value) -> {
-            System.out.println(name + " changed to " + value);
-        });
-        settingManager.getCategory(0).addSetting(setting);
+        Setting<Integer> setting = new Setting<>("Int Count", 0);
+        setting.setLimit(new IntLimit(0,Integer.MAX_VALUE));
 
         Setting<String> setting2 = new Setting<>("Some String", "Str");
-        setting2.addListener((name, value) -> {
-            System.out.println(name + " changed to " + value);
-        });
-        settingManager.getCategory(0).addSetting(setting2);
+        setting2.setLimit(new StringLimit(12));
+
+        Setting<Boolean> setting3 = new Setting<>("Some Boolean", false);
+        setting3.setLimit(new BooleanLimit());
+
+        Setting<Float> setting4 = new Setting<>("Some Float", 0.2f);
+        setting4.setLimit(new FloatLimit(0,100));
+
+        Setting<Double> setting5 = new Setting<>("Some Double", 13.5);
+        setting5.setLimit(new DoubleLimit(0,100));
+
+        settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5);
+
+        uiWindow.children.add(SettingsGenerator.generateSettingsUI(settingManager));
+        scene.addUI(uiWindow);
 
         Manager.addKeyReleasedCallback((key, mods) -> {
             if(key == Keyboard.nameToCode("F1")){

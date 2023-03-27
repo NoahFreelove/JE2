@@ -1,9 +1,6 @@
 package org.JE.JE2.UI.UIElements;
 
-import org.JE.JE2.IO.FileInput.ImageProcessor;
 import org.JE.JE2.Rendering.Texture;
-import org.JE.JE2.Resources.Resource;
-import org.JE.JE2.Resources.ResourceType;
 import org.JE.JE2.Window.UIHandler;
 import org.lwjgl.nuklear.NkImage;
 

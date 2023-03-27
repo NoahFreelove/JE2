@@ -1,5 +1,8 @@
 package org.JE.JE2.Utility.Settings;
 
+import org.JE.JE2.Utility.Settings.Limits.DefaultLimit;
+import org.JE.JE2.Utility.Settings.Limits.SettingLimit;
+
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -9,6 +12,8 @@ import java.util.Base64;
 public class Setting<T> implements Serializable {
     private final ArrayList<SettingRunnable<T>> onChange = new ArrayList<>();
     private final String name;
+    private SettingLimit<T> limit = new DefaultLimit<>();
+
     private T value;
 
     public Setting(String name, T value) {
@@ -16,14 +21,27 @@ public class Setting<T> implements Serializable {
         this.value = value;
     }
 
-    public void setValue(T value) {
-        this.value = value;
-        onChange.forEach(runnable -> runnable.run(name, value));
+    public void setLimit(SettingLimit<T> limit){
+        this.limit = limit;
     }
+    public SettingLimit<T> getLimit()
+    {
+        return limit;
+    }
+
+    public void setValue(T value) {
+        if(limit.canSet(value))
+        {
+            this.value = value;
+            onChange.forEach(runnable -> runnable.run(name, value));
+        }
+    }
+
     public void setValueObject(Object val){
         // cast to T
         setValue((T) val);
     }
+
     public void addListener(SettingRunnable<T> runnable) {
         onChange.add(runnable);
     }
