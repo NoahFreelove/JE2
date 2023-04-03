@@ -89,22 +89,6 @@ public class Manager {
         return new Vector2i(preferences.windowSize.x(), preferences.windowSize.y());
     }
 
-    public static void addKeyPressedCallback(KeyPressedEvent e){
-        Keyboard.keyPressedEvents.add(e);
-    }
-
-    public static void removeKeyPressedCallback(KeyPressedEvent e){
-        Keyboard.keyPressedEvents.remove(e);
-    }
-
-    public static void addKeyReleasedCallback(KeyReleasedEvent e){
-        Keyboard.keyReleasedEvents.add(e);
-    }
-
-    public static void removeKeyReleasedCallback(KeyReleasedEvent e){
-        Keyboard.keyReleasedEvents.remove(e);
-    }
-
     public static void setWindowSize(Vector2i size){
         preferences.windowSize = size;
         //defaultViewport = new Vector4i(defaultViewport.x(), defaultViewport.y(), size.x, size.y);

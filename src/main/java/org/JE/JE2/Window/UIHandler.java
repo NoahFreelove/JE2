@@ -1,7 +1,10 @@
 package org.JE.JE2.Window;
 
+import org.JE.JE2.IO.UserInput.Keyboard.KeyPressedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
+import org.JE.JE2.IO.UserInput.Mouse.MouseButton;
+import org.JE.JE2.IO.UserInput.Mouse.MousePressedEvent;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Resources.ResourceLoader;
 import org.JE.JE2.UI.Font;
@@ -146,14 +149,17 @@ public class UIHandler {
             }
         });
 
-        glfwSetCharCallback(win, (window, codepoint) -> nk_input_unicode(nuklearContext, codepoint));
+        glfwSetCharCallback(win, (window, unicode) -> nk_input_unicode(nuklearContext, unicode));
 
-        Keyboard.keyPressedEvents.add((key, mods) -> keyboardInput(true,key));
-        Keyboard.keyReleasedEvents.add((key, mods) -> keyboardInput(false,key));
+        Keyboard.addKeyPressedEvent((key, mods) -> keyboardInput(true,key));
+        Keyboard.addKeyReleasedEvent((key, mods) -> keyboardInput(false,key));
 
-        glfwSetCursorPosCallback(win, (window, xpos, ypos) -> nk_input_motion(nuklearContext, (int)xpos, (int)ypos));
-        Mouse.mousePressedEvents.add((button, mods) -> mouseInput(button.ordinal(),true));
-        Mouse.mouseReleasedEvents.add((button, mods) -> mouseInput(button.ordinal(),false));
+        glfwSetCursorPosCallback(win, (window, xpos, ypos) -> {
+            nk_input_motion(nuklearContext, (int)xpos, (int)ypos);
+            Mouse.triggerMouseMoved((float)xpos, (float)ypos);
+        });
+        Mouse.addMousePressedEvent((button, mods) -> mouseInput(button.ordinal(),true));
+        Mouse.addMouseReleasedEvent((button, mods) -> mouseInput(button.ordinal(),false));
 
         nk_init(nuklearContext, ALLOCATOR, null);
         nuklearContext.clip()

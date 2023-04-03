@@ -101,23 +101,29 @@ public class Window {
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(windowHandle, (windowHandle, key, scancode, action, mods) -> {
+
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(windowHandle, true);
 
             if(action == GLFW_PRESS){
-                Keyboard.keyPressedEvents.forEach(e -> e.invoke(key, mods));
+                Keyboard.triggerKeyPressed(key, mods);
             }
             else if(action == GLFW_RELEASE){
-                Keyboard.keyReleasedEvents.forEach(e -> e.invoke(key, mods));
+                Keyboard.triggerKeyReleased(key, mods);
+            }
+            else if (action == GLFW_REPEAT){
+                Keyboard.triggerKeyRepeat(key, mods);
             }
         });
 
+
+
         glfwSetMouseButtonCallback(windowHandle, (windowHandle, button, action, mods) -> {
             if(action == GLFW_PRESS){
-                Mouse.mousePressedEvents.forEach(e -> e.invoke(MouseButton.values()[button], mods));
+                Mouse.triggerMousePressed(MouseButton.values()[button], mods);
             }
             else if(action == GLFW_RELEASE){
-                Mouse.mouseReleasedEvents.forEach(e -> e.invoke(MouseButton.values()[button], mods));
+                Mouse.triggerMouseReleased(MouseButton.values()[button], mods);
             }
         });
 
@@ -149,12 +155,6 @@ public class Window {
 
         // Make the windowHandle visible
         glfwShowWindow(windowHandle);
-
-        Keyboard.keyPressedEvents.add((key, mods) -> Keyboard.keyPressed(key));
-        Keyboard.keyReleasedEvents.add((key, mods) -> Keyboard.keyReleased(key));
-
-        Mouse.mousePressedEvents.add((button, mods) -> Mouse.mousePressed(button.ordinal()));
-        Mouse.mouseReleasedEvents.add((button, mods) -> Mouse.mouseReleased(button.ordinal()));
 
         GLCapabilities caps = GL.createCapabilities();
 

@@ -1,5 +1,6 @@
 package org.JE.JE2.UI.UIElements.Style;
 
+import org.JE.JE2.Annotations.ActPublic;
 import org.joml.Vector4f;
 import org.lwjgl.nuklear.NkColor;
 
@@ -21,11 +22,13 @@ public class Color implements Serializable {
     public static final Color CYAN = Color.createColor(0,1,1,1);
     public static final Color MAGENTA = Color.createColor(1,0,1,1);
 
-    float r;
-    float g;
-    float b;
-    float a;
+    @ActPublic private float r;
+    @ActPublic private float g;
+    @ActPublic private float b;
+    @ActPublic private float a;
+
     transient NkColor nkColor = NkColor.create();
+
     private Color(){}
     private Color(float r, float g, float b, float a){
         this.r = r;

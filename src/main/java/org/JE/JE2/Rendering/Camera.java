@@ -15,6 +15,8 @@ public class Camera extends Script {
     public Vector4i viewportSize = Manager.defaultViewport();
     public Color backgroundColor = Color.BLACK;
 
+    public Camera(){}
+
     @Override
     public void update() {
     }

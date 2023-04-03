@@ -19,6 +19,7 @@ import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
+import org.JE.JE2.Utility.GarbageCollection;
 import org.JE.JE2.Utility.Settings.Limits.*;
 import org.JE.JE2.Utility.Settings.Setting;
 import org.JE.JE2.Utility.Settings.SettingCategory;
@@ -33,9 +34,11 @@ import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 public class Main {
 
     public static void main(String[] args) {
+
         Manager.start(new WindowPreferences(800,800, "JE2", false, true));
 
         Logger.logErrors = true;
+        Logger.logPetty = true;
 
         Scene scene = new Scene();
 
@@ -55,33 +58,19 @@ public class Main {
 
         //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
 
-        Manager.addKeyReleasedCallback((key, mods) -> {
+        Keyboard.addKeyReleasedEvent((key, mods) -> {
            if(key == Keyboard.nameToCode("E")){
                 Vector2f pos = new Vector2f(player.getTransform().position());
-                Vector2f mousePos = Mouse.getMouseWorldPosition();
+                Vector2f mousePos = Mouse.getMouseWorldPosition2D();
                 Vector2f dir = mousePos.sub(pos).normalize();
                 Raycast r = player.getScript(PhysicsBody.class).raycast(player.getTransform().position().add(0.5f,0.1f),pos.add(dir.mul(2)),0);
                 System.out.println((r.gameObjectHit() == null)? "Nothing" : r.gameObjectHit().identity());
             }
         });
 
-        /*ArrayList<UIElement> elements = new ArrayList<>();
-        TextField t = new TextField(32);
-        *//*t.eventChanged = System.out::println;
-        t.setValue("adasd");*//*
-        elements.add(t);
-        StyledSlider coolSlider = new StyledSlider();
-        FPSCounter counter = new FPSCounter("FPS: ");
-        elements.add(counter);
-        elements.add(new StyledButton("Toggle Slider Activation", () -> coolSlider.setActive(!coolSlider.isActive())));
-        elements.add(coolSlider);
-        elements.add(new StyledCheckbox());
-        elements.add(new ImageButton(ResourceLoader.getBytes("texture1.png")));*/
-
         UIWindow uiWindow = new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2f(100,100));
-
 
         GameObject go = new GameObject();
         go.addScript(new ShapeRenderer());
@@ -118,7 +107,7 @@ public class Main {
         setting.setLimit(new IntLimit(0,Integer.MAX_VALUE));
 
         Setting<String> setting2 = new Setting<>("Some String", "Str");
-        setting2.setLimit(new StringLimit(12));
+        setting2.setLimit(new StringLimit(128));
 
         Setting<Boolean> setting3 = new Setting<>("Some Boolean", false);
         setting3.setLimit(new BooleanLimit());
@@ -129,12 +118,13 @@ public class Main {
         Setting<Double> setting5 = new Setting<>("Some Double", 13.5);
         setting5.setLimit(new DoubleLimit(0,100));
 
-        settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5);
+        Setting<GameObject> setting6 = new Setting<>("Cool GameObject", new GameObject());
+        settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5,setting6);
 
         uiWindow.children.add(SettingsGenerator.generateSettingsUI(settingManager));
         scene.addUI(uiWindow);
 
-        Manager.addKeyReleasedCallback((key, mods) -> {
+        Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("F1")){
                 setting.setValue(setting.getValue() + 1);
             }
@@ -143,6 +133,9 @@ public class Main {
             }
             if(key == Keyboard.nameToCode("F3")){
                 settingManager.tryLoadFromFile("settings.txt");
+            }
+            if(key == Keyboard.nameToCode("F4")){
+                GarbageCollection.takeOutDaTrash();
             }
         });
     }

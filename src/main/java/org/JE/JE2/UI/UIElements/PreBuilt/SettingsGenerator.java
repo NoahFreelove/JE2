@@ -25,44 +25,63 @@ public class SettingsGenerator {
 
             for (Setting<?> setting: cat.getSettings()) {
                 if(setting.getValue() instanceof String v){
-                    if(setting.getLimit() instanceof StringLimit lim){
-                        g.addElement(new TextField(lim.maxChars,32, v, setting.getName(), (Setting<String>) setting));
-                    }
-                    else{
-                        g.addElement(new TextField(128,32, v));
-
-                    }
+                    generateStringUI(g, setting, v);
                 }
                 else if(setting.getValue() instanceof Integer i){
-                    if(setting.getLimit() instanceof IntLimit lim){
-                        g.addElement(new IntSlider(lim.minValue, i, lim.maxValue, setting.getName(), (Setting<Integer>) setting));
-                    }
-                    else{
-                        g.addElement(new IntSlider(Integer.MIN_VALUE, i, Integer.MAX_VALUE, setting.getName(), (Setting<Integer>) setting));
-                    }
+                    generateIntUI(g, setting, i);
                 }
                 else if(setting.getValue() instanceof Float f){
-                    if(setting.getLimit() instanceof FloatLimit lim){
-                        g.addElement(new FloatSlider(lim.minValue, f, lim.maxValue,0.1f,0.1f, setting.getName(), (Setting<Float>) setting));
-                    }
-                    else{
-                        g.addElement(new FloatSlider(-Float.MAX_VALUE+1, f, Float.MAX_VALUE,0.5f, 0.1f, setting.getName(),(Setting<Float>) setting));
-                    }
+                    generateFloatUI(g, setting, f);
                 }
                 else if(setting.getValue() instanceof Double d){
-                    if(setting.getLimit() instanceof DoubleLimit lim){
-                        g.addElement(new DoubleSlider(lim.minValue, d, lim.maxValue,0.1,0.1, setting.getName(),(Setting<Double>) setting));
-                    }
-                    else{
-                        g.addElement(new DoubleSlider(-Double.MAX_VALUE+1, d, Double.MAX_VALUE,0.5, 0.1, setting.getName(),(Setting<Double>) setting));
-                    }
+                    generateDoubleUI(g, setting, d);
                 }
                 else if(setting.getValue() instanceof Boolean b){
-                    g.addElement(new Checkbox(b, setting.getName(), (Setting<Boolean>) setting));
+                    generateBooleanUI(g, setting, b);
                 }
             }
         }
-
         return g;
+    }
+
+    private static void generateBooleanUI(Group g, Setting<?> setting, Boolean b) {
+        g.addElement(new Checkbox(b, setting.getName(), (Setting<Boolean>) setting));
+    }
+
+    private static void generateDoubleUI(Group g, Setting<?> setting, Double d) {
+        if(setting.getLimit() instanceof DoubleLimit lim){
+            g.addElement(new DoubleSlider(lim.minValue, d, lim.maxValue,0.1,0.1, setting.getName(),(Setting<Double>) setting));
+        }
+        else{
+            g.addElement(new DoubleSlider(-Double.MAX_VALUE+1, d, Double.MAX_VALUE,0.5, 0.1, setting.getName(),(Setting<Double>) setting));
+        }
+    }
+
+    private static void generateFloatUI(Group g, Setting<?> setting, Float f) {
+        if(setting.getLimit() instanceof FloatLimit lim){
+            g.addElement(new FloatSlider(lim.minValue, f, lim.maxValue,0.1f,0.1f, setting.getName(), (Setting<Float>) setting));
+        }
+        else{
+            g.addElement(new FloatSlider(-Float.MAX_VALUE+1, f, Float.MAX_VALUE,0.5f, 0.1f, setting.getName(),(Setting<Float>) setting));
+        }
+    }
+
+    private static void generateIntUI(Group g, Setting<?> setting, Integer i) {
+        if(setting.getLimit() instanceof IntLimit lim){
+            g.addElement(new IntSlider(lim.minValue, i, lim.maxValue, setting.getName(), (Setting<Integer>) setting));
+        }
+        else{
+            g.addElement(new IntSlider(Integer.MIN_VALUE, i, Integer.MAX_VALUE, setting.getName(), (Setting<Integer>) setting));
+        }
+    }
+
+    private static void generateStringUI(Group g, Setting<?> setting, String v) {
+        if(setting.getLimit() instanceof StringLimit lim){
+            g.addElement(new TextField(lim.maxChars,32, v, setting.getName(), (Setting<String>) setting));
+        }
+        else{
+            g.addElement(new TextField(128,32, v));
+
+        }
     }
 }

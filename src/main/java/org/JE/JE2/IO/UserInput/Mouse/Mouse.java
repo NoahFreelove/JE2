@@ -2,28 +2,70 @@ package org.JE.JE2.IO.UserInput.Mouse;
 
 import org.JE.JE2.Manager;
 import org.JE.JE2.Rendering.Camera;
-import org.JE.JE2.Window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 
 public class Mouse {
-    public static ArrayList<MousePressedEvent> mousePressedEvents = new ArrayList<>();
-    public static ArrayList<MouseReleasedEvent> mouseReleasedEvents = new ArrayList<>();
+    private static float x, y;
+
+    private static final ArrayList<MousePressedEvent> mousePressedEvents = new ArrayList<>();
+    private static final ArrayList<MouseReleasedEvent> mouseReleasedEvents = new ArrayList<>();
+
+    public static void addMousePressedEvent(MousePressedEvent event){
+        mousePressedEvents.add(event);
+    }
+    public static void addMouseReleasedEvent(MouseReleasedEvent event){
+        mouseReleasedEvents.add(event);
+    }
+
+    public static void removeMousePressedEvent(MousePressedEvent event){
+        mousePressedEvents.remove(event);
+    }
+    public static void removeMouseReleasedEvent(MouseReleasedEvent event){
+        mouseReleasedEvents.remove(event);
+    }
+
+    public static void triggerMouseMoved(float x, float y){
+        Mouse.x = x;
+        Mouse.y = y;
+    }
+
+    public static Vector2f getMousePosition(){
+        return new Vector2f(x, y);
+    }
+
+    public static float getX(){
+        return x;
+    }
+    public static float getY(){
+        return y;
+    }
+
+    public static void triggerMousePressed(MouseButton button, int mods){
+        mousePressedEvents.forEach(event -> event.invoke(button, mods));
+        mousePressed(button.ordinal());
+    }
+    public static void triggerMouseReleased(MouseButton button, int mods){
+        mouseReleasedEvents.forEach(event -> event.invoke(button, mods));
+        mouseReleased(button.ordinal());
+    }
+
+    public static void triggerMouseClick(MouseButton button, int mods){
+        triggerMousePressed(button, mods);
+        triggerMouseReleased(button, mods);
+    }
 
     private static final boolean[] buttons = new boolean[8];
 
-    public static void mousePressed(int button){
+    private static void mousePressed(int button){
         if(button >= buttons.length)
             return;
         buttons[button] = true;
     }
-    public static void mouseReleased(int button){
+    private static void mouseReleased(int button){
         if(button >= buttons.length)
             return;
         buttons[button] = false;
@@ -50,16 +92,10 @@ public class Mouse {
         };
     }
 
-    public static Vector2f getMousePosition(){
-        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-        GLFW.glfwGetCursorPos(Window.getWindowHandle(),x,y);
-        return new Vector2f((float) x.get(), (float) y.get());
+    public static Vector2f getMouseWorldPosition2D() {
+        return getMouseWorldPosition2D(Manager.getMainCamera());
     }
-    public static Vector2f getMouseWorldPosition() {
-        return getMouseWorldPosition(Manager.getMainCamera());
-    }
-    public static Vector2f getMouseWorldPosition(Camera c){
+    public static Vector2f getMouseWorldPosition2D(Camera c){
         Vector2f cursorPos = getMousePosition();
         Matrix4f viewMatrix = c.getViewMatrix();
         Matrix4f projectionMatrix = c.getOrtho();
@@ -73,7 +109,5 @@ public class Mouse {
         worldPos.mul(inverted);
 
         return new Vector2f(worldPos.x(),worldPos.y());
-
-
     }
 }

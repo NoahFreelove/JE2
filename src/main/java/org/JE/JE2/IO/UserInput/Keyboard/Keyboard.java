@@ -1,22 +1,94 @@
 package org.JE.JE2.IO.UserInput.Keyboard;
 
 import org.JE.JE2.IO.UserInput.Keyboard.Combos.KeyCombo;
+import org.JE.JE2.Window.UIHandler;
+import org.JE.JE2.Window.Window;
 
 import java.util.ArrayList;
 
+import static org.lwjgl.glfw.GLFW.glfwGetClipboardString;
+import static org.lwjgl.glfw.GLFW.glfwSetClipboardString;
+import static org.lwjgl.nuklear.Nuklear.nk_input_unicode;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+
 public class Keyboard {
 
-    public static ArrayList<KeyPressedEvent> keyPressedEvents = new ArrayList<>();
-    public static ArrayList<KeyReleasedEvent> keyReleasedEvents = new ArrayList<>();
+    public static boolean ignoreCopyPasteKeys = false;
+
+    private static final ArrayList<KeyPressedEvent> keyPressedEvents = new ArrayList<>();
+    private static final ArrayList<KeyReleasedEvent> keyReleasedEvents = new ArrayList<>();
+
+    public static void addKeyPressedEvent(KeyPressedEvent event){
+        keyPressedEvents.add(event);
+    }
+    public static void addKeyReleasedEvent(KeyReleasedEvent event){
+        keyReleasedEvents.add(event);
+    }
+
+    public static void removeKeyPressedEvent(KeyPressedEvent event){
+        keyPressedEvents.remove(event);
+    }
+    public static void removeKeyReleasedEvent(KeyReleasedEvent event){
+        keyReleasedEvents.remove(event);
+    }
+
+    public static void triggerKeyPressed(int code, int mods){
+        keyPressedEvents.forEach(event -> event.invoke(code, mods));
+        keyPressed(code);
+        if(ignoreCopyPasteKeys)
+            return;
+
+        if((mods & 2) != 0){
+            if(code == nameToCode("V")){
+                pasteClipboard();
+            }
+        }
+        if((mods & 2) != 0){
+            if(code == nameToCode("C")){
+                copyToClipboard("");
+            }
+        }
+    }
+    public static void triggerKeyReleased(int code, int mods){
+        keyReleasedEvents.forEach(event -> event.invoke(code, mods));
+        keyReleased(code);
+    }
+    public static void triggerKeyRepeat(int key, int mods) {
+       triggerKeyPressed(key, mods);
+    }
+
+    public static void triggerKey(int code, int mods){
+        triggerKeyPressed(code, mods);
+        triggerKeyReleased(code, mods);
+    }
+
+    private static void onPaste(String str){
+        if (str != null) {
+            for (char c :
+                    str.toCharArray()) {
+                nk_input_unicode(UIHandler.nuklearContext, c);
+            }
+        }
+    }
+
+    public static void pasteClipboard(){
+        onPaste(glfwGetClipboardString(Window.handle()));
+    }
+
+    public static void copyToClipboard(String str){
+        glfwSetClipboardString(Window.handle(),str);
+
+    }
 
     private static final boolean[] keys = new boolean[1024];
 
-    public static void keyPressed(int code) {
+    private static void keyPressed(int code) {
         if(within(0,keys.length,code))
             keys[code] = true;
     }
 
-    public static void keyReleased(int code) {
+    private static void keyReleased(int code) {
         if(within(0,keys.length,code))
             keys[code] = false;
     }
@@ -194,4 +266,6 @@ public class Keyboard {
             default -> "UNKNOWN";
         };
     }
+
+
 }

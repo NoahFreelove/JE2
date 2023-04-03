@@ -1,5 +1,13 @@
 Category:Settings
-Press Count
-45
+Int Count
+0
 Some String
 Str
+Some Boolean
+false
+Some Float
+0.2
+Some Double
+13.5
+Cool GameObject
+rO0ABXNyAB1vcmcuSkUuSkUyLk9iamVjdHMuR2FtZU9iamVjdNFNir/QuMOkAgADWgAGYWN0aXZlSQAFbGF5ZXJMAAhpZGVudGl0eXQAHUxvcmcvSkUvSkUyL09iamVjdHMvSWRlbnRpdHk7eHABAAAAAHNyABtvcmcuSkUuSkUyLk9iamVjdHMuSWRlbnRpdHmjxJKBN3B5uwIAA0oACHVuaXF1ZUlETAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO0wAA3RhZ3EAfgAEeHAABffZxwmbq3QACkdhbWVPYmplY3R0AAhVbnRhZ2dlZA==

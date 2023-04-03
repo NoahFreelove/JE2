@@ -16,7 +16,6 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
 public class Scene implements Serializable {
 
     private Camera activeCamera = new Camera();
@@ -212,6 +211,17 @@ public class Scene implements Serializable {
             return new Object();
         }
     }
+
+    /*public void saveSceneToFolder(String path){
+        if(!path.endsWith("/") && !path.endsWith("\\")){
+            path += "\\";
+        }
+        ObjectSaver<GameObject> saver = new ObjectSaver<>();
+
+        for (GameObject object : world.gameObjects) {
+            saver.saveToFile(object, path + object.identity().uniqueID + ".txt");
+        }
+    }*/
 
 }
 

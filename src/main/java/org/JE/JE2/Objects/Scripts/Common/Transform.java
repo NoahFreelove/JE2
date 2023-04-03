@@ -1,5 +1,6 @@
 package org.JE.JE2.Objects.Scripts.Common;
 
+import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Objects.Scripts.Base.Script;
 import org.JE.JE2.Objects.Scripts.Base.ScriptRestrictions;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
@@ -9,8 +10,11 @@ import org.joml.*;
 import java.lang.Math;
 
 public class Transform extends Script {
+    @ActPublic
     private Vector3f position;
+    @ActPublic
     private Vector3f rotation;
+    @ActPublic
     private Vector3f scale;
 
     private transient PhysicsBody physicsBody;

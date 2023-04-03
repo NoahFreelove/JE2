@@ -1,5 +1,6 @@
 package org.JE.JE2.Objects;
 
+import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.Annotations.RequireNonNull;
 import org.JE.JE2.IO.FileInput.ImageProcessor;
@@ -15,7 +16,6 @@ import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Scene.Scene;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,9 +38,12 @@ public final class GameObject implements Serializable {
     private transient CopyOnWriteArrayList<Script> scripts = new CopyOnWriteArrayList<>();
     private transient Renderer rendererRef = null;
     private transient PhysicsBody physicsBodyRef = null;
-    private Identity identity = new Identity();
 
+    @ActPublic
+    private Identity identity = new Identity();
+    @ActPublic
     private boolean active = true;
+    @ActPublic
     private int layer = 0;
 
     public GameObject(){
@@ -228,7 +231,7 @@ public final class GameObject implements Serializable {
     public void preRender(){}
 
     public Identity identity() {
-        return new Identity(identity.name, identity.tag);
+        return identity;
     }
 
     public void setIdentity(String name, String tag){
@@ -276,6 +279,8 @@ public final class GameObject implements Serializable {
     public void setScript(int i, Script script){
         if(scripts.get(i).getClass() == script.getClass()){
             scripts.set(i, script);
+            script.setAttachedObject(this);
+            script.onAddedToGameObject(this);
         }
     }
 
@@ -386,5 +391,13 @@ public final class GameObject implements Serializable {
     public void setScripts(ArrayList<Script> scripts) {
         this.scripts.clear();
         this.scripts.addAll(scripts);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof GameObject){
+            return ((GameObject) obj).identity.uniqueID == identity.uniqueID;
+        }
+        return false;
     }
 }

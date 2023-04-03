@@ -1,5 +1,6 @@
 package org.JE.JE2.Objects.Scripts.Base;
 
+import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.IO.Logging.Errors.ScriptError;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.GameObject;
@@ -18,7 +19,8 @@ import java.io.Serializable;
  Scripts MUST have a default constructor if you want to use *future* JE2 save and load features
  **/
 public class Script implements Serializable, Loadable {
-    protected transient ScriptRestrictions restrictions = new ScriptRestrictions();
+    @ActPublic
+    protected ScriptRestrictions restrictions = new ScriptRestrictions();
     private transient GameObject parentObject;
 
     public ScriptRestrictions getRestrictions(){
@@ -27,7 +29,9 @@ public class Script implements Serializable, Loadable {
         return restrictions;
     }
 
+    @ActPublic
     private boolean active = true;
+
     public boolean updateOnScriptUpdate = true;
 
     public Script(){}
