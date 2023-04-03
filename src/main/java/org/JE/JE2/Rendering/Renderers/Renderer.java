@@ -1,5 +1,6 @@
 package org.JE.JE2.Rendering.Renderers;
 
+import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.EditorEnum;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
@@ -26,11 +27,14 @@ public class Renderer extends Script {
     protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Color baseColor = Color.WHITE;
+    @ActPublic
     protected boolean scale = true;
 
+    @ActPublic
     @EditorEnum(values = {"Points", "Lines", "Line Loop", "Line Strip", "Triangles", "Triangle Strip", "Triangle Fan", "Quads", "Quad Strip", "Polygons"})
     protected int drawMode = GL_TRIANGLE_FAN;
 
+    @ActPublic
     @EditorEnum(values = {"Base Color", "Textured", "Textured with Lighting"})
     public int defaultShaderIndex = 1;
 

@@ -1,5 +1,6 @@
 package org.JE.JE2.Rendering.Renderers;
 
+import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
@@ -22,8 +23,10 @@ public class SpriteRenderer extends Renderer {
     private final VAO2f spriteCoordVAO;
 
     private transient Texture texture = new Texture();
+    @ActPublic
     private String textureFilepath = "";
     private transient Texture normal = new Texture();
+    @ActPublic
     private String normalFilepath = "";
 
 
@@ -89,6 +92,17 @@ public class SpriteRenderer extends Renderer {
     public void setTexture(Texture texture){
         setTexture(texture, spriteCoordVAO.getVertices(), true);
         //textureFp = texture.resource.bundle.filepath;
+    }
+    public void setNormal(Texture normal) {
+        this.normal = normal;
+    }
+
+    public void setTextureFilepath(String textureFilepath) {
+        this.textureFilepath = textureFilepath;
+    }
+
+    public void setNormalFilepath(String normalFilepath) {
+        this.normalFilepath = normalFilepath;
     }
 
     public void setNormalTexture(Texture texture) {
