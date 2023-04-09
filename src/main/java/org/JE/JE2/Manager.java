@@ -16,9 +16,13 @@ import java.util.ArrayList;
 public class Manager {
 
     private static WindowPreferences preferences = new WindowPreferences();
-    private static Scene activeScene = new Scene();
-    public static ArrayList<Scene> buildScenes = new ArrayList<>();
+    private static Scene activeScene;
 
+    public static ArrayList<Scene> buildScenes = new ArrayList<>();
+    static{
+        activeScene = new Scene(0);
+        buildScenes.add(activeScene);
+    }
     public static Camera getMainCamera(){
         return activeScene.mainCamera();
     }
@@ -105,6 +109,10 @@ public class Manager {
         return new Vector4i(0,0,preferences.windowSize.x(),preferences.windowSize.y());
     }
     public static void addBuildScene(Scene s){
+        s.buildIndex = buildScenes.size();
         buildScenes.add(s);
+    }
+    public static Scene getActiveScene(){
+        return activeScene;
     }
 }

@@ -11,7 +11,7 @@ import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
-import org.JE.JE2.Resources.ResourceLoader;
+import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
@@ -42,7 +42,9 @@ public class Main {
 
         Scene scene = new Scene();
 
-        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(), new Texture(ResourceLoader.getBytes("texture1.png")), new Texture(ResourceLoader.getBytes("texture1_N.png")));
+        GameObject player = GameObject.Sprite(ShaderProgram.spriteShaderSHARED,
+                Texture.checkExistElseCreate("PlayerTexture",-1,"texture1.png"),
+                Texture.checkExistElseCreate("PlayerNormal",-1,"texture1_N.png"));
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
 

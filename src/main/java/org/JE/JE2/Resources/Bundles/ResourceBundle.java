@@ -27,5 +27,7 @@ public abstract class ResourceBundle implements Serializable {
         freeResource();
         unload();
     }
+    public abstract boolean compareData(byte[] input);
+    public abstract byte[] getData();
     protected abstract void freeResource();
 }

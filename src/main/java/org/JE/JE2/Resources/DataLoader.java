@@ -1,5 +1,6 @@
 package org.JE.JE2.Resources;
 
+import org.JE.JE2.Annotations.JarSafe;
 import org.JE.JE2.Annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -8,11 +9,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
-public class ResourceLoader {
+public class DataLoader {
     @Nullable
-    public static String getResourcePath(String path){
+    public static String getDataFilePath(String path){
         try {
-            URL resourceURL = ResourceLoader.class.getResource(path);
+            URL resourceURL = DataLoader.class.getResource(path);
             File resourceFile = new File(resourceURL.getPath());
             return resourceFile.getAbsolutePath();
         }
@@ -21,9 +22,10 @@ public class ResourceLoader {
         }
     }
 
-    public static byte[] getResource(String path){
+    @JarSafe
+    public static byte[] getDataBytes(String path){
         try {
-            InputStream stream = ResourceLoader.class.getResourceAsStream(path);
+            InputStream stream = DataLoader.class.getResourceAsStream(path);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
             // buffer should be large enough to hold the entire file
@@ -52,7 +54,7 @@ public class ResourceLoader {
      */
     @Nullable
     public static String get(String path){
-        return getResourcePath("/" + path);
+        return getDataFilePath("/" + path);
     }
 
     /**
@@ -60,11 +62,9 @@ public class ResourceLoader {
      * @param path The path to the resource from the root of the jar
      * @return The resource as a byte array
      */
+    @JarSafe
     public static byte[] getBytes(String path){
-        /*System.out.println(path);
-        System.out.println(new File( path).getAbsolutePath());
-        System.out.println(getResource("/" + path).length);*/
-        return getResource("/" + path);
+        return getDataBytes("/" + path);
     }
 
     public static String[] readTextFile(String path){

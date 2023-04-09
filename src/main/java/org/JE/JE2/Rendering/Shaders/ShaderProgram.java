@@ -32,9 +32,15 @@ public final class ShaderProgram implements Serializable, Loadable {
     private transient int fragmentShaderID;
 
     // TODO: future testing to see if multiple objects can shader the same shader
-    /*public static final ShaderProgram defaultShader = defaultShader();
-    public static final ShaderProgram spriteShader = spriteShader();
-    public static final ShaderProgram lightSpriteShader = lightSpriteShader();*/
+    public static final ShaderProgram defaultShaderSHARED;
+    public static final ShaderProgram spriteShaderSHARED;
+    public static final ShaderProgram lightSpriteShaderSHARED;
+
+    static {
+        defaultShaderSHARED = defaultShader();
+        spriteShaderSHARED = spriteShader();
+        lightSpriteShaderSHARED = lightSpriteShader();
+    }
 
     private ShaderProgram(){}
 

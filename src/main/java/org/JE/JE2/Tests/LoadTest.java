@@ -1,5 +1,6 @@
-package org.JE.JE2;
+package org.JE.JE2.Tests;
 
+import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Rendering.Camera;
@@ -15,7 +16,6 @@ public class LoadTest {
         Camera camera = new Camera();
         cam.addScript(camera);
         Scene loaded = new Scene();
-        loaded.load("coolscene.JEScene");
 
         loaded.add(PointLight.pointLightObject(new Vector2f(0,0), new Vector3f(0.8f,0.8f,0.8f), 3, 5));
         loaded.add(cam);

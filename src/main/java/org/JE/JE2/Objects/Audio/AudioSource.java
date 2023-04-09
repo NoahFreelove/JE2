@@ -3,24 +3,29 @@ package org.JE.JE2.Objects.Audio;
 import org.JE.JE2.Objects.Audio.Filters.SoundFilter;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.Base.Script;
+import org.JE.JE2.Resources.Bundles.AudioBundle;
 import org.JE.JE2.Resources.Resource;
-import org.JE.JE2.Resources.ResourceType;
 import org.JE.JE2.Window.Window;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.EXTEfx;
+import org.lwjgl.stb.STBVorbis;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.AL_SAMPLE_OFFSET;
 import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryStack.stackPop;
 
 public sealed class AudioSource extends Script permits AudioSourcePlayer {
     private int sourceID;
 
-    private Resource audioResource;
+    private Resource<AudioBundle> audioResource;
 
     private transient boolean isPlaying = false;
 
@@ -31,26 +36,29 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     private transient int audioBuffer;
     private transient float duration = 0;
 
-    public AudioSource(){
+    protected AudioSource(){
         super();
     }
-    public AudioSource setAudio(String filePath){
-        this.audioResource = new Resource("sound", filePath, ResourceType.SOUND);
 
-        generateAudioBuffer();
-        return this;
+    protected AudioSource(Resource<AudioBundle> bundleResource){
+
     }
-    public AudioSource setAudio(Resource resource){
+
+    public AudioSource setAudio(Resource<AudioBundle> resource){
         this.audioResource = resource;
         generateAudioBuffer();
         return this;
     }
+
     private void generateAudioBuffer(){
 
         alcMakeContextCurrent(Window.audioContext());
 
         this.audioBuffer = alGenBuffers();
-        alBufferData(audioBuffer, audioResource.getAudioBundle().getFormat(), audioResource.getAudioBundle().getSoundData(), audioResource.getAudioBundle().getSampleRate());
+        alBufferData(audioBuffer,
+                audioResource.getBundle().getFormat(),
+                audioResource.getBundle().getSoundData(),
+                audioResource.getBundle().getSampleRate());
 
         // Generate source
         sourceID = alGenSources();
@@ -72,6 +80,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     protected void playSound(){
         playAt(0);
     }
+
     protected void playAt(int pos){
         int state = alGetSourcei(sourceID, AL_SOURCE_STATE);
 
@@ -80,14 +89,12 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
             isPlaying = false;
             alSourcei(sourceID, AL_POSITION, pos);
             alGetSourcei(sourceID, AL_POSITION);
-
         }
 
         if(!isPlaying){
             alSourcePlay(sourceID);
             isPlaying = true;
         }
-
     }
 
     protected void stopSound(){
@@ -96,7 +103,6 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
             isPlaying = false;
         }
     }
-
 
     public boolean isPlaying() {
         int state = alGetSourcei(sourceID, AL_SOURCE_STATE);
@@ -146,17 +152,119 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
 
     public float getDuration(){
-
-        return audioResource.getAudioBundle().getSoundData().capacity() / (float)audioResource.getAudioBundle().getSampleRate();
+        return audioResource.getBundle().getSoundData().capacity() / (float)audioResource.getBundle().getSampleRate();
     }
+
     public float getPositionTime(){
-
-        return (float)getBufferPosition() / (float)audioResource.getAudioBundle().getSampleRate();
+        return (float)getBufferPosition() / (float)audioResource.getBundle().getSampleRate();
     }
+
     public float duration(){
         return duration;
     }
+
     public float getDecimal(){
         return getPositionTime() / getDuration() *2;
+    }
+
+}
+
+class AudioProcessor {
+    public static AudioBundle processAudio(String filePath)
+    {
+        ShortBuffer soundData;
+        int format;
+        int sampleRate;
+        int channels;
+
+        if(Window.audioContext() == -1)
+            Window.CreateOpenAL();
+
+        stackPush();
+        IntBuffer channelsBuffer = stackMallocInt(1);
+        stackPush();
+        IntBuffer sampleRateBuffer = stackMallocInt(1);
+
+        ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(filePath, channelsBuffer, sampleRateBuffer);
+        if(rawAudioBuffer == null){
+            Logger.log("Error loading sound file: " + filePath);
+            stackPop();
+            stackPop();
+            return new AudioBundle();
+        }
+
+        channels = channelsBuffer.get(0);
+        sampleRate = sampleRateBuffer.get(0);
+
+        stackPop();
+        stackPop();
+
+        //Find correct format
+        format = -1;
+        if(channels == 1){
+            format = AL10.AL_FORMAT_MONO16;
+        }else if(channels == 2){
+            format = AL10.AL_FORMAT_STEREO16;
+        }
+
+        soundData = rawAudioBuffer;
+
+        /*System.out.println("Sound loaded: " + filePath);
+        System.out.println("Channels: " + channels);
+        System.out.println("Sample Rate: " + sampleRate);
+        System.out.println("Format: " + format);
+        System.out.println("Buffer: " + rawAudioBuffer);
+        System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
+        return new AudioBundle(soundData,format,sampleRate,channels);
+    }
+
+    public static AudioBundle processAudio(byte[] data)
+    {
+        ShortBuffer soundData;
+        int format;
+        int sampleRate;
+        int channels;
+        if(Window.audioContext() == -1)
+            Window.CreateOpenAL();
+
+        stackPush();
+        IntBuffer channelsBuffer = stackMallocInt(1);
+        stackPush();
+        IntBuffer sampleRateBuffer = stackMallocInt(1);
+
+        ByteBuffer putData = BufferUtils.createByteBuffer(data.length);
+        putData.put(data);
+        putData.flip();
+        ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_memory(putData, channelsBuffer, sampleRateBuffer);
+        if(rawAudioBuffer == null){
+            Logger.log("Error loading sound bytes size: " + data.length);
+            stackPop();
+            stackPop();
+            return new AudioBundle();
+        }
+
+        channels = channelsBuffer.get(0);
+        sampleRate = sampleRateBuffer.get(0);
+
+        stackPop();
+        stackPop();
+
+        //Find correct format
+        format = -1;
+        if(channels == 1){
+            format = AL10.AL_FORMAT_MONO16;
+        }else if(channels == 2){
+            format = AL10.AL_FORMAT_STEREO16;
+        }
+
+        soundData = rawAudioBuffer;
+
+        /*System.out.println("Sound loaded: " + filePath);
+        System.out.println("Channels: " + channels);
+        System.out.println("Sample Rate: " + sampleRate);
+        System.out.println("Format: " + format);
+        System.out.println("Buffer: " + rawAudioBuffer);
+        System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
+        return new AudioBundle(soundData,format,sampleRate,channels);
     }
 }

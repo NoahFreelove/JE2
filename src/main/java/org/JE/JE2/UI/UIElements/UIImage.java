@@ -23,11 +23,11 @@ public class UIImage extends UIElement {
     protected void render() {
         if(text == null)
             return;
-        nk_image_id(text.generatedTextureID,img);
+        /*nk_image_id(text.generatedTextureID,img);
         nk_layout_row_template_begin(UIHandler.nuklearContext, text.resource.getTextureBundle().getImageSize().y);
         nk_layout_row_template_push_static(UIHandler.nuklearContext, text.resource.getTextureBundle().getImageSize().x);
         nk_layout_row_template_end(UIHandler.nuklearContext);
-        nk_image(UIHandler.nuklearContext, img);
+        nk_image(UIHandler.nuklearContext, img);*/
 
     }
 }

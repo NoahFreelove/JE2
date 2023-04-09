@@ -1,6 +1,5 @@
 package org.JE.JE2.Rendering.Renderers;
 
-import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
@@ -9,7 +8,7 @@ import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
-import org.JE.JE2.Resources.ResourceLoader;
+import org.JE.JE2.Resources.DataLoader;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
@@ -23,10 +22,8 @@ public class SpriteRenderer extends Renderer {
     private final VAO2f spriteCoordVAO;
 
     private transient Texture texture = new Texture();
-    @ActPublic
     private String textureFilepath = "";
     private transient Texture normal = new Texture();
-    @ActPublic
     private String normalFilepath = "";
 
 
@@ -81,10 +78,12 @@ public class SpriteRenderer extends Renderer {
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
         if (!vao.getShaderProgram().use())
             return;
-        texture.activateTexture(GL_TEXTURE0); normal.activateTexture(GL_TEXTURE1);
 
-        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
-        glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
+        if(texture.activateTexture(GL_TEXTURE0))
+            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
+
+        if(normal.activateTexture(GL_TEXTURE1))
+            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
 
         spriteCoordVAO.Enable(1); super.Render(gameObject, 0, camera); spriteCoordVAO.Disable();
     }
@@ -92,17 +91,6 @@ public class SpriteRenderer extends Renderer {
     public void setTexture(Texture texture){
         setTexture(texture, spriteCoordVAO.getVertices(), true);
         //textureFp = texture.resource.bundle.filepath;
-    }
-    public void setNormal(Texture normal) {
-        this.normal = normal;
-    }
-
-    public void setTextureFilepath(String textureFilepath) {
-        this.textureFilepath = textureFilepath;
-    }
-
-    public void setNormalFilepath(String normalFilepath) {
-        this.normalFilepath = normalFilepath;
     }
 
     public void setNormalTexture(Texture texture) {
@@ -137,8 +125,8 @@ public class SpriteRenderer extends Renderer {
         }
         super.load();
 
-        setTexture(new Texture(ResourceLoader.getBytes(textureFilepath)));
-        setNormalTexture(new Texture(ResourceLoader.getBytes(normalFilepath)));
+        setTexture(Texture.checkExistElseCreate(textureFilepath,-1,textureFilepath));
+        setNormalTexture(Texture.checkExistElseCreate(normalFilepath,-1,normalFilepath));
     }
 
     public void customTile(Vector2f scale){

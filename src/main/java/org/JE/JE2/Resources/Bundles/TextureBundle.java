@@ -28,6 +28,30 @@ public class TextureBundle extends ResourceBundle{
     }
 
     @Override
+    public boolean compareData(byte[] input) {
+        if(input == null)
+            return false;
+
+        if(input.length != imageData.limit())
+            return false;
+
+        for(int i = 0; i < input.length; i++){
+            if(input[i] != imageData.get(i))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public byte[] getData() {
+        byte[] data = new byte[imageData.limit()];
+        for(int i = 0; i < data.length; i++){
+            data[i] = imageData.get(i);
+        }
+        return data;
+    }
+
+    @Override
     public void freeResource() {
         imageData = null;
         imageSize = null;

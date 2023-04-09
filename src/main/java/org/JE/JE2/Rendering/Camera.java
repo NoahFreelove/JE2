@@ -7,6 +7,7 @@ import org.JE.JE2.UI.UIElements.Style.Color;
 import org.joml.*;
 
 import java.lang.Math;
+import java.lang.ref.PhantomReference;
 
 public class Camera extends Script {
     public float zPos = 100;
@@ -59,14 +60,16 @@ public class Camera extends Script {
     }
 
     private final Vector2f position = new Vector2f();
+    private final Matrix4f viewMatrix = new Matrix4f();
     public Matrix4f getViewMatrix(){
 
+        
         if(getAttachedObject() == null) {
             position.set(0,0);
         }
         else
             position.set(getAttachedObject().getTransform().position());
-        return new Matrix4f().identity().translate(-(position.x + positionOffset.x), -(position.y + positionOffset.y), -zPos);
+        return viewMatrix.identity().translate(-(position.x + positionOffset.x), -(position.y + positionOffset.y), -zPos);
     }
     private final Matrix4f projection = new Matrix4f().identity();
     public Matrix4f getOrtho(){

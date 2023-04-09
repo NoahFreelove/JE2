@@ -1,12 +1,9 @@
 package org.JE.JE2.Window;
 
-import org.JE.JE2.IO.UserInput.Keyboard.KeyPressedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
-import org.JE.JE2.IO.UserInput.Mouse.MouseButton;
-import org.JE.JE2.IO.UserInput.Mouse.MousePressedEvent;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Resources.ResourceLoader;
+import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.UI.Font;
 import org.JE.JE2.UI.UIObjects.UIObject;
 import org.lwjgl.nuklear.*;
@@ -75,7 +72,7 @@ public class UIHandler {
     
     public static void init(){
         NkContext ctx = setupWindow(Window.handle());
-        default_font = new Font(ResourceLoader.getBytes("arial.ttf"), true);
+        default_font = new Font(DataLoader.getBytes("arial.ttf"), true);
         nk_style_set_font(ctx, default_font.getFont());
         nuklearReady = true;
     }

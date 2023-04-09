@@ -1,6 +1,6 @@
 package org.JE.JE2.Utility.Settings;
 
-import org.JE.JE2.Resources.ResourceLoader;
+import org.JE.JE2.Resources.DataLoader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class SettingManager implements Serializable {
         if(!file.exists()){
             return;
         }
-        String[] lines = ResourceLoader.readTextFile(path);
+        String[] lines = DataLoader.readTextFile(path);
         SettingCategory activeCat = null;
         for (int i = 0; i < lines.length; i++) {
             if(lines[i].startsWith("Category:")){

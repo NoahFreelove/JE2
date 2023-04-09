@@ -1,101 +1,77 @@
 package org.JE.JE2.Resources;
 
-import org.JE.JE2.IO.FileInput.ImageProcessor;
-import org.JE.JE2.IO.FileInput.AudioProcessor;
-import org.JE.JE2.IO.Logging.Errors.ResourceError;
-import org.JE.JE2.IO.Logging.Logger;
-import org.JE.JE2.Resources.Bundles.AudioBundle;
-import org.JE.JE2.Resources.Bundles.DefaultBundle;
+import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.Resources.Bundles.ResourceBundle;
-import org.JE.JE2.Resources.Bundles.TextureBundle;
-import org.joml.Vector2i;
 
 import java.io.Serializable;
-import java.nio.ByteBuffer;
+import java.lang.ref.WeakReference;
 
-public class Resource implements Serializable {
-    private transient ResourceBundle bundle;
+public class Resource<T extends ResourceBundle> implements Serializable {
+    public final Class<T> type;
+    private transient T ref;
+    private String name = "";
+    private int ID = -1;
 
-    public final String name;
-    public final ResourceType type;
-
-    public Resource(String name, byte[] data, ResourceType type) {
+    private Resource(){
+        type = null;
+    }
+    public Resource (T bundle, String name, int ID) {
+        ref = bundle;
+        type = (Class<T>) bundle.getClass();
         this.name = name;
-        this.type = type;
-        bundle = new DefaultBundle();
-        switch (type) {
-            case TEXTURE -> {
-                bundle = ImageProcessor.processImage(data, true);
-                ResourceManager.textures.add(this);
-            }
-            case SOUND -> {
-                bundle = AudioProcessor.ProcessSound(data);
-                ResourceManager.sounds.add(this);
-            }
-        }
+        this.ID = ID;
     }
 
-    public Resource(String name, String path, ResourceType type) {
-        this.name = name;
-        this.type = type;
-        bundle = new DefaultBundle();
-        switch (type) {
-            case TEXTURE -> {
-                bundle = ImageProcessor.processImage(path);
-                ResourceManager.textures.add(this);
-            }
-            case SOUND -> {
-                bundle = AudioProcessor.ProcessSound(path);
-                ResourceManager.sounds.add(this);
-            }
-        }
+    @Nullable
+    public T getBundle() {
+        return ref;
     }
 
-    public Resource(String name, ResourceBundle rb, ResourceType type){
-        this.name = name;
-        this.type = type;
-        bundle = rb;
-        switch (type) {
-            case TEXTURE -> ResourceManager.textures.add(this);
-            case SOUND -> ResourceManager.sounds.add(this);
-        }
-    }
+    @Override
+    public boolean equals(Object obj){
+        boolean equalName = false;
+        boolean equalID = false;
+        boolean equalData = false;
 
-    public Resource(String name, ByteBuffer buffer, Vector2i size, ResourceType type)
-    {
-        this.name = name;
-        this.type = type;
-        switch (type)
+        if(obj instanceof Resource<?> resource)
         {
-            case TEXTURE -> {
-                this.bundle = new TextureBundle(size,buffer);
-                ResourceManager.textures.add(this);
-            }
-        }
-    }
-    public TextureBundle getTextureBundle(){
-        if(type == ResourceType.TEXTURE)
-            return (TextureBundle) bundle;
-        Logger.log(new ResourceError("Resource is not a texture!"));
-        return null;
-    }
-    public AudioBundle getAudioBundle(){
-        if(type == ResourceType.SOUND)
-            return (AudioBundle) bundle;
-        Logger.log(new ResourceError("Resource is not a sound!"));
-        return null;
-    }
-    public ResourceBundle getBundle(){
-        return bundle;
-    }
+            equalID = ((getID() == resource.getID()) && (getID()>=0));
+            equalName = ((getName().equals(resource.getName())) && (getName() !=null) && !getName().equals(""));
 
-    public boolean free(){
-        if(bundle.isLoaded())
-        {
-            bundle.free();
-            return true;
+            if(resource.type == type){
+                Resource<T> typeCasted = (Resource<T>) resource;
+
+                if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_BY_ID && equalID)
+                    return true;
+                if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_BY_NAME && equalName)
+                    return true;
+                if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_IF_EXISTS){
+                    if(equalID || equalName)
+                        return true;
+                }
+                equalData = typeCasted.getBundle().compareData(getBundle().getData());
+
+
+                if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_BY_BYTE_DATA && equalData)
+                    return true;
+
+
+            }
+            else return false;
         }
-        Logger.log(new ResourceError("Resource has not been loaded yet!"));
+
         return false;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 }

@@ -3,7 +3,6 @@ package org.JE.JE2.Objects;
 import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.Annotations.RequireNonNull;
-import org.JE.JE2.IO.FileInput.ImageProcessor;
 import org.JE.JE2.IO.Logging.Errors.GameObjectError;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.Base.ScriptRestrictions;
@@ -353,7 +352,7 @@ public final class GameObject implements Serializable {
         return sprite;
     }
     public static GameObject Sprite(ShaderProgram shaderProgram, Texture texture){
-        return Sprite(shaderProgram, texture, new Texture(ImageProcessor.generateNormalMap(texture)));
+        return Sprite(shaderProgram, texture, texture);
     }
 
     public static GameObject Sprite(ShaderProgram shaderProgram, Texture texture, Texture normal){

@@ -1,67 +1,77 @@
 package org.JE.JE2.Rendering;
 
 import org.JE.JE2.Annotations.GLThread;
+import org.JE.JE2.IO.Logging.Errors.ImageProcessError;
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Resources.Resource;
+import org.JE.JE2.Resources.*;
+import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.Bundles.ResourceBundle;
-import org.JE.JE2.Resources.ResourceType;
 import org.joml.Vector2i;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
 
+import java.io.File;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 public class Texture implements Serializable {
-    public Resource resource;
-    public int generatedTextureID = -1;
+    public Resource<TextureBundle> resource;
     public boolean valid = false;
     public int forceValidateMode = 0;
     public Texture(){
     }
-    public Texture(Resource resource){
+
+    private Texture(Resource<TextureBundle> resource, boolean newTexture){
         this.resource = resource;
-        GenerateTexture();
+
+        if(newTexture) {
+            System.out.println("Generating new texture :" +resource.getName());
+            GenerateTexture();
+            ResourceManager.indexResource(resource);
+        }
+        else
+            valid = true;
     }
 
-    public Texture(ResourceBundle bundle){
-        this.resource = new Resource("resource", bundle, ResourceType.TEXTURE);
-        GenerateTexture();
+    public static Texture checkExistElseCreate(String name, int ID, String bytePath){
+
+        Resource<TextureBundle> finalRef = (Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, ID);
+
+        if(finalRef != null){
+            return new Texture(finalRef, false);
+        }
+        else{
+            return new Texture(new Resource<>(TextureProcessor.processImage(DataLoader.getBytes(bytePath), true), name, ID), true);
+        }
     }
 
-    public Texture(String filepath){
-        resource = new Resource("texture",filepath, ResourceType.TEXTURE);
-        resource.getBundle().setFilepath(filepath);
+    public Texture(String filepath, boolean flip){
+        TextureBundle tb = TextureProcessor.processImage(filepath, flip);
+        this.resource = new Resource<>(tb, filepath, -1);
         GenerateTexture();
-    }
-
-    public Texture(byte[] data){
-        resource = new Resource("texture",data, ResourceType.TEXTURE);
-        GenerateTexture();
-    }
-
-    public Texture(ByteBuffer bb, Vector2i size){
-        resource = new Resource("texture",bb,size, ResourceType.TEXTURE);
-        GenerateTexture();
+        ResourceManager.indexResource(resource);
     }
 
     public void GenerateTexture(){
-        if(resource.getTextureBundle().getImageData().limit() == 1)
+        if(resource.getBundle().getImageData().limit() == 1)
             return;
         Runnable r = () -> {
             if(resource == null)
                 return;
             glEnable(GL_TEXTURE_2D);
-            this.generatedTextureID = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, generatedTextureID);
+            resource.setID(glGenTextures());
+            glBindTexture(GL_TEXTURE_2D, resource.getID());
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, resource.getTextureBundle().getImageSize().x(), resource.getTextureBundle().getImageSize().y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, resource.getTextureBundle().getImageData());
+            glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, resource.getBundle().getImageSize().x(), resource.getBundle().getImageSize().y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, resource.getBundle().getImageData());
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -81,7 +91,100 @@ public class Texture implements Serializable {
         if(!valid)
             return false;
         glActiveTexture(textureSlot);
-        glBindTexture(GL_TEXTURE_2D, generatedTextureID);
+        glBindTexture(GL_TEXTURE_2D, resource.getID());
         return true;
+    }
+}
+
+class TextureProcessor {
+    static TextureBundle processImage(String filepath) {
+        return processImage(filepath,true);
+    }
+
+    static TextureBundle processImage(String filepath, boolean flip){
+        Vector2i imageSize;
+        ByteBuffer imageData;
+        if(filepath == null)
+        {
+            Logger.log(new ImageProcessError(true));
+            imageData = BufferUtils.createByteBuffer(1);
+            imageSize = new Vector2i(1,1);
+            return new TextureBundle(imageSize, imageData);
+        }
+        if(filepath.equals("") || new File(filepath).isDirectory() || !new File(filepath).exists())
+        {
+            Logger.log(new ImageProcessError(true));
+            imageData = BufferUtils.createByteBuffer(1);
+            imageSize = new Vector2i(1,1);
+            return new TextureBundle(imageSize, imageData);
+        }
+
+        IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
+        IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
+        IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
+        STBImage.stbi_set_flip_vertically_on_load(flip);
+
+
+        STBImage.stbi_set_unpremultiply_on_load(true);
+        ByteBuffer image = STBImage.stbi_load(filepath, widthBuf, heightBuf, channelsBuf, 4);
+        if (image == null) {
+            image = BufferUtils.createByteBuffer(1);
+            imageData = image;
+            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nFilepath:" + filepath));
+            return new TextureBundle(new Vector2i(),imageData);
+        }
+        image.flip();
+        imageData = image;
+        imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
+        return new TextureBundle(imageSize,imageData);
+    }
+
+    static TextureBundle processImage(byte[] data, boolean flip){
+        Vector2i imageSize;
+        ByteBuffer imageData;
+        if(data == null)
+        {
+            Logger.log(new ImageProcessError(true));
+            imageData = BufferUtils.createByteBuffer(1);
+            imageSize = new Vector2i(1,1);
+            return new TextureBundle(imageSize,imageData);
+        }
+
+        IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
+        IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
+        IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
+        STBImage.stbi_set_flip_vertically_on_load(flip);
+        STBImage.stbi_set_unpremultiply_on_load(true);
+        ByteBuffer putData = BufferUtils.createByteBuffer(data.length);
+        putData.put(data);
+        putData.flip();
+        ByteBuffer image = STBImage.stbi_load_from_memory(putData, widthBuf, heightBuf, channelsBuf, 4);
+
+        if (image == null) {
+            image = BufferUtils.createByteBuffer(1);
+            imageData = image;
+            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nbytes:" + data.length));
+
+            return new TextureBundle(new Vector2i(),imageData);
+        }
+        image.flip();
+        imageData = image;
+        imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
+        return new TextureBundle(imageSize,imageData);
+    }
+
+    static TextureBundle generateSolidColorImage(Vector2i size, int color){
+        Vector2i imageSize;
+        ByteBuffer imageData;
+        imageSize = size;
+        imageData = BufferUtils.createByteBuffer(size.x * size.y * 4);
+        for (int i = 0; i < size.x * size.y; i++) {
+            imageData.put((byte) ((color >> 16) & 0xFF));
+            imageData.put((byte) ((color >> 8) & 0xFF));
+            imageData.put((byte) (color & 0xFF));
+            imageData.put((byte) ((color >> 24) & 0xFF));
+        }
+        imageData.flip();
+        return new TextureBundle(imageSize,imageData);
     }
 }

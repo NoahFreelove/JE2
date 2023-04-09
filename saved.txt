@@ -1,0 +1,9 @@
+Field:identity.name
+Type:string
+Value:"GameObject"
+Field:identity.tag
+Type:string
+Value:"Untagged"
+Field:active
+Type:boolean
+Value:true
