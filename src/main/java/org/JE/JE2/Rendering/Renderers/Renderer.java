@@ -6,16 +6,14 @@ import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
-import org.JE.JE2.Objects.Scripts.Base.Script;
-import org.JE.JE2.Objects.Scripts.Common.Transform;
+import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderLayout;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO;
 import org.JE.JE2.UI.UIElements.Style.Color;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
@@ -64,7 +62,7 @@ public class Renderer extends Script {
 
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
-        glViewport(camera.viewportSize.x, camera.viewportSize.y, camera.viewportSize.z, camera.viewportSize.w);
+        glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
         PreRender();
         ShaderProgram shader = vao.getShaderProgram();
         if(!shader.use())

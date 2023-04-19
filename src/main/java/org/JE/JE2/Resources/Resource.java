@@ -41,14 +41,11 @@ public class Resource<T extends ResourceBundle> implements Serializable {
             if(resource.type == type){
                 Resource<T> typeCasted = (Resource<T>) resource;
 
-                if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_BY_ID && equalID)
-                    return true;
+                /*if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_BY_ID && equalID)
+                    return true;*/
                 if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_BY_NAME && equalName)
                     return true;
-                if(ResourceManager.policy == ResourceLoadingPolicy.CHECK_IF_EXISTS){
-                    if(equalID || equalName)
-                        return true;
-                }
+
                 equalData = typeCasted.getBundle().compareData(getBundle().getData());
 
 

@@ -1,9 +1,11 @@
 package org.JE.JE2.IO.Logging;
 
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
+import org.JE.JE2.Window.Window;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public class Logger {
 
@@ -12,7 +14,7 @@ public class Logger {
 
     // may have performance hit
     public static boolean enableIgnoreList = false;
-    public static ArrayList<Class> ignoreList = new ArrayList<>();
+    public static ArrayList<Class<?>> ignoreList = new ArrayList<>();
 
     public static boolean log = true;
     public static boolean logPetty = false;

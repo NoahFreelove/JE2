@@ -2,8 +2,7 @@ package org.JE.JE2.Objects.Scripts.Physics;
 
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
-import org.JE.JE2.Objects.Scripts.Base.Script;
-import org.JE.JE2.Utility.JOMLtoJBOX;
+import org.JE.JE2.Objects.Scripts.Script;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.RayCastInput;
 import org.jbox2d.collision.RayCastOutput;
@@ -14,7 +13,6 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 public class PhysicsBody extends Script {
     public transient org.jbox2d.dynamics.BodyDef bodyDef;
@@ -39,12 +37,12 @@ public class PhysicsBody extends Script {
         this.size = new Vector2f(initialSize);
         bodyDef.type = defaultState;
 
-        Vector2f adjustedPos =  new Vector2f(initialPosition);
+        Vector2f adjustedPos = new Vector2f(initialPosition);
         adjustedPos.x += getSize().x/2;
         adjustedPos.y += getSize().y/2;
-        bodyDef.position = JOMLtoJBOX.vec2(adjustedPos);
-        body = Manager.activeScene().world.physicsWorld.createBody(this.bodyDef);
-        body.setTransform(JOMLtoJBOX.vec2(adjustedPos), 0);
+        bodyDef.position.set(adjustedPos.x(),adjustedPos.y());
+        body = getAttachedObject().linkedScene.world.physicsWorld.createBody(this.bodyDef);
+        body.setTransform(new Vec2(adjustedPos.x(),adjustedPos.y()), 0);
 
         // Set box collider
         PolygonShape shape = new PolygonShape();
@@ -152,11 +150,15 @@ public class PhysicsBody extends Script {
     }
     public boolean hasInitialized(){return hasInitialized;}
 
+    Vec2 jBoxStart = new Vec2();
+    Vec2 jBoxEnd = new Vec2();
     public Raycast raycast(Vector2f start, Vector2f end, int layerMask){
         // Do a box 2d Raycast
+        jBoxStart.set(start.x(),start.y());
+        jBoxEnd.set(end.x(),end.y());
         RayCastInput input = new RayCastInput();
-        input.p1.set(JOMLtoJBOX.vec2(start));
-        input.p2.set(JOMLtoJBOX.vec2(end));
+        input.p1.set(jBoxStart);
+        input.p2.set(jBoxEnd);
         input.maxFraction = 1;
 
         float closestFraction = 1;
@@ -183,7 +185,7 @@ public class PhysicsBody extends Script {
             }
         }
         if(closestFixture != null){
-            return new Raycast(true, userData, JOMLtoJBOX.vector2f(output.normal));
+            return new Raycast(true, userData, new Vector2f(output.normal.x,output.normal.y));
         }
         return new Raycast(false, null, null);
     }

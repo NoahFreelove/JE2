@@ -1,14 +1,13 @@
 package org.JE.JE2;
 
-import org.JE.JE2.IO.UserInput.Keyboard.KeyPressedEvent;
-import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
-import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Scene.SceneLoading.LoadingSequence;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowCloseReason;
 import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2i;
+import org.joml.Vector4f;
 import org.joml.Vector4i;
 
 import java.util.ArrayList;
@@ -17,8 +16,11 @@ public class Manager {
 
     private static WindowPreferences preferences = new WindowPreferences();
     private static Scene activeScene;
+    private static LoadingSequence activeLoadingSequence;
 
     public static ArrayList<Scene> buildScenes = new ArrayList<>();
+
+    private static Vector4f defaultViewport = new Vector4f(0,0,1920,1080);
     static{
         activeScene = new Scene(0);
         buildScenes.add(activeScene);
@@ -26,7 +28,6 @@ public class Manager {
     public static Camera getMainCamera(){
         return activeScene.mainCamera();
     }
-    private static Scene queuedScene;
     public static void setWindowPreferences(WindowPreferences wp){
         preferences = wp;
         Window.onPreferenceUpdated(preferences);
@@ -38,11 +39,12 @@ public class Manager {
      */
     public static void start(WindowPreferences wp){
         preferences = wp;
+        defaultViewport = new Vector4f(0,0,wp.windowSize.x(),wp.windowSize.y());
         Window.createWindow(preferences);
     }
 
     /**
-     * Runs window with "default" settings.
+     * Runs window with settings that should generally work for most screens and apps
      */
     public static void run(){
         start(new WindowPreferences());
@@ -66,21 +68,17 @@ public class Manager {
         newScene.start();
     }
 
-    public static void setScene(Scene s, boolean waitFrame){
-        if(waitFrame)
+    public static void initiateLoadingSequence(LoadingSequence sequence){
+        if(activeLoadingSequence !=null)
         {
-            queuedScene = s;
-            Window.queuedScene = true;
+            activeLoadingSequence.cancel();
         }
-        else {
-            setScene(s);
-        }
-
+        activeLoadingSequence = sequence;
+        activeLoadingSequence.initiate();
     }
-    public static void setQueuedScene(){
-        activeScene.unload(activeScene, queuedScene);
-        activeScene = queuedScene;
-        queuedScene.start();
+
+    public static void loadAndSetNextScene(LoadingSequence sequence){
+        initiateLoadingSequence(sequence);
     }
 
     public static void queueGLFunction(Runnable r){
@@ -93,11 +91,6 @@ public class Manager {
         return new Vector2i(preferences.windowSize.x(), preferences.windowSize.y());
     }
 
-    public static void setWindowSize(Vector2i size){
-        preferences.windowSize = size;
-        //defaultViewport = new Vector4i(defaultViewport.x(), defaultViewport.y(), size.x, size.y);
-        Window.onPreferenceUpdated(preferences);
-    }
     public static float deltaTime(){
         return Window.deltaTime();
     }
@@ -105,14 +98,17 @@ public class Manager {
         return (int)(1/Window.deltaTime());
     }
 
-    public static Vector4i defaultViewport(){
-        return new Vector4i(0,0,preferences.windowSize.x(),preferences.windowSize.y());
+    public static Vector4f defaultViewport(){
+        return defaultViewport;
     }
+
     public static void addBuildScene(Scene s){
         s.buildIndex = buildScenes.size();
         buildScenes.add(s);
     }
-    public static Scene getActiveScene(){
-        return activeScene;
+
+    public static void onWindowSizeChange(int width, int height){
+        preferences.windowSize = new Vector2i(width,height);
+        defaultViewport = new Vector4f(0,0,width,height);
     }
 }

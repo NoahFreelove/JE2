@@ -16,13 +16,19 @@ public class Keyboard {
 
     public static boolean ignoreCopyPasteKeys = false;
 
+    public static boolean disableInput = false;
+
     private static final ArrayList<KeyPressedEvent> keyPressedEvents = new ArrayList<>();
     private static final ArrayList<KeyReleasedEvent> keyReleasedEvents = new ArrayList<>();
 
     public static void addKeyPressedEvent(KeyPressedEvent event){
+        if(keyPressedEvents.contains(event))
+            return;
         keyPressedEvents.add(event);
     }
     public static void addKeyReleasedEvent(KeyReleasedEvent event){
+        if(keyReleasedEvents.contains(event))
+            return;
         keyReleasedEvents.add(event);
     }
 
@@ -34,6 +40,9 @@ public class Keyboard {
     }
 
     public static void triggerKeyPressed(int code, int mods){
+        if(disableInput)
+            return;
+
         keyPressedEvents.forEach(event -> event.invoke(code, mods));
         keyPressed(code);
         if(ignoreCopyPasteKeys)
@@ -51,14 +60,20 @@ public class Keyboard {
         }
     }
     public static void triggerKeyReleased(int code, int mods){
+        if(disableInput)
+            return;
         keyReleasedEvents.forEach(event -> event.invoke(code, mods));
         keyReleased(code);
     }
     public static void triggerKeyRepeat(int key, int mods) {
+        if(disableInput)
+            return;
        triggerKeyPressed(key, mods);
     }
 
     public static void triggerKey(int code, int mods){
+        if(disableInput)
+            return;
         triggerKeyPressed(code, mods);
         triggerKeyReleased(code, mods);
     }

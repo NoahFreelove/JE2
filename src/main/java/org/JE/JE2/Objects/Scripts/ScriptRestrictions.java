@@ -1,4 +1,4 @@
-package org.JE.JE2.Objects.Scripts.Base;
+package org.JE.JE2.Objects.Scripts;
 
 import java.io.Serializable;
 import java.util.ArrayList;

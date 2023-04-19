@@ -1,4 +1,4 @@
-package org.JE.JE2.Objects.Scripts.Base;
+package org.JE.JE2.Objects.Scripts;
 
 import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.IO.Logging.Errors.ScriptError;
@@ -36,7 +36,7 @@ public class Script implements Serializable, Loadable {
 
     public Script(){}
 
-    public void setActive (boolean newState){
+    public void setActive(boolean newState){
         if(!restrictions.canBeDisabled && !newState){
             Logger.log(new ScriptError(this, "Script restrictions do not let it be disabled."));
             return;
@@ -56,12 +56,13 @@ public class Script implements Serializable, Loadable {
     public void unload(Scene oldScene, Scene newScene){}
     public void destroy(){}
     public void onForeignScriptAdded(Script script){}
-    public void onAddedToGameObject(GameObject gameObject){
-    }
+    public void onAddedToGameObject(GameObject gameObject){}
     public void gameObjectAddedToScene(Scene scene){}
+
     public GameObject getAttachedObject(){
         return parentObject;
     }
+
     public void setAttachedObject(GameObject newParent){
         if(parentObject !=null)
             parentObject.removeScript(this);

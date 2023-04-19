@@ -1,5 +1,6 @@
 package org.JE.JE2.Rendering.Renderers;
 
+import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
@@ -22,9 +23,16 @@ public class SpriteRenderer extends Renderer {
     private final VAO2f spriteCoordVAO;
 
     private transient Texture texture = new Texture();
+    @ActPublic
     private String textureFilepath = "";
+    @ActPublic
+    private String textureName = "";
+
     private transient Texture normal = new Texture();
+    @ActPublic
     private String normalFilepath = "";
+    @ActPublic
+    private String normalTextureName = "";
 
 
     public SpriteRenderer() {
@@ -90,16 +98,20 @@ public class SpriteRenderer extends Renderer {
 
     public void setTexture(Texture texture){
         setTexture(texture, spriteCoordVAO.getVertices(), true);
-        //textureFp = texture.resource.bundle.filepath;
+        textureFilepath = texture.resource.getBundle().filepath;
+        textureName = texture.resource.getName();
     }
 
     public void setNormalTexture(Texture texture) {
         this.normal = texture;
-        //normalFp = texture.resource.bundle.filepath;
+        normalFilepath = texture.resource.getBundle().filepath;
+        normalTextureName = texture.resource.getName();
     }
 
     public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
         this.texture = texture;
+        textureFilepath = texture.resource.getBundle().filepath;
+        textureName = texture.resource.getName();
         if(softSet) return;
         Runnable r = () ->{
             spriteCoordVAO.setVertices(textCoords);
@@ -125,8 +137,8 @@ public class SpriteRenderer extends Renderer {
         }
         super.load();
 
-        setTexture(Texture.checkExistElseCreate(textureFilepath,-1,textureFilepath));
-        setNormalTexture(Texture.checkExistElseCreate(normalFilepath,-1,normalFilepath));
+        setTexture(Texture.checkExistElseCreate(textureName,-1,textureFilepath));
+        setNormalTexture(Texture.checkExistElseCreate(normalTextureName,-1,normalFilepath));
     }
 
     public void customTile(Vector2f scale){

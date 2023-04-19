@@ -8,14 +8,16 @@ import java.nio.ByteBuffer;
 public class TextureBundle extends ResourceBundle{
     private transient Vector2i imageSize;
     private transient ByteBuffer imageData;
+    public transient String filepath;
     public TextureBundle(){
         imageSize = new Vector2i();
         imageData = BufferUtils.createByteBuffer(1);
     }
 
-    public TextureBundle(Vector2i imageSize, ByteBuffer imageData) {
+    public TextureBundle(Vector2i imageSize, ByteBuffer imageData, String bytePath) {
         this.imageSize = imageSize;
         this.imageData = imageData;
+        this.filepath = bytePath;
         load();
     }
 

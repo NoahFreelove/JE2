@@ -1,10 +1,8 @@
-package org.JE.JE2.Objects.Scripts.Common;
+package org.JE.JE2.Objects.Scripts;
 
 import org.JE.JE2.Annotations.ActPublic;
-import org.JE.JE2.Objects.Scripts.Base.Script;
-import org.JE.JE2.Objects.Scripts.Base.ScriptRestrictions;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
-import org.JE.JE2.Utility.JOMLtoJBOX;
+import org.jbox2d.common.Vec2;
 import org.joml.*;
 
 import java.lang.Math;
@@ -12,10 +10,13 @@ import java.lang.Math;
 public class Transform extends Script {
     @ActPublic
     private Vector3f position;
+    private Vector2f position2d = new Vector2f();
     @ActPublic
     private Vector3f rotation;
+
     @ActPublic
     private Vector3f scale;
+    private Vector2f scale2d = new Vector2f();
 
     private transient PhysicsBody physicsBody;
 
@@ -27,7 +28,8 @@ public class Transform extends Script {
     }
 
     public Vector2f position(){
-        return new Vector2f(position.x, position.y);
+        position2d.set(position.x(),position.y());
+        return position2d;
     }
     public Vector3f position3D(){
         return position;
@@ -37,7 +39,8 @@ public class Transform extends Script {
     }
 
     public Vector2f scale(){
-        return new Vector2f(scale.x, scale.y);
+        scale2d.set(scale.x(),scale.y());
+        return scale2d;
     }
 
     public Vector3f scale3D(){
@@ -123,16 +126,19 @@ public class Transform extends Script {
         physicsBody = getAttachedObject().getScript(PhysicsBody.class);
     }
 
+    private final Vector2f adjustedPos = new Vector2f();
+    private final Vec2 jBoxAdjustedPos = new Vec2();
     @Override
     public void update() {
         if(physicsBody !=null)
         {
             if(!physicsBody.hasInitialized())
                 return;
-            Vector2f adjustedPos = new Vector2f(position());
+            adjustedPos.set(position());
             adjustedPos.x += physicsBody.getSize().x/2;
             adjustedPos.y += physicsBody.getSize().y/2;
-            physicsBody.body.setTransform(JOMLtoJBOX.vec2(adjustedPos), rotation().z());
+            jBoxAdjustedPos.set(adjustedPos.x(),adjustedPos.y());
+            physicsBody.body.setTransform(jBoxAdjustedPos, rotation().z());
         }
     }
 

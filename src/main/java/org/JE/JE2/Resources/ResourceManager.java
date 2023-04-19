@@ -1,10 +1,16 @@
 package org.JE.JE2.Resources;
 
+import org.JE.JE2.Annotations.JarSafe;
 import org.JE.JE2.Annotations.Nullable;
+import org.JE.JE2.Objects.Audio.AudioSource;
+import org.JE.JE2.Objects.Audio.AudioSourcePlayer;
+import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.AudioBundle;
 import org.JE.JE2.Resources.Bundles.ResourceBundle;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
+import org.JE.JE2.Utility.Triplet;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -13,6 +19,7 @@ import java.util.function.Consumer;
 public class ResourceManager implements Serializable {
     private final static CopyOnWriteArrayList<Resource<TextureBundle>> textures = new CopyOnWriteArrayList<>();
     private final static CopyOnWriteArrayList<Resource<AudioBundle>> sounds = new CopyOnWriteArrayList<>();
+    public final static CopyOnWriteArrayList<Triplet<String,String,Class<? extends ResourceBundle>>> queuedWarmupAssets = new CopyOnWriteArrayList<>();
 
     public static void indexResource(Resource<?> resource){
         if(resource.type == TextureBundle.class){
@@ -86,6 +93,7 @@ public class ResourceManager implements Serializable {
         if(policy == ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS)
             return null;
 
+
         // Check if texture or audio bundle
 
         if(clazz == TextureBundle.class){
@@ -93,9 +101,9 @@ public class ResourceManager implements Serializable {
                 if(policy== ResourceLoadingPolicy.CHECK_BY_NAME && t.getName().equals(name)){
                     return t;
                 }
-                if(policy== ResourceLoadingPolicy.CHECK_BY_ID && t.getID() == ID){
+                /*if(policy== ResourceLoadingPolicy.CHECK_BY_ID && t.getID() == ID){
                     return t;
-                }
+                }*/
             }
         }
         if(clazz == AudioBundle.class){
@@ -110,4 +118,43 @@ public class ResourceManager implements Serializable {
     }
 
     public static ResourceLoadingPolicy policy = ResourceLoadingPolicy.CHECK_BY_NAME;
+
+    /**
+     * This method trusts that you won't give it duplicate resources!
+     * @param assets The byte paths of the assets to load
+     * @param names Their names to be referenced when checking if they exist
+     * @param classes Their respective Bundle type
+     */
+    @JarSafe
+    public static void warmupAssets(String[] assets, String[] names, Class<? extends ResourceBundle>[] classes){
+        int prevPolicy = policy.ordinal();
+        policy = ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS;
+        if(assets.length != names.length || assets.length != classes.length)
+            return;
+
+        for (int i = 0; i < assets.length; i++) {
+            System.out.println("Warming up asset: " + names[i]);
+            warmupAsset(names[i], assets[i], classes[i]);
+        }
+        policy = ResourceLoadingPolicy.values()[prevPolicy];
+    }
+
+    public static void warmupAssets(Triplet<String, String, Class<? extends ResourceBundle>>[] assets){
+        for (Triplet<String,String,Class<? extends ResourceBundle>> t: assets) {
+            warmupAsset(t.x,t.y,t.z);
+        }
+    }
+
+    public static void warmupAsset(String name, String asset, Class<? extends ResourceBundle> clazz){
+        if(clazz== TextureBundle.class)
+        {
+            Texture.checkExistElseCreate(name,-1, asset);
+        } else if (clazz == AudioBundle.class) {
+            AudioSourcePlayer.checkExistElseCreate(name,-1, asset);
+        }
+    }
+
+    public static void warmupQueue(){
+        warmupAssets(queuedWarmupAssets.toArray(new Triplet[0]));
+    }
 }

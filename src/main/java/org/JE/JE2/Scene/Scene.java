@@ -3,12 +3,9 @@ package org.JE.JE2.Scene;
 import org.JE.JE2.Annotations.RequireNonNull;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
-import org.JE.JE2.Objects.Identity;
 import org.JE.JE2.Objects.Lights.Light;
-import org.JE.JE2.Objects.Scripts.Base.Script;
-import org.JE.JE2.Objects.Scripts.Common.Transform;
+import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;
-import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.UI.UIObjects.UIObject;
 import org.JE.JE2.Utility.Watcher;
 

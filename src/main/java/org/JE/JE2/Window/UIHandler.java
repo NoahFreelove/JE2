@@ -313,6 +313,8 @@ public class UIHandler {
     }
 
     public static void renderNuklear() {
+        if(!nuklearReady)
+            return;
 
         int AA = NK_ANTI_ALIASING_ON;
         int max_vertex_buffer = MAX_VERTEX_BUFFER;
@@ -417,6 +419,8 @@ public class UIHandler {
     }
     
     public static void destroy() {
+        if(!nuklearReady)
+            return;
         glDetachShader(prog, vert_shdr);
         glDetachShader(prog, frag_shdr);
         glDeleteShader(vert_shdr);

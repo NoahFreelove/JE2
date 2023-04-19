@@ -1,6 +1,7 @@
 package org.JE.JE2.Rendering;
 
 import org.JE.JE2.Annotations.GLThread;
+import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.IO.Logging.Errors.ImageProcessError;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
@@ -28,10 +29,14 @@ public class Texture implements Serializable {
     }
 
     private Texture(Resource<TextureBundle> resource, boolean newTexture){
+        if(resource == null)
+        {
+            valid = false;
+            return;
+        }
         this.resource = resource;
 
         if(newTexture) {
-            System.out.println("Generating new texture :" +resource.getName());
             GenerateTexture();
             ResourceManager.indexResource(resource);
         }
@@ -40,15 +45,25 @@ public class Texture implements Serializable {
     }
 
     public static Texture checkExistElseCreate(String name, int ID, String bytePath){
-
+        System.out.println("warming up: " + bytePath);
         Resource<TextureBundle> finalRef = (Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, ID);
 
         if(finalRef != null){
             return new Texture(finalRef, false);
         }
         else{
-            return new Texture(new Resource<>(TextureProcessor.processImage(DataLoader.getBytes(bytePath), true), name, ID), true);
+            return new Texture(new Resource<>(TextureProcessor.processImage(DataLoader.getBytes(bytePath), true,bytePath), name, ID), true);
         }
+    }
+
+    /**
+     * Assumes you've already warmed up or indexed texture.
+     * @param name The name of the texture indexed in ResourceManager
+     * @return a new Texture object
+     */
+    @Nullable
+    public static Texture get(String name){
+        return new Texture((Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, -1), false);
     }
 
     public Texture(String filepath, boolean flip){
@@ -109,14 +124,14 @@ class TextureProcessor {
             Logger.log(new ImageProcessError(true));
             imageData = BufferUtils.createByteBuffer(1);
             imageSize = new Vector2i(1,1);
-            return new TextureBundle(imageSize, imageData);
+            return new TextureBundle(imageSize, imageData,filepath);
         }
         if(filepath.equals("") || new File(filepath).isDirectory() || !new File(filepath).exists())
         {
             Logger.log(new ImageProcessError(true));
             imageData = BufferUtils.createByteBuffer(1);
             imageSize = new Vector2i(1,1);
-            return new TextureBundle(imageSize, imageData);
+            return new TextureBundle(imageSize, imageData,filepath);
         }
 
         IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
@@ -131,15 +146,15 @@ class TextureProcessor {
             image = BufferUtils.createByteBuffer(1);
             imageData = image;
             Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nFilepath:" + filepath));
-            return new TextureBundle(new Vector2i(),imageData);
+            return new TextureBundle(new Vector2i(),imageData,filepath);
         }
         image.flip();
         imageData = image;
         imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
-        return new TextureBundle(imageSize,imageData);
+        return new TextureBundle(imageSize,imageData,filepath);
     }
 
-    static TextureBundle processImage(byte[] data, boolean flip){
+    static TextureBundle processImage(byte[] data, boolean flip, String filepath){
         Vector2i imageSize;
         ByteBuffer imageData;
         if(data == null)
@@ -147,7 +162,7 @@ class TextureProcessor {
             Logger.log(new ImageProcessError(true));
             imageData = BufferUtils.createByteBuffer(1);
             imageSize = new Vector2i(1,1);
-            return new TextureBundle(imageSize,imageData);
+            return new TextureBundle(imageSize,imageData,filepath);
         }
 
         IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
@@ -165,12 +180,12 @@ class TextureProcessor {
             imageData = image;
             Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nbytes:" + data.length));
 
-            return new TextureBundle(new Vector2i(),imageData);
+            return new TextureBundle(new Vector2i(),imageData,filepath);
         }
         image.flip();
         imageData = image;
         imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
-        return new TextureBundle(imageSize,imageData);
+        return new TextureBundle(imageSize,imageData,filepath);
     }
 
     static TextureBundle generateSolidColorImage(Vector2i size, int color){
@@ -185,6 +200,6 @@ class TextureProcessor {
             imageData.put((byte) ((color >> 24) & 0xFF));
         }
         imageData.flip();
-        return new TextureBundle(imageSize,imageData);
+        return new TextureBundle(imageSize,imageData,"");
     }
 }

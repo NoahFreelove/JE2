@@ -11,13 +11,19 @@ import java.util.ArrayList;
 public class Mouse {
     private static float x, y;
 
+    public static boolean disableInput = false;
+
     private static final ArrayList<MousePressedEvent> mousePressedEvents = new ArrayList<>();
     private static final ArrayList<MouseReleasedEvent> mouseReleasedEvents = new ArrayList<>();
 
     public static void addMousePressedEvent(MousePressedEvent event){
+        if(mousePressedEvents.contains(event))
+            return;
         mousePressedEvents.add(event);
     }
     public static void addMouseReleasedEvent(MouseReleasedEvent event){
+        if(mouseReleasedEvents.contains(event))
+            return;
         mouseReleasedEvents.add(event);
     }
 
@@ -29,6 +35,8 @@ public class Mouse {
     }
 
     public static void triggerMouseMoved(float x, float y){
+        if(disableInput)
+            return;
         Mouse.x = x;
         Mouse.y = y;
     }
@@ -45,15 +53,21 @@ public class Mouse {
     }
 
     public static void triggerMousePressed(MouseButton button, int mods){
+        if(disableInput)
+            return;
         mousePressedEvents.forEach(event -> event.invoke(button, mods));
         mousePressed(button.ordinal());
     }
     public static void triggerMouseReleased(MouseButton button, int mods){
+        if(disableInput)
+            return;
         mouseReleasedEvents.forEach(event -> event.invoke(button, mods));
         mouseReleased(button.ordinal());
     }
 
     public static void triggerMouseClick(MouseButton button, int mods){
+        if(disableInput)
+            return;
         triggerMousePressed(button, mods);
         triggerMouseReleased(button, mods);
     }

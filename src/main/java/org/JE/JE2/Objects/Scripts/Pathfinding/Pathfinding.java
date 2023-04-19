@@ -2,7 +2,7 @@ package org.JE.JE2.Objects.Scripts.Pathfinding;
 
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
-import org.JE.JE2.Objects.Scripts.Base.Script;
+import org.JE.JE2.Objects.Scripts.Script;
 import org.joml.Vector2f;
 
 public class Pathfinding extends Script {

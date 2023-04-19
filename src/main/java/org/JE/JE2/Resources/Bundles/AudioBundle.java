@@ -9,8 +9,7 @@ public class AudioBundle extends ResourceBundle{
     private transient int format;
     private transient int sampleRate;
     private transient int channels;
-
-
+    
     public AudioBundle() {
         soundData = BufferUtils.createShortBuffer(1);
         format = 0;

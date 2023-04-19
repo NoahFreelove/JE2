@@ -1,7 +1,7 @@
 package org.JE.JE2.UI;
 
 import org.JE.JE2.Annotations.GLThread;
-import org.JE.JE2.IO.FileInput.IOUtil;
+import org.JE.JE2.IO.IOUtil;
 import org.JE.JE2.IO.Logging.Errors.IOError;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;

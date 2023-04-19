@@ -11,4 +11,8 @@ public class GarbageCollection {
         float actualMemUsed=Math.abs(afterUsedMem-beforeUsedMem) / 1000000f;
         Logger.log("Garbage Collection: " + actualMemUsed + " mb freed.", true);
     }
+
+    public static float getMemoryUsageMb(){
+        return (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1000000f;
+    }
 }

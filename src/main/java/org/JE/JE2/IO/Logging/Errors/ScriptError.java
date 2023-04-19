@@ -1,6 +1,6 @@
 package org.JE.JE2.IO.Logging.Errors;
 
-import org.JE.JE2.Objects.Scripts.Base.Script;
+import org.JE.JE2.Objects.Scripts.Script;
 
 public class ScriptError extends JE2Error {
     public ScriptError(){

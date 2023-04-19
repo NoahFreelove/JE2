@@ -40,8 +40,6 @@ public class Window {
     public static Pipeline pipeline = new DefaultPipeline();
     private static double deltaTime = 0;
     private static int fpsLimit = 60;
-    public static boolean queuedScene = false;
-    private static boolean waitedFrame = false;
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
@@ -116,6 +114,12 @@ public class Window {
             }
         });
 
+        glfwSetWindowSizeCallback(windowHandle, (windowHandle, width, height) -> {
+            Window.width = width;
+            Window.height = height;
+            Manager.onWindowSizeChange(width,height);
+        });
+
 
 
         glfwSetMouseButtonCallback(windowHandle, (windowHandle, button, action, mods) -> {
@@ -172,8 +176,8 @@ public class Window {
                     false
             );
         }
-        UIHandler.init();
-
+        if(wp.initializeNuklear)
+            UIHandler.init();
 
     }
 
@@ -239,17 +243,6 @@ public class Window {
             if(deltaTime()>= 0.1){
                 deltaTime = 0;
             }
-            if(queuedScene){
-                if(waitedFrame)
-                {
-                    Manager.setQueuedScene();
-                    queuedScene = false;
-                    waitedFrame = false;
-                }
-                else {
-                    waitedFrame = true;
-                }
-            }
         }
     }
 
@@ -261,6 +254,7 @@ public class Window {
             glfwSwapInterval((wp.vSync? 1:0));
             width = wp.windowSize.x();
             height = wp.windowSize.y();
+            Manager.onWindowSizeChange(width,height);
         });
     }
 

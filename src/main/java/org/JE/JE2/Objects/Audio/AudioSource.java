@@ -2,7 +2,7 @@ package org.JE.JE2.Objects.Audio;
 
 import org.JE.JE2.Objects.Audio.Filters.SoundFilter;
 import org.JE.JE2.IO.Logging.Logger;
-import org.JE.JE2.Objects.Scripts.Base.Script;
+import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Resources.Bundles.AudioBundle;
 import org.JE.JE2.Resources.Resource;
 import org.JE.JE2.Window.Window;
@@ -23,8 +23,6 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryStack.stackPop;
 
 public sealed class AudioSource extends Script permits AudioSourcePlayer {
-    private int sourceID;
-
     private Resource<AudioBundle> audioResource;
 
     private transient boolean isPlaying = false;
@@ -61,11 +59,11 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
                 audioResource.getBundle().getSampleRate());
 
         // Generate source
-        sourceID = alGenSources();
-        alSourcei(sourceID, AL10.AL_BUFFER, audioBuffer);
-        alSourcei(sourceID, AL10.AL_LOOPING, loops?1:0);
+        audioResource.setID(alGenBuffers());
+        alSourcei(audioResource.getID(), AL10.AL_BUFFER, audioBuffer);
+        alSourcei(audioResource.getID(), AL10.AL_LOOPING, loops?1:0);
 
-        alSourcei(sourceID, AL_POSITION, 0);
+        alSourcei(audioResource.getID(), AL_POSITION, 0);
 
         setMaxGain(1);
         setGain(1);
@@ -74,7 +72,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
 
     protected void delete(){
-        alDeleteSources(sourceID);
+        alDeleteSources(audioResource.getID());
     }
 
     protected void playSound(){
@@ -82,30 +80,30 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
 
     protected void playAt(int pos){
-        int state = alGetSourcei(sourceID, AL_SOURCE_STATE);
+        int state = alGetSourcei(audioResource.getID(), AL_SOURCE_STATE);
 
         if(state == AL_STOPPED)
         {
             isPlaying = false;
-            alSourcei(sourceID, AL_POSITION, pos);
-            alGetSourcei(sourceID, AL_POSITION);
+            alSourcei(audioResource.getID(), AL_POSITION, pos);
+            alGetSourcei(audioResource.getID(), AL_POSITION);
         }
 
         if(!isPlaying){
-            alSourcePlay(sourceID);
+            alSourcePlay(audioResource.getID());
             isPlaying = true;
         }
     }
 
     protected void stopSound(){
         if(isPlaying){
-            alSourceStop(sourceID);
+            alSourceStop(audioResource.getID());
             isPlaying = false;
         }
     }
 
     public boolean isPlaying() {
-        int state = alGetSourcei(sourceID, AL_SOURCE_STATE);
+        int state = alGetSourcei(audioResource.getID(), AL_SOURCE_STATE);
         return state == AL_PLAYING;
     }
 
@@ -114,7 +112,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
     public void setLoops(boolean loops){
         this.loops = loops;
-        alSourcei(sourceID, AL10.AL_LOOPING, loops?1:0);
+        alSourcei(audioResource.getID(), AL10.AL_LOOPING, loops?1:0);
     }
 
     public void setFilter(SoundFilter filter){
@@ -124,14 +122,14 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
     public void updateFilter(){
         if(filter == null) return;
-        AL10.alSourcei(sourceID, EXTEfx.AL_DIRECT_FILTER, filter.filterHandle);
+        AL10.alSourcei(audioResource.getID(), EXTEfx.AL_DIRECT_FILTER, filter.filterHandle);
     }
     public SoundFilter getFilter(){return filter;}
     public void setGain(float gain){
-        alSourcef(sourceID, AL_GAIN, gain);
+        alSourcef(audioResource.getID(), AL_GAIN, gain);
     }
     public void setMaxGain(float maxGain){
-        alSourcef(sourceID,AL_MAX_GAIN, maxGain);
+        alSourcef(audioResource.getID(),AL_MAX_GAIN, maxGain);
     }
     public int getBufferPosition(){
         // get alError
@@ -139,11 +137,11 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         if(error != AL_NO_ERROR){
             Logger.log("Error: " + error);
         }
-        return alGetSourcei(sourceID, AL_SAMPLE_OFFSET);
+        return alGetSourcei(audioResource.getID(), AL_SAMPLE_OFFSET);
     }
     public void setAttribute3f(int attribute, Vector3f value)
     {
-        alSource3f(sourceID, attribute, value.x, value.y, value.z);
+        alSource3f(audioResource.getID(), attribute, value.x, value.y, value.z);
     }
     public int getSourceSize(){
         IntBuffer size = BufferUtils.createIntBuffer(1);

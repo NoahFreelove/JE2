@@ -2,7 +2,7 @@ package org.JE.JE2.Objects.Lights;
 
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Objects.Scripts.Base.Script;
+import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIElements.Style.Color;

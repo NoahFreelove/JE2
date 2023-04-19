@@ -21,7 +21,7 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
         }
     }
 
-    public AudioSourcePlayer checkExistElseCreate(String name, int ID, String bytePath){
+    public static AudioSourcePlayer checkExistElseCreate(String name, int ID, String bytePath){
         Resource<AudioBundle> resource = (Resource<AudioBundle>) ResourceManager.getIfExists(AudioBundle.class, name, ID);
         if(resource != null){
             return new AudioSourcePlayer(resource, false);

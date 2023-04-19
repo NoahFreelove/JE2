@@ -5,13 +5,16 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
+import org.JE.JE2.Objects.Scripts.CameraEffects.CameraShake;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.DataLoader;
+import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
@@ -20,13 +23,17 @@ import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.GarbageCollection;
+import org.JE.JE2.Utility.NotificationSender;
 import org.JE.JE2.Utility.Settings.Limits.*;
 import org.JE.JE2.Utility.Settings.Setting;
 import org.JE.JE2.Utility.Settings.SettingCategory;
 import org.JE.JE2.Utility.Settings.SettingManager;
+import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
+import java.awt.*;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
@@ -34,34 +41,58 @@ import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 public class Main {
 
     public static void main(String[] args) {
-
-        Manager.start(new WindowPreferences(800,800, "JE2", false, true));
-
+        WindowPreferences preferences = new WindowPreferences(800,800, "JE2", true, true);
+        Manager.start(preferences);
         Logger.logErrors = true;
         Logger.logPetty = true;
+        Manager.setScene(mainScene());
+    }
 
+    public static Scene mainScene(){
         Scene scene = new Scene();
 
+        ResourceManager.warmupAssets(
+                new String[]{
+                        "texture1.png",
+                        "texture1_N.png",
+                        "texture2.png",
+                },
+                new String[]{
+                        "PlayerTexture",
+                        "PlayerNormal",
+                        "floor"
+                },
+                new Class[]{
+                        TextureBundle.class,
+                        TextureBundle.class,
+                        TextureBundle.class
+                });
+
         GameObject player = GameObject.Sprite(ShaderProgram.spriteShaderSHARED,
-                Texture.checkExistElseCreate("PlayerTexture",-1,"texture1.png"),
-                Texture.checkExistElseCreate("PlayerNormal",-1,"texture1_N.png"));
+                Texture.get("PlayerTexture"),
+                Texture.get("PlayerNormal"));
+        Camera playerCam = new Camera();
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
 
         scene.add(PointLight.pointLightObject(new Vector2f(1,-1), new Vector3f(1,1,1), 12, 2f));
 
+        CameraShake cs = new CameraShake();
+
         MovementController mc = new MovementController();
         mc.physicsBased = true;
         mc.canMoveDown = false;
         player.addScript(mc);
-        player.addScript(new Camera());
+        player.addScript(playerCam);
         player.setPosition(2,0 );
-        scene.setCamera(player.getScript(Camera.class));
+        scene.setCamera(playerCam);
+        cs.cameraReference = playerCam;
+        //player.addScript(cs);
 
         //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
 
         Keyboard.addKeyReleasedEvent((key, mods) -> {
-           if(key == Keyboard.nameToCode("E")){
+            if(key == Keyboard.nameToCode("E")){
                 Vector2f pos = new Vector2f(player.getTransform().position());
                 Vector2f mousePos = Mouse.getMouseWorldPosition2D();
                 Vector2f dir = mousePos.sub(pos).normalize();
@@ -88,7 +119,7 @@ public class Main {
         go.getPhysicsBody().defaultDensity = 0.1f;
         go.getPhysicsBody().defaultFriction = 0.05f;
 
-        go.getRenderer().getVAO().setShaderProgram(ShaderProgram.lightSpriteShader());
+        go.getRenderer().getVAO().setShaderProgram(ShaderProgram.spriteShader());
         go.getRenderer().getVAO().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
         go.getRenderer().setDrawMode(GL_LINE_LOOP);
@@ -101,7 +132,6 @@ public class Main {
         scene.add(FloorFactory.createFloor(new Vector2f(-3,-3), new Vector2f(1,4)));
         scene.add(FloorFactory.createFloor(new Vector2f(-2,1), new Vector2f(6,1)));
 
-        Manager.setScene(scene);
 
         SettingManager settingManager = new SettingManager(new SettingCategory("Settings"));
 
@@ -139,6 +169,11 @@ public class Main {
             if(key == Keyboard.nameToCode("F4")){
                 GarbageCollection.takeOutDaTrash();
             }
+            if(key == Keyboard.nameToCode("F5")){
+                Manager.setWindowPreferences(new WindowPreferences(2000,2000,"JE2"));
+            }
         });
+
+        return scene;
     }
 }

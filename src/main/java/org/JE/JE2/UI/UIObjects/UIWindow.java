@@ -61,6 +61,10 @@ public class UIWindow extends UIObject {
         window = NkStyleWindow.create();
     }
 
+    public void hideBar(){
+        windowOptions = 0;
+    }
+
     @Override
     public void update() {
 

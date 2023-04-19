@@ -2,7 +2,7 @@
  * Copyright LWJGL. All rights reserved.
  * License terms: https://www.lwjgl.org/license
  */
-package org.JE.JE2.IO.FileInput;
+package org.JE.JE2.IO;
 
 import org.lwjgl.*;
 

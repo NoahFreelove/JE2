@@ -9,6 +9,8 @@ import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Resources.Bundles.ResourceBundle;
+import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.ResourceLoadingPolicy;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.Scene.Scene;
@@ -19,8 +21,20 @@ public class ObjectStressTest {
     public static void main(String[] args) {
         int maxObjects = 100;
         ResourceManager.policy = ResourceLoadingPolicy.CHECK_BY_NAME;
-
         Manager.start(new WindowPreferences(800,800, "JE2", false, true));
+
+        ResourceManager.warmupAssets(
+                new String[]{"texture1.png",
+                        "texture1_N.png"
+                },
+                new String[]{
+                        "player",
+                        "player_normal"
+                },
+                new Class[]{
+                        TextureBundle.class,
+                        TextureBundle.class
+                });
 
         Logger.logErrors = true;
         Logger.logPetty = true;
@@ -31,16 +45,11 @@ public class ObjectStressTest {
         activeScene.setCamera(cam);
         activeScene.add(cameraRig);
 
-
-
-        Keyboard.addKeyReleasedEvent(new KeyReleasedEvent() {
-            @Override
-            public void invoke(int key, int mods) {
-                for (int i = 0; i < maxObjects; i++) {
-                    //Vector2f offset = new Vector2f(i * 0.033f, i * 0.33f);
-                    Vector2f offset = new Vector2f(-3 + i * 0.1f,-3 + i * 0.1f);
-                    activeScene.add(objectFactory(offset));
-                }
+        Keyboard.addKeyReleasedEvent((key, mods) -> {
+            for (int i = 0; i < maxObjects; i++) {
+                //Vector2f offset = new Vector2f(i * 0.033f, i * 0.33f);
+                Vector2f offset = new Vector2f(-3 + i * 0.1f,-3 + i * 0.1f);
+                activeScene.add(objectFactory(offset));
             }
         });
 
