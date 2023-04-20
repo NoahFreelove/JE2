@@ -1,0 +1,57 @@
+/*use nice font*/
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+/*apply font to headers*/
+h1, h2, h3, h4, h5, h6,body,p,div,summary,a,li {
+    font-family: 'Roboto', sans-serif;
+}
+
+#summary {
+    border-radius: 10px;
+    border: 1px solid #444444;
+    padding: 10px;
+    margin: 5px;
+    background-color: #c2c2c2;
+}
+
+#fields
+{
+    border-radius: 10px;
+    border: 1px solid #444444;
+    padding: 10px;
+    margin: 5px;
+    background-color: #f9f9f9;
+}
+
+#methods{
+    border-radius: 10px;
+    border: 1px solid #444444;
+    padding: 10px;
+    margin: 5px;
+    background-color: #f9f9f9;
+}
+
+.methodBox{
+    border-radius: 10px;
+    border: 1px solid #444444;
+    padding: 10px;
+    margin: 5px;
+    background-color: #a1a1a1;
+}
+
+.fieldBox{
+    border-radius: 10px;
+    border: 1px solid #444444;
+    padding: 10px;
+    margin: 5px;
+    background-color: #a1a1a1;
+}
+
+#otherInfo
+{
+    border-radius: 10px;
+    border: 1px solid #444444;
+    padding: 10px;
+    margin: 5px;
+    background-color: #f9f9f9;
+}
