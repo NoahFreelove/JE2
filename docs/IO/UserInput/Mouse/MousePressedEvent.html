@@ -4,31 +4,31 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>JE2 IO.UserInput.Keyboard.KeyReleasedEvent</title>
+  <title>JE2 IO.UserInput.Mouse.MousePressedEvent</title>
 </head>
 <body>
 <h1>JE2 Documentation</h1>
 
-<h1><a href="keyboard_index.html">Keyboard</a></h1>
+<h1><a href="mouse_index.html">Mouse</a></h1>
 
-<h2>KeyReleasedEvent</h2>
+<h2>MousePressedEvent</h2>
 
 <p>Interface</p>
 
 <div id="summary">
   <h3>Summary</h3>
   <p>
-    The KeyReleasedEvent interface lets you add key release events
-    to the Keyboard class. These events will be invoked every time a key is released.
+    The MousePressedEvent interface lets you add mouse press events
+    to the Mouse class. These events will be invoked every time a mouse button is pressed.
   </p>
 </div>
 
 <div id="methods">
   <h3>Methods</h3>
   <div>
-    <div class="methodBox"><h4>void invoke(int key, int mods)</h4>
+    <div class="methodBox"><h4>void invoke(MouseButton button, int mods)</h4>
       <p>
-        key - the keycode to invoke.
+        button - the mouse button to invoke.
         mods - any modifiers like ctr, alt, shift.
       </p>
     </div>
