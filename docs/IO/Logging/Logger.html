@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../../index.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JE2 IO.Logging.Logger</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="logging.html">Logging</a></h1>
+
+<h2>Logger</h2>
+
+<p><small>Modifiers:<br/>Public</small></p>
+
+<div id="summary">
+    <h3>Summary</h3>
+    <p>
+        The Logger is a way to log events that happen in the engine in an organized way.
+        The Logger allows you to have different levels of logging and disable it altogether.
+    </p>
+</div>
+
+<div id="methods">
+    <h3>Methods</h3>
+    <div>
+        <div class="methodBox"><h4>void log(String message, boolean petty)</h4>
+            <p>
+                message - The message to log<br/>
+                petty - Is this spam?
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(String message)</h4>
+            <p>
+                message - The message to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(float f)</h4>
+            <p>
+                f - The float to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(int i)</h4>
+            <p>
+                i - The int to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(double d)</h4>
+            <p>
+                d - The double to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(boolean b)</h4>
+            <p>
+                b - The boolean to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(char c)</h4>
+            <p>
+                c - The character to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(Object o)</h4>
+            <p>
+                o - The Object to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(JE2Error error)</h4>
+            <p>
+                error - The error to log
+            </p>
+        </div>
+        <div class="methodBox"><h4>void log(JE2Error error, boolean petty)</h4>
+            <p>
+                error - The error to log<br/>
+                petty- Is this spam?
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="fields">
+    <h3>Fields</h3>
+    <div>
+        <div class="fieldBox"><h4>public static boolean throwErrors</h4>
+            <p>
+                Should the program stop when an error is logged?
+            </p>
+        </div>
+        <div class="fieldBox"><h4>public static boolean logErrors</h4>
+            <p>
+                Should errors be logged or ignored?
+            </p>
+        </div>
+        <div class="fieldBox"><h4>public static boolean enableIgnoreList</h4>
+            <p>
+                Enables the ignoreList which checks if certain classes are blacklisted from logging.<br/>
+                <small>May have performance hit!</small>
+            </p>
+        </div>
+        <div class="fieldBox"><h4>public static ArrayList&lt;Class&lt;?&gt;&gt; ignoreList</h4>
+            <p>
+                List of classes to ignore if they attempt to log a message.
+            </p>
+        </div>
+        <div class="fieldBox"><h4>public static boolean log</h4>
+            <p>
+                Should anything be logged?
+            </p>
+        </div>
+        <div class="fieldBox"><h4>public static boolean logPetty</h4>
+            <p>
+                Should spam be logged?
+            </p>
+        </div>
+        <div class="fieldBox"><h4>public static boolean showTime</h4>
+            <p>
+                Should a timestamp be in the logs?
+            </p>
+        </div>
+        <div class="fieldBox"><h4>public static boolean stackTrace</h4>
+            <p>
+                Should the caller of the log method be included in the log?
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="otherInfo">
+    <h3>Other Info</h3>
+    <div>Some info</div>
+</div>
+</body>
+</html>
