@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../../../index.css">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JE2 IO.UserInput.Keyboard</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="keyboard.html">Keyboard</a></h1>
+
+<h2>Keyboard</h2>
+
+<p>Class</p>
+
+<div id="summary">
+  <h3>Summary</h3>
+  <p>
+    The keyboard class facilitates all keyboard input for the engine.
+    You can check if specific keys are pressed or add events for when any keys are pressed/released.
+  </p>
+</div>
+
+<div id="methods">
+  <h3>Methods</h3>
+  <div>
+    <div class="methodBox"><h4>public static void addKeyPressedEvent(KeyPressedEvent event)</h4>
+      <p>
+        Adds a key pressed event.
+      </p>
+    </div>
+
+    <div class="methodBox"><h4>public static void addKeyReleasedEvent(KeyReleasedEvent event)</h4>
+      <p>
+        Adds a key released event.
+      </p>
+    </div>
+    <div class="methodBox"><h4>public static void removeKeyPressedEvent(KeyPressedEvent event)</h4>
+      <p>
+        Removes a key pressed event.
+      </p>
+    </div>
+    <div class="methodBox"><h4>public static void triggerKeyPressed(int code, int mods)</h4>
+        <p>
+          Simulates a key press
+        </p>
+    </div>
+    <div class="methodBox"><h4>public static void triggerKeyReleased(int code, int mods)</h4>
+        <p>
+          Simulates a key release
+        </p>
+    </div>
+    <div class="methodBox"><h4>public static void triggerKeyRepeat(int code, int mods)</h4>
+        <p>
+          Simulates holding a key down
+        </p>
+    </div>
+    <div class="methodBox"><h4>public static void triggerKey(int code, int mods)</h4>
+        <p>
+          Simulates a key press and release
+        </p>
+    </div>
+    <div class="methodBox"><h4>private static void onPaste(String str)</h4>
+        <p>
+          Sends clipboard info to the nuklear library
+        </p>
+    </div>
+    <div class="methodBox"><h4>public static void pasteClipboard()</h4>
+        <p>
+          Paste current clipboard content
+        </p>
+    </div>
+    <div class="methodBox"><h4>public static void copyToClipboard(String str)</h4>
+        <p>
+          Send a string to the clipboard`
+        </p>
+    </div>
+    <div class="methodBox"><h4>private static void keyPressed(int code)</h4>
+        <p>
+          Updates keys array at the given code index to true
+        </p>
+    </div>
+    <div class="methodBox"><h4>private static void keyReleased(int code)</h4>
+    <p>
+      Updates keys array at the given code index to false
+    </p>
+    </div>
+    <div class="methodBox"><h4>public static boolean within(int min, int max, int v)</h4>
+        <p>
+          returns true if v is within the range of min and max
+        </p>
+        </div>
+    </div>
+    <div class="methodBox"><h4>public static boolean isKeyPressed(int code)</h4>
+        <p>
+          returns true if the key code is pressed
+        </p>
+        </div>
+    </div>
+
+    <div class="methodBox"><h4>public static boolean isComboPressed(KeyCombo combo)</h4>
+        <p>
+          returns true if the key combo is pressed
+        </p>
+    </div>
+
+    <div class="methodBox"><h4>public static int nameToCode(String keyName)</h4>
+        <p>
+          returns the code of the key name. Ex. A-&gt;65
+        </p>
+    </div>
+
+    <div class="methodBox"><h4>public static String codeToName(int keyCode)</h4>
+        <p>
+          returns the name of the key code. Ex. 65-&gt;A
+        </p>
+    </div>
+</div>
+</div>
+
+<div id="fields">
+  <h3>Fields</h3>
+  <div>
+    <div class="fieldBox"><h4>public static boolean ignoreCopyPasteKeys</h4>
+      <p>
+        Set to true if you would like to ignore ctrl+c and ctrl+v inputs
+      </p>
+    </div>
+    <div class="fieldBox"><h4>public static boolean disableInput</h4>
+        <p>
+            Set to true if you would like to ignore all keyboard input.
+            For example if you don't want the player to move during loading sequences you would set this to true.
+        </p>
+      </div>
+  </div>
+
+  <div class="fieldBox"><h4>private static final ArrayList&lt;KeyPressedEvent&gt; keyPressedEvents</h4>
+    <p>
+      Arraylist of all key pressed events. All events will be triggered every key press.
+    </p>
+  </div>
+
+  <div class="fieldBox"><h4>private static final ArrayList&lt;KeyReleasedEvent&gt; keyReleasedEvents</h4>
+    <p>
+      Arraylist of all key pressed events. All events will be triggered every key press.
+    </p>
+  </div>
+
+  <div class="fieldBox"><h4>private static final boolean[] keys</h4>
+    <p>
+      1024 booleans that hold the status of a given keycode being pressed.
+      Ex. index 65 being true would corrospond to A being pressed.
+    </p>
+  </div>
+</div>
+
+<div id="otherInfo">
+  <h3>Other Info</h3>
+  <div>Some info</div>
+</div>
+</body>
+</html>
