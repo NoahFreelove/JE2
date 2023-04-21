@@ -124,9 +124,35 @@
 <div id="fields">
   <h3>Fields</h3>
   <div>
-    <div class="fieldBox"><h4>String fieldName</h4>
+    <div class="fieldBox"><h4>private static float x</h4>
       <p>
-        field description
+        X position of mouse.
+      </p>
+    </div>
+    <div class="fieldBox"><h4>private static float y</h4>
+      <p>
+        Y position of mouse.
+      </p>
+    </div>
+    <div class="fieldBox"><h4>public static boolean disableInput</h4>
+      <p>
+        Set this to true if you'd like to disable mouse button input.
+      </p>
+    </div>
+    <div class="fieldBox"><h4>private static final ArrayList&lt;MousePressedEvent&gt; mousePressedEvents</h4>
+      <p>
+        Collection of all mouse press events. All will run whenever a mouse button is pressed.
+      </p>
+    </div>
+    <div class="fieldBox"><h4>private static final ArrayList&lt;MouseReleasedEvent&gt; mouseReleasedEvents</h4>
+      <p>
+        Collection of all mouse release events. All will run whenever a mouse button is released.
+      </p>
+    </div>
+    <div class="fieldBox"><h4>private static final boolean[] buttons</h4>
+      <p>
+        Holds the press states of mouse buttons.
+        Ex. index 0 is mouse button 0's press state
       </p>
     </div>
   </div>
