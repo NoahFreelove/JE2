@@ -1,6 +1,9 @@
 # JEngine 2
 An OpenGL upgrade of JEngine, a JavaFX based game engine.
 
+## Documentation
+You can find all the JEngine 2 documentation [here](https://noahfreelove.github.io/JE2/)
+
 ## Features
 - Easy setup✅
 - 2D vertex rendering ✅
