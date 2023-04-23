@@ -13,7 +13,7 @@ public class WorldSound extends AudioSourcePlayer {
         Vector2f worldPos = getAttachedObject().getTransform().position();
         Vector3f distance = new Vector3f(worldPos.x - cameraPos.x, worldPos.y - cameraPos.y,0);
         // Calculate rolloff
-        float rolloff = 1 / (distance.length() * distance.length()) * range;
+        float rolloff = 1 / (distance.length() * distance.length()) * 1;
         // if past range, set to 0
         if(rolloff > 1)
             rolloff = -1;

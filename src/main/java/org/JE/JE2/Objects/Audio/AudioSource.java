@@ -39,7 +39,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
 
     protected AudioSource(Resource<AudioBundle> bundleResource){
-
+        this.audioResource = bundleResource;
     }
 
     public AudioSource setAudio(Resource<AudioBundle> resource){
@@ -125,6 +125,9 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         AL10.alSourcei(audioResource.getID(), EXTEfx.AL_DIRECT_FILTER, filter.filterHandle);
     }
     public SoundFilter getFilter(){return filter;}
+    public void removeFilter(){
+        setFilter(new SoundFilter());
+    }
     public void setGain(float gain){
         alSourcef(audioResource.getID(), AL_GAIN, gain);
     }

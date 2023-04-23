@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../../../index.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JE2 Objects.Audio.Filters.IntensityFilter</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="filters.html">Filters</a></h1>
+
+<h2>
+    <qualifiers>public abstract class</qualifiers>
+    <field>IntensityFilter</field>
+    <qualifiers>extends</qualifiers>
+    <a href="SoundFilter.html"><field>SoundFilter</field></a>
+</h2>
+
+<div id="summary">
+    <h3>Summary</h3>
+    <p>
+        Abstract audio filter which can vary based on an intensity value.
+    </p>
+</div>
+
+<div id="constructors">
+    <h3>Constructors</h3>
+    <div>
+        <div class="constructorBox"><h4><qualifiers>public</qualifiers>
+            <method>IntensityFilter</method>()</h4>
+            <p>
+                returns a new instance
+            </p>
+        </div>
+        <div class="constructorBox"><h4><qualifiers>public</qualifiers>
+            <method>IntensityFilter</method>(<field>float intensity</field>)</h4>
+            <p>
+                returns a new instance
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="methods">
+    <h3>Methods</h3>
+    <div>
+        <div class="methodBox"><h4><qualifiers>protected float</qualifiers> <method>simpleClamp</method>(<field>float f</field>)</h4>
+            <p>
+                Clamps the intensity value between 0 and 1
+            </p>
+        </div>
+        <div class="methodBox"><h4><qualifiers>public float</qualifiers> <method>getIntensity</method>()</h4>
+            <p>
+                Returns the intensity of the filter
+            </p>
+        </div>
+        <div class="methodBox"><h4><qualifiers>public void</qualifiers> <method>setIntensity</method>(<field>float intensity</field>)</h4>
+            <p>
+                Sets the intensity of the filter
+            </p>
+        </div>
+        <div class="methodBox"><h4><qualifiers>protected abstract void</qualifiers> <method>intensityUpdate</method>(<field>float newIntensity</field>)</h4>
+            <p>
+                Called when the intensity is updated, for subclasses to implement.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="fields">
+    <h3>Fields</h3>
+    <div>
+        <div class="fieldBox"><h4><qualifiers>protected</qualifiers> <field>float intensity</field></h4>
+            <p>
+                The intensity of the filter.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="otherInfo">
+    <h3>Other Info</h3>
+    <div>No additional info.</div>
+</div>
+</body>
+</html>

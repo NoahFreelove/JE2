@@ -11,9 +11,7 @@
 
 <h1><a href="logging.html">Logging</a></h1>
 
-<h2>Logger</h2>
-
-<p><small>Modifiers:<br/>Public</small></p>
+<h2><qualifiers>public class</qualifiers> <field>Logger</field></h2>
 
 <div id="summary">
     <h3>Summary</h3>
@@ -26,53 +24,53 @@
 <div id="methods">
     <h3>Methods</h3>
     <div>
-        <div class="methodBox"><h4>void log(String message, boolean petty)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>String message</field>, <field>boolean petty</field>)</h4>
             <p>
                 message - The message to log<br/>
                 petty - Is this spam?
             </p>
         </div>
-        <div class="methodBox"><h4>void log(String message)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>String message</field>)</h4>
             <p>
                 message - The message to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(float f)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>float f</field>)</h4>
             <p>
                 f - The float to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(int i)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>int i</field>)</h4>
             <p>
                 i - The int to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(double d)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>double d</field>)</h4>
             <p>
                 d - The double to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(boolean b)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>boolean b</field>)</h4>
             <p>
                 b - The boolean to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(char c)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>char c</field>)</h4>
             <p>
                 c - The character to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(Object o)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>Object o</field>)</h4>
             <p>
                 o - The Object to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(JE2Error error)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>JE2Error error</field>)</h4>
             <p>
                 error - The error to log
             </p>
         </div>
-        <div class="methodBox"><h4>void log(JE2Error error, boolean petty)</h4>
+        <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>log</method>(<field>JE2Error error</field>, <field>boolean petty</field>)</h4>
             <p>
                 error - The error to log<br/>
                 petty- Is this spam?
@@ -84,43 +82,43 @@
 <div id="fields">
     <h3>Fields</h3>
     <div>
-        <div class="fieldBox"><h4>public static boolean throwErrors</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean throwErrors</field></h4>
             <p>
                 Should the program stop when an error is logged?
             </p>
         </div>
-        <div class="fieldBox"><h4>public static boolean logErrors</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean logErrors</field></h4>
             <p>
                 Should errors be logged or ignored?
             </p>
         </div>
-        <div class="fieldBox"><h4>public static boolean enableIgnoreList</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean enableIgnoreList</field></h4>
             <p>
                 Enables the ignoreList which checks if certain classes are blacklisted from logging.<br/>
                 <small>May have performance hit!</small>
             </p>
         </div>
-        <div class="fieldBox"><h4>public static ArrayList&lt;Class&lt;?&gt;&gt; ignoreList</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>ArrayList&lt;Class&lt;?&gt;&gt; ignoreList</field></h4>
             <p>
                 List of classes to ignore if they attempt to log a message.
             </p>
         </div>
-        <div class="fieldBox"><h4>public static boolean log</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean log</field></h4>
             <p>
                 Should anything be logged?
             </p>
         </div>
-        <div class="fieldBox"><h4>public static boolean logPetty</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean logPetty</field></h4>
             <p>
                 Should spam be logged?
             </p>
         </div>
-        <div class="fieldBox"><h4>public static boolean showTime</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean showTime</field></h4>
             <p>
                 Should a timestamp be in the logs?
             </p>
         </div>
-        <div class="fieldBox"><h4>public static boolean stackTrace</h4>
+        <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean stackTrace</field></h4>
             <p>
                 Should the caller of the log method be included in the log?
             </p>

@@ -11,9 +11,7 @@
 
 <h1><a href="mouse_index.html">Mouse</a></h1>
 
-<h2>Mouse</h2>
-
-<p>Class</p>
+<h2><qualifiers>public class</qualifiers> <field>Mouse</field></h2>
 
 <div id="summary">
   <h3>Summary</h3>
@@ -27,92 +25,92 @@
 <div id="methods">
   <h3>Methods</h3>
   <div>
-    <div class="methodBox"><h4>public static void addMousePressedEvent(MousePressedEvent event)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>addMousePressedEvent</method>(<field>MousePressedEvent event</field>)</h4>
       <p>
         Adds a mouse press event
       </p>
     </div>
-    <div class="methodBox"><h4>public static void addMouseReleasedEvent(MouseReleasedEvent event)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>addMouseReleasedEvent</method>(<field>MouseReleasedEvent event</field>)</h4>
       <p>
         Adds a mouse release event
       </p>
     </div>
-    <div class="methodBox"><h4>public static void removeMousePressedEvent(MousePressedEvent event)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>removeMousePressedEvent</method>(<field>MousePressedEvent event</field>)</h4>
       <p>
         Removes a mouse press event
       </p>
     </div>
-    <div class="methodBox"><h4>public static void removeMouseReleasedEvent(MouseReleasedEvent event)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>removeMouseReleasedEvent</method>(<field>MouseReleasedEvent event</field>)</h4>
       <p>
         Removes a mouse release event
       </p>
     </div>
-    <div class="methodBox"><h4>public static void triggerMouseMoved(float x, float y)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>triggerMouseMoved</method>(<field>float x</field>, <field>float y</field>)</h4>
       <p>
         Sets the x and y position of the mouse
       </p>
     </div>
-    <div class="methodBox"><h4>public static Vector2f getMousePosition()</h4>
+    <div class="methodBox"><h4><qualifiers>public static Vector2f</qualifiers> <method>getMousePosition</method>()</h4>
       <p>
         returns the position of the mouse relative to the window
       </p>
     </div>
-    <div class="methodBox"><h4>public static float getX()</h4>
+    <div class="methodBox"><h4><qualifiers>public static float</qualifiers> <method>getX</method>()</h4>
       <p>
         returns the x position of the mouse relative to the window
       </p>
     </div>
-    <div class="methodBox"><h4>public static float getY()</h4>
+    <div class="methodBox"><h4><qualifiers>public static float</qualifiers> <method>getY</method>()</h4>
       <p>
         returns the y position of the mouse relative to the window
       </p>
     </div>
-    <div class="methodBox"><h4>public static void triggerMousePressed(MouseButton button, int mods)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>triggerMousePressed</method>(<field>MouseButton button</field>, <field>int mods</field>)</h4>
       <p>
         Simulates a mouse press
       </p>
     </div>
-    <div class="methodBox"><h4>public static void triggerMouseReleased(MouseButton button, int mods)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>triggerMouseReleased</method>(<field>MouseButton button</field>, <field>int mods</field>)</h4>
       <p>
         Simulates a mouse release
       </p>
     </div>
-    <div class="methodBox"><h4>public static void triggerMouseClick(MouseButton button, int mods)</h4>
+    <div class="methodBox"><h4><qualifiers>public static void</qualifiers> <method>triggerMouseClick</method>(<field>MouseButton button</field>, <field>int mods</field>)</h4>
       <p>
         Simulates a mouse press and release
       </p>
     </div>
-    <div class="methodBox"><h4>private static void mousePressed(int button)</h4>
+    <div class="methodBox"><h4><qualifiers>private static void</qualifiers> <method>mousePressed</method>(<field>int button</field>)</h4>
       <p>
         Sets the button array at index button to true
       </p>
     </div>
 
-    <div class="methodBox"><h4>private static void mouseReleased(int button)</h4>
+    <div class="methodBox"><h4><qualifiers>private static void</qualifiers> <method>mouseReleased</method>(<field>int button</field>)</h4>
       <p>
         Sets the button array at index button to false
       </p>
     </div>
 
-    <div class="methodBox"><h4>public static boolean isPressed(int button)</h4>
+    <div class="methodBox"><h4><qualifiers>public static boolean</qualifiers> <method>isPressed</method>(<field>int button</field>)</h4>
       <p>
         returns true if the button is pressed
       </p>
     </div>
 
-    <div class="methodBox"><h4>public static int nameToCode(String buttonName)</h4>
+    <div class="methodBox"><h4><qualifiers>public static int</qualifiers> <method>nameToCode</method>(<field>String buttonName</field>)</h4>
       <p>
         Converts a name to a button code.
         Ex. "LEFT" -&gt; 0
       </p>
     </div>
 
-    <div class="methodBox"><h4>public static Vector2f getMouseWorldPosition2D()</h4>
+    <div class="methodBox"><h4><qualifiers>public static Vector2f</qualifiers> <method>getMouseWorldPosition2D</method>()</h4>
       <p>
         returns getMousePosition2D(Camera c) with the currently active scene camera.
       </p>
     </div>
-    <div class="methodBox"><h4>public static Vector2f getMouseWorldPosition2D(Camera c)</h4>
+    <div class="methodBox"><h4><qualifiers>public static Vector2f</qualifiers> <method>getMouseWorldPosition2D</method>(<field>Camera c</field>)</h4>
       <p>
         Gets the mouse's position in world space. This is achieved through matrix transformations.
         Somewhat expensive to call.
@@ -124,32 +122,32 @@
 <div id="fields">
   <h3>Fields</h3>
   <div>
-    <div class="fieldBox"><h4>private static float x</h4>
+    <div class="fieldBox"><h4><qualifiers>private static</qualifiers> <field>float x</field></h4>
       <p>
         X position of mouse.
       </p>
     </div>
-    <div class="fieldBox"><h4>private static float y</h4>
+    <div class="fieldBox"><h4><qualifiers>private static</qualifiers> <field>float y</field></h4>
       <p>
         Y position of mouse.
       </p>
     </div>
-    <div class="fieldBox"><h4>public static boolean disableInput</h4>
+    <div class="fieldBox"><h4><qualifiers>public static</qualifiers> <field>boolean disableInput</field></h4>
       <p>
         Set this to true if you'd like to disable mouse button input.
       </p>
     </div>
-    <div class="fieldBox"><h4>private static final ArrayList&lt;MousePressedEvent&gt; mousePressedEvents</h4>
+    <div class="fieldBox"><h4><qualifiers>private static final</qualifiers> <field>ArrayList&lt;MousePressedEvent&gt; mousePressedEvents</field></h4>
       <p>
         Collection of all mouse press events. All will run whenever a mouse button is pressed.
       </p>
     </div>
-    <div class="fieldBox"><h4>private static final ArrayList&lt;MouseReleasedEvent&gt; mouseReleasedEvents</h4>
+    <div class="fieldBox"><h4><qualifiers>private static final</qualifiers> <field>ArrayList&lt;MouseReleasedEvent&gt; mouseReleasedEvents</field></h4>
       <p>
         Collection of all mouse release events. All will run whenever a mouse button is released.
       </p>
     </div>
-    <div class="fieldBox"><h4>private static final boolean[] buttons</h4>
+    <div class="fieldBox"><h4><qualifiers>private static final</qualifiers> <field>boolean[] buttons</field></h4>
       <p>
         Holds the press states of mouse buttons.
         Ex. index 0 is mouse button 0's press state

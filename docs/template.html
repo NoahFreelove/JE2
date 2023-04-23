@@ -11,9 +11,10 @@
 
 <h1><a href="index.html">Upper Package Name</a></h1>
 
-<h2>ClassName</h2>
-
-<p>ClassType</p>
+<h2>
+  <qualifiers>public class</qualifiers>
+  <field>ClassName</field>
+</h2>
 
 <div id="summary">
   <h3>Summary</h3>
@@ -22,10 +23,21 @@
   </p>
 </div>
 
+<div id="constructors">
+  <h3>Constructors</h3>
+  <div>
+    <div class="constructorBox"><h4><qualifiers>public</qualifiers> <method>ClassName</method>(<field>String arg</field>)</h4>
+      <p>
+        returns a new instance
+      </p>
+    </div>
+  </div>
+</div>
+
 <div id="methods">
   <h3>Methods</h3>
   <div>
-    <div class="methodBox"><h4>String method()</h4>
+    <div class="methodBox"><h4><qualifiers>public String</qualifiers> <method>method</method>()</h4>
       <p>
         method description
       </p>
@@ -36,7 +48,7 @@
 <div id="fields">
   <h3>Fields</h3>
   <div>
-    <div class="fieldBox"><h4>String fieldName</h4>
+    <div class="fieldBox"><h4><qualifiers>public</qualifiers><field>String fieldName</field></h4>
       <p>
         field description
       </p>

@@ -43,11 +43,6 @@ public abstract class Light extends Script {
         shaderProgram.setUniform1f("lights[" + index + "].intensity", 0);
     }
 
-    public Light setColor(Color c){
-        this.color = c;
-        return this;
-    }
-
     @GLThread
     protected abstract void setLightSpecific(ShaderProgram shaderProgram, int index);
 
@@ -59,5 +54,10 @@ public abstract class Light extends Script {
     @Override
     public void start() {
         Manager.activeScene().addLight(this);
+    }
+
+    public Light setColor(Color c){
+        this.color = c;
+        return this;
     }
 }

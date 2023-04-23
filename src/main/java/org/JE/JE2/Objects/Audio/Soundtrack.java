@@ -11,10 +11,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Soundtracks are meant for world ambiance. You can switch between tracks as you please.
  */
 public class Soundtrack {
-    CopyOnWriteArrayList<AudioSourcePlayer> trackList = new CopyOnWriteArrayList<>();
-    int currentTrack = 0;
-    AudioSourcePlayer activeTrack;
-    Watcher trackEndWatcher = () -> {
+    private CopyOnWriteArrayList<AudioSourcePlayer> trackList = new CopyOnWriteArrayList<>();
+    private int currentTrack = 0;
+    private AudioSourcePlayer activeTrack;
+    private Watcher trackEndWatcher = () -> {
         if(activeTrack.getDecimal() >=0.999f)
         {
             nextTrack();

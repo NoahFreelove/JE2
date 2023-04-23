@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../../index.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JE2 Objects.Lights.Light</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="lights.html">Lights</a></h1>
+
+<h2>
+    <qualifiers>public abstract class</qualifiers>
+    <field>Light</field>
+    <qualifiers>extends</qualifiers>
+    <a href="../Scripts/Script.html"><field>Script</field></a>
+</h2>
+
+<div id="summary">
+    <h3>Summary</h3>
+    <p>
+        The light class is the base class for all lights. It is an abstract class and cannot be instantiated.
+        Lights only affect objects which have a shader that supports lighting.
+    </p>
+</div>
+
+<div id="constructors">
+    <h3>Constructors</h3>
+    <div>
+        <div class="constructorBox"><h4><qualifiers>public</qualifiers> <method>Light</method>(<field>Color color</field>, <field>float intensity</field>, <field>int type</field>)</h4>
+            <p>
+                returns a new instance of Light.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="methods">
+    <h3>Methods</h3>
+    <div>
+        <div class="methodBox"><h4><annotation>@GLThread</annotation> <qualifiers>public final void</qualifiers> <method>setLighting</method>(<field>ShaderProgram shaderProgram</field>, <field>int index</field>)</h4>
+            <p>
+                Sets the base light shader properties like position, color, intensity, and type.
+            </p>
+        </div>
+        <div class="methodBox"><h4><annotation>@GLThread</annotation> <qualifiers>public final void</qualifiers> <method>hideLighting</method>(<field>ShaderProgram shaderProgram</field>, <field>int index</field>)</h4>
+            <p>
+                Sets the light properties that make it invisible.
+            </p>
+        </div>
+        <div class="methodBox"><h4><annotation>@GLThread</annotation> <qualifiers>protected abstract void</qualifiers> <method>setLightSpecific</method>(<field>ShaderProgram shaderProgram</field>, <field>int index</field>)</h4>
+            <p>
+                For use by subclasses to set light specific properties.
+            </p>
+        </div>
+        <div class="methodBox"><h4><annotation>@Override</annotation> <qualifiers>public void</qualifiers> <method>gameObjectAddedToScene</method>(<field>Scene scene</field>)</h4>
+            <p>
+                Adds the light to the scene when the parent game object is added to the scene.
+            </p>
+        </div>
+        <div class="methodBox"><h4><annotation>@Override</annotation> <qualifiers>public void</qualifiers> <method>start</method>()</h4>
+            <p>
+                Adds the light to the scene when the parent game object starts.
+            </p>
+        </div>
+        <div class="methodBox"><h4><qualifiers>public Light</qualifiers> <method>setColor</method>(<field>Color c</field>)</h4>
+            <p>
+                Sets the color of the light.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="fields">
+    <h3>Fields</h3>
+    <div>
+        <div class="fieldBox"><h4><qualifiers>public</qualifiers> <field>Vector2f boundPos</field></h4>
+            <p>
+                The position of the bound in 2d space.
+            </p>
+        </div>
+        <div class="fieldBox"><h4><qualifiers>public</qualifiers> <field>Vector2f boundSize</field></h4>
+            <p>
+                The size of the bound.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="otherInfo">
+    <h3>Other Info</h3>
+    <div>No additional info.</div>
+</div>
+</body>
+</html>

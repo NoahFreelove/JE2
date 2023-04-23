@@ -9,7 +9,6 @@ import org.JE.JE2.Scene.World;
 
 public non-sealed class AudioSourcePlayer extends AudioSource {
     private World worldRef;
-    public float range = 1f;
 
     public AudioSourcePlayer(){}
 
@@ -44,6 +43,11 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
         stopSound();
     }
 
+    public void restart(){
+        stopSound();
+        playSound();
+    }
+
     @Override
     public void destroy(){
         stopSound();
@@ -54,11 +58,6 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
     @Override
     public void unload(Scene oldScene, Scene newScene){
         stopSound();
-    }
-
-    public void restart(){
-        stopSound();
-        playSound();
     }
 
     @Override

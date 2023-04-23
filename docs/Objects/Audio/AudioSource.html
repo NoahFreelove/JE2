@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../../index.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JE2 Objects.Audio.AudioSource</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="audio.html">Audio</a></h1>
+
+<h2>
+    <qualifiers>public sealed class</qualifiers>
+    <field>AudioSource</field>
+    <qualifiers>extends</qualifiers>
+    <a href="../Scripts/Script.html"><field>Script</field></a>
+    <qualifiers>permits</qualifiers>
+    <a href="AudioSourcePlayer.html"><field>AudioSourcePlayer</field></a>
+
+</h2>
+
+<div id="summary">
+    <h3>Summary</h3>
+    <p>
+        The audio source manages the audio resource (ex. the byte buffer) and the OpenAL playback.
+        The audio source cannot be directly instantiated, but must be created by through the AudioSourcePlayer.
+    </p>
+</div>
+
+<div id="constructors">
+    <h3>Constructors</h3>
+    <div>
+        <div class="constructorBox"><h4><qualifiers>protected</qualifiers> <method>AudioSource</method>()</h4>
+            <p>
+                returns a new instance of AudioSource
+            </p>
+        </div>
+
+        <div class="constructorBox"><h4> <qualifiers>protected</qualifiers> <method>AudioSource</method>(<field>Resource&lt;AudioBundle&gt; bundleResource</field>)</h4>
+            <p>
+                returns a new instance of AudioSource with a given audio bundle resource
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="methods">
+    <h3>Methods</h3>
+    <div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public AudioSource</qualifiers>
+                <method>setAudio</method>
+                (<field>Resource&lt;AudioBundle&gt; resource</field>)
+            </h4>
+            <p>
+                Sets the audio resource for this audio source. And regenerates the audio buffer.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>private void</qualifiers>
+                <method>generateAudioBuffer</method>()
+            </h4>
+            <p>
+                Generates the OpenAL audio buffer and removes any audio filters.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>protected void</qualifiers>
+                <method>delete</method>
+                ()
+            </h4>
+            <p>
+                Deletes the audio source.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>protected void</qualifiers>
+                <method>playSound</method>
+                ()
+            </h4>
+            <p>
+                Plays audio from beginning.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>protected void</qualifiers>
+                <method>playAt</method>
+                (<field>int pos</field>)
+            </h4>
+            <p>
+                Plays the audio source at the given position. Note: Position is in bytes, not seconds.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>protected void</qualifiers>
+                <method>stopSound</method>
+                ()
+            </h4>
+            <p>
+                Stops the audio source.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public boolean</qualifiers>
+                <method>isPlaying</method>
+                ()
+            </h4>
+            <p>
+                Returns true if the audio source is playing.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public boolean</qualifiers>
+                <method>loops</method>
+                ()
+            </h4>
+            <p>
+                Returns true if the audio source is set to loop.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public void</qualifiers>
+                <method>setLoops</method>
+                (<field>boolean loops</field>)
+            </h4>
+            <p>
+                Sets whether the audio source should loop.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public void</qualifiers>
+                <method>setFilter</method>
+                (<field>SoundFilter filter</field>)
+            </h4>
+            <p>
+                Sets the audio filter for this audio source.
+            </p>
+        </div>
+
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public void</qualifiers>
+                <method>updateFilter</method>
+                ()
+            </h4>
+            <p>
+                Updates the audio filter for OpenAL.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public SoundFilter</qualifiers>
+                <method>getFilter</method>
+                ()
+            </h4>
+            <p>
+                Returns the audio filter for this audio source.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public void</qualifiers>
+                <method>removeFilter</method>
+                ()
+            </h4>
+            <p>
+                Removes the audio filter for this audio source.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public void</qualifiers>
+                <method>setGain</method>
+                (<field>float gain</field>)
+            </h4>
+            <p>
+                Sets the gain for this audio source.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public void</qualifiers>
+                <method>setMaxGain</method>
+                (<field>float maxGain</field>)
+            </h4>
+            <p>
+                Sets the max gain for this audio source.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public int</qualifiers>
+                <method>getBufferPosition</method>
+                ()
+            </h4>
+            <p>
+                Returns the current position of the audio buffer.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public void</qualifiers>
+                <method>setAttribute3f</method>
+                (<field>int attribute</field>, <field>Vector3f value</field>)
+            </h4>
+            <p>
+                attribute - The attribute to set.<br/>
+                value - The value to set the attribute to.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public int</qualifiers>
+                <method>getSourceSize</method>
+                ()
+            </h4>
+            <p>
+                Returns the size of the audio source in bytes.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public float</qualifiers>
+                <method>getDuration</method>
+                ()
+            </h4>
+            <p>
+                Returns the duration of the source in seconds.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public float</qualifiers>
+                <method>getPositionTime</method>
+                ()
+            </h4>
+            <p>
+                Returns the position of the audio source in seconds.
+            </p>
+        </div>
+
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public float</qualifiers>
+                <method>duration</method>
+                ()
+            </h4>
+            <p>
+                Returns the duration of the source in seconds.
+            </p>
+        </div>
+    </div>
+    <div class="methodBox">
+        <h4>
+            <qualifiers>public float</qualifiers>
+            <method>getDecimal</method>
+            ()
+        </h4>
+        <p>
+            Returns the percentage of the audio source that has been played from 0 to 1.
+            Useful for progress bars perhaps?
+        </p>
+    </div>
+</div>
+
+<div id="fields">
+    <h3>Fields</h3>
+    <div>
+        <div class="fieldBox"><h4><qualifiers>private</qualifiers> <field>Resource&lt;AudioBundle&gt; audioResource</field></h4>
+            <p>
+                The audio resource which the audio source is playing.
+            </p>
+        </div>
+        <div class="fieldBox"><h4><qualifiers>private transient</qualifiers> <field>boolean isPlaying</field></h4>
+            <p>
+                Whether the audio source is playing.
+            </p>
+        </div>
+        <div class="fieldBox"><h4><qualifiers>private</qualifiers> <field>boolean loops</field></h4>
+            <p>
+                Whether the audio source should loop.
+            </p>
+        </div>
+        <div class="fieldBox"><h4><qualifiers>private</qualifiers> <field>SoundFilter filter</field></h4>
+            <p>
+                The audio filter for this audio source.
+            </p>
+        </div>
+        <div class="fieldBox"><h4><qualifiers>private transient</qualifiers> <field>int audioBuffer</field></h4>
+            <p>
+                The audio buffer ID.
+            </p>
+        </div>
+        <div class="fieldBox"><h4><qualifiers>private transient</qualifiers> <field>float duration</field></h4>
+            <p>
+                The duration of this audio source.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="otherInfo">
+    <h3>Other Info</h3>
+    <div>No additional info.</div>
+</div>
+
+<h2>
+    <qualifiers>(package-private) class</qualifiers>
+    <field>AudioProcessor</field>
+</h2>
+
+<div class="summary">
+    <h3>Summary</h3>
+    <p>
+        The AudioProcessor class is used to load audio files and convert them to a format that can be played by an AudioSource.
+    </p>
+</div>
+
+<div class="methods">
+    <h3>Methods</h3>
+    <div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public static AudioBundle</qualifiers>
+                <method>processAudio</method>
+                (<field>String filePath</field>)
+            </h4>
+            <p>
+                Loads the audio file at the given path and returns an AudioBundle containing the audio data.
+            </p>
+        </div>
+        <div class="methodBox">
+            <h4>
+                <qualifiers>public static AudioBundle</qualifiers>
+                <method>processAudio</method>
+                (<field>byte[] data</field>)
+            </h4>
+            <p>
+                Loads the audio from the given byte array and returns an AudioBundle containing the audio data.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
