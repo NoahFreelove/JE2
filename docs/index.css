@@ -122,6 +122,10 @@ method{
     width: fit-content;
     list-style-type: none;
     font-weight: bold;
+    /**
+    Make all text larger
+     */
+    font-size: 2em;
 }
 
 .listParent{

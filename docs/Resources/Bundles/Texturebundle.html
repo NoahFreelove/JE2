@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../../index.css">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JE2 Resources.TextureBundle</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="bundles.html">Bundles</a></h1>
+
+<h2>
+  <qualifiers>public class</qualifiers>
+  <field>TextureBundle</field>
+  <qualifiers>extends</qualifiers>
+  <a href="ResourceBundle.html"><field>ResourceBundle</field></a>
+</h2>
+
+<div id="summary">
+  <h3>Summary</h3>
+  <p>
+    The TextureBundle is a resource bundle made for image sources.
+    It uses a ByteBuffer for the image data but also has a field for image size.
+  </p>
+</div>
+
+<div id="constructors">
+  <h3>Constructors</h3>
+  <div>
+    <div class="constructorBox"><h4><qualifiers>public</qualifiers> <method>AudioBundle</method>()</h4>
+      <p>
+        returns a new instance of AudioBundle with non-null fields.
+      </p>
+    </div>
+
+    <div class="constructorBox"><h4><qualifiers>public</qualifiers> <method>AudioBundle</method>
+      (<field>ShortBuffer soundData</field>, <field>int format</field>, <field>int sampleRate</field>, <field>int channels</field>)</h4>
+      <p>
+        returns a new instance of AudioBundle with set data.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="methods">
+  <h3>Methods</h3>
+  <div>
+
+    <div class="methodBox"><h4><qualifiers>public Vector2i</qualifiers> <method>getImageSize</method>()</h4>
+      <p>
+        Returns the width and height of the loaded image data.
+      </p>
+    </div>
+    <div class="methodBox"><h4><qualifiers>public ByteBuffer</qualifiers> <method>getImageData</method>()</h4>
+      <p>
+        Returns the image data as a byte buffer.
+      </p>
+    </div>
+
+    <div class="methodBox"><h4><annotation>@Override</annotation> <qualifiers>public boolean</qualifiers> <method>compareData</method>(<field>byte[] input</field>)</h4>
+      <p>
+        Checks if this texture bundle has the same data as input.
+      </p>
+    </div>
+    <div class="methodBox"><h4><annotation>@Override</annotation> <qualifiers>public byte[]</qualifiers> <method>getData</method>()</h4>
+      <p>
+        Returns byte buffer data in byte array format
+      </p>
+    </div>
+    <div class="methodBox"><h4><annotation>@Override</annotation> <qualifiers>public void</qualifiers> <method>freeResource</method>()</h4>
+      <p>
+        Sets image data and image size to null.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="fields">
+  <h3>Fields</h3>
+  <div>
+    <div class="fieldBox"><h4><qualifiers>private transient</qualifiers> <field>Vector2i imageSize</field></h4>
+      <p>
+        The size of the image as 2 ints. x - width. y - height.
+      </p>
+    </div>
+    <div class="fieldBox"><h4><qualifiers>private transient</qualifiers> <field>ByteBuffer imageData</field></h4>
+      <p>
+        The stored byte data in a buffer format.
+      </p>
+    </div>
+    <div class="fieldBox"><h4><qualifiers>private transient</qualifiers> <field>String filepath</field></h4>
+      <p>
+        The texture's filepath. May be empty if bundle was set with existing data.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="otherInfo">
+  <h3>Other Info</h3>
+  <div>No additional info.</div>
+</div>
+</body>
+</html>
