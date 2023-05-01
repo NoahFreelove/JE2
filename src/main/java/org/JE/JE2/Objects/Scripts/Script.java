@@ -51,6 +51,7 @@ public class Script implements Serializable, Loadable {
     public boolean getActive(){return active;}
 
     public void update(){}
+    public void postRender(){}
     public void start(){}
     public void awake(){}
     public void unload(Scene oldScene, Scene newScene){}

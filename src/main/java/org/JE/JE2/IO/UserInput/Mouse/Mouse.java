@@ -58,6 +58,7 @@ public class Mouse {
         mousePressedEvents.forEach(event -> event.invoke(button, mods));
         mousePressed(button.ordinal());
     }
+
     public static void triggerMouseReleased(MouseButton button, int mods){
         if(disableInput)
             return;
@@ -75,18 +76,19 @@ public class Mouse {
     private static final boolean[] buttons = new boolean[8];
 
     private static void mousePressed(int button){
-        if(button >= buttons.length)
+        if(button >= buttons.length || button < 0)
             return;
         buttons[button] = true;
     }
+
     private static void mouseReleased(int button){
-        if(button >= buttons.length)
+        if(button >= buttons.length || button < 0)
             return;
         buttons[button] = false;
     }
 
     public static boolean isPressed(int button){
-        if(button >= buttons.length)
+        if(button >= buttons.length || button < 0)
             return false;
         return buttons[button];
     }

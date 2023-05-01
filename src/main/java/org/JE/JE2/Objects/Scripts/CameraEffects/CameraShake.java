@@ -2,7 +2,6 @@ package org.JE.JE2.Objects.Scripts.CameraEffects;
 
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;
-import org.joml.Vector2f;
 
 public class CameraShake extends Script {
     public float magnitude = 1f;

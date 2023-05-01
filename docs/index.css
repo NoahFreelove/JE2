@@ -17,7 +17,11 @@ qualifiers{
     font-family: 'Roboto Mono', monospace;
     color: #d35edc;
 }
-
+variables{
+    /*Use monospaced font*/
+    font-family: 'Roboto Mono', monospace;
+    color: #ffffff;
+}
 annotation{
     font-family: 'Roboto Mono', monospace;
     color: #e2be6e;

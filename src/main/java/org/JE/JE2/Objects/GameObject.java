@@ -227,7 +227,15 @@ public final class GameObject implements Serializable {
         }
     }
 
-    public void preRender(){}
+    public void scriptPostRender(){
+        if(!active)
+            return;
+        scripts.forEach((c)->{
+            if(!c.getActive())
+                return;
+            c.postRender();
+        });
+    }
 
     public Identity identity() {
         return identity;

@@ -6,6 +6,7 @@ import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.CameraEffects.CameraShake;
+import org.JE.JE2.Objects.Scripts.CameraEffects.PostProcessingVolume;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
 import org.JE.JE2.Rendering.Camera;
@@ -114,6 +115,8 @@ public class Main {
                 new Vector2f(0,1)
         });
 
+        go.addScript(new PostProcessingVolume());
+
         go.addScript(new PhysicsBody());
         go.getPhysicsBody().defaultRestitution = 0.8f;
         go.getPhysicsBody().defaultDensity = 0.1f;
@@ -124,7 +127,7 @@ public class Main {
         go.getTransform().translateY(-1.5f);
         go.getRenderer().setDrawMode(GL_LINE_LOOP);
         go.getRenderer().baseColor = Color.BLUE;
-        scene.add(go);
+        //scene.add(go);
         scene.add(player);
 
         scene.add(FloorFactory.createFloor(new Vector2f(-2,-4), new Vector2f(6,1)));

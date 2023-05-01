@@ -27,6 +27,8 @@ public abstract class Pipeline {
     @GLThread
     public abstract void renderObjects(); // GameObjects
     @GLThread
+    public abstract void postProcess(); // GameObjects
+    @GLThread
     public abstract void renderUI(); // UI / Gizmos
     @GLThread
     public abstract void runQueuedEvents(); // GL thread events
@@ -34,6 +36,7 @@ public abstract class Pipeline {
     public abstract void pollEvents(); // check for keyboard inputs, window updates, etc.
     @GLThread
     public abstract void updateScene(); // run GameObject update methods
+
     @GLThread
     public abstract void checkWatchers(); // run scene's watchers to watch for event changes
 

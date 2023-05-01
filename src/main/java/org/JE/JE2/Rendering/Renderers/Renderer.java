@@ -62,6 +62,9 @@ public class Renderer extends Script {
 
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
+        if(!camera.withinRenderDistance(gameObject.getTransform().position(), gameObject.getTransform().scale()))
+            return;
+
         glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
         PreRender();
         ShaderProgram shader = vao.getShaderProgram();

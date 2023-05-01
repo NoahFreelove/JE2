@@ -42,6 +42,7 @@ public class DataLoader {
         }
     }
 
+    @JarSafe
     public static String[] getBytesAsString(String path){
         return new String(getBytes(path)).split("\n");
     }

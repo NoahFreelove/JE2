@@ -42,7 +42,7 @@ public final class ShaderProgram implements Serializable, Loadable {
         lightSpriteShaderSHARED = lightSpriteShader();
     }
 
-    private ShaderProgram(){}
+    public ShaderProgram(){}
 
     public static ShaderProgram invalidShader(){
         return new ShaderProgram();

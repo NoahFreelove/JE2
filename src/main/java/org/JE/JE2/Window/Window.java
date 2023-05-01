@@ -6,6 +6,7 @@ import org.JE.JE2.IO.UserInput.Mouse.MouseButton;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
@@ -23,6 +24,7 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -39,18 +41,21 @@ public class Window {
     public static final CopyOnWriteArrayList<Runnable> actionQueue = new CopyOnWriteArrayList<>();
     public static Pipeline pipeline = new DefaultPipeline();
     private static double deltaTime = 0;
-    private static int fpsLimit = 60;
+
+    public static int framebuffer;
+    public static int textureColorBuffer;
+    public static int rbo;
+
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
-        Thread t = new Thread(() -> {
+        new Thread(() -> {
             initializeWindow(wp);
             hasInit = true;
             monitorHeight = glfwGetVideoMode(glfwGetPrimaryMonitor()).height();
             monitorWidth = glfwGetVideoMode(glfwGetPrimaryMonitor()).width();
             loop();
-        });
-        t.start();
+        }).start();
 
     }
     public static void closeWindow(int code){
@@ -94,6 +99,8 @@ public class Window {
 
         // Create the windowHandle
         windowHandle = glfwCreateWindow(wp.windowSize.x(), wp.windowSize.y(), wp.windowTitle, NULL, NULL);
+        width = wp.windowSize.x();
+        height = wp.windowSize.y();
         if ( windowHandle == NULL )
             throw new RuntimeException("Failed to create the GLFW windowHandle");
 
@@ -179,6 +186,33 @@ public class Window {
         if(wp.initializeNuklear)
             UIHandler.init();
 
+        generateFrameBuffer();
+    }
+
+    private static void generateFrameBuffer() {
+        IntBuffer result = BufferUtils.createIntBuffer(1);
+        glGenFramebuffers(result);
+        framebuffer = result.get();
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+        textureColorBuffer =  glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
+
+        rbo = glGenRenderbuffers();
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height); // use a single renderbuffer object for both a depth AND stencil buffer.
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+        // now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     }
 
     public static void CreateOpenAL() {
@@ -198,7 +232,6 @@ public class Window {
 
             assert alCapabilities.OpenAL10 : "OpenAL 1.0 is not supported";
         }
-
     }
 
     private static void WindowLoop() {
@@ -206,7 +239,6 @@ public class Window {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         glEnable(GL_TEXTURE_2D);
-        glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glEnable(GL_COLOR_MATERIAL);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -216,9 +248,11 @@ public class Window {
         while ( !glfwWindowShouldClose(windowHandle) ) {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            //glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
             UIHandler.frameStart();
             double startTime = glfwGetTime();
+            Color clear = Manager.activeScene().mainCamera().backgroundColor;
 
             try (MemoryStack stack = stackPush()) {
                 IntBuffer width  = stack.mallocInt(1);
@@ -226,15 +260,20 @@ public class Window {
 
                 glfwGetWindowSize(windowHandle, width, height);
                 glViewport(0, 0, width.get(0), height.get(0));
-                Color clear = Manager.activeScene().mainCamera().backgroundColor;
                 glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
             }
 
             glfwPollEvents();
             pipeline.onStart();
 
-            glfwSwapBuffers(windowHandle);
+            //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+           /* glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
+
+            //pipeline.postProcess();
+
+            glfwSwapBuffers(windowHandle);
             deltaTime = (glfwGetTime() - startTime);
 
             // If the window was moved or resized, the delta time will be very large.
