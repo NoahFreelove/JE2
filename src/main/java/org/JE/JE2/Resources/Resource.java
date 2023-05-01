@@ -9,16 +9,19 @@ import java.lang.ref.WeakReference;
 public class Resource<T extends ResourceBundle> implements Serializable {
     public final Class<T> type;
     private transient T ref;
-    private String name = "";
+    private final String name;
     private int ID = -1;
 
     private Resource(){
         type = null;
+        name = "";
     }
     public Resource (T bundle, String name, int ID) {
         ref = bundle;
         type = (Class<T>) bundle.getClass();
         this.name = name;
+        if(this.name == null)
+            this.name = "resource";
         this.ID = ID;
     }
 

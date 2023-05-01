@@ -10,12 +10,22 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class DataLoader {
-    @Nullable
     public static String getDataFilePath(String path){
+        try {
+            return getDataFile(path).getAbsolutePath();
+        }
+        catch (Exception e){
+            return "";
+        }
+    }
+
+    @Nullable
+    @JarSafe
+    public static File getDataFile(String path){
         try {
             URL resourceURL = DataLoader.class.getResource(path);
             File resourceFile = new File(resourceURL.getPath());
-            return resourceFile.getAbsolutePath();
+            return resourceFile;
         }
         catch (Exception e){
             return null;

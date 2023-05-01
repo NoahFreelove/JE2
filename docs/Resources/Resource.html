@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../index.css">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JE2 Resources.Resource</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="resources.html">Resources</a></h1>
+
+<h2>
+  <qualifiers>public class</qualifiers>
+  <field>Resource&lt;</field><variables>T</variables>
+  <qualifiers>extends</qualifiers>
+  <a href="ResourceBundle.html"><field>ResourceBundle</field></a>
+  <field>&gt;</field>
+  <qualifiers>implements</qualifiers>
+  <field>Serializable</field>
+</h2>
+
+<div id="summary">
+  <h3>Summary</h3>
+  <p>
+    The Resource is the primary way to store and access file data.
+    A resource has three primary components, Its Bundle (what actually holds the byte data),
+    its Name, and its ID. The last two are for comparing against other Resources
+    to see if identical ones already exist in memory.<br/><br/>
+    You probably wont interact with Resources directly as you will likely
+    use the Texture object for images and AudioSource for sound, both
+    handle this for you.
+  </p>
+</div>
+
+<div id="constructors">
+  <h3>Constructors</h3>
+  <div>
+    <div class="constructorBox"><h4><qualifiers>private</qualifiers> <method>Resource</method>()</h4>
+      <p>
+        Don't let anyone create a resource without giving it a Name and ID.
+      </p>
+    </div>
+
+    <div class="constructorBox"><h4><qualifiers>public</qualifiers> <method>Resource</method>
+      (<field><variables>T</variables> bundle</field>, <field>String name</field>, <field>int ID</field>)</h4>
+      <p>
+        returns a new instance of Resource and sets fields.<br/>
+        A resource's ID can always be changes but it's name is final.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="methods">
+  <h3>Methods</h3>
+  <div>
+    <div class="methodBox"><h4><annotation>@Nullable</annotation> <qualifiers>public <variables>T</variables></qualifiers> <method>getBundle</method>()</h4>
+        <p>
+          Returns the Resource's bundle, the object that contains the actual byte data.
+        </p>
+      </div>
+    <div class="methodBox"><h4><annotation>@Override</annotation> <qualifiers>public boolean</qualifiers> <method>equals</method>(<field>Object obj</field>)</h4>
+      <p>
+        Will compare two resources to check if they are identical or if one already exists. <br/>
+        Depending on the <a href="ResourceManager.html">ResourceManager</a> policy, it will compare
+        by Name, ID, Or check byte for byte. This is to conserve memory.<br/>
+        <br/>
+        <strong>It is assumed that if two Resources have the same name OR ID that they are identical.
+            byte for byte resource checks aren't the default and are slow.
+        </strong>
+      </p>
+    </div>
+    <div class="methodBox"><h4><qualifiers>public String</qualifiers> <method>getName</method>()</h4>
+        <p>
+          Returns resource's name
+        </p>
+    </div>
+    <div class="methodBox"><h4><qualifiers>public int</qualifiers> <method>getID</method>()</h4>
+        <p>
+          Returns resource's ID
+        </p>
+    </div>
+    <div class="methodBox"><h4><qualifiers>public void</qualifiers> <method>setID</method>(<field>int ID</field>)</h4>
+        <p>
+          Set's the resource's ID
+        </p>
+    </div>
+  </div>
+</div>
+
+<div id="fields">
+  <h3>Fields</h3>
+  <div>
+    <div class="fieldBox"><h4><qualifiers>public final</qualifiers> <field>Class&lt;<variables>T</variables>&gt; type</field></h4>
+      <p>
+        Reference to the class's type T.<br/>
+        Probably useless?
+      </p>
+    </div>
+    <div class="fieldBox"><h4><qualifiers>private transient</qualifiers> <field><variables>T</variables> ref</field></h4>
+        <p>
+          Reference to the Resource's bundle of type T.
+        </p>
+    </div>
+    <div class="fieldBox"><h4><qualifiers>private final</qualifiers> <field>String name</field></h4>
+        <p>
+          The resource's name. Used for uniquely identifying resources.
+        </p>
+    </div>
+    <div class="fieldBox"><h4><qualifiers>private</qualifiers> <field>int ID</field></h4>
+        <p>
+          The resource's ID. Used for uniquely identifying resources.<br/>
+          An ID of -1 means it will never equal another ID.
+        </p>
+    </div>
+  </div>
+</div>
+
+<div id="otherInfo">
+  <h3>Other Info</h3>
+  <div>No additional info.</div>
+</div>
+</body>
+</html>

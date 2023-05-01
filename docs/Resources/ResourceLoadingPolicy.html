@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="../index.css">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JE2 Resources.ResourceLoadingPolicy</title>
+</head>
+<body>
+<h1>JE2 Documentation</h1>
+
+<h1><a href="resources.html">Resources</a></h1>
+
+<h2>
+  <qualifiers>public enum</qualifiers>
+  <field>ResourceLoadingPolicy</field>
+</h2>
+
+<div id="summary">
+  <h3>Summary</h3>
+  <p>
+    The ResourceLoadingPolicy is the policy which the <a href="ResourceManager.html">ResourceManager</a>
+    uses when indexing your resources. The policy dicates how the <a href="ResourceManager.html">ResourceManager</a> will
+    compare and check other resources when attempting to load a new resource. It will see if identical
+    (or assumed identical) resources already exist in memory and return a reference to those
+    instead of using memory to create duplicate data.
+  </p>
+</div>
+
+<div id="constructors">
+  <h3>Constructors</h3>
+  <div>
+    This class has no constructors.
+  </div>
+</div>
+
+<div id="methods">
+  <h3>Methods</h3>
+  <div>
+    This class has no methods.
+  </div>
+</div>
+
+<div id="fields">
+  <h3>Fields</h3>
+  <div>
+    <div class="fieldBox"><h4><field>DONT_CHECK_IF_EXISTS</field></h4>
+      <p>
+        ResourceManager will not do any checks for duplicate resources when a new resource is created.
+        Every resource will assume it's unique. This is the least memory conscious policy.
+      </p>
+    </div>
+    <div class="fieldBox"><h4><field>CHECK_BY_NAME</field></h4>
+        <p>
+          ResourceManager will see if another resource by the same name exists.
+          Will go through all indexed resources in a linear search to see if the created resource already exists.
+          You are trading a little bit of procssing time to save you creating duplicate memory.
+        </p>
+    </div>
+    <div class="fieldBox"><h4><field>CHECK_BY_ID</field></h4>
+        <p>
+          ResourceManager will see if another resource by the same ID exists.
+        </p>
+    </div>
+    <div class="fieldBox"><h4><field>CHECK_BY_BYTE_DATA</field></h4>
+        <p>
+          By far the slowest option but useful if you really want to save memory.
+          Will check each resource and compare byte for byte if they are identical.
+          If a match is found it will not allocate new space for the resource but return a reference
+          to the already created one.
+        </p>
+    </div>
+  </div>
+</div>
+
+<div id="otherInfo">
+  <h3>Other Info</h3>
+  <div>No additional info.</div>
+</div>
+</body>
+</html>

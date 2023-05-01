@@ -60,13 +60,24 @@
 <div id="methods">
   <h3>Methods</h3>
   <div>
-    <div class="methodBox"><h4><annotation>@Nullable</annotation> <qualifiers>public static String</qualifiers>
+    <div class="methodBox"><h4><qualifiers>public static String</qualifiers>
       <method>getDataFilePath</method>(<field>String path</field>)</h4>
       <p>
         path - relative path to resource from <code>"src/main/resources/"</code><br/>
-        Will convert the relative resource path to an absolute file path.
+        Will use the relative resource path given and use the ResourceLoader to get it's absolute filepath in your system.
         <br/>
         This will not work in a jar archive.
+        <br/>
+        This will return empty string if no file is found.
+      </p>
+    </div>
+    <div class="methodBox"><h4><annotation>@Nullable @JarSafe</annotation> <qualifiers>public static String</qualifiers>
+      <method>getDataFile</method>(<field>String path</field>)</h4>
+      <p>
+        path - relative path to resource from <code>"src/main/resources/"</code><br/>
+        Will use the relative resource path given and use the ResourceLoader to return a file object.
+        <br/>
+        This will work in a jar archive.
         <br/>
         This will return null if no file is found.
       </p>
@@ -75,9 +86,9 @@
       <method>getDataBytes</method>(<field>String path</field>)</h4>
       <p>
         path - relative path to resource from <code>"src/main/resources/"</code><br/>
-        Will load the file into a byte array which can be used by various resource loaders.
+        Will use the ResourceLoader and the relative filepath given to process a file's data into a byte array which can be used by various resource loaders.
         <br/>
-        This will work in a jar file.
+        This will work in a jar archive.
         <br/>
         This will return empty byte array if no file is found.
       </p>
