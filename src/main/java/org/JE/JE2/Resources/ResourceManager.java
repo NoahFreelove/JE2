@@ -66,6 +66,7 @@ public class ResourceManager implements Serializable {
         return null;
     }
 
+    @Nullable
     public static Resource<?> getIfExists(Resource<?> resource){
         if(policy == ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS)
             return null;
@@ -89,6 +90,7 @@ public class ResourceManager implements Serializable {
         return null;
     }
 
+    @Nullable
     public static Resource<? extends ResourceBundle> getIfExists(Class<? extends ResourceBundle> clazz, String name, int ID){
         if(policy == ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS)
             return null;
@@ -126,7 +128,7 @@ public class ResourceManager implements Serializable {
      * @param classes Their respective Bundle type
      */
     @JarSafe
-    public static void warmupAssets(String[] assets, String[] names, Class<? extends ResourceBundle>[] classes){
+    public static void warmupAssets(String[] names, String[] assets, Class<? extends ResourceBundle>[] classes){
         int prevPolicy = policy.ordinal();
         policy = ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS;
         if(assets.length != names.length || assets.length != classes.length)
@@ -138,13 +140,14 @@ public class ResourceManager implements Serializable {
         }
         policy = ResourceLoadingPolicy.values()[prevPolicy];
     }
-
+    @JarSafe
     public static void warmupAssets(Triplet<String, String, Class<? extends ResourceBundle>>[] assets){
         for (Triplet<String,String,Class<? extends ResourceBundle>> t: assets) {
             warmupAsset(t.x,t.y,t.z);
         }
     }
 
+    @JarSafe
     public static void warmupAsset(String name, String asset, Class<? extends ResourceBundle> clazz){
         if(clazz== TextureBundle.class)
         {

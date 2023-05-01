@@ -54,14 +54,14 @@ public class Main {
 
         ResourceManager.warmupAssets(
                 new String[]{
-                        "texture1.png",
-                        "texture1_N.png",
-                        "texture2.png",
-                },
-                new String[]{
                         "PlayerTexture",
                         "PlayerNormal",
                         "floor"
+                },
+                new String[]{
+                        "texture1.png",
+                        "texture1_N.png",
+                        "texture2.png",
                 },
                 new Class[]{
                         TextureBundle.class,
