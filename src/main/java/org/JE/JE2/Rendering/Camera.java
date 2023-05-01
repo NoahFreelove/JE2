@@ -16,7 +16,7 @@ public class Camera extends Script {
     public float renderDistance = 3;
 
     public Vector2f positionOffset = new Vector2f();
-    public float zoomMultiplier = 0.5f;
+    public float zoomMultiplier = 1f;
 
     public Vector4f viewportSize = new Vector4f();
     public boolean useDefaultViewport = true;

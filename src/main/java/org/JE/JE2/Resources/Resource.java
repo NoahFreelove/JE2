@@ -19,9 +19,10 @@ public class Resource<T extends ResourceBundle> implements Serializable {
     public Resource (T bundle, String name, int ID) {
         ref = bundle;
         type = (Class<T>) bundle.getClass();
+        if(name == null)
+            name = "resource";
         this.name = name;
-        if(this.name == null)
-            this.name = "resource";
+
         this.ID = ID;
     }
 
