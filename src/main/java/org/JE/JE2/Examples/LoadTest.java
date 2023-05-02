@@ -1,4 +1,4 @@
-package org.JE.JE2.Tests;
+package org.JE.JE2.Examples;
 
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;

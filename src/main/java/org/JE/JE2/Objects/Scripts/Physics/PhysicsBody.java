@@ -18,7 +18,7 @@ public class PhysicsBody extends Script {
     public transient org.jbox2d.dynamics.BodyDef bodyDef;
     public transient org.jbox2d.dynamics.Body body;
     public transient Fixture activeFixture;
-    private transient boolean hasInitialized = false;
+    protected transient boolean hasInitialized = false;
     public transient boolean onGround = false;
     public boolean fixedRotation = true;
     private Vector2f size = new Vector2f(1,1);
@@ -32,10 +32,11 @@ public class PhysicsBody extends Script {
         super();
     }
     
-    private PhysicsBody create(BodyType defaultState, Vector2f initialPosition, Vector2f initialSize){
+    protected PhysicsBody create(BodyType defaultState, Vector2f initialPosition, Vector2f initialSize){
         bodyDef = new BodyDef();
         this.size = new Vector2f(initialSize);
         bodyDef.type = defaultState;
+
 
         Vector2f adjustedPos = new Vector2f(initialPosition);
         adjustedPos.x += getSize().x/2;
@@ -97,6 +98,12 @@ public class PhysicsBody extends Script {
         body.setUserData(getAttachedObject());
     }
 
+    @Override
+    public void onAddedToGameObject(GameObject gameObject) {
+        if(body!=null)
+            body.setUserData(gameObject);
+    }
+
     private final Vector2f adjustedPos = new Vector2f();
     private final Vector2f pos = new Vector2f();
     private final Vec2 bodyPos = new Vec2();
@@ -136,6 +143,10 @@ public class PhysicsBody extends Script {
                 Manager.activeScene().world.physicsWorld.queryAABB((fixture) -> {
                     if(fixture.getBody() != body)
                     {
+                        if(fixture.m_isSensor)
+                        {
+                            return true;
+                        }
                         onGround = true;
                         return true;
                     }

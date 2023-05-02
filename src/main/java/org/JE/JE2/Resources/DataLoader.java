@@ -7,14 +7,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Scanner;
 
-public class DataLoader {
+public final class DataLoader {
+
     public static String getDataFilePath(String path){
         try {
-            return getDataFile(path).getAbsolutePath();
+            return Objects.requireNonNull(getDataFile(path)).getAbsolutePath();
         }
-        catch (Exception e){
+        catch (NullPointerException e){
             return "";
         }
     }

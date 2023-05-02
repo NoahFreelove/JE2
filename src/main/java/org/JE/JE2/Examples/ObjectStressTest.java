@@ -1,15 +1,12 @@
-package org.JE.JE2.Tests;
+package org.JE.JE2.Examples;
 
 import org.JE.JE2.IO.Logging.Logger;
-import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Camera;
-import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
-import org.JE.JE2.Resources.Bundles.ResourceBundle;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.ResourceLoadingPolicy;
 import org.JE.JE2.Resources.ResourceManager;

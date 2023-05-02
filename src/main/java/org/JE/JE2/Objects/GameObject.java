@@ -23,11 +23,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  JE2 - GameObject
- @author Noah Freelove
 
  GameObjects are the base for everything you see in JE2. Every object possesses a Transform (pos, rot, scale).
  GameObjects can have scripts attached to them to add additional behaviour.
  GameObjects should have a default constructor if you want them to work with save/load features.
+ @author Noah Freelove
 
  **/
 public final class GameObject implements Serializable {
@@ -80,7 +80,7 @@ public final class GameObject implements Serializable {
     }
 
     @RequireNonNull
-    public boolean addScript(Script script){
+    public GameObject addScript(Script script){
         Objects.requireNonNull(script);
 
         if(scripts == null)
@@ -89,7 +89,7 @@ public final class GameObject implements Serializable {
         if(script.getAttachedObject() !=null)
         {
             Logger.log(new GameObjectError(this, "Can't Add Script. This Script already has a parent."));
-            return false;
+            return this;
         }
 
         if(!script.getRestrictions().canHaveMultiple)
@@ -97,7 +97,7 @@ public final class GameObject implements Serializable {
             for(Script comp : scripts){
                 if(comp.getClass() == script.getClass()){
                     Logger.log(new GameObjectError(this, "Can't Add Script. This Script cannot have multiple instances on a single object."));
-                    return false;
+                    return this;
                 }
             }
         }
@@ -112,7 +112,7 @@ public final class GameObject implements Serializable {
             }
             if(!allowed) {
                 Logger.log(new GameObjectError(this, "Can't Add Script. GameObject class is not on permitted list."));
-                return false;
+                return this;
             }
         }
 
@@ -127,7 +127,8 @@ public final class GameObject implements Serializable {
         script.onAddedToGameObject(this);
 
         notifyScriptsForeign(script);
-        return scripts.add(script);
+        scripts.add(script);
+        return this;
     }
 
     @RequireNonNull
@@ -265,15 +266,15 @@ public final class GameObject implements Serializable {
         return null;
     }
 
-    public <T extends Script> T[] getScripts(Class<T> clazz){
-        ArrayList<T> list = new ArrayList<>();
+    public <T extends Script> CopyOnWriteArrayList<T> getScripts(Class<T> clazz){
+        CopyOnWriteArrayList<T> list = new CopyOnWriteArrayList<>();
         for (Script s :
                 scripts) {
             if(s.getClass() == clazz){
                 list.add((T) s);
             }
         }
-        return (T[]) list.toArray();
+        return list;
     }
 
     @Nullable

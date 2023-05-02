@@ -13,7 +13,7 @@ public class Camera extends Script {
     public float zPos = 100;
 
     public boolean checkRenderDistance = true;
-    public float renderDistance = 3;
+    public float renderDistance = 10;
 
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1f;
@@ -122,10 +122,13 @@ public class Camera extends Script {
         else{
             // Use attached object position as camera position
             // Take objects x and y scale into account
-            return (pos.x() + scale.x() > getAttachedObject().getTransform().position().x() - renderDistance &&
-                    pos.x() - scale.x() < getAttachedObject().getTransform().position().x() + renderDistance &&
-                    pos.y() + scale.y() > getAttachedObject().getTransform().position().y() - renderDistance &&
-                    pos.y() - scale.y() < getAttachedObject().getTransform().position().y() + renderDistance);
+            // Take position offset into account
+            return (pos.x() + scale.x() > getAttachedObject().getTransform().position().x() - renderDistance + positionOffset.x() &&
+                    pos.x() - scale.x() < getAttachedObject().getTransform().position().x() + renderDistance + positionOffset.x() &&
+                    pos.y() + scale.y() > getAttachedObject().getTransform().position().y() - renderDistance + positionOffset.y() &&
+                    pos.y() - scale.y() < getAttachedObject().getTransform().position().y() + renderDistance + positionOffset.y());
+
+
         }
     }
 }

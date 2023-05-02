@@ -4,6 +4,7 @@ import org.JE.JE2.Annotations.RequireNonNull;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.Light;
+import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.UI.UIObjects.UIObject;
@@ -73,17 +74,24 @@ public class Scene implements Serializable {
         }
     }
 
-    @RequireNonNull
     public void remove(GameObject gameObject)
     {
-        Objects.requireNonNull(gameObject);
+        if(gameObject == null)
+            return;
+        gameObject.setActive(false);
+
         if(!world.gameObjects.contains(gameObject))
             return;
+
         gameObject.scriptDestroy();
 
         for (GameObject child :
                 gameObject.getChildren()) {
             child.scriptDestroy();
+        }
+        for (PhysicsBody body :
+                gameObject.getScripts(PhysicsBody.class)) {
+            world.physicsWorld.destroyBody(body.body);
         }
         world.gameObjects.remove(gameObject);
     }
