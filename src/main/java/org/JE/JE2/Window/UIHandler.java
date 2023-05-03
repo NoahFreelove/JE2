@@ -315,6 +315,7 @@ public class UIHandler {
     public static void renderNuklear() {
         if(!nuklearReady)
             return;
+        nk_style_set_font(nuklearContext, default_font.getFont());
 
         int AA = NK_ANTI_ALIASING_ON;
         int max_vertex_buffer = MAX_VERTEX_BUFFER;
@@ -345,7 +346,9 @@ public class UIHandler {
             glViewport(0, 0, Window.monitorWidth, Window.monitorHeight);
         }
 
-        Manager.activeScene().world.UI.forEach(UIObject::requestRender);
+        Manager.activeScene().world.UI.forEach(o -> {
+            o.requestRender();
+        });
 
         {
             // convert from command queue into draw list and draw to screen

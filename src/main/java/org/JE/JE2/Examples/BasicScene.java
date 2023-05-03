@@ -4,6 +4,7 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Objects.Lights.AmbientLight;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.CameraEffects.CameraShake;
 import org.JE.JE2.Objects.Scripts.CameraEffects.PostProcessingVolume;
@@ -23,6 +24,7 @@ import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
+import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
@@ -72,7 +74,7 @@ public class BasicScene {
         scene.add(PointLight.pointLightObject(new Vector2f(-5,-1), new Vector3f(1,1,1), 12, 2f).addScript(new LambdaScript(new ILambdaScript() {
             @Override
             public void update(GameObject parent) {
-                parent.getTransform().translateX(0.1f);
+                //parent.getTransform().translateX(0.1f);
             }
         })));
 
@@ -88,7 +90,7 @@ public class BasicScene {
         cs.cameraReference = playerCam;
         //player.addScript(cs);
 
-        //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
+        scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
 
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("E")){
@@ -172,8 +174,9 @@ public class BasicScene {
         Setting<GameObject> setting6 = new Setting<>("Cool GameObject", new GameObject());
         settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5,setting6);
 
-        uiWindow.children.add(SettingsGenerator.generateSettingsUI(settingManager));
-        //scene.addUI(uiWindow);
+        uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
+
+        scene.addUI(uiWindow);
 
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("F1")){

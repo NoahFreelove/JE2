@@ -1,10 +1,15 @@
 package org.JE.JE2.UI.UIElements;
 
+import org.JE.JE2.Window.UIHandler;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static org.JE.JE2.Window.UIHandler.nuklearContext;
+import static org.lwjgl.nuklear.Nuklear.nk_style_set_font;
+
 public class Group extends UIElement{
-    private CopyOnWriteArrayList<UIElement> elements = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<UIElement> elements = new CopyOnWriteArrayList<>();
 
     public Group(){}
 
@@ -30,6 +35,7 @@ public class Group extends UIElement{
 
     @Override
     protected void render() {
+        nk_style_set_font(nuklearContext, UIHandler.default_font.getFont());
         elements.forEach(UIElement::requestRender);
     }
 }

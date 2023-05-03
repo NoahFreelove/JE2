@@ -45,7 +45,7 @@ public class Texture implements Serializable {
     }
 
     public static Texture checkExistElseCreate(String name, int ID, String bytePath){
-        System.out.println("warming up: " + bytePath);
+        //System.out.println("warming up: " + bytePath);
         Resource<TextureBundle> finalRef = (Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, ID);
 
         if(finalRef != null){

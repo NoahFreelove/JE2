@@ -3,6 +3,7 @@ package org.JE.JE2.UI.UIObjects;
 import org.JE.JE2.Manager;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIElements.UIElement;
+import org.JE.JE2.Window.UIHandler;
 import org.joml.Vector2f;
 import org.lwjgl.nuklear.*;
 
@@ -28,7 +29,7 @@ public class UIWindow extends UIObject {
 
     public boolean reset = false;
 
-    public CopyOnWriteArrayList<UIElement> children = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<UIElement> children = new CopyOnWriteArrayList<>();
 
     public UIWindow() {
         super();
@@ -98,13 +99,18 @@ public class UIWindow extends UIObject {
             window = context.style().window();
             window.fixed_background().data().color().set((byte) backgroundColor.r255(), (byte) backgroundColor.g255(), (byte) backgroundColor.b255(), (byte) backgroundColor.a255());
 
-            children.forEach((uiElement -> {
-                nk_layout_row_dynamic(context, 20, 1);
-                uiElement.requestRender();
-            }));
+            renderChildren();
         }
 
         nk_end(context);
+    }
+
+    private void renderChildren() {
+        children.forEach((uiElement -> {
+            nk_style_set_font(nuklearContext, UIHandler.default_font.getFont());
+            nk_layout_row_dynamic(context, 20, 1);
+            uiElement.requestRender();
+        }));
     }
 
     public void closeWindow() {
@@ -146,5 +152,18 @@ public class UIWindow extends UIObject {
 
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public void addElement(UIElement element) {
+        if(element == null)
+            return;
+        if(!children.contains(element))
+            children.add(element);
+    }
+
+    public void removeElement(UIElement element) {
+        if(element == null)
+            return;
+        children.remove(element);
     }
 }

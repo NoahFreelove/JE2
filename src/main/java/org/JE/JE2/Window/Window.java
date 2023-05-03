@@ -46,17 +46,20 @@ public class Window {
     public static int textureColorBuffer;
     public static int rbo;
 
+    public static ThreadLocal<Boolean> glThread;
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
+        glThread = new ThreadLocal<>();
+        glThread.set(false);
         new Thread(() -> {
+            glThread.set(true);
             initializeWindow(wp);
             hasInit = true;
             monitorHeight = glfwGetVideoMode(glfwGetPrimaryMonitor()).height();
             monitorWidth = glfwGetVideoMode(glfwGetPrimaryMonitor()).width();
             loop();
         }).start();
-
     }
     public static void closeWindow(int code){
         Logger.log("Closing window with code: " + code);

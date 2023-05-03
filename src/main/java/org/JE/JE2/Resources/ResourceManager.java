@@ -135,7 +135,7 @@ public class ResourceManager implements Serializable {
             return;
 
         for (int i = 0; i < assets.length; i++) {
-            System.out.println("Warming up asset: " + names[i]);
+            //System.out.println("Warming up asset: " + names[i]);
             warmupAsset(names[i], assets[i], classes[i]);
         }
         policy = ResourceLoadingPolicy.values()[prevPolicy];
