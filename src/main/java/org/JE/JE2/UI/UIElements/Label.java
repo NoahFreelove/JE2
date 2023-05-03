@@ -10,16 +10,15 @@ import static org.lwjgl.nuklear.Nuklear.*;
 
 public class Label extends UIElement {
     public int alignment = NK_TEXT_ALIGN_LEFT;
-    public String text = "";
+    public String text = "Label";
     public Font font;
 
     public Label() {
-        font = new Font(DataLoader.getBytes("arial.ttf"), false);
+        
     }
 
     public Label(String text) {
         this.text = text;
-        font = new Font(DataLoader.getBytes("arial.ttf"), false);
     }
 
     public Label(int alignment) {
@@ -35,7 +34,7 @@ public class Label extends UIElement {
     protected void render() {
         if(font.created)
         {
-            nk_style_set_font(UIHandler.nuklearContext, font.getFont());
+            nk_style_set_font(UIHandler.nuklearContext, style.font.getFont());
         }
         nk_label_colored(UIHandler.nuklearContext,text,alignment, style.textColor.nkColor());
     }

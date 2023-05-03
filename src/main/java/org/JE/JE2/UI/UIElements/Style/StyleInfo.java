@@ -6,7 +6,11 @@ public class StyleInfo {
     public Color inactiveColor = Color.createColorHex("#002550");
     public Color pressedColor = Color.createColorHex("#000B50");
     public Color textColor = Color.createColorHex("#FFFFFF");
+    public Font font;
 
+    public StyleInfo(){
+        font = new Font(DataLoader.getBytes("arial.ttf"), false);
+    }
     public StyleInfo setHoverColor(Color c){
         this.hoverColor = c;
         return this;
