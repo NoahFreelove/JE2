@@ -1,5 +1,8 @@
 package org.JE.JE2.UI.UIElements.Style;
 
+import org.JE.JE2.Resources.DataLoader;
+import org.JE.JE2.UI.Font;
+
 public class StyleInfo {
     public Color hoverColor = Color.createColorHex("#0061CE");
     public Color normalColor = Color.createColorHex("#006AF6");

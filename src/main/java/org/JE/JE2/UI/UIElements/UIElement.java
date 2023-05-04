@@ -33,4 +33,7 @@ public abstract class UIElement {
     public void setStyle(StyleInfo style){
         this.style = style;
     }
+    public StyleInfo getStyle(){
+        return style;
+    }
 }

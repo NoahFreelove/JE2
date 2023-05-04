@@ -11,8 +11,6 @@ import static org.lwjgl.nuklear.Nuklear.*;
 public class Label extends UIElement {
     public int alignment = NK_TEXT_ALIGN_LEFT;
     public String text = "Label";
-    public Font font;
-
     public Label() {
         
     }
@@ -32,7 +30,7 @@ public class Label extends UIElement {
 
     @Override
     protected void render() {
-        if(font.created)
+        if(style.font.created)
         {
             nk_style_set_font(UIHandler.nuklearContext, style.font.getFont());
         }

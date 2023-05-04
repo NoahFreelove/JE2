@@ -19,11 +19,13 @@ import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
+import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
+import org.JE.JE2.UI.Font;
 import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Style.Color;
@@ -174,7 +176,18 @@ public class BasicScene {
         Setting<GameObject> setting6 = new Setting<>("Cool GameObject", new GameObject());
         settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5,setting6);
 
-        uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
+        Label small = new Label("small");
+        small.getStyle().font = new Font(DataLoader.getBytes("arial.ttf"), false);
+        small.getStyle().font.fontHeight = 12;
+
+        Label large = new Label("large");
+        large.getStyle().font = new Font(DataLoader.getBytes("arial.ttf"), false);
+        large.getStyle().font.fontHeight = 30;
+
+        uiWindow.addElement(large);
+        uiWindow.addElement(small);
+
+        //uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
 
         scene.addUI(uiWindow);
 
