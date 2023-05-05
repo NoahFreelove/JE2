@@ -16,7 +16,9 @@ public class FloorFactory {
         floor.setScale(size);
         floor.setPosition(position);
         floor.getSpriteRenderer().defaultTile();
-        floor.addScript(new PhysicsBody().setMode(BodyType.STATIC));
+        PhysicsBody pb = new PhysicsBody().setMode(BodyType.STATIC);
+        pb.defaultFriction = 0;
+        floor.addScript(pb);
         floor.setIdentity(new Identity("Floor", "floor"));
         return floor;
     }

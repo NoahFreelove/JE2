@@ -23,14 +23,12 @@ public class MovementController extends Script {
     public boolean absoluteXPositioning = true;
     public boolean absoluteYPositioning = false;
 
-    volatile boolean isHugging = false;
-
     public MovementController(){}
 
-    private PhysicsBody parentBody;
+    private PhysicsBody physicsBody;
     @Override
     public void start(){
-        parentBody = getAttachedObject().getScript(PhysicsBody.class);
+        physicsBody = getAttachedObject().getScript(PhysicsBody.class);
     }
 
     @Override
@@ -41,52 +39,43 @@ public class MovementController extends Script {
             return;
 
         if(physicsBased){
-            if(parentBody!=null){
-                if(Keyboard.isComboPressed(LEFT) && canMoveLeft){
-                    if(isHuggingWall()){
-                        parentBody.body.setLinearVelocity(new Vec2(0, parentBody.body.getLinearVelocity().y));
-                    }
-                    else {
-                        parentBody.body.setLinearVelocity(new Vec2(-moveSpeed, parentBody.body.getLinearVelocity().y));
-                    }
-                }
-                if(Keyboard.isComboPressed(RIGHT) && canMoveRight){
-                    if(isHuggingWall()){
-                        parentBody.body.setLinearVelocity(new Vec2(0, parentBody.body.getLinearVelocity().y));
-                    }
-                    else {
-                        parentBody.body.setLinearVelocity(new Vec2(moveSpeed, parentBody.body.getLinearVelocity().y));
-                    }
-                }
+            if (physicsBody == null) {
+                return;
+            }
+            if(Keyboard.isComboPressed(LEFT) && canMoveLeft){
+                physicsBody.body.setLinearVelocity(new Vec2(-moveSpeed, physicsBody.body.getLinearVelocity().y));
+            }
+            if(Keyboard.isComboPressed(RIGHT) && canMoveRight){
+                physicsBody.body.setLinearVelocity(new Vec2(moveSpeed, physicsBody.body.getLinearVelocity().y));
+            }
 
-                if(absoluteXPositioning){
-                    if(!Keyboard.isComboPressed(RIGHT) && !Keyboard.isComboPressed(LEFT)){
-                        parentBody.body.setLinearVelocity(new Vec2(0, parentBody.body.getLinearVelocity().y));
-                    }
+            if(absoluteXPositioning){
+                if(!Keyboard.isComboPressed(RIGHT) && !Keyboard.isComboPressed(LEFT)){
+                    physicsBody.body.setLinearVelocity(new Vec2(0, physicsBody.body.getLinearVelocity().y));
                 }
-                if(absoluteYPositioning){
-                    if(!Keyboard.isComboPressed(UP) && !Keyboard.isComboPressed(DOWN)){
-                        parentBody.body.setLinearVelocity(new Vec2(parentBody.body.getLinearVelocity().x,0));
-                    }
+            }
+            if(absoluteYPositioning){
+                if(!Keyboard.isComboPressed(UP) && !Keyboard.isComboPressed(DOWN)){
+                    physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,0));
                 }
-                if(enableJump)
-                {
+            }
+            if(enableJump)
+            {
+                if(Keyboard.isComboPressed(UP)){
+                    if(physicsBody.onGround)
+                        physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,jumpVelocity));
+                }
+            }
+            else {
+                if(canMoveUp){
                     if(Keyboard.isComboPressed(UP)){
-                        if(parentBody.onGround)
-                            parentBody.body.setLinearVelocity(new Vec2(parentBody.body.getLinearVelocity().x,jumpVelocity));
+                        physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,moveSpeed));
                     }
                 }
-                else {
-                    if(canMoveUp){
-                        if(Keyboard.isComboPressed(UP)){
-                            parentBody.body.setLinearVelocity(new Vec2(parentBody.body.getLinearVelocity().x,moveSpeed));
-                        }
-                    }
-                }
-                if(canMoveDown){
-                    if(Keyboard.isComboPressed(DOWN)){
-                        parentBody.body.setLinearVelocity(new Vec2(parentBody.body.getLinearVelocity().x,-moveSpeed));
-                    }
+            }
+            if(canMoveDown){
+                if(Keyboard.isComboPressed(DOWN)){
+                    physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,-moveSpeed));
                 }
             }
         }
@@ -106,7 +95,4 @@ public class MovementController extends Script {
         }
     }
 
-    public boolean isHuggingWall(){
-        return false;
-    }
 }

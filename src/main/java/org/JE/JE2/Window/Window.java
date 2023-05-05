@@ -39,6 +39,7 @@ public class Window {
     public static int monitorWidth;
     public static int monitorHeight;
     public static final CopyOnWriteArrayList<Runnable> actionQueue = new CopyOnWriteArrayList<>();
+    public static final CopyOnWriteArrayList<Thread> fileDialogs = new CopyOnWriteArrayList<>();
     public static Pipeline pipeline = new DefaultPipeline();
     private static double deltaTime = 0;
 
@@ -74,6 +75,7 @@ public class Window {
     private static void Destroy(){
         UIHandler.destroy();
 
+        fileDialogs.forEach(Thread::interrupt);
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
         glfwTerminate();
