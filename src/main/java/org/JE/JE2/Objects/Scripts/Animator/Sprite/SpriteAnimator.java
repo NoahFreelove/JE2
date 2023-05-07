@@ -5,13 +5,13 @@ import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.Script;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SpriteAnimator extends Script {
     private final ArrayList<SpriteAnimationTimeline> spriteAnimationTimelines = new ArrayList<>();
     public int state = 0;
 
     public SpriteAnimator(){
-        spriteAnimationTimelines.add(new SpriteAnimationTimeline());
     }
 
     public void addTimelines(SpriteAnimationTimeline... timelines){
@@ -24,32 +24,59 @@ public class SpriteAnimator extends Script {
         if(getAttachedObject()==null)
             return;
         try {
-            spriteAnimationTimelines.get(state).AnimUpdate(getAttachedObject().getSpriteRenderer());
+            if(state>= spriteAnimationTimelines.size())
+            {
+                outOfRangeError("update",0);
+                return;
+            }
+            spriteAnimationTimelines.get(state).animUpdate(getAttachedObject().getSpriteRenderer());
         }
-        catch (Exception e){
-            Logger.log(new JE2Error("Sprite Animator", "Could not update animation as parent object could not be cast to a sprite"));
+        catch (NullPointerException e){
+            Logger.log(new JE2Error("Sprite Animator Error: Could not update animation as parent object does not have a sprite renderer"));
         }
     }
-
-    @Override
-    public void start() {
-
+    public void play(){
+        if(state>= spriteAnimationTimelines.size())
+        {
+            outOfRangeError("play",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            return;
+        }
+        spriteAnimationTimelines.get(state).play();
+    }
+    public void restart(){
+        if(state>= spriteAnimationTimelines.size())
+        {
+            outOfRangeError("restart",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            return;
+        }
+        spriteAnimationTimelines.get(state).restart();
+    }
+    public void pause(){
+        if(state>= spriteAnimationTimelines.size())
+        {
+            outOfRangeError("pause",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            return;
+        }
+        spriteAnimationTimelines.get(state).pause();}
+    public void stop(){
+        if(state>= spriteAnimationTimelines.size())
+        {
+            outOfRangeError("stop",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            return;
+        }
+        spriteAnimationTimelines.get(state).stop();
+    }
+    public void setPlaybackPosition(int pos){
+        if(state>= spriteAnimationTimelines.size())
+        {
+            outOfRangeError("set playback position", Logger.DEFAULT_ERROR_LOG_LEVEL);
+            return;
+        }
+        spriteAnimationTimelines.get(state).position = pos;
     }
 
-    @Override
-    public void awake() {}
+    private void outOfRangeError(String action, int level){
+        Logger.log(new JE2Error("Sprite Animator Error: There are only " + spriteAnimationTimelines.size() + " timelines but timeline " + (state+1) + " is trying to " + action),level);
 
-    public void Play(){
-        spriteAnimationTimelines.get(state).Play();
     }
-    public void Restart(){
-        spriteAnimationTimelines.get(state).Restart();
-    }
-    public void Pause(){
-        spriteAnimationTimelines.get(state).Pause();}
-    public void Stop(){
-        spriteAnimationTimelines.get(state).Stop();}
-    public void SetPlaybackPosition(int pos){
-        spriteAnimationTimelines.get(state).position = pos;}
-
 }

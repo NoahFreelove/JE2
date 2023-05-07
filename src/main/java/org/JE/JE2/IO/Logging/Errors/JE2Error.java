@@ -1,23 +1,17 @@
 package org.JE.JE2.IO.Logging.Errors;
 
-public class JE2Error {
-    protected String NAME;
-    protected String MESSAGE;
-    protected boolean petty = false;
+import org.JE.JE2.IO.Logging.Logger;
 
+public class JE2Error extends Exception {
+    int level = Logger.DEFAULT_ERROR_LOG_LEVEL;
     public JE2Error(){
-        MESSAGE = "Unknown Error";
-        NAME = "ERROR";
+        super("Unknown Error");
     }
     public JE2Error(String message){
-        MESSAGE = message;
-        NAME = "ERROR";
+        super(message);
     }
-    public JE2Error(String name, String message){
-        MESSAGE = message;
-        NAME = name;
-    }
-    public String toString(){
-        return NAME + " -> " + MESSAGE;
+    public JE2Error(String message, int level){
+        super(message);
+        this.level = level;
     }
 }

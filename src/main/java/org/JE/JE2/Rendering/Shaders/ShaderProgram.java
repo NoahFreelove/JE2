@@ -31,6 +31,8 @@ public final class ShaderProgram implements Serializable, Loadable {
     private transient int vertexShaderID;
     private transient int fragmentShaderID;
 
+    public static boolean logShaderSourceUponError = true;
+
     // TODO: future testing to see if multiple objects can shader the same shader
     public static final ShaderProgram defaultShaderSHARED;
     public static final ShaderProgram spriteShaderSHARED;
@@ -195,12 +197,12 @@ public final class ShaderProgram implements Serializable, Loadable {
         fragmentCompileStatus = glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS) == 1;
 
         if(!vertexCompileStatus){
-            Logger.log(new ShaderError(vertex, true));
+            Logger.log(new ShaderError("Vertex shader did not compile...", vertex, fragment));
         }
 
         if(!fragmentCompileStatus)
         {
-            Logger.log(new ShaderError(fragment, false));
+            Logger.log(new ShaderError("Fragment shader did not compile...", vertex, fragment));
         }
 
         programID = glCreateProgram();
@@ -228,7 +230,12 @@ public final class ShaderProgram implements Serializable, Loadable {
     @GLThread
     public boolean use(){
         if(!valid()){
-            Logger.log(ShaderError.invalidProgramIDError);
+            if(logShaderSourceUponError){
+                Logger.log(new ShaderError("Shader program ID is not valid", vertex, fragment));
+            }
+            else {
+                Logger.log(ShaderError.invalidProgramIDError);
+            }
         }
         else glUseProgram(programID);
         return valid();

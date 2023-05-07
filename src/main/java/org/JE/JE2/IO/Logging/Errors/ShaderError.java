@@ -1,30 +1,19 @@
 package org.JE.JE2.IO.Logging.Errors;
 
 public class ShaderError extends JE2Error {
-    public static ShaderError invalidProgramIDError;
+    public static JE2Error invalidProgramIDError;
     static {
-        invalidProgramIDError = new ShaderError("INVALID PROGRAM ID");
-        invalidProgramIDError.petty = true;
+        invalidProgramIDError = new JE2Error("Shader Error: INVALID PROGRAM ID", 0);
     }
     public ShaderError(){
-        MESSAGE = "Unknown Shader Error";
-        NAME = "SHADER ERROR";
+        super("Unknown Shader Error");
     }
 
     public ShaderError(String message){
-        MESSAGE = message;
-        NAME = "SHADER ERROR";
+        super("Shader Error: " + message);
     }
 
-    public ShaderError(String message, String shaderSource)
-    {
-        NAME = "SHADER ERROR";
-        MESSAGE = "Error with Shader: " + message + " :\n" + shaderSource;
+    public ShaderError(String message, String vertexSource, String fragmentSource){
+        super("Error with Shader: " + message + " :\nVERTEX\n" + vertexSource + "\nFRAGMENT\n" + fragmentSource);
     }
-
-    public ShaderError(String shaderSource, boolean vertexShader){
-        NAME = "SHADER COMPILE ERROR";
-        MESSAGE = (vertexShader? "Vertex" : "Fragment") + " Shader Compile Error. Source: \n" + shaderSource;
-    }
-
 }

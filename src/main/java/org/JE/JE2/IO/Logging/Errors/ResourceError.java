@@ -1,19 +1,15 @@
 package org.JE.JE2.IO.Logging.Errors;
 
-public class ResourceError extends JE2Error {
-    protected String NAME;
-    protected String MESSAGE;
+import org.JE.JE2.Resources.Resource;
 
+public class ResourceError extends JE2Error {
     public ResourceError(){
-        MESSAGE = "Unknown Resource Error";
-        NAME = "RESOURCE ERROR";
+        super("Unknown Resource Error");
     }
     public ResourceError(String message){
-        MESSAGE = message;
-        NAME = "RESOURCE ERROR";
+        super("Resource Error: " + message);
     }
-    public ResourceError(String name, String message){
-        MESSAGE = message;
-        NAME = name;
+    public ResourceError(String message, Resource<?> resource){
+        super("Resource Error: " + message + " with resource: " + resource.getName() + " ID: " + resource.getID() + " Type: " + resource.type.getSimpleName());
     }
 }

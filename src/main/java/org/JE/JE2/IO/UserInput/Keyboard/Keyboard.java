@@ -43,8 +43,8 @@ public class Keyboard {
         if(disableInput)
             return;
 
-        keyPressedEvents.forEach(event -> event.invoke(code, mods));
         keyPressed(code);
+        keyPressedEvents.forEach(event -> event.invoke(code, mods));
         if(ignoreCopyPasteKeys)
             return;
 
@@ -62,8 +62,8 @@ public class Keyboard {
     public static void triggerKeyReleased(int code, int mods){
         if(disableInput)
             return;
-        keyReleasedEvents.forEach(event -> event.invoke(code, mods));
         keyReleased(code);
+        keyReleasedEvents.forEach(event -> event.invoke(code, mods));
     }
     public static void triggerKeyRepeat(int key, int mods) {
         if(disableInput)
@@ -118,6 +118,10 @@ public class Keyboard {
 
     public static boolean isComboPressed(KeyCombo combo){
         return combo.or(keys);
+    }
+
+    public static boolean isComboFullyPressed(KeyCombo combo){
+        return combo.and(keys);
     }
 
     public static int nameToCode(String keyName) {

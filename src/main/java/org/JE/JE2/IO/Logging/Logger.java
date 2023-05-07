@@ -40,6 +40,17 @@ public class Logger {
         if(!log && !quietLog)
             return;
 
+        if(enableIgnoreList){
+            for(Class<?> c : ignoreList){
+                String className = Thread.currentThread().getStackTrace()[2].getClassName();
+                if(!className.equals("org.JE.JE2.IO.Logging.Logger")){
+                    className = Thread.currentThread().getStackTrace()[3].getClassName();
+                }
+                if(className.equals(c.getName()))
+                    return;
+            }
+        }
+
         if(logLevel > level)
             return;
         if(logEntryIndex >= logEntries.length){
@@ -123,10 +134,6 @@ public class Logger {
         if(logLevel > level)
             return;
 
-        if(enableIgnoreList)
-            if(ignoreList.contains(error.getClass()))
-                return;
-
         if(logEntryIndex >= logEntries.length){
             LogEntry[] newLogEntries = new LogEntry[logEntries.length * 2];
             System.arraycopy(logEntries, 0, newLogEntries, 0, logEntries.length);
@@ -136,23 +143,23 @@ public class Logger {
         if(showTime){
             String time = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND);
             if(!quietLog)
-                System.out.println("[" + time  + "] " + error.toString());
-            appendedMessage += "[" + time  + "] " + error.toString();
+                System.err.println("[" + time  + "] " + error.getMessage());
+            appendedMessage += "[" + time  + "] " + error.getMessage();
         }
         else if (!quietLog) {
-            System.out.println(error.toString());
+            System.err.println(error.getMessage());
         }
-        appendedMessage += error.toString();
-        
+        appendedMessage += error.getMessage();
+
         logEntries[logEntryIndex] = new LogEntry(appendedMessage, level);
         logEntryIndex++;
 
         if(throwErrors)
         {
             try {
-                throw new Exception(error.toString());
+                throw error;
             } catch (Exception e) {
-                throw new RuntimeException(error.toString());
+                // ignore
             }
         }
     }

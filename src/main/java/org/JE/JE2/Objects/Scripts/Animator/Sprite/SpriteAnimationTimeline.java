@@ -15,7 +15,10 @@ public class SpriteAnimationTimeline {
     float currentFrameDuration = 0f;
 
     public SpriteAnimationTimeline(SpriteAnimationFrame... spriteAnimationFrames){
+        System.out.println(spriteAnimationFrames.length);
         frames.addAll(java.util.Arrays.asList(spriteAnimationFrames));
+        System.out.println(frames.size());
+
         for(SpriteAnimationFrame frame : frames){
             totalDuration += frame.duration;
         }
@@ -23,26 +26,27 @@ public class SpriteAnimationTimeline {
         calculateDuration();
     }
 
-    public void Restart(){
+    public void restart(){
         isPlaying = true;
         position = 0;
         currentFrameDuration = 0;
     }
-    public void Play(){
+    public void play(){
         isPlaying = true;
     }
-    public void Pause(){
+    public void pause(){
         isPlaying = false;
     }
-    public void Stop(){
+    public void stop(){
         isPlaying = false;
         position = 0;
         currentFrameDuration = 0;
     }
 
-    public void AnimUpdate(SpriteRenderer sprite){
-        float newDelta = new Date().getTime() - updateDelta;
-        updateDelta = new Date().getTime();
+    public void animUpdate(SpriteRenderer sprite){
+        float newDelta = System.currentTimeMillis() - updateDelta;
+        updateDelta = System.currentTimeMillis();
+
 
         if(!isPlaying)
             return;
@@ -54,33 +58,41 @@ public class SpriteAnimationTimeline {
             if(position >= frames.size()){
                 position = 0;
                 if(!loops)
-                    Stop();
+                    stop();
             }
+            if(position >= frames.size())
+                return;
             currentFrameDuration = frames.get(position).duration;
             frames.get(position).Activate(sprite);
         }
     }
 
-    public void SetFrame(int index, SpriteAnimationFrame newFrame){
+    public void setFrame(SpriteAnimationFrame newFrame, int index){
         if(index >= frames.size())
             return;
         frames.set(index, newFrame);
         calculateDuration();
     }
 
-    public void AddFrame(SpriteAnimationFrame frame){
+    public void addFrame(SpriteAnimationFrame frame){
         frames.add(frame);
         calculateDuration();
     }
 
-    public void RemoveFrame(SpriteAnimationFrame frame){
+    public void removeFrame(SpriteAnimationFrame frame){
         frames.remove(frame);
         calculateDuration();
     }
-    public void RemoveFrame(int index){
+    public void removeFrame(int index){
         if(index >= frames.size())
             return;
         frames.remove(index);
+        calculateDuration();
+    }
+    public void injectFrame(SpriteAnimationFrame frame, int index){
+        if(index >= frames.size())
+            return;
+        frames.add(index, frame);
         calculateDuration();
     }
 

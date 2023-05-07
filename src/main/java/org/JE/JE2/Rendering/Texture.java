@@ -109,97 +109,99 @@ public class Texture implements Serializable {
         glBindTexture(GL_TEXTURE_2D, resource.getID());
         return true;
     }
-}
 
-class TextureProcessor {
-    static TextureBundle processImage(String filepath) {
-        return processImage(filepath,true);
-    }
-
-    static TextureBundle processImage(String filepath, boolean flip){
-        Vector2i imageSize;
-        ByteBuffer imageData;
-        if(filepath == null)
-        {
-            Logger.log(new ImageProcessError(true));
-            imageData = BufferUtils.createByteBuffer(1);
-            imageSize = new Vector2i(1,1);
-            return new TextureBundle(imageSize, imageData,filepath);
-        }
-        if(filepath.equals("") || new File(filepath).isDirectory() || !new File(filepath).exists())
-        {
-            Logger.log(new ImageProcessError(true));
-            imageData = BufferUtils.createByteBuffer(1);
-            imageSize = new Vector2i(1,1);
-            return new TextureBundle(imageSize, imageData,filepath);
+    private static class TextureProcessor {
+        static TextureBundle processImage(String filepath) {
+            return processImage(filepath,true);
         }
 
-        IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
-        IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
-        IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
-        STBImage.stbi_set_flip_vertically_on_load(flip);
+        static TextureBundle processImage(String filepath, boolean flip){
+            Vector2i imageSize;
+            ByteBuffer imageData;
+            if(filepath == null)
+            {
+                Logger.log(new ImageProcessError("Invalid Filepath: null"));
+                imageData = BufferUtils.createByteBuffer(1);
+                imageSize = new Vector2i(1,1);
+                return new TextureBundle(imageSize, imageData,filepath);
+            }
+            if(filepath.equals("") || new File(filepath).isDirectory() || !new File(filepath).exists())
+            {
+                Logger.log(new ImageProcessError("Invalid Filepath: " + filepath));
+                imageData = BufferUtils.createByteBuffer(1);
+                imageSize = new Vector2i(1,1);
+                return new TextureBundle(imageSize, imageData,filepath);
+            }
+
+            IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
+            IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
+            IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
+            STBImage.stbi_set_flip_vertically_on_load(flip);
 
 
-        STBImage.stbi_set_unpremultiply_on_load(true);
-        ByteBuffer image = STBImage.stbi_load(filepath, widthBuf, heightBuf, channelsBuf, 4);
-        if (image == null) {
-            image = BufferUtils.createByteBuffer(1);
+            STBImage.stbi_set_unpremultiply_on_load(true);
+            ByteBuffer image = STBImage.stbi_load(filepath, widthBuf, heightBuf, channelsBuf, 4);
+            if (image == null) {
+                image = BufferUtils.createByteBuffer(1);
+                imageData = image;
+                Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nFilepath:" + filepath));
+                return new TextureBundle(new Vector2i(),imageData,filepath);
+            }
+            image.flip();
             imageData = image;
-            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nFilepath:" + filepath));
-            return new TextureBundle(new Vector2i(),imageData,filepath);
-        }
-        image.flip();
-        imageData = image;
-        imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
-        return new TextureBundle(imageSize,imageData,filepath);
-    }
-
-    static TextureBundle processImage(byte[] data, boolean flip, String filepath){
-        Vector2i imageSize;
-        ByteBuffer imageData;
-        if(data == null)
-        {
-            Logger.log(new ImageProcessError(true));
-            imageData = BufferUtils.createByteBuffer(1);
-            imageSize = new Vector2i(1,1);
+            imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
             return new TextureBundle(imageSize,imageData,filepath);
         }
 
-        IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
-        IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
-        IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
-        STBImage.stbi_set_flip_vertically_on_load(flip);
-        STBImage.stbi_set_unpremultiply_on_load(true);
-        ByteBuffer putData = BufferUtils.createByteBuffer(data.length);
-        putData.put(data);
-        putData.flip();
-        ByteBuffer image = STBImage.stbi_load_from_memory(putData, widthBuf, heightBuf, channelsBuf, 4);
+        static TextureBundle processImage(byte[] data, boolean flip, String filepath){
+            Vector2i imageSize;
+            ByteBuffer imageData;
+            if(data == null)
+            {
+                Logger.log(new ImageProcessError("Invalid Filepath: null"));
+                imageData = BufferUtils.createByteBuffer(1);
+                imageSize = new Vector2i(1,1);
+                return new TextureBundle(imageSize,imageData,filepath);
+            }
 
-        if (image == null) {
-            image = BufferUtils.createByteBuffer(1);
+            IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
+            IntBuffer heightBuf = BufferUtils.createIntBuffer(1);
+            IntBuffer channelsBuf = BufferUtils.createIntBuffer(1);
+            STBImage.stbi_set_flip_vertically_on_load(flip);
+            STBImage.stbi_set_unpremultiply_on_load(true);
+            ByteBuffer putData = BufferUtils.createByteBuffer(data.length);
+            putData.put(data);
+            putData.flip();
+            ByteBuffer image = STBImage.stbi_load_from_memory(putData, widthBuf, heightBuf, channelsBuf, 4);
+
+            if (image == null) {
+                image = BufferUtils.createByteBuffer(1);
+                imageData = image;
+                Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nbytes:" + data.length));
+
+                return new TextureBundle(new Vector2i(),imageData,filepath);
+            }
+            image.flip();
             imageData = image;
-            Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nbytes:" + data.length));
-
-            return new TextureBundle(new Vector2i(),imageData,filepath);
+            imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
+            return new TextureBundle(imageSize,imageData,filepath);
         }
-        image.flip();
-        imageData = image;
-        imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
-        return new TextureBundle(imageSize,imageData,filepath);
+
+        static TextureBundle generateSolidColorImage(Vector2i size, int color){
+            Vector2i imageSize;
+            ByteBuffer imageData;
+            imageSize = size;
+            imageData = BufferUtils.createByteBuffer(size.x * size.y * 4);
+            for (int i = 0; i < size.x * size.y; i++) {
+                imageData.put((byte) ((color >> 16) & 0xFF));
+                imageData.put((byte) ((color >> 8) & 0xFF));
+                imageData.put((byte) (color & 0xFF));
+                imageData.put((byte) ((color >> 24) & 0xFF));
+            }
+            imageData.flip();
+            return new TextureBundle(imageSize,imageData,"");
+        }
     }
 
-    static TextureBundle generateSolidColorImage(Vector2i size, int color){
-        Vector2i imageSize;
-        ByteBuffer imageData;
-        imageSize = size;
-        imageData = BufferUtils.createByteBuffer(size.x * size.y * 4);
-        for (int i = 0; i < size.x * size.y; i++) {
-            imageData.put((byte) ((color >> 16) & 0xFF));
-            imageData.put((byte) ((color >> 8) & 0xFF));
-            imageData.put((byte) (color & 0xFF));
-            imageData.put((byte) ((color >> 24) & 0xFF));
-        }
-        imageData.flip();
-        return new TextureBundle(imageSize,imageData,"");
-    }
 }
+

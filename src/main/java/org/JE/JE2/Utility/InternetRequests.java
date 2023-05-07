@@ -19,7 +19,7 @@ public class InternetRequests {
                 HashMap<String, Object> res = makeRequest(url, requestMethod, queries, contentType);
                 callback.invoke(res);
             } catch (Exception e) {
-                Logger.log(new JE2Error("INTERNET REQUEST ERROR FOR <" + url + "> VIA: " +requestMethod ,"An exception occurred: " + e.getMessage()));
+                Logger.log(new JE2Error("Internet Request Error: For <" + url + "> VIA: " +requestMethod + "\nAn exception occurred: " + e.getMessage()));
             }
         });
         requestThread.start();
@@ -59,7 +59,7 @@ public class InternetRequests {
             return mapResult(response.toString());
         }
         else{
-            Logger.log(new JE2Error("INTERNET REQUEST ERROR FOR <" + url + "> VIA: " +requestMethod ,"Response code not 200: " + responseCode));
+            Logger.log(new JE2Error("Internet Request Error: For <" + url + "> VIA: " +requestMethod + "\nResponse code not 200: " + responseCode));
         }
         // Close connection
         connection.disconnect();

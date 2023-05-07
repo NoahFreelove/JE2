@@ -168,47 +168,45 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         return getPositionTime() / getDuration() *2;
     }
 
-}
+    protected static class AudioProcessor {
+        public static AudioBundle processAudio(String filePath)
+        {
+            ShortBuffer soundData;
+            int format;
+            int sampleRate;
+            int channels;
 
-class AudioProcessor {
-    public static AudioBundle processAudio(String filePath)
-    {
-        ShortBuffer soundData;
-        int format;
-        int sampleRate;
-        int channels;
+            if(Window.audioContext() == -1)
+                Window.CreateOpenAL();
 
-        if(Window.audioContext() == -1)
-            Window.CreateOpenAL();
+            stackPush();
+            IntBuffer channelsBuffer = stackMallocInt(1);
+            stackPush();
+            IntBuffer sampleRateBuffer = stackMallocInt(1);
 
-        stackPush();
-        IntBuffer channelsBuffer = stackMallocInt(1);
-        stackPush();
-        IntBuffer sampleRateBuffer = stackMallocInt(1);
+            ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(filePath, channelsBuffer, sampleRateBuffer);
+            if(rawAudioBuffer == null){
+                Logger.log("Error loading sound file: " + filePath);
+                stackPop();
+                stackPop();
+                return new AudioBundle();
+            }
 
-        ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(filePath, channelsBuffer, sampleRateBuffer);
-        if(rawAudioBuffer == null){
-            Logger.log("Error loading sound file: " + filePath);
+            channels = channelsBuffer.get(0);
+            sampleRate = sampleRateBuffer.get(0);
+
             stackPop();
             stackPop();
-            return new AudioBundle();
-        }
 
-        channels = channelsBuffer.get(0);
-        sampleRate = sampleRateBuffer.get(0);
+            //Find correct format
+            format = -1;
+            if(channels == 1){
+                format = AL10.AL_FORMAT_MONO16;
+            }else if(channels == 2){
+                format = AL10.AL_FORMAT_STEREO16;
+            }
 
-        stackPop();
-        stackPop();
-
-        //Find correct format
-        format = -1;
-        if(channels == 1){
-            format = AL10.AL_FORMAT_MONO16;
-        }else if(channels == 2){
-            format = AL10.AL_FORMAT_STEREO16;
-        }
-
-        soundData = rawAudioBuffer;
+            soundData = rawAudioBuffer;
 
         /*System.out.println("Sound loaded: " + filePath);
         System.out.println("Channels: " + channels);
@@ -216,49 +214,49 @@ class AudioProcessor {
         System.out.println("Format: " + format);
         System.out.println("Buffer: " + rawAudioBuffer);
         System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
-        return new AudioBundle(soundData,format,sampleRate,channels);
-    }
-
-    public static AudioBundle processAudio(byte[] data)
-    {
-        ShortBuffer soundData;
-        int format;
-        int sampleRate;
-        int channels;
-        if(Window.audioContext() == -1)
-            Window.CreateOpenAL();
-
-        stackPush();
-        IntBuffer channelsBuffer = stackMallocInt(1);
-        stackPush();
-        IntBuffer sampleRateBuffer = stackMallocInt(1);
-
-        ByteBuffer putData = BufferUtils.createByteBuffer(data.length);
-        putData.put(data);
-        putData.flip();
-        ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_memory(putData, channelsBuffer, sampleRateBuffer);
-        if(rawAudioBuffer == null){
-            Logger.log("Error loading sound bytes size: " + data.length);
-            stackPop();
-            stackPop();
-            return new AudioBundle();
+            return new AudioBundle(soundData,format,sampleRate,channels);
         }
 
-        channels = channelsBuffer.get(0);
-        sampleRate = sampleRateBuffer.get(0);
+        public static AudioBundle processAudio(byte[] data)
+        {
+            ShortBuffer soundData;
+            int format;
+            int sampleRate;
+            int channels;
+            if(Window.audioContext() == -1)
+                Window.CreateOpenAL();
 
-        stackPop();
-        stackPop();
+            stackPush();
+            IntBuffer channelsBuffer = stackMallocInt(1);
+            stackPush();
+            IntBuffer sampleRateBuffer = stackMallocInt(1);
 
-        //Find correct format
-        format = -1;
-        if(channels == 1){
-            format = AL10.AL_FORMAT_MONO16;
-        }else if(channels == 2){
-            format = AL10.AL_FORMAT_STEREO16;
-        }
+            ByteBuffer putData = BufferUtils.createByteBuffer(data.length);
+            putData.put(data);
+            putData.flip();
+            ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_memory(putData, channelsBuffer, sampleRateBuffer);
+            if(rawAudioBuffer == null){
+                Logger.log("Error loading sound bytes size: " + data.length);
+                stackPop();
+                stackPop();
+                return new AudioBundle();
+            }
 
-        soundData = rawAudioBuffer;
+            channels = channelsBuffer.get(0);
+            sampleRate = sampleRateBuffer.get(0);
+
+            stackPop();
+            stackPop();
+
+            //Find correct format
+            format = -1;
+            if(channels == 1){
+                format = AL10.AL_FORMAT_MONO16;
+            }else if(channels == 2){
+                format = AL10.AL_FORMAT_STEREO16;
+            }
+
+            soundData = rawAudioBuffer;
 
         /*System.out.println("Sound loaded: " + filePath);
         System.out.println("Channels: " + channels);
@@ -266,6 +264,8 @@ class AudioProcessor {
         System.out.println("Format: " + format);
         System.out.println("Buffer: " + rawAudioBuffer);
         System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
-        return new AudioBundle(soundData,format,sampleRate,channels);
+            return new AudioBundle(soundData,format,sampleRate,channels);
+        }
     }
 }
+

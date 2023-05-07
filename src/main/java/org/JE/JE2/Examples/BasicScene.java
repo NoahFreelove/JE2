@@ -6,6 +6,9 @@ import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.AmbientLight;
 import org.JE.JE2.Objects.Lights.PointLight;
+import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationFrame;
+import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationTimeline;
+import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimator;
 import org.JE.JE2.Objects.Scripts.CameraEffects.CameraShake;
 import org.JE.JE2.Objects.Scripts.CameraEffects.PostProcessingVolume;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
@@ -27,7 +30,6 @@ import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.Font;
 import org.JE.JE2.UI.UIElements.Label;
-import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.GarbageCollection;
@@ -68,6 +70,14 @@ public class BasicScene {
         GameObject player = GameObject.Sprite(ShaderProgram.spriteShader(),
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
+
+        SpriteAnimator sa = new SpriteAnimator();
+        sa.addTimelines(new SpriteAnimationTimeline(
+                new SpriteAnimationFrame(Texture.get("PlayerTexture"), Texture.get("PlayerNormal"), 500),
+                new SpriteAnimationFrame(Texture.get("floor"), Texture.get("PlayerNormal"), 500)));
+        player.addScript(sa);
+
+        sa.play();
 
         Camera playerCam = new Camera();
         player.addScript(new PhysicsBody());
@@ -143,16 +153,6 @@ public class BasicScene {
             public void onTriggerEnter(GameObject other) {
                 scene.remove(rightWall);
             }
-
-            @Override
-            public void onTriggerExit(GameObject other) {
-
-            }
-
-            @Override
-            public void onTrigger(GameObject other) {
-
-            }
         }));
 
 
@@ -189,7 +189,7 @@ public class BasicScene {
 
         //uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
 
-        scene.addUI(uiWindow);
+        //scene.addUI(uiWindow);
 
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("F1")){
