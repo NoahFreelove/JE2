@@ -34,7 +34,7 @@ public class ObjectStressTest {
                 });
 
         Logger.logErrors = true;
-        Logger.logPetty = true;
+        Logger.logLevel = 0;
         GameObject cameraRig = new GameObject();
         Camera cam = new Camera();
         cameraRig.addScript(cam);

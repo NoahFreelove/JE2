@@ -9,10 +9,11 @@ import java.nio.ByteBuffer;
 
 public class FileDialogs {
 
-    public static File getFile(String title, String defaultPath, String[] extensions, boolean multiFiles){
+    public static String[] getFiles(String title, String defaultPath, String[] extensions, boolean multiFiles){
         PointerBuffer filterPatterns = MemoryUtil.memAllocPointer(extensions.length);
-
         for (String etx : extensions) {
+            if(!etx.startsWith("*."))
+                etx = "*." + etx;
             ByteBuffer filterPatternBuffer = MemoryUtil.memUTF8(etx);
             filterPatterns.put(filterPatternBuffer);
         }
@@ -23,15 +24,11 @@ public class FileDialogs {
         // free
         MemoryUtil.memFree(filterPatterns);
         if(fp == null)
-            return new File(defaultPath);
-        return new File(fp);
+            return new String[]{defaultPath};
+        return fp.split("\\|");
     }
 
-    /*public static void getFileAsync(String title, String defaultPath, String[] extensions, boolean multiFiles, RunnableGeneric<File> onComplete){
-        Thread fileThread = new Thread(()->{
-            onComplete.invoke(getFile(title,defaultPath,extensions,multiFiles));
-        });
-        Window.fileDialogs.add(fileThread);
-        fileThread.start();
-    }*/
+    public static File getFile(String title, String defaultPath, String[] extensions){
+        return new File(getFiles(title,defaultPath,extensions,false)[0]);
+    }
 }

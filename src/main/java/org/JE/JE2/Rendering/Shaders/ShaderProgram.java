@@ -228,7 +228,7 @@ public final class ShaderProgram implements Serializable, Loadable {
     @GLThread
     public boolean use(){
         if(!valid()){
-            Logger.log(ShaderError.invalidProgramIDError, true);
+            Logger.log(ShaderError.invalidProgramIDError);
         }
         else glUseProgram(programID);
         return valid();
