@@ -1,20 +1,22 @@
 package org.JE.JE2.UI.UIElements;
 
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Resources.Bundles.TextureBundle;
+import org.JE.JE2.Resources.Resource;
 import org.JE.JE2.Window.UIHandler;
 import org.lwjgl.nuklear.NkImage;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 
 public class UIImage extends UIElement {
-    private Texture text = null;
+    private Resource<TextureBundle> text = null;
     public NkImage img = NkImage.create();
 
     public UIImage() {
         super();
     }
 
-    public UIImage(Texture text) {
+    public UIImage(Resource<TextureBundle> text) {
         super();
         this.text = text;
     }
@@ -23,11 +25,11 @@ public class UIImage extends UIElement {
     protected void render() {
         if(text == null)
             return;
-        /*nk_image_id(text.generatedTextureID,img);
-        nk_layout_row_template_begin(UIHandler.nuklearContext, text.resource.getTextureBundle().getImageSize().y);
-        nk_layout_row_template_push_static(UIHandler.nuklearContext, text.resource.getTextureBundle().getImageSize().x);
+        nk_image_id(text.getID(),img);
+        nk_layout_row_template_begin(UIHandler.nuklearContext, text.getBundle().getImageSize().y);
+        nk_layout_row_template_push_static(UIHandler.nuklearContext, text.getBundle().getImageSize().x);
         nk_layout_row_template_end(UIHandler.nuklearContext);
-        nk_image(UIHandler.nuklearContext, img);*/
+        nk_image(UIHandler.nuklearContext, img);
 
     }
 }

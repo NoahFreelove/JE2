@@ -10,7 +10,9 @@ public class PlayerScript extends Script {
     @Override
     public void start() {
         cameraRef = getAttachedObject().getScript(Camera.class);
-        if(cameraRef !=null)
-            cameraRef.positionOffset = new Vector2f(0.5f,0.5f);
+        if(cameraRef !=null) {
+            cameraRef.checkRenderDistance = false;
+            cameraRef.positionOffset = new Vector2f(0.5f, 0.5f);
+        }
     }
 }

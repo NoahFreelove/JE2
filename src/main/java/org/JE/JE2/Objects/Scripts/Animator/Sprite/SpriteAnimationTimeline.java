@@ -15,10 +15,7 @@ public class SpriteAnimationTimeline {
     float currentFrameDuration = 0f;
 
     public SpriteAnimationTimeline(SpriteAnimationFrame... spriteAnimationFrames){
-        System.out.println(spriteAnimationFrames.length);
         frames.addAll(java.util.Arrays.asList(spriteAnimationFrames));
-        System.out.println(frames.size());
-
         for(SpriteAnimationFrame frame : frames){
             totalDuration += frame.duration;
         }

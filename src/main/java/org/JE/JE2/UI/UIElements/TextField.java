@@ -88,6 +88,11 @@ public class TextField extends UIElement {
 
         prevString = getValue();
 
+        if(style.font.created)
+        {
+            nk_style_set_font(UIHandler.nuklearContext, style.font.getFont());
+        }
+
         nk_edit_string(UIHandler.nuklearContext, NK_EDIT_FIELD, content, length, maxLength, filter);
 
         if(!getValue().equals(prevString))

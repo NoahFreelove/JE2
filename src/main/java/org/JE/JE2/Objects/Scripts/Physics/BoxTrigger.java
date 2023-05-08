@@ -9,22 +9,7 @@ import org.joml.Vector2f;
  * But if you don't want to you can use the triggerEvent field to set the trigger event.
  */
 public class BoxTrigger extends TriggerVolume{
-    private TriggerEvent triggerEvent = new TriggerEvent() {
-        @Override
-        public void onTriggerEnter(GameObject other) {
-
-        }
-
-        @Override
-        public void onTriggerExit(GameObject other) {
-
-        }
-
-        @Override
-        public void onTrigger(GameObject other) {
-
-        }
-    };
+    private TriggerEvent triggerEvent = new TriggerEvent(){};
 
     public BoxTrigger(){}
 

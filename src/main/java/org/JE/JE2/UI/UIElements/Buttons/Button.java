@@ -5,6 +5,7 @@ import org.JE.JE2.Window.UIHandler;
 import org.lwjgl.nuklear.NkStyleButton;
 
 import static org.lwjgl.nuklear.Nuklear.nk_button_label;
+import static org.lwjgl.nuklear.Nuklear.nk_style_set_font;
 
 public class Button extends UIElement {
     public String text = "text";
@@ -29,7 +30,10 @@ public class Button extends UIElement {
         button.text_normal().set(style.textColor.nkColor());
         button.text_hover().set(style.textColor.nkColor());
         button.text_active().set(style.textColor.nkColor());
-
+        if(style.font.created)
+        {
+            nk_style_set_font(UIHandler.nuklearContext, style.font.getFont());
+        }
         if(isActive()){
             button.normal().data().color().set(style.normalColor.nkColor());
             button.hover().data().color().set(style.hoverColor.nkColor());

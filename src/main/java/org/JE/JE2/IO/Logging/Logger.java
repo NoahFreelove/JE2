@@ -93,9 +93,11 @@ public class Logger {
         logEntries[logEntryIndex] = new LogEntry(appendedMessage, level);
         logEntryIndex++;
     }
+
     public static void log(String message){
         log(message, DEFAULT_LOG_LEVEL);
     }
+
     public static void log(float f){
         log(String.valueOf(f));
     }
@@ -119,9 +121,11 @@ public class Logger {
     public static void log(Object o){
     log(o.toString(),DEFAULT_LOG_LEVEL);
     }
+
     public static void log(Object o, int level){
         log(o.toString(), level);
     }
+
     public static void log(JE2Error error){
         log(error,DEFAULT_ERROR_LOG_LEVEL);
     }

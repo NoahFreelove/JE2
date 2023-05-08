@@ -25,6 +25,7 @@ public class Renderer extends Script {
     protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Color baseColor = Color.WHITE;
+
     @ActPublic
     protected boolean scale = true;
 

@@ -2,10 +2,7 @@ package org.JE.JE2;
 
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.Logging.Logger;
-import org.JE.JE2.Utility.FileDialogs;
 import org.JE.JE2.Window.WindowPreferences;
-
-import java.util.Arrays;
 
 import static org.JE.JE2.Examples.BasicScene.mainScene;
 

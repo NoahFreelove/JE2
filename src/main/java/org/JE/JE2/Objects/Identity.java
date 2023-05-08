@@ -5,7 +5,6 @@ import org.JE.JE2.Annotations.ActPublic;
 import java.io.Serializable;
 
 public class Identity implements Serializable {
-
     @ActPublic
     public String name;
     @ActPublic

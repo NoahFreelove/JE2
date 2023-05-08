@@ -30,6 +30,8 @@ import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.Font;
 import org.JE.JE2.UI.UIElements.Label;
+import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
+import org.JE.JE2.UI.UIElements.Spacer;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.GarbageCollection;
@@ -67,9 +69,10 @@ public class BasicScene {
                         TextureBundle.class
                 });
 
-        GameObject player = GameObject.Sprite(ShaderProgram.spriteShader(),
+        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(),
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
+        player.setIdentity("Player", "player");
 
         SpriteAnimator sa = new SpriteAnimator();
         sa.addTimelines(new SpriteAnimationTimeline(
@@ -77,7 +80,7 @@ public class BasicScene {
                 new SpriteAnimationFrame(Texture.get("floor"), Texture.get("PlayerNormal"), 500)));
         player.addScript(sa);
 
-        sa.play();
+        //sa.play();
 
         Camera playerCam = new Camera();
         player.addScript(new PhysicsBody());
@@ -114,10 +117,74 @@ public class BasicScene {
             }
         });
 
+        addPhysicsObject();
+        addFloors(scene);
+        createUI(scene);
+        scene.add(player);
+
+        return scene;
+    }
+
+    private static void createUI(Scene scene) {
         UIWindow uiWindow = new UIWindow("Cool window",
                 NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
                 new Vector2f(100,100));
+        SettingManager settingManager = new SettingManager(new SettingCategory("Settings"));
 
+        Setting<Integer> setting = new Setting<>("Int Count", 0);
+        setting.setLimit(new IntLimit(0,Integer.MAX_VALUE));
+
+        Setting<String> setting2 = new Setting<>("Some String", "Str");
+        setting2.setLimit(new StringLimit(128));
+
+        Setting<Boolean> setting3 = new Setting<>("Some Boolean", false);
+        setting3.setLimit(new BooleanLimit());
+
+        Setting<Float> setting4 = new Setting<>("Some Float", 0.2f);
+        setting4.setLimit(new FloatLimit(0,100));
+
+        Setting<Double> setting5 = new Setting<>("Some Double", 13.5);
+        setting5.setLimit(new DoubleLimit(0,100));
+
+        Setting<GameObject> setting6 = new Setting<>("Cool GameObject", new GameObject());
+        settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5,setting6);
+
+        Label small = new Label("arial");
+        small.getStyle().font = new Font(DataLoader.getBytes("arial.ttf"), false);
+        small.getStyle().font.fontHeight = 25;
+
+        Label large = new Label("comic sans");
+        large.getStyle().font = new Font(DataLoader.getBytes("comic.ttf"), false);
+        large.getStyle().font.fontHeight = 45;
+
+        uiWindow.addElement(large);
+        uiWindow.addElement(new Spacer());
+        uiWindow.addElement(small);
+
+        uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
+
+        scene.addUI(uiWindow);
+
+        Keyboard.addKeyReleasedEvent((key, mods) -> {
+            if(key == Keyboard.nameToCode("F1")){
+                setting.setValue(setting.getValue() + 1);
+            }
+            if(key == Keyboard.nameToCode("F2")){
+                settingManager.saveToFile("settings.txt");
+            }
+            if(key == Keyboard.nameToCode("F3")){
+                settingManager.tryLoadFromFile("settings.txt");
+            }
+            if(key == Keyboard.nameToCode("F4")){
+                GarbageCollection.takeOutDaTrash();
+            }
+            if(key == Keyboard.nameToCode("F5")){
+                Manager.setWindowPreferences(new WindowPreferences(2000,2000,"JE2"));
+            }
+        });
+    }
+
+    private static void addPhysicsObject() {
         GameObject go = new GameObject();
         go.addScript(new ShapeRenderer());
         ((ShapeRenderer)go.getRenderer()).setPoints(new Vector2f[]{
@@ -140,13 +207,23 @@ public class BasicScene {
         go.getRenderer().setDrawMode(GL_LINE_LOOP);
         go.getRenderer().baseColor = Color.BLUE;
         //scene.add(go);
-        scene.add(player);
+    }
 
+    private static void addFloors(Scene scene) {
         scene.add(FloorFactory.createFloor(new Vector2f(-2,-4), new Vector2f(6,1)));
         GameObject rightWall = FloorFactory.createFloor(new Vector2f(4,-3), new Vector2f(1,4));
         scene.add(rightWall);
-        scene.add(FloorFactory.createFloor(new Vector2f(-3,-3), new Vector2f(1,4)));
+        scene.add(FloorFactory.createFloor(new Vector2f(-3,-4), new Vector2f(1,6)));
         scene.add(FloorFactory.createFloor(new Vector2f(-2,1), new Vector2f(6,1)));
+        scene.add(FloorFactory.createFloor(new Vector2f(4,-4), new Vector2f(3,1)));
+        scene.add(FloorFactory.createFloor(new Vector2f(7,-3), new Vector2f(1,1)));
+        scene.add(FloorFactory.createFloor(new Vector2f(8,-2), new Vector2f(1,1)));
+        scene.add(FloorFactory.createFloor(new Vector2f(9,-1), new Vector2f(1,1)));
+        scene.add(FloorFactory.createFloor(new Vector2f(10,0), new Vector2f(1,1)));
+        scene.add(FloorFactory.createFloor(new Vector2f(11,0), new Vector2f(1,6)));
+        scene.add(FloorFactory.createFloor(new Vector2f(11,6), new Vector2f(-10,1)));
+
+        scene.add(FloorFactory.createFloor(new Vector2f(4,1), new Vector2f(3,1)));
 
         scene.add(BoxTrigger.triggerObject(new Vector2f(4, -3), new Vector2f(1, 5), new TriggerEvent() {
             @Override
@@ -154,61 +231,5 @@ public class BasicScene {
                 scene.remove(rightWall);
             }
         }));
-
-
-        SettingManager settingManager = new SettingManager(new SettingCategory("Settings"));
-
-        Setting<Integer> setting = new Setting<>("Int Count", 0);
-        setting.setLimit(new IntLimit(0,Integer.MAX_VALUE));
-
-        Setting<String> setting2 = new Setting<>("Some String", "Str");
-        setting2.setLimit(new StringLimit(128));
-
-        Setting<Boolean> setting3 = new Setting<>("Some Boolean", false);
-        setting3.setLimit(new BooleanLimit());
-
-        Setting<Float> setting4 = new Setting<>("Some Float", 0.2f);
-        setting4.setLimit(new FloatLimit(0,100));
-
-        Setting<Double> setting5 = new Setting<>("Some Double", 13.5);
-        setting5.setLimit(new DoubleLimit(0,100));
-
-        Setting<GameObject> setting6 = new Setting<>("Cool GameObject", new GameObject());
-        settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5,setting6);
-
-        Label small = new Label("small");
-        small.getStyle().font = new Font(DataLoader.getBytes("arial.ttf"), false);
-        small.getStyle().font.fontHeight = 12;
-
-        Label large = new Label("large");
-        large.getStyle().font = new Font(DataLoader.getBytes("arial.ttf"), false);
-        large.getStyle().font.fontHeight = 30;
-
-        uiWindow.addElement(large);
-        uiWindow.addElement(small);
-
-        //uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
-
-        //scene.addUI(uiWindow);
-
-        Keyboard.addKeyReleasedEvent((key, mods) -> {
-            if(key == Keyboard.nameToCode("F1")){
-                setting.setValue(setting.getValue() + 1);
-            }
-            if(key == Keyboard.nameToCode("F2")){
-                settingManager.saveToFile("settings.txt");
-            }
-            if(key == Keyboard.nameToCode("F3")){
-                settingManager.tryLoadFromFile("settings.txt");
-            }
-            if(key == Keyboard.nameToCode("F4")){
-                GarbageCollection.takeOutDaTrash();
-            }
-            if(key == Keyboard.nameToCode("F5")){
-                Manager.setWindowPreferences(new WindowPreferences(2000,2000,"JE2"));
-            }
-        });
-
-        return scene;
     }
 }
