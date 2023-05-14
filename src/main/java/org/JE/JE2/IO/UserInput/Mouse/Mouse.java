@@ -74,17 +74,31 @@ public class Mouse {
     }
 
     private static final boolean[] buttons = new boolean[8];
+    private static final long[] pressedFor = new long[8];
+    private static final long[] releasedSince = new long[8];
+
+    static {
+        for(int i = 0; i < buttons.length; i++){
+            buttons[i] = false;
+            pressedFor[i] = 0;
+            releasedSince[i] = System.currentTimeMillis();
+        }
+    }
 
     private static void mousePressed(int button){
         if(button >= buttons.length || button < 0)
             return;
         buttons[button] = true;
+        pressedFor[button] = System.currentTimeMillis();
+        releasedSince[button] = 0;
     }
 
     private static void mouseReleased(int button){
         if(button >= buttons.length || button < 0)
             return;
         buttons[button] = false;
+        pressedFor[button] = 0;
+        releasedSince[button] = System.currentTimeMillis();
     }
 
     public static boolean isPressed(int button){
@@ -106,6 +120,25 @@ public class Mouse {
             case "BUTTON8" -> 7;
             default -> -1;
         };
+    }
+
+    public static float buttonPressedForSeconds(int button){
+        if(button >= buttons.length || button < 0)
+            return 0;
+        if(pressedFor[button] == 0)
+            return 0;
+        long delta = System.currentTimeMillis() - pressedFor[button];
+        return delta / 1000f;
+    }
+
+    public static float buttonReleasedForSeconds(int button){
+        if(button >= buttons.length || button < 0)
+            return 0;
+        if(releasedSince[button] == 0)
+            return 0;
+
+        long delta = System.currentTimeMillis() - releasedSince[button];
+        return delta / 1000f;
     }
 
     public static Vector2f getMouseWorldPosition2D() {

@@ -30,6 +30,7 @@ import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.Font;
 import org.JE.JE2.UI.UIElements.Label;
+import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Spacer;
 import org.JE.JE2.UI.UIElements.Style.Color;
@@ -89,7 +90,7 @@ public class BasicScene {
         scene.add(PointLight.pointLightObject(new Vector2f(-5,-1), new Vector3f(1,1,1), 12, 2f).addScript(new LambdaScript(new ILambdaScript() {
             @Override
             public void update(GameObject parent) {
-                //parent.getTransform().translateX(0.1f);
+                //System.out.println("Released for: " + Mouse.buttonReleasedForSeconds(0));
             }
         })));
 
@@ -163,8 +164,8 @@ public class BasicScene {
 
         uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
 
-        scene.addUI(uiWindow);
-
+        //scene.addUI(uiWindow);
+        scene.addUI(FPSCounter.generateFPSBox(new Vector2f(800-90,800-40)));
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("F1")){
                 setting.setValue(setting.getValue() + 1);

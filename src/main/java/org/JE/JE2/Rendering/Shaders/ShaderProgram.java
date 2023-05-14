@@ -265,9 +265,7 @@ public final class ShaderProgram implements Serializable, Loadable {
         {
             case 0 -> setDefaultShader();
             case 1 -> setSpriteShader();
-            case 2 -> {
-                setLightSpriteShader();
-            }
+            case 2 -> setLightSpriteShader();
         }
     }
 }

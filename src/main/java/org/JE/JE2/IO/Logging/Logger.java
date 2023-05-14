@@ -160,11 +160,7 @@ public class Logger {
 
         if(throwErrors)
         {
-            try {
-                throw error;
-            } catch (Exception e) {
-                // ignore
-            }
+            throw new RuntimeException(error);
         }
     }
 

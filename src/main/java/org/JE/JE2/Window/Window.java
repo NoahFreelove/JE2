@@ -68,11 +68,11 @@ public class Window {
     }
 
     public static void loop(){
-        WindowLoop();
-        Destroy();
+        windowLoop();
+        destroy();
     }
 
-    private static void Destroy(){
+    private static void destroy(){
         UIHandler.destroy();
 
         fileDialogs.forEach(Thread::interrupt);
@@ -239,7 +239,7 @@ public class Window {
         }
     }
 
-    private static void WindowLoop() {
+    private static void windowLoop() {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
