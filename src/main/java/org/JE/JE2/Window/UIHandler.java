@@ -287,12 +287,12 @@ public class UIHandler {
             IntBuffer h = stack.mallocInt(1);
 
             glfwGetWindowSize(Window.handle(), w, h);
-            Window.width = w.get(0);
-            Window.height = h.get(0);
+            Window.setWidth(w.get(0));
+            Window.setHeight(h.get(0));
 
             glfwGetFramebufferSize(Window.handle(), w, h);
-            Window.monitorWidth = w.get(0);
-            Window.monitorHeight = h.get(0);
+            Window.setMonitorWidth(w.get(0));
+            Window.setMonitorHeight(h.get(0));
         }
 
         nk_input_begin(nuklearContext);
@@ -341,12 +341,12 @@ public class UIHandler {
             glUseProgram(prog);
             glUniform1i(uniform_tex, 0);
             glUniformMatrix4fv(uniform_proj, false, stack.floats(
-                    2.0f / Window.width, 0.0f, 0.0f, 0.0f,
-                    0.0f, -2.0f / Window.height, 0.0f, 0.0f,
+                    2.0f / Window.getWidth(), 0.0f, 0.0f, 0.0f,
+                    0.0f, -2.0f / Window.getHeight(), 0.0f, 0.0f,
                     0.0f, 0.0f, -1.0f, 0.0f,
                     -1.0f, 1.0f, 0.0f, 1.0f
             ));
-            glViewport(0, 0, Window.monitorWidth, Window.monitorHeight);
+            glViewport(0, 0, Window.getMonitorWidth(), Window.getMonitorHeight());
         }
 
         Manager.activeScene().world.UI.forEach(UIObject::requestRender);
@@ -391,8 +391,8 @@ public class UIHandler {
             glUnmapBuffer(GL_ARRAY_BUFFER);
 
             // iterate over and execute each draw command
-            float fb_scale_x = (float)Window.monitorWidth / (float)Window.width;
-            float fb_scale_y = (float)Window.monitorHeight / (float)Window.height;
+            float fb_scale_x = (float)Window.getMonitorWidth() / (float)Window.getWidth();
+            float fb_scale_y = (float)Window.getMonitorHeight() / (float)Window.getHeight();
 
             long offset = NULL;
             for (NkDrawCommand cmd = nk__draw_begin(nuklearContext, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, nuklearContext)) {
@@ -402,7 +402,7 @@ public class UIHandler {
                 glBindTexture(GL_TEXTURE_2D, cmd.texture().id());
                 glScissor(
                         (int)(cmd.clip_rect().x() * fb_scale_x),
-                        (int)((Window.height - (int)(cmd.clip_rect().y() + cmd.clip_rect().h())) * fb_scale_y),
+                        (int)((Window.getHeight() - (int)(cmd.clip_rect().y() + cmd.clip_rect().h())) * fb_scale_y),
                         (int)(cmd.clip_rect().w() * fb_scale_x),
                         (int)(cmd.clip_rect().h() * fb_scale_y)
                 );

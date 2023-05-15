@@ -3,11 +3,9 @@ package org.JE.JE2.Window;
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
-import org.JE.JE2.IO.UserInput.Mouse.MouseButton;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
 import org.JE.JE2.UI.UIElements.Style.Color;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
@@ -25,37 +23,33 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public final class Window {
-    private static long windowHandle = 0;
-
+    private static long windowHandle = -1;
     private static long audioDevice =-1;
     private static long audioContext =-1;
-    public static boolean hasInit = false;
-    public static int width;
-    public static int height;
-    public static int monitorWidth;
-    public static int monitorHeight;
+    private static boolean hasInit = false;
+    private static int width;
+    private static int height;
+    private static int monitorWidth;
+    private static int monitorHeight;
     public static final CopyOnWriteArrayList<Runnable> actionQueue = new CopyOnWriteArrayList<>();
     public static final CopyOnWriteArrayList<Thread> fileDialogs = new CopyOnWriteArrayList<>();
-    public static Pipeline pipeline = new DefaultPipeline();
+    private static Thread glThread;
+    private static ThreadLocal<Boolean> isGLThread;
+    private static Pipeline pipeline = new DefaultPipeline();
+
     private static double deltaTime = 0;
 
-    public static int framebuffer;
-    public static int textureColorBuffer;
-    public static int rbo;
-
-    public static ThreadLocal<Boolean> glThread;
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
-        glThread = new ThreadLocal<>();
-        glThread.set(false);
-        new Thread(() -> {
-            glThread.set(true);
+        isGLThread = new ThreadLocal<>();
+        isGLThread.set(false);
+        glThread = new Thread(() -> {
+            isGLThread.set(true);
             initializeWindow(wp);
             hasInit = true;
             GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -67,7 +61,8 @@ public final class Window {
             monitorHeight = vidMode.height();
             monitorWidth = vidMode.width();
             loop();
-        }).start();
+        });
+        glThread.start();
     }
     public static void closeWindow(int code){
         Logger.log("Quitting with code: " + code + "...");
@@ -175,34 +170,6 @@ public final class Window {
         }
         if(wp.initializeNuklear)
             UIHandler.init();
-
-        generateFrameBuffer();
-    }
-
-    private static void generateFrameBuffer() {
-        IntBuffer result = BufferUtils.createIntBuffer(1);
-        glGenFramebuffers(result);
-        framebuffer = result.get();
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-        textureColorBuffer =  glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
-
-        rbo = glGenRenderbuffers();
-        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height); // use a single renderbuffer object for both a depth AND stencil buffer.
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
-        // now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
     }
 
     public static void CreateOpenAL() {
@@ -238,7 +205,6 @@ public final class Window {
         while ( !glfwWindowShouldClose(windowHandle) ) {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            //glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
             UIHandler.frameStart();
             double startTime = glfwGetTime();
@@ -256,11 +222,6 @@ public final class Window {
             glfwPollEvents();
             pipeline.onStart();
 
-            //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-           /* glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-
             //pipeline.postProcess();
 
             glfwSwapBuffers(windowHandle);
@@ -268,8 +229,8 @@ public final class Window {
 
             // If the window was moved or resized, the delta time will be very large.
             // This is to prevent that and physics from breaking.
-            // This is a very temporary fix.
-            if(deltaTime()>= 0.1){
+            // This is a very temporary fix. Haha "temporary".
+            if(deltaTime() >= 0.1){
                 deltaTime = 0;
             }
         }
@@ -298,14 +259,65 @@ public final class Window {
     public static long getWindowHandle(){
         return windowHandle;
     }
+
     public static float deltaTime(){
         return (float)deltaTime;
     }
+
     public static long handle()
     {
         return windowHandle;
     }
+
     public static long audioContext(){
         return audioContext;
+    }
+
+    public static void setPipeline(Pipeline pipeline) {
+        Window.pipeline = pipeline;
+    }
+
+    public static Pipeline getPipeline(){
+        return pipeline;
+    }
+
+    public static boolean getHasInit() {
+        return hasInit;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static void setWidth(int width) {
+        Window.width = width;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
+    public static void setHeight(int height) {
+        Window.height = height;
+    }
+
+    public static int getMonitorWidth() {
+        return monitorWidth;
+    }
+
+    public static void setMonitorWidth(int monitorWidth) {
+        Window.monitorWidth = monitorWidth;
+    }
+
+    public static int getMonitorHeight() {
+        return monitorHeight;
+    }
+
+    public static void setMonitorHeight(int monitorHeight) {
+        Window.monitorHeight = monitorHeight;
+    }
+
+    public static boolean isGLThread(){
+        return isGLThread.get();
     }
 }
