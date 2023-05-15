@@ -1,5 +1,6 @@
 package org.JE.JE2.Window;
 
+import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.IO.UserInput.Mouse.MouseButton;
@@ -28,7 +29,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Window {
+public final class Window {
     private static long windowHandle = 0;
 
     private static long audioDevice =-1;
@@ -57,13 +58,19 @@ public class Window {
             glThread.set(true);
             initializeWindow(wp);
             hasInit = true;
-            monitorHeight = glfwGetVideoMode(glfwGetPrimaryMonitor()).height();
-            monitorWidth = glfwGetVideoMode(glfwGetPrimaryMonitor()).width();
+            GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            if(vidMode == null){
+                Logger.log(new JE2Error("GLFW Video Mode is null, closing program.", Logger.DEFAULT_MAX_LOG_LEVEL));
+                Window.closeWindow(WindowCloseReason.ERROR);
+                return;
+            }
+            monitorHeight = vidMode.height();
+            monitorWidth = vidMode.width();
             loop();
         }).start();
     }
     public static void closeWindow(int code){
-        Logger.log("Closing window with code: " + code);
+        Logger.log("Quitting with code: " + code + "...");
         glfwSetWindowShouldClose(windowHandle, true);
     }
 
@@ -95,7 +102,11 @@ public class Window {
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if ( !glfwInit() )
-            throw new IllegalStateException("Unable to initialize GLFW");
+        {
+            Logger.log(new JE2Error("Could not initialize GLFW, closing program.", Logger.DEFAULT_MAX_LOG_LEVEL));
+            Window.closeWindow(1);
+            return;
+        }
 
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current windowHandle hints are already the default
@@ -109,40 +120,14 @@ public class Window {
         if ( windowHandle == NULL )
             throw new RuntimeException("Failed to create the GLFW windowHandle");
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(windowHandle, (windowHandle, key, scancode, action, mods) -> {
-
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(windowHandle, true);
-
-            if(action == GLFW_PRESS){
-                Keyboard.triggerKeyPressed(key, mods);
-            }
-            else if(action == GLFW_RELEASE){
-                Keyboard.triggerKeyReleased(key, mods);
-            }
-            else if (action == GLFW_REPEAT){
-                Keyboard.triggerKeyRepeat(key, mods);
-            }
-        });
-
         glfwSetWindowSizeCallback(windowHandle, (windowHandle, width, height) -> {
             Window.width = width;
             Window.height = height;
             Manager.onWindowSizeChange(width,height);
         });
 
-
-
-        glfwSetMouseButtonCallback(windowHandle, (windowHandle, button, action, mods) -> {
-            if(action == GLFW_PRESS){
-                Mouse.triggerMousePressed(MouseButton.values()[button], mods);
-            }
-            else if(action == GLFW_RELEASE){
-                Mouse.triggerMouseReleased(MouseButton.values()[button], mods);
-            }
-        });
-
+        Keyboard.setupKeyboard();
+        Mouse.setupMouse();
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {

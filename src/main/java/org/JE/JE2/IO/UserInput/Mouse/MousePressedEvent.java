@@ -6,5 +6,4 @@ public interface MousePressedEvent {
      * @param mods - modifiers (ex. ctrl,shift,alt)
      */
     void invoke(MouseButton button, int mods);
-
 }

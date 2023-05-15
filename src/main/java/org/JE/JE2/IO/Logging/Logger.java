@@ -33,6 +33,7 @@ public class Logger {
 
     public static int DEFAULT_LOG_LEVEL = 10;
     public static int DEFAULT_ERROR_LOG_LEVEL = 20;
+    public static int DEFAULT_MAX_LOG_LEVEL = Integer.MAX_VALUE-1;
 
     public static void log(String message, int level){
         if(!masterLog)

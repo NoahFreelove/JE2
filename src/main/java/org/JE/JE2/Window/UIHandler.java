@@ -1,7 +1,6 @@
 package org.JE.JE2.Window;
 
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
-import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.UI.Font;
@@ -16,6 +15,7 @@ import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
 
+import static org.JE.JE2.IO.UserInput.Mouse.Mouse.disableUIInput;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_COUNT;
@@ -77,15 +77,18 @@ public class UIHandler {
         nuklearReady = true;
     }
 
-    private static void keyboardInput(boolean press, int key){
+    public static void triggerUIKeyboardInput(boolean press, int key){
+        if(!nuklearReady || Keyboard.disableUIInput)
+            return;
         switch (key) {
-            case GLFW_KEY_ESCAPE -> glfwSetWindowShouldClose(Window.handle(), true);
             case GLFW_KEY_DELETE -> nk_input_key(nuklearContext, NK_KEY_DEL, press);
             case GLFW_KEY_ENTER -> nk_input_key(nuklearContext, NK_KEY_ENTER, press);
             case GLFW_KEY_TAB -> nk_input_key(nuklearContext, NK_KEY_TAB, press);
             case GLFW_KEY_BACKSPACE -> nk_input_key(nuklearContext, NK_KEY_BACKSPACE, press);
             case GLFW_KEY_UP -> nk_input_key(nuklearContext, NK_KEY_UP, press);
             case GLFW_KEY_DOWN -> nk_input_key(nuklearContext, NK_KEY_DOWN, press);
+            case GLFW_KEY_LEFT -> nk_input_key(nuklearContext, NK_KEY_LEFT, press);
+            case GLFW_KEY_RIGHT -> nk_input_key(nuklearContext, NK_KEY_RIGHT, press);
             case GLFW_KEY_HOME -> {
                 nk_input_key(nuklearContext, NK_KEY_TEXT_START, press);
                 nk_input_key(nuklearContext, NK_KEY_SCROLL_START, press);
@@ -119,7 +122,9 @@ public class UIHandler {
             }
         }
     }
-    private static void mouseInput(int button, boolean pressed){
+    public static void triggerUIMouseInput(int button, boolean pressed){
+        if(!nuklearReady || disableUIInput)
+            return;
         try (MemoryStack stack = stackPush()) {
             DoubleBuffer cx = stack.mallocDouble(1);
             DoubleBuffer cy = stack.mallocDouble(1);
@@ -136,28 +141,9 @@ public class UIHandler {
             nk_input_button(nuklearContext, nkButton, x, y, pressed);
         }
     }
+
+    //region Setup and Destroy Nuklear
     private static NkContext setupWindow(long win) {
-        glfwSetScrollCallback(win, (window, xoffset, yoffset) -> {
-            try (MemoryStack stack = stackPush()) {
-                NkVec2 scroll = NkVec2.malloc(stack)
-                        .x((float)xoffset)
-                        .y((float)yoffset);
-                nk_input_scroll(nuklearContext, scroll);
-            }
-        });
-
-        glfwSetCharCallback(win, (window, unicode) -> nk_input_unicode(nuklearContext, unicode));
-
-        Keyboard.addKeyPressedEvent((key, mods) -> keyboardInput(true,key));
-        Keyboard.addKeyReleasedEvent((key, mods) -> keyboardInput(false,key));
-
-        glfwSetCursorPosCallback(win, (window, xpos, ypos) -> {
-            nk_input_motion(nuklearContext, (int)xpos, (int)ypos);
-            Mouse.triggerMouseMoved((float)xpos, (float)ypos);
-        });
-        Mouse.addMousePressedEvent((button, mods) -> mouseInput(button.ordinal(),true));
-        Mouse.addMouseReleasedEvent((button, mods) -> mouseInput(button.ordinal(),false));
-
         nk_init(nuklearContext, ALLOCATOR, null);
         nuklearContext.clip()
                 .copy((handle, text, len) -> {
@@ -183,8 +169,6 @@ public class UIHandler {
         setupContext();
         return nuklearContext;
     }
-
-
     private static void setupContext() {
         String NK_SHADER_VERSION = Platform.get() == Platform.MACOSX ? "#version 150\n" : "#version 300 es\n";
         String vertex_shader =
@@ -277,7 +261,26 @@ public class UIHandler {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
+    public static void destroy() {
+        if(!nuklearReady)
+            return;
+        glDetachShader(prog, vert_shdr);
+        glDetachShader(prog, frag_shdr);
+        glDeleteShader(vert_shdr);
+        glDeleteShader(frag_shdr);
+        glDeleteProgram(prog);
+        glDeleteTextures(default_font.getFont().texture().id());
+        glDeleteTextures(null_texture.texture().id());
+        glDeleteBuffers(vbo);
+        glDeleteBuffers(ebo);
+        nk_buffer_free(cmds);
+        nk_free(nuklearContext);
 
+        GL.setCapabilities(null);
+    }
+    //endregion
+
+    //region Rendering Nuklear
     public static void frameStart() {
         try (MemoryStack stack = stackPush()) {
             IntBuffer w = stack.mallocInt(1);
@@ -346,9 +349,7 @@ public class UIHandler {
             glViewport(0, 0, Window.monitorWidth, Window.monitorHeight);
         }
 
-        Manager.activeScene().world.UI.forEach(o -> {
-            o.requestRender();
-        });
+        Manager.activeScene().world.UI.forEach(UIObject::requestRender);
 
         {
             // convert from command queue into draw list and draw to screen
@@ -420,24 +421,7 @@ public class UIHandler {
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_SCISSOR_TEST);
     }
-    
-    public static void destroy() {
-        if(!nuklearReady)
-            return;
-        glDetachShader(prog, vert_shdr);
-        glDetachShader(prog, frag_shdr);
-        glDeleteShader(vert_shdr);
-        glDeleteShader(frag_shdr);
-        glDeleteProgram(prog);
-        glDeleteTextures(default_font.getFont().texture().id());
-        glDeleteTextures(null_texture.texture().id());
-        glDeleteBuffers(vbo);
-        glDeleteBuffers(ebo);
-        nk_buffer_free(cmds);
-        nk_free(nuklearContext);
-
-        GL.setCapabilities(null);
-    }
+    //endregion
 
 
 }

@@ -3,7 +3,6 @@ package org.JE.JE2.Scene.SceneLoading;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.Style.Color;
@@ -35,8 +34,8 @@ public class StaticLoadSequence extends LoadingSequence {
     public void initiate() {
         loadedScene = new Scene();
         Manager.activeScene().world.UI.add(0,screen);
-        Keyboard.disableInput = true;
-        Mouse.disableInput = true;
+        Keyboard.disableGameInput = true;
+        Mouse.disableGameInput = true;
         super.initiate();
     }
 
@@ -48,8 +47,8 @@ public class StaticLoadSequence extends LoadingSequence {
 
     @Override
     public void finalization() {
-        Keyboard.disableInput = false;
-        Mouse.disableInput = false;
+        Keyboard.disableGameInput = false;
+        Mouse.disableGameInput = false;
         next();
     }
 
@@ -81,8 +80,8 @@ public class StaticLoadSequence extends LoadingSequence {
     @Override
     public void cancel() {
         Manager.activeScene().world.UI.remove(screen);
-        Keyboard.disableInput = false;
-        Mouse.disableInput = false;
+        Keyboard.disableGameInput = false;
+        Mouse.disableGameInput = false;
         super.cancel();
     }
 }

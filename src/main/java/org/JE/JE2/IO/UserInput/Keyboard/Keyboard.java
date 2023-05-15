@@ -1,22 +1,20 @@
 package org.JE.JE2.IO.UserInput.Keyboard;
 
 import org.JE.JE2.IO.UserInput.Keyboard.Combos.KeyCombo;
-import org.JE.JE2.Window.UIHandler;
 import org.JE.JE2.Window.Window;
 
 import java.util.ArrayList;
 
-import static org.lwjgl.glfw.GLFW.glfwGetClipboardString;
-import static org.lwjgl.glfw.GLFW.glfwSetClipboardString;
+import static org.JE.JE2.Window.UIHandler.*;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.nk_input_unicode;
-import static org.lwjgl.system.MemoryUtil.memAddress;
-import static org.lwjgl.system.MemoryUtil.memCopy;
 
 public class Keyboard {
 
     public static boolean ignoreCopyPasteKeys = false;
 
-    public static boolean disableInput = false;
+    public static boolean disableGameInput = false;
+    public static boolean disableUIInput = false;
 
     private static final ArrayList<KeyPressedEvent> keyPressedEvents = new ArrayList<>();
     private static final ArrayList<KeyReleasedEvent> keyReleasedEvents = new ArrayList<>();
@@ -40,7 +38,7 @@ public class Keyboard {
     }
 
     public static void triggerKeyPressed(int code, int mods){
-        if(disableInput)
+        if(disableGameInput)
             return;
 
         keyPressed(code);
@@ -60,19 +58,19 @@ public class Keyboard {
         }
     }
     public static void triggerKeyReleased(int code, int mods){
-        if(disableInput)
+        if(disableGameInput)
             return;
         keyReleased(code);
         keyReleasedEvents.forEach(event -> event.invoke(code, mods));
     }
     public static void triggerKeyRepeat(int key, int mods) {
-        if(disableInput)
+        if(disableGameInput)
             return;
        triggerKeyPressed(key, mods);
     }
 
     public static void triggerKey(int code, int mods){
-        if(disableInput)
+        if(disableGameInput)
             return;
         triggerKeyPressed(code, mods);
         triggerKeyReleased(code, mods);
@@ -82,7 +80,7 @@ public class Keyboard {
         if (str != null) {
             for (char c :
                     str.toCharArray()) {
-                nk_input_unicode(UIHandler.nuklearContext, c);
+                nk_input_unicode(nuklearContext, c);
             }
         }
     }
@@ -286,5 +284,40 @@ public class Keyboard {
         };
     }
 
+
+    private static boolean setupKeyboard = false;
+
+    public static void setupKeyboard(){
+        if(setupKeyboard)
+            return;
+        setupKeyboard = true;
+
+        glfwSetKeyCallback(Window.getWindowHandle(), (windowHandle, key, scancode, action, mods) -> {
+
+            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+                glfwSetWindowShouldClose(windowHandle, true);
+
+            if(action == GLFW_PRESS){
+                Keyboard.triggerKeyPressed(key, mods);
+                triggerUIKeyboardInput(true,key);
+            }
+            else if(action == GLFW_RELEASE){
+                Keyboard.triggerKeyReleased(key, mods);
+                triggerUIKeyboardInput(false,key);
+            }
+            else if (action == GLFW_REPEAT){
+                Keyboard.triggerKeyRepeat(key, mods);
+                triggerUIKeyboardInput(true,key);
+            }
+        });
+
+        glfwSetCharCallback(Window.getWindowHandle(), (window, unicode) -> {
+            if(!nuklearReady || disableUIInput)
+                return;
+            nk_input_unicode(nuklearContext, unicode);
+        });
+
+
+    }
 
 }

@@ -164,7 +164,7 @@ public class BasicScene {
 
         uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
 
-        //scene.addUI(uiWindow);
+        scene.addUI(uiWindow);
         scene.addUI(FPSCounter.generateFPSBox(new Vector2f(800-90,800-40)));
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("F1")){

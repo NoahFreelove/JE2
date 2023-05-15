@@ -2,16 +2,28 @@ package org.JE.JE2.IO.UserInput.Mouse;
 
 import org.JE.JE2.Manager;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Window.UIHandler;
+import org.JE.JE2.Window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import org.lwjgl.nuklear.NkVec2;
+import org.lwjgl.system.MemoryStack;
 
 import java.util.ArrayList;
+
+import static org.JE.JE2.Window.UIHandler.nuklearContext;
+import static org.JE.JE2.Window.UIHandler.triggerUIMouseInput;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.nuklear.Nuklear.nk_input_motion;
+import static org.lwjgl.nuklear.Nuklear.nk_input_scroll;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class Mouse {
     private static float x, y;
 
-    public static boolean disableInput = false;
+    public static boolean disableGameInput = false;
+    public static boolean disableUIInput = false;
 
     private static final ArrayList<MousePressedEvent> mousePressedEvents = new ArrayList<>();
     private static final ArrayList<MouseReleasedEvent> mouseReleasedEvents = new ArrayList<>();
@@ -35,7 +47,7 @@ public class Mouse {
     }
 
     public static void triggerMouseMoved(float x, float y){
-        if(disableInput)
+        if(disableGameInput)
             return;
         Mouse.x = x;
         Mouse.y = y;
@@ -53,21 +65,21 @@ public class Mouse {
     }
 
     public static void triggerMousePressed(MouseButton button, int mods){
-        if(disableInput)
+        if(disableGameInput)
             return;
         mousePressedEvents.forEach(event -> event.invoke(button, mods));
         mousePressed(button.ordinal());
     }
 
     public static void triggerMouseReleased(MouseButton button, int mods){
-        if(disableInput)
+        if(disableGameInput)
             return;
         mouseReleasedEvents.forEach(event -> event.invoke(button, mods));
         mouseReleased(button.ordinal());
     }
 
     public static void triggerMouseClick(MouseButton button, int mods){
-        if(disableInput)
+        if(disableGameInput)
             return;
         triggerMousePressed(button, mods);
         triggerMouseReleased(button, mods);
@@ -158,5 +170,41 @@ public class Mouse {
         worldPos.mul(inverted);
 
         return new Vector2f(worldPos.x(),worldPos.y());
+    }
+
+
+    private static boolean setupMouse = false;
+    public static void setupMouse(){
+        if(setupMouse)
+            return;
+        setupMouse = true;
+
+        glfwSetMouseButtonCallback(Window.getWindowHandle(), (windowHandle, button, action, mods) -> {
+            if(action == GLFW_PRESS){
+                Mouse.triggerMousePressed(MouseButton.values()[button], mods);
+                triggerUIMouseInput(button,true);
+            }
+            else if(action == GLFW_RELEASE){
+                Mouse.triggerMouseReleased(MouseButton.values()[button], mods);
+                triggerUIMouseInput(button,false);
+            }
+        });
+
+        glfwSetCursorPosCallback(Window.getWindowHandle(), (window, xpos, ypos) -> {
+            Mouse.triggerMouseMoved((float)xpos, (float)ypos);
+            if(UIHandler.nuklearReady && !disableUIInput)
+                nk_input_motion(nuklearContext, (int)xpos, (int)ypos);
+        });
+
+        glfwSetScrollCallback(Window.getWindowHandle(), (window, xoffset, yoffset) -> {
+            if(disableUIInput)
+                return;
+            try (MemoryStack stack = stackPush()) {
+                NkVec2 scroll = NkVec2.malloc(stack)
+                        .x((float)xoffset)
+                        .y((float)yoffset);
+                nk_input_scroll(nuklearContext, scroll);
+            }
+        });
     }
 }

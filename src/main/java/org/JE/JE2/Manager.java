@@ -8,7 +8,6 @@ import org.JE.JE2.Window.WindowCloseReason;
 import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
-import org.joml.Vector4i;
 
 import java.util.ArrayList;
 
@@ -51,8 +50,8 @@ public class Manager {
     }
 
     public static void quit(){
-        Window.closeWindow(WindowCloseReason.WINDOW_CLOSE_USER_REQUEST);
-        System.exit(WindowCloseReason.WINDOW_CLOSE_USER_REQUEST);
+        Window.closeWindow(WindowCloseReason.USER_REQUEST);
+        System.exit(WindowCloseReason.USER_REQUEST);
     }
 
     public static void setScene(Scene s){
