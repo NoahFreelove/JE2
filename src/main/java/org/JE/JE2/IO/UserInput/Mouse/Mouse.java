@@ -11,6 +11,7 @@ import org.lwjgl.nuklear.NkVec2;
 import org.lwjgl.system.MemoryStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.JE.JE2.Window.UIHandler.nuklearContext;
 import static org.JE.JE2.Window.UIHandler.triggerUIMouseInput;
@@ -20,7 +21,8 @@ import static org.lwjgl.nuklear.Nuklear.nk_input_scroll;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class Mouse {
-    private static float x, y;
+    private static float x;
+    private static float y;
 
     public static boolean disableGameInput = false;
     public static boolean disableUIInput = false;
@@ -95,6 +97,10 @@ public class Mouse {
             pressedFor[i] = 0;
             releasedSince[i] = System.currentTimeMillis();
         }
+    }
+
+    public static void reset(){
+        Arrays.fill(buttons,false);
     }
 
     private static void mousePressed(int button){

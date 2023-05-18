@@ -21,12 +21,10 @@ public class MethodTimer {
     }
 
     public long getDurationMilliseconds(){
-        // convert to milliseconds
         return getDurationNanoseconds() / 1000000;
     }
 
     public long getDurationSeconds(){
-        // convert to seconds
         return getDurationNanoseconds() / 1000000000;
     }
 }

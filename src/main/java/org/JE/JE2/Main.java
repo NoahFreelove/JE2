@@ -9,7 +9,6 @@ import static org.JE.JE2.Examples.BasicScene.mainScene;
 public class Main {
 
     public static void main(String[] args) {
-
         WindowPreferences preferences = new WindowPreferences(400,400, "JE2", true, true);
         Manager.start(preferences);
         Logger.logErrors = true;

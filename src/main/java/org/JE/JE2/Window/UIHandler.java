@@ -1,5 +1,6 @@
 package org.JE.JE2.Window;
 
+import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Resources.DataLoader;
@@ -69,14 +70,17 @@ public class UIHandler {
                 .position(3).attribute(NK_VERTEX_ATTRIBUTE_COUNT).format(NK_FORMAT_COUNT).offset(0)
                 .flip();
     }
-    
+
+    @GLThread
     public static void init(){
         NkContext ctx = setupWindow(Window.handle());
         default_font = new Font(DataLoader.getBytes("arial.ttf"), true);
+        active_font = default_font;
         nk_style_set_font(ctx, default_font.getFont());
         nuklearReady = true;
     }
 
+    //region UI Input
     public static void triggerUIKeyboardInput(boolean press, int key){
         if(!nuklearReady || Keyboard.disableUIInput)
             return;
@@ -141,6 +145,7 @@ public class UIHandler {
             nk_input_button(nuklearContext, nkButton, x, y, pressed);
         }
     }
+    //endregion
 
     //region Setup and Destroy Nuklear
     private static NkContext setupWindow(long win) {

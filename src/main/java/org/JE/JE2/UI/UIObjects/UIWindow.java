@@ -107,7 +107,7 @@ public class UIWindow extends UIObject {
 
     private void renderChildren() {
         children.forEach((uiElement -> {
-            nk_style_set_font(nuklearContext, UIHandler.default_font.getFont());
+            nk_style_set_font(nuklearContext, UIHandler.active_font.getFont());
             nk_layout_row_dynamic(context, 20, 1);
             uiElement.requestRender();
         }));

@@ -58,7 +58,7 @@ public class PostProcessingVolume extends Script {
         screenShader.setUniform1i("screenTexture",0);
         glBindVertexArray(quadVAO);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Window.textureColorBuffer);
+        //glBindTexture(GL_TEXTURE_2D, Window.textureColorBuffer);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
 

@@ -43,6 +43,8 @@ public final class Window {
 
     private static double deltaTime = 0;
 
+    private static double frameTimeMax = 0.02;
+
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
@@ -203,11 +205,11 @@ public final class Window {
 
         //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
+            double startTime = System.currentTimeMillis();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             UIHandler.frameStart();
-            double startTime = glfwGetTime();
             Color clear = Manager.activeScene().mainCamera().backgroundColor;
 
             try (MemoryStack stack = stackPush()) {
@@ -225,13 +227,16 @@ public final class Window {
             //pipeline.postProcess();
 
             glfwSwapBuffers(windowHandle);
-            deltaTime = (glfwGetTime() - startTime);
+            deltaTime = (System.currentTimeMillis() - startTime)/1000.0;
 
             // If the window was moved or resized, the delta time will be very large.
             // This is to prevent that and physics from breaking.
             // This is a very temporary fix. Haha "temporary".
-            if(deltaTime() >= 0.1){
+
+            if(deltaTime() >= frameTimeMax){
                 deltaTime = 0;
+                Keyboard.reset();
+                Mouse.reset();
             }
         }
     }
@@ -319,5 +324,18 @@ public final class Window {
 
     public static boolean isGLThread(){
         return isGLThread.get();
+    }
+
+    public static double getFrameTimeMax() {
+        return frameTimeMax;
+    }
+
+    /**
+     * If delta-time is greater than this value, it will be reset to 0 so physics and input don't break.
+     * This is a protection set in place for when the window is moved or resized.
+     * @param frameTimeMax The maximum delta time allowed. For V-Sync 60fps I would recommend 0.05 at most or 0.02.
+     */
+    public static void setFrameTimeMax(double frameTimeMax) {
+        Window.frameTimeMax = frameTimeMax;
     }
 }

@@ -4,6 +4,7 @@ import org.JE.JE2.IO.UserInput.Keyboard.Combos.KeyCombo;
 import org.JE.JE2.Window.Window;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.JE.JE2.Window.UIHandler.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -104,6 +105,10 @@ public class Keyboard {
     private static void keyReleased(int code) {
         if(within(0,keys.length,code))
             keys[code] = false;
+    }
+
+    public static void reset(){
+        Arrays.fill(keys, false);
     }
 
     public static boolean within(int min, int max, int v){
