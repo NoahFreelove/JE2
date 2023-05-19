@@ -77,29 +77,41 @@ public record ShaderRegistry() {
             "\n" +
             "in vec2 UV;\n" +
             "in vec3 FragPos;\n" +
+            "uniform mat4 model;\n" +
+            "uniform vec3 world_position;\n" +
             "\n" +
             "struct Light{\n" +
             "    vec3 position;\n" +
             "    vec4 color;\n" +
             "\tfloat intensity;\n" +
             "\tvec3 ambient;\n" +
-            "\tvec3 diffuse;\n" +
+            "\tfloat quadratic;\n" +
+            "    float linear;\n" +
+            "    float constant;\n" +
             "    float radius;\n" +
             "    int has_bounds;\n" +
             "    vec2 bound_pos;\n" +
             "    vec2 bound_range;\n" +
             "    int type; // 0 - completely lit | 1 - point light | 2 - area light\n" +
             "};\n" +
+            "uniform int layer;\n" +
             "\n" +
-            "uniform mat4 model;\n" +
+            "struct Material{\n" +
+            "    vec4 base_color;\n" +
+            "    vec3 ambient;\n" +
+            "    vec3 diffuse;\n" +
+            "    vec3 specular;\n" +
+            "    float shininess;\n" +
+            "};\n" +
             "\n" +
-            "uniform int light_count;\n" +
+            "uniform Material material;\n" +
             "uniform Light lights[MAX_LIGHTS];\n" +
+            "uniform int light_count;\n" +
+            "\n" +
             "uniform sampler2D JE_Texture;\n" +
             "uniform sampler2D JE_Normal;\n" +
+            "\n" +
             "uniform int use_texture;\n" +
-            "uniform vec3 world_position;\n" +
-            "uniform vec4 base_color;\n" +
             "\n" +
             "out vec4 color;\n" +
             "\n" +
@@ -121,17 +133,29 @@ public record ShaderRegistry() {
             "        lightDir = normalize(lightDir);\n" +
             "\n" +
             "        // Look up the normal from the normal map\n" +
-            "        vec3 normal = texture(JE_Normal, UV).rgb;\n" +
             "\n" +
-            "        float diffuse = 1;\n" +
+            "        vec3 normal = normalize(vec3(0,0,1));\n" +
+            "        if(use_texture == 1) {\n" +
+            "            normal = texture(JE_Normal, UV).rgb;\n" +
+            "        }\n" +
             "        float falloff = 1;\n" +
-            "        float intensity = lights[i].intensity;\n" +
+            "        float intensity = light.intensity;\n" +
             "\n" +
             "        if(light.type == 1){\n" +
             "            // Calculate the falloff factor using the smoothstep function\n" +
-            "            falloff = smoothstep(light.radius, light.radius - 2, dist);\n" +
+            "            // Calculate the light intensity using falloff\n" +
+            "            float attenuation = 1.0 / (light.constant + light.linear * dist +\n" +
+            "            light.quadratic * (dist * dist));\n" +
+            "\n" +
+            "            // Adjust attenuation based on radius\n" +
+            "            attenuation = clamp(1.0 - (dist / light.radius), 0.0, 1.0) * attenuation;\n" +
+            "\n" +
+            "            // Calculate diffuse lighting using the fragment normal and light direction\n" +
+            "\n" +
+            "\n" +
+            "            falloff = smoothstep(0.0,1.0,attenuation);\n" +
             "            // Calculate the diffuse lighting\n" +
-            "            diffuse = abs(dot(lightDir, normal));\n" +
+            "            //diffuse = abs(dot(lightDir, normal));\n" +
             "        }\n" +
             "        else if (light.type == 2){\n" +
             "            dist = 1;\n" +
@@ -147,13 +171,15 @@ public record ShaderRegistry() {
             "            intensity = 1;\n" +
             "        }\n" +
             "\n" +
-            "        total_light += light.color.rgb * diffuse * falloff * intensity / (dist * dist);\n" +
+            "        float diffuseFactor = max(dot(normal, lightDir), 0.0);\n" +
+            "\n" +
+            "        total_light += light.color.rgb * falloff * intensity;\n" +
             "    }\n" +
             "    if(use_texture == 1){\n" +
             "        color = texture(JE_Texture, UV) * vec4(total_light, 1.0);\n" +
             "    }\n" +
             "    else if (use_texture == 0){\n" +
-            "        color = base_color * vec4(total_light, 1.0);\n" +
+            "        color = material.base_color * vec4(total_light, 1.0);\n" +
             "    }\n" +
             "}";
 

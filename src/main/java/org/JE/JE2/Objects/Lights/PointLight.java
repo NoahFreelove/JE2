@@ -7,24 +7,29 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class PointLight extends Light {
-    public Vector3f diffuse = new Vector3f(0.8f, 0.8f, 0.8f);
+    public float quadratic = 1;
+    public float linear = 1;
+    public float constant = 1;
     public float radius = 5;
-
     public PointLight(){
         super(Color.WHITE, 1, 1);
     }
 
     @Override
     protected void setLightSpecific(ShaderProgram shaderProgram, int index) {
-        shaderProgram.setUniform3f("lights[" + index + "].diffuse", diffuse);
+        shaderProgram.setUniform1f("lights[" + index + "].quadratic", quadratic);
+        shaderProgram.setUniform1f("lights[" + index + "].linear", linear);
+        shaderProgram.setUniform1f("lights[" + index + "].constant", constant);
         shaderProgram.setUniform1f("lights[" + index + "].radius", radius);
     }
 
-    public static GameObject pointLightObject(Vector2f position, Vector3f diffuse, float radius, float intensity){
+    public static GameObject pointLightObject(Vector2f position, float constant, float linear, float quadratic, float radius, float intensity){
         GameObject light = new GameObject();
         PointLight p = new PointLight();
         light.addScript(p);
-        p.diffuse = diffuse;
+        p.quadratic = quadratic;
+        p.linear = linear;
+        p.constant = constant;
         p.radius = radius;
         p.intensity = intensity;
         light.getTransform().setPosition(position);

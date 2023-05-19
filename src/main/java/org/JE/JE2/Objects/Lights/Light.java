@@ -34,16 +34,6 @@ public abstract class Light extends Script {
     }
 
     @GLThread
-    public final void hideLighting(ShaderProgram shaderProgram, int index){
-        if(getAttachedObject() == null)
-            return;
-        shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(getAttachedObject().getTransform().position(), getAttachedObject().getTransform().zPos()));
-        shaderProgram.setUniform1i("lights[" + index + "].type", type);
-        shaderProgram.setUniform4f("lights[" + index + "].color", Color.TRANSPARENT.getVec4());
-        shaderProgram.setUniform1f("lights[" + index + "].intensity", 0);
-    }
-
-    @GLThread
     protected abstract void setLightSpecific(ShaderProgram shaderProgram, int index);
 
     @Override

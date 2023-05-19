@@ -17,7 +17,7 @@ public class LoadTest {
         cam.addScript(camera);
         Scene loaded = new Scene();
 
-        loaded.add(PointLight.pointLightObject(new Vector2f(0,0), new Vector3f(0.8f,0.8f,0.8f), 3, 5));
+        loaded.add(PointLight.pointLightObject(new Vector2f(0,0), 1,1,1, 3, 5));
         loaded.add(cam);
         loaded.setCamera(camera);
         Manager.setScene(loaded);

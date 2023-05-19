@@ -10,6 +10,7 @@ import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Rendering.Material;
 import org.JE.JE2.Rendering.Shaders.ShaderLayout;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO;
@@ -24,7 +25,7 @@ public class Renderer extends Script {
     @HideFromInspector
     protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
-    public Color baseColor = Color.WHITE;
+    public Material material = new Material();
 
     @ActPublic
     protected boolean scale = true;
@@ -73,14 +74,10 @@ public class Renderer extends Script {
             return;
         Transform t = gameObject.getTransform();
 
-        shader.setUniformMatrix4f("MVP", camera.MVPOrtho(t,scale).get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniformMatrix4f("model", camera.getModel(t,scale).get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniform3f("world_position", t.position3D());
-        shader.setUniform2f("world_scale", t.scale());
-        shader.setUniform3f("world_rotation", t.rotation());
-        shader.setUniform4f("base_color", baseColor.getVec4());
+        setProjections(camera, shader, t);
+        setPositions(shader, t);
+        setMaterial(shader);
+
 
         if (shader.supportsTextures)
         {
@@ -99,22 +96,36 @@ public class Renderer extends Script {
         vao.Disable();
     }
 
+    private void setMaterial(ShaderProgram shader) {
+        shader.setUniform3f("material.ambient", material.getAmbient());
+        shader.setUniform3f("material.diffuse", material.getDiffuse());
+        shader.setUniform3f("material.specular", material.getSpecular());
+        shader.setUniform1f("material.shininess", material.getShininess());
+        shader.setUniform4f("material.base_color", material.getBaseColor().getVec4());
+    }
+
+    private void setPositions(ShaderProgram shader, Transform t) {
+        shader.setUniform3f("world_position", t.position3D());
+        shader.setUniform2f("world_scale", t.scale());
+        shader.setUniform3f("world_rotation", t.rotation());
+    }
+
+    private void setProjections(Camera camera, ShaderProgram shader, Transform t) {
+        shader.setUniformMatrix4f("MVP", camera.MVPOrtho(t,scale).get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("model", camera.getModel(t,scale).get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
+        shader.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
+    }
+
     @GLThread
     private void setLighting(int selectedLayer) {
         vao.getShaderProgram().setUniform1i("light_count", Manager.activeScene().world.lights.size());
+        vao.getShaderProgram().setUniform1i("layer", selectedLayer);
 
-        for (int i = 0; i <Manager.activeScene().world.lights.size(); i++) {
-            Light light = Manager.activeScene().world.lights.get(i);
-            boolean found = false;
-            for (int layer : light.affectedLayers) {
-                if (layer == selectedLayer) {
-                    light.setLighting(vao.getShaderProgram(), i);
-                    found = true;
-                    break;
-                }
-            }
-            if(!found)
-                light.hideLighting(vao.getShaderProgram(), i);
+        int i = 0;
+        for (Light light : Manager.activeScene().world.lights) {
+            light.setLighting(vao.getShaderProgram(), i);
+            i++;
         }
     }
 

@@ -115,7 +115,10 @@ public final class Window {
         width = wp.windowSize.x();
         height = wp.windowSize.y();
         if ( windowHandle == NULL )
-            throw new RuntimeException("Failed to create the GLFW windowHandle");
+        {
+            Logger.log(new JE2Error("Failed to create the GLFW windowHandle.", Logger.DEFAULT_MAX_LOG_LEVEL));
+            Window.closeWindow(1);
+        }
 
         glfwSetWindowSizeCallback(windowHandle, (windowHandle, width, height) -> {
             Window.width = width;
@@ -136,13 +139,17 @@ public final class Window {
 
             // Get the resolution of the primary monitor
             GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-            // Center the windowHandle
-            glfwSetWindowPos(
-                    windowHandle,
-                    (videoMode.width() - pWidth.get(0)) / 2,
-                    (videoMode.height() - pHeight.get(0)) / 2
-            );
+            if(videoMode != null){
+                // Center the windowHandle
+                glfwSetWindowPos(
+                        windowHandle,
+                        (videoMode.width() - pWidth.get(0)) / 2,
+                        (videoMode.height() - pHeight.get(0)) / 2
+                );
+            }
+            else{
+                Logger.log(new JE2Error("Failed to retrieve primary monitor video mode.", Logger.DEFAULT_MAX_LOG_LEVEL));
+            }
         } // the stack frame is popped automatically
 
         // Make the OpenGL context current

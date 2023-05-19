@@ -73,6 +73,9 @@ public class BasicScene {
         GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(),
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
+
+        player.getRenderer().getVAO().getShaderProgram().supportsTextures = true;
+
         player.setIdentity("Player", "player");
 
         SpriteAnimator sa = new SpriteAnimator();
@@ -87,7 +90,7 @@ public class BasicScene {
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
 
-        scene.add(PointLight.pointLightObject(new Vector2f(-5,-1), new Vector3f(1,1,1), 12, 2f).addScript(new LambdaScript(new ILambdaScript() {
+        scene.add(PointLight.pointLightObject(new Vector2f(1,-1), 1f,0.09f,0.032f,25, 5).addScript(new LambdaScript(new ILambdaScript() {
             @Override
             public void update(GameObject parent) {
                 //System.out.println("Released for: " + Mouse.buttonReleasedForSeconds(0));
@@ -106,7 +109,7 @@ public class BasicScene {
         cs.cameraReference = playerCam;
         //player.addScript(cs);
 
-        scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
+        //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
 
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("E")){
@@ -120,7 +123,7 @@ public class BasicScene {
 
         addPhysicsObject();
         addFloors(scene);
-        createUI(scene);
+        //createUI(scene);
         scene.add(player);
 
         return scene;
@@ -206,7 +209,7 @@ public class BasicScene {
         go.getRenderer().getVAO().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
         go.getRenderer().setDrawMode(GL_LINE_LOOP);
-        go.getRenderer().baseColor = Color.BLUE;
+        go.getRenderer().material.setBaseColor(Color.BLUE);
         //scene.add(go);
     }
 

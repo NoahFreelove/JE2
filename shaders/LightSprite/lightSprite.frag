@@ -4,29 +4,41 @@
 
 in vec2 UV;
 in vec3 FragPos;
+uniform mat4 model;
+uniform vec3 world_position;
 
 struct Light{
     vec3 position;
     vec4 color;
 	float intensity;
 	vec3 ambient;
-	vec3 diffuse;
+	float quadratic;
+    float linear;
+    float constant;
     float radius;
     int has_bounds;
     vec2 bound_pos;
     vec2 bound_range;
     int type; // 0 - completely lit | 1 - point light | 2 - area light
 };
+uniform int layer;
 
-uniform mat4 model;
+struct Material{
+    vec4 base_color;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
 
-uniform int light_count;
+uniform Material material;
 uniform Light lights[MAX_LIGHTS];
+uniform int light_count;
+
 uniform sampler2D JE_Texture;
 uniform sampler2D JE_Normal;
+
 uniform int use_texture;
-uniform vec3 world_position;
-uniform vec4 base_color;
 
 out vec4 color;
 
@@ -48,17 +60,29 @@ void main(){
         lightDir = normalize(lightDir);
 
         // Look up the normal from the normal map
-        vec3 normal = texture(JE_Normal, UV).rgb;
 
-        float diffuse = 1;
+        vec3 normal = normalize(vec3(0,0,1));
+        if(use_texture == 1) {
+            normal = texture(JE_Normal, UV).rgb;
+        }
         float falloff = 1;
-        float intensity = lights[i].intensity;
+        float intensity = light.intensity;
 
         if(light.type == 1){
             // Calculate the falloff factor using the smoothstep function
-            falloff = smoothstep(light.radius, light.radius - 2, dist);
+            // Calculate the light intensity using falloff
+            float attenuation = 1.0 / (light.constant + light.linear * dist +
+            light.quadratic * (dist * dist));
+
+            // Adjust attenuation based on radius
+            attenuation = clamp(1.0 - (dist / light.radius), 0.0, 1.0) * attenuation;
+
+            // Calculate diffuse lighting using the fragment normal and light direction
+
+
+            falloff = smoothstep(0.0,1.0,attenuation);
             // Calculate the diffuse lighting
-            diffuse = abs(dot(lightDir, normal));
+            //diffuse = abs(dot(lightDir, normal));
         }
         else if (light.type == 2){
             dist = 1;
@@ -74,12 +98,14 @@ void main(){
             intensity = 1;
         }
 
-        total_light += light.color.rgb * diffuse * falloff * intensity / (dist * dist);
+        float diffuseFactor = max(dot(normal, lightDir), 0.0);
+
+        total_light += light.color.rgb * falloff * intensity;
     }
     if(use_texture == 1){
         color = texture(JE_Texture, UV) * vec4(total_light, 1.0);
     }
     else if (use_texture == 0){
-        color = base_color * vec4(total_light, 1.0);
+        color = material.base_color * vec4(total_light, 1.0);
     }
 }
