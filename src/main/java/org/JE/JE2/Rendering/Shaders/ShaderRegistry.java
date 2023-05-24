@@ -151,11 +151,8 @@ public record ShaderRegistry() {
             "            attenuation = clamp(1.0 - (dist / light.radius), 0.0, 1.0) * attenuation;\n" +
             "\n" +
             "            // Calculate diffuse lighting using the fragment normal and light direction\n" +
-            "\n" +
-            "\n" +
             "            falloff = smoothstep(0.0,1.0,attenuation);\n" +
-            "            // Calculate the diffuse lighting\n" +
-            "            //diffuse = abs(dot(lightDir, normal));\n" +
+            "\n" +
             "        }\n" +
             "        else if (light.type == 2){\n" +
             "            dist = 1;\n" +
@@ -170,9 +167,7 @@ public record ShaderRegistry() {
             "            dist = 1;\n" +
             "            intensity = 1;\n" +
             "        }\n" +
-            "\n" +
-            "        float diffuseFactor = max(dot(normal, lightDir), 0.0);\n" +
-            "\n" +
+            "        \n" +
             "        total_light += light.color.rgb * falloff * intensity;\n" +
             "    }\n" +
             "    if(use_texture == 1){\n" +

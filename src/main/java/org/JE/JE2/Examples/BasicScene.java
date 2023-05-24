@@ -29,9 +29,11 @@ import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.Font;
+import org.JE.JE2.UI.UIElements.ElementEventChanged;
 import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
+import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Spacer;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
@@ -40,6 +42,7 @@ import org.JE.JE2.Utility.Settings.Limits.*;
 import org.JE.JE2.Utility.Settings.Setting;
 import org.JE.JE2.Utility.Settings.SettingCategory;
 import org.JE.JE2.Utility.Settings.SettingManager;
+import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -49,6 +52,11 @@ import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_CLOSABLE;
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 
 public class BasicScene {
+    static GameObject pl;
+    static{
+        pl = PointLight.pointLightObject(new Vector2f(1,-1), 0f,0f,0f,3, 1);
+
+    }
 
     public static Scene mainScene(){
         Scene scene = new Scene();
@@ -74,6 +82,29 @@ public class BasicScene {
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
 
+        pl.addScript(new ILambdaScript() {
+            @Override
+            public void update(GameObject parent) {
+                if(Keyboard.isKeyPressed(Keyboard.nameToCode("LEFT")))
+                {
+                    parent.getTransform().translateX(-5f * Window.deltaTime());
+                }
+                if(Keyboard.isKeyPressed(Keyboard.nameToCode("RIGHT")))
+                {
+                    parent.getTransform().translateX(5f * Window.deltaTime());
+                }
+                if(Keyboard.isKeyPressed(Keyboard.nameToCode("UP")))
+                {
+                    parent.getTransform().translateY(5f * Window.deltaTime());
+                }
+                if(Keyboard.isKeyPressed(Keyboard.nameToCode("DOWN")))
+                {
+                    parent.getTransform().translateY(-5f * Window.deltaTime());
+                }
+                //System.out.println(pl.getScript(PointLight.class).isObjectInsideRadius(player));
+            }
+        });
+
         player.getRenderer().getVAO().getShaderProgram().supportsTextures = true;
 
         player.setIdentity("Player", "player");
@@ -90,12 +121,7 @@ public class BasicScene {
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
 
-        scene.add(PointLight.pointLightObject(new Vector2f(1,-1), 1f,0.09f,0.032f,25, 5).addScript(new LambdaScript(new ILambdaScript() {
-            @Override
-            public void update(GameObject parent) {
-                //System.out.println("Released for: " + Mouse.buttonReleasedForSeconds(0));
-            }
-        })));
+        scene.add(pl);
 
         CameraShake cs = new CameraShake();
 
@@ -123,69 +149,64 @@ public class BasicScene {
 
         addPhysicsObject();
         addFloors(scene);
-        //createUI(scene);
+        createUI(scene);
         scene.add(player);
 
         return scene;
     }
 
     private static void createUI(Scene scene) {
-        UIWindow uiWindow = new UIWindow("Cool window",
-                NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE,
-                new Vector2f(100,100));
-        SettingManager settingManager = new SettingManager(new SettingCategory("Settings"));
+        UIWindow uiWindow = new UIWindow("Adjust Lighting",
+                NK_WINDOW_TITLE | NK_WINDOW_BORDER | NK_WINDOW_MINIMIZABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE,
+                new Vector2f(100, 100));
 
-        Setting<Integer> setting = new Setting<>("Int Count", 0);
-        setting.setLimit(new IntLimit(0,Integer.MAX_VALUE));
+        Label Constant = new Label("Constant");
+        Slider constant = new Slider(0f, 0f, 0.2f, 0.01f);
+        constant.onChange = value -> {
+            pl.getScripts(PointLight.class).forEach(pl -> pl.constant = value);
+        };
 
-        Setting<String> setting2 = new Setting<>("Some String", "Str");
-        setting2.setLimit(new StringLimit(128));
+        Label Linear = new Label("Linear");
+        Slider linear = new Slider(0f, 0f, 0.2f, 0.01f);
+        linear.onChange = value -> {
+            pl.getScripts(PointLight.class).forEach(pl -> pl.linear = value);
+        };
 
-        Setting<Boolean> setting3 = new Setting<>("Some Boolean", false);
-        setting3.setLimit(new BooleanLimit());
+        Label Quadratic = new Label("Quadratic");
+        Slider quadratic = new Slider(0f, 0f, 0.1f, 0.01f);
+        quadratic.onChange = value -> {
+            pl.getScripts(PointLight.class).forEach(pl -> pl.quadratic = value);
+        };
 
-        Setting<Float> setting4 = new Setting<>("Some Float", 0.2f);
-        setting4.setLimit(new FloatLimit(0,100));
+        Label radiusLabel = new Label("Radius");
+        Slider radius = new Slider(3f, 0f, 10f, 0.01f);
+        radius.onChange = value -> {
+            pl.getScripts(PointLight.class).forEach(pl -> pl.radius = value);
+        };
 
-        Setting<Double> setting5 = new Setting<>("Some Double", 13.5);
-        setting5.setLimit(new DoubleLimit(0,100));
+        Label intensityLabel = new Label("Intensity");
+        Slider intensity = new Slider(1f, 0f, 10f, 0.01f);
+        intensity.onChange = value -> {
+            pl.getScripts(PointLight.class).forEach(pl -> pl.intensity = value);
+        };
 
-        Setting<GameObject> setting6 = new Setting<>("Cool GameObject", new GameObject());
-        settingManager.getCategory(0).addSettings(setting,setting2,setting3,setting4,setting5,setting6);
+        Label xPosLabel = new Label("X Position");
+        Slider xPos = new Slider(1f, -10f, 10f, 0.01f);
+        xPos.onChange = value -> {
+            pl.setPosition(value, pl.getTransform().position().y);
+        };
 
-        Label small = new Label("arial");
-        small.getStyle().font = new Font(DataLoader.getBytes("arial.ttf"), false);
-        small.getStyle().font.fontHeight = 25;
+        Label yPosLabel = new Label("Y Position");
+        Slider yPos = new Slider(-1f, -10f, 10f, 0.01f);
+        yPos.onChange = value -> {
+            pl.setPosition(pl.getTransform().position().x, value);
+        };
 
-        Label large = new Label("comic sans");
-        large.getStyle().font = new Font(DataLoader.getBytes("comic.ttf"), false);
-        large.getStyle().font.fontHeight = 45;
-
-        uiWindow.addElement(large);
-        uiWindow.addElement(new Spacer());
-        uiWindow.addElement(small);
-
-        uiWindow.addElement(SettingsGenerator.generateSettingsUI(settingManager));
+        uiWindow.addElement(Constant, constant, Linear, linear, Quadratic, quadratic, radiusLabel, radius, intensityLabel, intensity);
+        //uiWindow.addElement(xPosLabel, xPos, yPosLabel, yPos);
 
         scene.addUI(uiWindow);
-        scene.addUI(FPSCounter.generateFPSBox(new Vector2f(800-90,800-40)));
-        Keyboard.addKeyReleasedEvent((key, mods) -> {
-            if(key == Keyboard.nameToCode("F1")){
-                setting.setValue(setting.getValue() + 1);
-            }
-            if(key == Keyboard.nameToCode("F2")){
-                settingManager.saveToFile("settings.txt");
-            }
-            if(key == Keyboard.nameToCode("F3")){
-                settingManager.tryLoadFromFile("settings.txt");
-            }
-            if(key == Keyboard.nameToCode("F4")){
-                GarbageCollection.takeOutDaTrash();
-            }
-            if(key == Keyboard.nameToCode("F5")){
-                Manager.setWindowPreferences(new WindowPreferences(2000,2000,"JE2"));
-            }
-        });
+        scene.addUI(FPSCounter.generateFPSBox(new Vector2f(1000 - 90, 1000 - 40)));
     }
 
     private static void addPhysicsObject() {

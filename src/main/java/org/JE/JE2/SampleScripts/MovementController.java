@@ -42,54 +42,54 @@ public class MovementController extends Script {
             if (physicsBody == null) {
                 return;
             }
-            if(Keyboard.isComboPressed(LEFT) && canMoveLeft){
+            if(Keyboard.isKeyPressed(65) && canMoveLeft){
                 physicsBody.body.setLinearVelocity(new Vec2(-moveSpeed, physicsBody.body.getLinearVelocity().y));
             }
-            if(Keyboard.isComboPressed(RIGHT) && canMoveRight){
+            if(Keyboard.isKeyPressed(68) && canMoveRight){
                 physicsBody.body.setLinearVelocity(new Vec2(moveSpeed, physicsBody.body.getLinearVelocity().y));
             }
 
             if(absoluteXPositioning){
-                if(!Keyboard.isComboPressed(RIGHT) && !Keyboard.isComboPressed(LEFT)){
+                if(!Keyboard.isKeyPressed(68) && !Keyboard.isKeyPressed(65)){
                     physicsBody.body.setLinearVelocity(new Vec2(0, physicsBody.body.getLinearVelocity().y));
                 }
             }
             if(absoluteYPositioning){
-                if(!Keyboard.isComboPressed(UP) && !Keyboard.isComboPressed(DOWN)){
+                if(!Keyboard.isKeyPressed(87) && !Keyboard.isKeyPressed(83)){
                     physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,0));
                 }
             }
             if(enableJump)
             {
-                if(Keyboard.isComboPressed(UP)){
+                if(Keyboard.isKeyPressed(87)){
                     if(physicsBody.onGround)
                         physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,jumpVelocity));
                 }
             }
             else {
                 if(canMoveUp){
-                    if(Keyboard.isComboPressed(UP)){
+                    if(Keyboard.isKeyPressed(87)){
                         physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,moveSpeed));
                     }
                 }
             }
             if(canMoveDown){
-                if(Keyboard.isComboPressed(DOWN)){
+                if(Keyboard.isKeyPressed(83)){
                     physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,-moveSpeed));
                 }
             }
         }
         else{
-            if(Keyboard.isComboPressed(LEFT) && canMoveLeft){
+            if(Keyboard.isKeyPressed(65) && canMoveLeft){
                 getAttachedObject().getTransform().translateX(-moveSpeed * deltaTime());
             }
-            if(Keyboard.isComboPressed(RIGHT) && canMoveRight){
+            if(Keyboard.isKeyPressed(68) && canMoveRight){
                 getAttachedObject().getTransform().translateX(moveSpeed * deltaTime());
             }
-            if(Keyboard.isComboPressed(UP) && canMoveUp){
+            if(Keyboard.isKeyPressed(87) && canMoveUp){
                 getAttachedObject().getTransform().translateY(moveSpeed * deltaTime());
             }
-            if(Keyboard.isComboPressed(DOWN) && canMoveDown){
+            if(Keyboard.isKeyPressed(83) && canMoveDown){
                 getAttachedObject().getTransform().translateY(-moveSpeed * deltaTime());
             }
         }

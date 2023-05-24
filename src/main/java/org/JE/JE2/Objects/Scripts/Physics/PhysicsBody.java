@@ -45,11 +45,12 @@ public class PhysicsBody extends Script {
         body = getAttachedObject().linkedScene.world.physicsWorld.createBody(this.bodyDef);
         body.setTransform(new Vec2(adjustedPos.x(),adjustedPos.y()), 0);
 
-        // Set box collider
+        // Create box shape
         PolygonShape shape = new PolygonShape();
-
         shape.setAsBox(initialSize.x/2*1, initialSize.y/2);
-        shape.setRadius(0.001f);
+
+
+
 
         activeFixture = body.createFixture(shape, 1.0f);
         activeFixture.setRestitution(defaultRestitution);

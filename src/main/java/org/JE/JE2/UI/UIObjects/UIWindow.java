@@ -160,6 +160,10 @@ public class UIWindow extends UIObject {
         if(!children.contains(element))
             children.add(element);
     }
+    public void addElement(UIElement... elements) {
+        for(UIElement element : elements)
+            addElement(element);
+    }
 
     public void removeElement(UIElement element) {
         if(element == null)

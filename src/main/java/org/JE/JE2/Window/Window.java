@@ -5,8 +5,10 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
+import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -43,7 +45,7 @@ public final class Window {
 
     private static double deltaTime = 0;
 
-    private static double frameTimeMax = 0.02;
+    private static double frameTimeMax = 0.08;
 
 
     public static void createWindow(WindowPreferences wp) {
@@ -344,5 +346,17 @@ public final class Window {
      */
     public static void setFrameTimeMax(double frameTimeMax) {
         Window.frameTimeMax = frameTimeMax;
+    }
+
+    public static void setWindowIcon(Texture texture){
+        actionQueue.add(() -> {
+            GLFWImage image = GLFWImage.malloc();
+            image.set(texture.resource.getBundle().getImageSize().x, texture.resource.getBundle().getImageSize().y, texture.resource.getBundle().getImageData());
+            GLFWImage.Buffer imageBuffer = GLFWImage.malloc(1);
+            imageBuffer.put(0, image);
+            glfwSetWindowIcon(windowHandle, imageBuffer);
+            imageBuffer.free();
+            image.free();
+        });
     }
 }

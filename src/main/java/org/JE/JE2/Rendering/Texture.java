@@ -56,6 +56,18 @@ public class Texture implements Serializable {
         }
     }
 
+    public static Texture checkExistElseCreate(String name, int ID, String bytePath, boolean flip){
+        //System.out.println("warming up: " + bytePath);
+        Resource<TextureBundle> finalRef = (Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, ID);
+
+        if(finalRef != null){
+            return new Texture(finalRef, false);
+        }
+        else{
+            return new Texture(new Resource<>(TextureProcessor.processImage(DataLoader.getBytes(bytePath), flip,bytePath), name, ID), true);
+        }
+    }
+
     /**
      * Assumes you've already warmed up or indexed texture.
      * @param name The name of the texture indexed in ResourceManager

@@ -5,6 +5,8 @@ import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.Annotations.RequireNonNull;
 import org.JE.JE2.IO.Logging.Errors.GameObjectError;
 import org.JE.JE2.IO.Logging.Logger;
+import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
+import org.JE.JE2.Objects.Scripts.LambdaScript.LambdaScript;
 import org.JE.JE2.Objects.Scripts.ScriptRestrictions;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Transform;
@@ -77,6 +79,10 @@ public final class GameObject implements Serializable {
 
     public void setTransform(Transform transform){
         scripts.set(0, transform);
+    }
+
+    public GameObject addScript(ILambdaScript lambda){
+        return addScript(new LambdaScript(lambda));
     }
 
     @RequireNonNull

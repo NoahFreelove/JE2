@@ -16,9 +16,10 @@ public class World implements Serializable {
     public CopyOnWriteArrayList<GameObject> gameObjects = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<AudioSourcePlayer> sounds = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<UIObject> UI = new CopyOnWriteArrayList<>();
-    public org.jbox2d.dynamics.World physicsWorld = new org.jbox2d.dynamics.World(new Vec2(0,-9.8f));
+    public org.jbox2d.dynamics.World physicsWorld = new org.jbox2d.dynamics.World(new Vec2(0f,-9.8f));
     public World(){
         physicsWorld.setAllowSleep(false);
+        physicsWorld.setContinuousPhysics(true);
     }
 
     @Nullable

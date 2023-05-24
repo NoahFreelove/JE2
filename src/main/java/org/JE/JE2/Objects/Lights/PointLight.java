@@ -36,4 +36,13 @@ public class PointLight extends Light {
         return light;
     }
 
+    public boolean isObjectInsideRadius(GameObject gameObject){
+        // get from center of object, so we take scale into account
+        Vector2f scale = gameObject.getTransform().scale().div(2);
+        return new Vector2f().add(gameObject.getTransform().position()).add(scale).distance(getAttachedObject().getTransform().position()) < radius;
+    }
+
+    public boolean isInsideRadius(Vector2f position){
+        return position.distance(getAttachedObject().getTransform().position()) < radius;
+    }
 }

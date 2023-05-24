@@ -147,7 +147,7 @@ public class Scene implements Serializable {
 
     public void update(boolean physicsUpdate) {
         if (physicsUpdate){
-            world.physicsWorld.step(Manager.deltaTime(), 6, 2);
+            world.physicsWorld.step(Manager.deltaTime(), 8, 3);
             world.gameObjects.forEach(GameObject::physicsUpdate);
         }
         world.gameObjects.forEach(GameObject::scriptUpdate);
