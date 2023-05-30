@@ -5,6 +5,7 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
+import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -47,7 +48,10 @@ public final class Window {
 
     private static double frameTimeMax = 0.08;
 
-
+    public static int fboId;
+    public static int textureId;
+    public static int quadVAO;
+    public static ShaderProgram defaultPostProcessShader;
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
         isGLThread = new ThreadLocal<>();
@@ -74,6 +78,7 @@ public final class Window {
     }
 
     public static void loop(){
+        initFBO();
         windowLoop();
         destroy();
     }
@@ -231,17 +236,21 @@ public final class Window {
             }
 
             glfwPollEvents();
+            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+
             pipeline.onStart();
 
-            //pipeline.postProcess();
+            pipeline.postProcess();
+
+            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
             glfwSwapBuffers(windowHandle);
             deltaTime = (System.currentTimeMillis() - startTime)/1000.0;
 
+
             // If the window was moved or resized, the delta time will be very large.
             // This is to prevent that and physics from breaking.
             // This is a very temporary fix. Haha "temporary".
-
             if(deltaTime() >= frameTimeMax){
                 deltaTime = 0;
                 Keyboard.reset();
@@ -359,4 +368,61 @@ public final class Window {
             image.free();
         });
     }
+
+
+    private static void initFBO() {
+        // Create framebuffer
+        fboId = GL30.glGenFramebuffers();
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fboId);
+
+        // Create texture
+        textureId = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, textureId, 0);
+
+        // Create quad VAO
+        float[] vertices = {
+                -1.0f,  1.0f,
+                -1.0f, -1.0f,
+                1.0f, -1.0f,
+                1.0f,  1.0f
+        };
+        int quadVBO = GL15.glGenBuffers();
+        quadVAO = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(quadVAO);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, quadVBO);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 0, 0);
+        GL20.glEnableVertexAttribArray(0);
+
+
+        defaultPostProcessShader = ShaderProgram.ShaderProgramNow("#version 330 core\n" +
+                "\n" +
+                "layout (location = 0) in vec2 position;\n" +
+                "\n" +
+                "out vec2 fragTexCoord;\n" +
+                "\n" +
+                "void main()\n" +
+                "{\n" +
+                "    gl_Position = vec4(position, 0.0, 1.0);\n" +
+                "    fragTexCoord = position;\n" +
+                "}", "#version 330 core\n" +
+                "\n" +
+                "in vec2 fragTexCoord;\n" +
+                "\n" +
+                "out vec4 fragColor;\n" +
+                "\n" +
+                "uniform sampler2D textureSampler;\n" +
+                "\n" +
+                "void main()\n" +
+                "{\n" +
+                "    vec4 color = texture(textureSampler, fragTexCoord);\n" +
+                "    float gray = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));\n" +
+                "    fragColor = vec4(1,1,1,1);\n" +
+                "}", false);
+    }
+
 }

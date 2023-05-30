@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 
 public class LoadTest {
     public static void main(String[] args){
-        Manager.start(new WindowPreferences(1280,720, "JE2", false, true));
+        Manager.start(new WindowPreferences(400,400, "JE2", false, true));
         GameObject cam = new GameObject();
         Camera camera = new Camera();
         cam.addScript(camera);

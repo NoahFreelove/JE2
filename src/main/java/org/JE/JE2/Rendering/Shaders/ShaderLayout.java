@@ -13,12 +13,6 @@ public class ShaderLayout implements Serializable {
 
     public ShaderLayout(VAO vao, int location) {
         this.vao = vao;
-        if(location > 100)
-            this.location = location;
-        else {
-            this.location = location + 100;
-            Logger.log(new ShaderLayoutError("ShaderLayout location is less than 100. These are reserved for JE2. The location has been set to " + this.location));
-        }
 
     }
 

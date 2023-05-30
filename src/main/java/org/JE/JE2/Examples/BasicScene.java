@@ -149,7 +149,7 @@ public class BasicScene {
 
         addPhysicsObject();
         addFloors(scene);
-        createUI(scene);
+        //createUI(scene);
         scene.add(player);
 
         return scene;
