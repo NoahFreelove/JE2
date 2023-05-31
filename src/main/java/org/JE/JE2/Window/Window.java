@@ -26,6 +26,8 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL30C.glFramebufferTexture2D;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -48,10 +50,11 @@ public final class Window {
 
     private static double frameTimeMax = 0.08;
 
-    public static int fboId;
-    public static int textureId;
+    public static int framebuffer;
+    public static int colorTexture;
     public static int quadVAO;
     public static ShaderProgram defaultPostProcessShader;
+
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
         isGLThread = new ThreadLocal<>();
@@ -236,13 +239,9 @@ public final class Window {
             }
 
             glfwPollEvents();
-            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+            GL30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
             pipeline.onStart();
-
-            pipeline.postProcess();
-
-            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
             glfwSwapBuffers(windowHandle);
             deltaTime = (System.currentTimeMillis() - startTime)/1000.0;
@@ -371,58 +370,83 @@ public final class Window {
 
 
     private static void initFBO() {
-        // Create framebuffer
-        fboId = GL30.glGenFramebuffers();
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fboId);
+        // Create frame buffer
+        framebuffer = GL30.glGenFramebuffers();
+        GL30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
-        // Create texture
-        textureId = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, textureId, 0);
+        int rbo = glGenRenderbuffers();
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-        // Create quad VAO
-        float[] vertices = {
-                -1.0f,  1.0f,
-                -1.0f, -1.0f,
-                1.0f, -1.0f,
-                1.0f,  1.0f
+        colorTexture = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+
+        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            // Create quad VAO
+        float[] quadVertices = {
+                // Positions      // Texture coordinates
+                -1.0f,  1.0f, 0.0f,  0.0f, 1.0f, // Top-left
+                -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, // Bottom-left
+                1.0f, -1.0f, 0.0f,   1.0f, 0.0f, // Bottom-right
+                1.0f,  1.0f, 0.0f,   1.0f, 1.0f  // Top-right
         };
-        int quadVBO = GL15.glGenBuffers();
+
+        int[] quadIndices = {
+                0, 1, 3,  // First triangle
+                1, 2, 3   // Second triangle
+        };
+
+        int quadVBO = GL30.glGenBuffers();
+        int quadEBO = GL30.glGenBuffers();
         quadVAO = GL30.glGenVertexArrays();
+
         GL30.glBindVertexArray(quadVAO);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, quadVBO);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 0, 0);
-        GL20.glEnableVertexAttribArray(0);
 
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, quadVBO);
+        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, quadVertices, GL30.GL_STATIC_DRAW);
+        GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, 5 * Float.BYTES, 0);
+        GL30.glEnableVertexAttribArray(0);
+        GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, 5 * Float.BYTES, 3 * Float.BYTES);
+        GL30.glEnableVertexAttribArray(1);
 
-        defaultPostProcessShader = ShaderProgram.ShaderProgramNow("#version 330 core\n" +
-                "\n" +
-                "layout (location = 0) in vec2 position;\n" +
-                "\n" +
-                "out vec2 fragTexCoord;\n" +
-                "\n" +
-                "void main()\n" +
-                "{\n" +
-                "    gl_Position = vec4(position, 0.0, 1.0);\n" +
-                "    fragTexCoord = position;\n" +
-                "}", "#version 330 core\n" +
-                "\n" +
-                "in vec2 fragTexCoord;\n" +
-                "\n" +
-                "out vec4 fragColor;\n" +
-                "\n" +
-                "uniform sampler2D textureSampler;\n" +
-                "\n" +
-                "void main()\n" +
-                "{\n" +
-                "    vec4 color = texture(textureSampler, fragTexCoord);\n" +
-                "    float gray = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));\n" +
-                "    fragColor = vec4(1,1,1,1);\n" +
-                "}", false);
+        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, quadEBO);
+        GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, quadIndices, GL30.GL_STATIC_DRAW);
+
+        GL30.glBindVertexArray(0);
+
+        defaultPostProcessShader = ShaderProgram.ShaderProgramNow(
+                "#version 330 core\n" +
+                        "layout (location = 0) in vec2 aPos;\n" +
+                        "layout (location = 1) in vec2 aTexCoords;\n" +
+                        "\n" +
+                        "out vec2 TexCoords;\n" +
+                        "\n" +
+                        "void main()\n" +
+                        "{\n" +
+                        "    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0); \n" +
+                        "    TexCoords = aTexCoords;\n" +
+                        "}",
+                "#version 330 core\n" +
+                        "out vec4 FragColor;\n" +
+                        "  \n" +
+                        "in vec2 TexCoords;\n" +
+                        "\n" +
+                        "uniform sampler2D screenTexture;\n" +
+                        "\n" +
+                        "void main()\n" +
+                        "{ \n" +
+                        "    FragColor = texture(screenTexture, TexCoords);\n" +
+                        "}",false);
     }
 
 }
