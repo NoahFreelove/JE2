@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL20.glUniform1i;
 public class SpriteRenderer extends Renderer {
 
     @HideFromInspector
-    private final VAO2f spriteCoordVAO;
+    private VAO2f spriteCoordVAO;
 
     private transient Texture texture = new Texture();
     @ActPublic
@@ -84,7 +84,7 @@ public class SpriteRenderer extends Renderer {
     @Override
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
-        if (!vao.getShaderProgram().use())
+        if (!vao.getShaderProgram().use() || !getActive())
             return;
 
         if(texture.activateTexture(GL_TEXTURE0))
@@ -120,6 +120,11 @@ public class SpriteRenderer extends Renderer {
     }
 
     public VAO2f getSpriteVAO(){return spriteCoordVAO;}
+
+    public void setSpriteVAO(VAO2f vao){
+        this.spriteCoordVAO = vao;
+        this.vao = vao;
+    }
 
     public Texture getTexture(){ return texture; }
 

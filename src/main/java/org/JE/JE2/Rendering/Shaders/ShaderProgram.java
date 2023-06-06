@@ -45,6 +45,9 @@ public final class ShaderProgram implements Serializable, Loadable {
     }
 
     public ShaderProgram(){}
+    public ShaderProgram(String vertex, String fragment){
+        createShader(vertex,fragment);
+    }
 
     public static ShaderProgram invalidShader(){
         return new ShaderProgram();

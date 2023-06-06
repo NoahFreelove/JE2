@@ -26,6 +26,7 @@ public class Texture implements Serializable {
     public boolean valid = false;
     public int forceValidateMode = 0;
     public Texture(){
+        resource = new Resource<>(new TextureBundle(), "null", 0);
     }
 
     private Texture(Resource<TextureBundle> resource, boolean newTexture){

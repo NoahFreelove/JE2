@@ -8,6 +8,9 @@ import org.joml.*;
 import java.lang.Math;
 
 public class Transform extends Script {
+
+    public static Transform zero = new Transform();
+
     @ActPublic
     private Vector3f position;
     private Vector2f position2d = new Vector2f();

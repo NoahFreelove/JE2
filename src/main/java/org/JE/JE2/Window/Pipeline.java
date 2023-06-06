@@ -40,4 +40,6 @@ public abstract class Pipeline {
     @GLThread
     public abstract void checkWatchers(); // run scene's watchers to watch for event changes
 
+    @GLThread public abstract void init();
+
 }

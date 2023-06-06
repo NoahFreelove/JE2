@@ -33,6 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
  **/
 public final class GameObject implements Serializable {
+    public static final GameObject emptyGameObject = new GameObject();
     public transient Scene linkedScene = null;
     private transient GameObject parent = this;
     private transient ArrayList<GameObject> children = new ArrayList<>();

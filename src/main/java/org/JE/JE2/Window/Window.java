@@ -6,8 +6,11 @@ import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
+import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -52,7 +55,7 @@ public final class Window {
 
     public static int framebuffer;
     public static int colorTexture;
-    public static int quadVAO;
+    public static VAO2f screenVAO;
     public static ShaderProgram defaultPostProcessShader;
 
     public static void createWindow(WindowPreferences wp) {
@@ -220,6 +223,7 @@ public final class Window {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthFunc(GL_LEQUAL);
 
+        pipeline.init();
         //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
             double startTime = System.currentTimeMillis();
@@ -239,7 +243,6 @@ public final class Window {
             }
 
             glfwPollEvents();
-            GL30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
             pipeline.onStart();
 
@@ -376,7 +379,8 @@ public final class Window {
 
         int rbo = glGenRenderbuffers();
         glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+        glViewport(0, 0, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
         colorTexture = GL11.glGenTextures();
@@ -386,43 +390,20 @@ public final class Window {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
 
+        System.out.println("COLOR TEXTURE:" + colorTexture);
+
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
 
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-            // Create quad VAO
-        float[] quadVertices = {
-                // Positions      // Texture coordinates
-                -1.0f,  1.0f, 0.0f,  0.0f, 1.0f, // Top-left
-                -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, // Bottom-left
-                1.0f, -1.0f, 0.0f,   1.0f, 0.0f, // Bottom-right
-                1.0f,  1.0f, 0.0f,   1.0f, 1.0f  // Top-right
-        };
-
-        int[] quadIndices = {
-                0, 1, 3,  // First triangle
-                1, 2, 3   // Second triangle
-        };
-
-        int quadVBO = GL30.glGenBuffers();
-        int quadEBO = GL30.glGenBuffers();
-        quadVAO = GL30.glGenVertexArrays();
-
-        GL30.glBindVertexArray(quadVAO);
-
-        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, quadVBO);
-        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, quadVertices, GL30.GL_STATIC_DRAW);
-        GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, 5 * Float.BYTES, 0);
-        GL30.glEnableVertexAttribArray(0);
-        GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, 5 * Float.BYTES, 3 * Float.BYTES);
-        GL30.glEnableVertexAttribArray(1);
-
-        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, quadEBO);
-        GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, quadIndices, GL30.GL_STATIC_DRAW);
-
-        GL30.glBindVertexArray(0);
+        screenVAO = new VAO2f(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        }, new ShaderProgram(ShaderRegistry.QUAD_VERTEX, ShaderRegistry.QUAD_FRAGMENT));
 
         defaultPostProcessShader = ShaderProgram.ShaderProgramNow(
                 "#version 330 core\n" +

@@ -15,6 +15,7 @@ import org.JE.JE2.Rendering.Shaders.ShaderLayout;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
@@ -64,7 +65,12 @@ public class Renderer extends Script {
 
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
-        if(!camera.withinRenderDistance(gameObject.getTransform().position(), gameObject.getTransform().scale()))
+        Render(gameObject.getTransform(), additionalBufferSize, camera.viewportSize, gameObject.getLayer(), camera);
+    }
+
+    @GLThread
+    public void Render(Transform t, int additionalBufferSize, Vector4f viewport, int layer, Camera camera){
+        if(!camera.withinRenderDistance(t.position(),t.scale()))
             return;
 
         glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
@@ -72,7 +78,6 @@ public class Renderer extends Script {
         ShaderProgram shader = vao.getShaderProgram();
         if(!shader.use())
             return;
-        Transform t = gameObject.getTransform();
 
         setProjections(camera, shader, t);
         setPositions(shader, t);
@@ -86,7 +91,7 @@ public class Renderer extends Script {
 
         if(shader.supportsLighting)
         {
-            setLighting(gameObject.getLayer());
+            setLighting(layer);
         }
 
         vao.Enable(0);

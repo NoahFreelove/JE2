@@ -130,6 +130,14 @@ public class BasicScene {
         mc.canMoveDown = false;
         player.addScript(mc);
         player.addScript(playerCam);
+        Manager.queueGLFunction(new Runnable() {
+            @Override
+            public void run() {
+                player.getSpriteRenderer().getTexture().resource.setID(Window.colorTexture);
+                player.getSpriteRenderer().getNormalTexture().resource.setID(Window.colorTexture);
+            }
+        },true);
+
         player.setPosition(2,0);
         scene.setCamera(playerCam);
         cs.cameraReference = playerCam;

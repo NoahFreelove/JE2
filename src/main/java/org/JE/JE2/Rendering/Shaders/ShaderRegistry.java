@@ -1,7 +1,7 @@
 package org.JE.JE2.Rendering.Shaders;
 
 public record ShaderRegistry() {
-    public static String DEFAULT_VERTEX = "#version 330 core\n" +
+    public static final String DEFAULT_VERTEX = "#version 330 core\n" +
             "layout(location = 0) in vec2 vertexPos;\n" +
             "\n" +
             "uniform mat4 MVP;\n" +
@@ -11,14 +11,14 @@ public record ShaderRegistry() {
             "  gl_Position = pos;\n" +
             "}";
 
-    public static String DEFAULT_FRAGMENT = "#version 330 core\n" +
+    public static final String DEFAULT_FRAGMENT = "#version 330 core\n" +
             "out vec4 FragColor;" +
             "uniform vec4 base_color;\n" +
             "void main(){\n" +
             "  FragColor = base_color;\n" +
             "}";
 
-    public static String SPRITE_VERTEX = "#version 330 core\n" +
+    public static final String SPRITE_VERTEX = "#version 330 core\n" +
             "layout(location = 0) in vec2 modelPos;\n" +
             "layout(location = 1) in vec2 texCoord;\n" +
             "\n" +
@@ -31,7 +31,7 @@ public record ShaderRegistry() {
             "  UV = texCoord;\n" +
             "}";
 
-    public static String SPRITE_FRAGMENT = "#version 330 core\n" +
+    public static final String SPRITE_FRAGMENT = "#version 330 core\n" +
             "out vec4 FragColor;\n" +
             "uniform sampler2D JE_Texture;\n" +
             "in vec2 UV;\n" +
@@ -47,7 +47,7 @@ public record ShaderRegistry() {
             "    }\n" +
             "}";
 
-    public static String LIGHTSPRITE_VERTEX = "#version 330 core\n" +
+    public static final String LIGHTSPRITE_VERTEX = "#version 330 core\n" +
             "\n" +
             "layout(location = 0) in vec2 vertexPos;\n" +
             "layout(location = 1) in vec2 texCoord;\n" +
@@ -71,7 +71,7 @@ public record ShaderRegistry() {
             "  UV = texCoord;\n" +
             "}";
 
-    public static String LIGHTSPRITE_FRAGMENT = "#version 330 core\n" +
+    public static final String LIGHTSPRITE_FRAGMENT = "#version 330 core\n" +
             "\n" +
             "#define MAX_LIGHTS 32\n" +
             "\n" +
@@ -177,5 +177,29 @@ public record ShaderRegistry() {
             "        color = material.base_color * vec4(total_light, 1.0);\n" +
             "    }\n" +
             "}";
+
+    public static final String QUAD_VERTEX = "#version 330 core\n" +
+            "\n" +
+            "layout (location = 0) in vec3 position;\n" +
+            "layout (location = 1) in vec2 texCoords;\n" +
+            "\n" +
+            "out vec2 fragTexCoord;\n" +
+            "\n" +
+            "void main()\n" +
+            "{\n" +
+            "    gl_Position = vec4(position, 1.0);\n" +
+            "    fragTexCoord = texCoords;\n" +
+            "}";
+    public static final String QUAD_FRAGMENT = "#version 330 core\n" +
+            "\n" +
+            "    in vec2 fragTexCoord;\n" +
+            "    out vec4 fragColor;\n" +
+            "\n" +
+            "    uniform sampler2D textureSampler;\n" +
+            "\n" +
+            "    void main()\n" +
+            "    {\n" +
+            "        fragColor = texture(textureSampler, fragTexCoord);\n" +
+            "    }";
 
 }

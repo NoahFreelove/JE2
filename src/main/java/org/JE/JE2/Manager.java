@@ -83,7 +83,11 @@ public class Manager {
     public static void queueGLFunction(Runnable r){
         Window.queueGLFunction(r);
     }
-
+    public static void queueGLFunction(Runnable r, boolean jk){
+        if(jk)
+            return;
+        Window.queueGLFunction(r);
+    }
     public static Scene activeScene(){return activeScene;}
 
     public static Vector2i getWindowSize(){
