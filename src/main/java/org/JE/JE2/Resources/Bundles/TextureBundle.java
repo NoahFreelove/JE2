@@ -9,6 +9,9 @@ public class TextureBundle extends ResourceBundle{
     private transient Vector2i imageSize;
     private transient ByteBuffer imageData;
     public transient String filepath;
+
+    private boolean altered = false;
+
     public TextureBundle(){
         imageSize = new Vector2i();
         imageData = BufferUtils.createByteBuffer(1);
@@ -22,7 +25,7 @@ public class TextureBundle extends ResourceBundle{
     }
 
     public Vector2i getImageSize() {
-        return imageSize;
+        return new Vector2i(imageSize);
     }
 
     public ByteBuffer getImageData() {
@@ -57,5 +60,23 @@ public class TextureBundle extends ResourceBundle{
     public void freeResource() {
         imageData = null;
         imageSize = null;
+    }
+
+    public boolean hasBeenAltered(){return altered;}
+
+    public void setImageSize(Vector2i imageSize) {
+        this.imageSize = imageSize;
+        altered = true;
+    }
+
+    public void setImageData(ByteBuffer imageData) {
+        this.imageData = imageData;
+        altered = true;
+    }
+
+    @Override
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+        altered = true;
     }
 }

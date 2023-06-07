@@ -398,36 +398,38 @@ public final class Window {
             System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+
+
+        defaultPostProcessShader = ShaderProgram.ShaderProgramNow(
+                ShaderRegistry.QUAD_VERTEX,
+                "#version 330 core\n" +
+                        "\n" +
+                        "in vec2 texCoord;\n" +
+                        "out vec4 FragColor;\n" +
+                        "uniform sampler2D JE_Texture;\n" +
+                        "uniform vec2 JE_TextureSize;\n" +
+                        "\n" +
+                        "void main() {\n" +
+                        "    vec4 color = vec4(0.0);\n" +
+                        "    vec2 texelSize = vec2(1.0) / JE_TextureSize;\n" +
+                        "\n" +
+                        "    for (float x = -1.0; x <= 1.0; x++) {\n" +
+                        "        for (float y = -1.0; y <= 1.0; y++) {\n" +
+                        "            vec2 offset = vec2(x, y) * texelSize;\n" +
+                        "            color += texture(JE_Texture, texCoord + offset);\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    FragColor = color / 9.0; // Divide by the number of samples (9 in this case)\n" +
+                        "}",false);
+
         screenVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
-        }, new ShaderProgram(ShaderRegistry.QUAD_VERTEX, ShaderRegistry.QUAD_FRAGMENT));
-
-        defaultPostProcessShader = ShaderProgram.ShaderProgramNow(
-                "#version 330 core\n" +
-                        "layout (location = 0) in vec2 aPos;\n" +
-                        "layout (location = 1) in vec2 aTexCoords;\n" +
-                        "\n" +
-                        "out vec2 TexCoords;\n" +
-                        "\n" +
-                        "void main()\n" +
-                        "{\n" +
-                        "    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0); \n" +
-                        "    TexCoords = aTexCoords;\n" +
-                        "}",
-                "#version 330 core\n" +
-                        "out vec4 FragColor;\n" +
-                        "  \n" +
-                        "in vec2 TexCoords;\n" +
-                        "\n" +
-                        "uniform sampler2D screenTexture;\n" +
-                        "\n" +
-                        "void main()\n" +
-                        "{ \n" +
-                        "    FragColor = texture(screenTexture, TexCoords);\n" +
-                        "}",false);
+        }, defaultPostProcessShader);
     }
+
 
 }

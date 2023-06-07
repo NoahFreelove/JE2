@@ -7,6 +7,7 @@ import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Rendering.VertexBuffers.VAO;
 import org.JE.JE2.Utility.Watcher;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -55,7 +56,7 @@ public class DefaultPipeline extends Pipeline{
             {
                 if(!gameObject.getRenderer().getActive())
                     return;
-                //gameObject.getRenderer().Render(Transform.zero,0, new Vector4f(0,0,Window.getWidth(),Window.getHeight()),Manager.getMainCamera());
+                gameObject.getRenderer().Render(gameObject);
             }
         });
         //GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
@@ -66,6 +67,7 @@ public class DefaultPipeline extends Pipeline{
     public void init() {
         postProcessor.setSpriteVAO(screenVAO);
         postProcessor.getTexture().resource.setID(colorTexture);
+        postProcessor.getTexture().resource.getBundle().setImageSize(new Vector2i(Window.getWidth(), Window.getHeight()));
         postProcessor.getTexture().valid = true;
 
     }

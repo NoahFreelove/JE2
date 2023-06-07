@@ -129,6 +129,11 @@ public final class ShaderProgram implements Serializable, Loadable {
         glUniform2f(location, value.x, value.y);
     }
     @GLThread
+    public void setUniform2f(String name, float x, float y){
+        int location = glGetUniformLocation(programID, name);
+        glUniform2f(location, x, y);
+    }
+    @GLThread
     public void setUniform4f(String name, Vector4f value){
         int location = glGetUniformLocation(programID, name);
         glUniform4f(location, value.x, value.y, value.z, value.w);

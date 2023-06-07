@@ -180,26 +180,26 @@ public record ShaderRegistry() {
 
     public static final String QUAD_VERTEX = "#version 330 core\n" +
             "\n" +
-            "layout (location = 0) in vec3 position;\n" +
-            "layout (location = 1) in vec2 texCoords;\n" +
+            "layout(location = 0) in vec2 vertexPosition;\n" +
+            "layout(location = 1) in vec2 vertexTexCoord;\n" +
             "\n" +
-            "out vec2 fragTexCoord;\n" +
+            "out vec2 texCoord;\n" +
             "\n" +
             "void main()\n" +
             "{\n" +
-            "    gl_Position = vec4(position, 1.0);\n" +
-            "    fragTexCoord = texCoords;\n" +
+            "    gl_Position = vec4(vertexPosition * 2.0 - 1.0, 0.0, 1.0);\n" +
+            "    texCoord = vertexTexCoord;\n" +
             "}";
     public static final String QUAD_FRAGMENT = "#version 330 core\n" +
             "\n" +
-            "    in vec2 fragTexCoord;\n" +
-            "    out vec4 fragColor;\n" +
+            "in vec2 texCoord;\n" +
+            "out vec4 fragColor;\n" +
             "\n" +
-            "    uniform sampler2D textureSampler;\n" +
+            "uniform sampler2D textureSampler;\n" +
             "\n" +
-            "    void main()\n" +
-            "    {\n" +
-            "        fragColor = texture(textureSampler, fragTexCoord);\n" +
-            "    }";
+            "void main()\n" +
+            "{\n" +
+            "    fragColor = texture(textureSampler, texCoord);\n" +
+            "}\n";
 
 }

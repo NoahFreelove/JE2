@@ -87,8 +87,10 @@ public class SpriteRenderer extends Renderer {
         if (!vao.getShaderProgram().use() || !getActive())
             return;
 
-        if(texture.activateTexture(GL_TEXTURE0))
+        if(texture.activateTexture(GL_TEXTURE0)) {
             glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
+            vao.getShaderProgram().setUniform2f("JE_TextureSize", texture.resource.getBundle().getImageSize().x, texture.resource.getBundle().getImageSize().y);
+        }
 
         if(normal.activateTexture(GL_TEXTURE1))
             glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
