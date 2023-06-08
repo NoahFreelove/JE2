@@ -33,6 +33,9 @@ import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Window.Window;
 import org.joml.Vector2f;
+import org.lwjgl.system.windows.LARGE_INTEGER;
+
+import java.math.BigInteger;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_CLOSABLE;
@@ -41,7 +44,6 @@ public class BasicScene {
     static GameObject pl;
     static{
         pl = PointLight.pointLightObject(new Vector2f(1,-1), 0f,0f,0.2f,8, 1);
-
     }
 
     public static Scene mainScene(){
@@ -104,17 +106,17 @@ public class BasicScene {
         //sa.play();
 
         Camera playerCam = new Camera();
-        playerCam.backgroundColor = Color.createColorHex("#87ceeb");
+        //playerCam.backgroundColor = Color.createColorHex("#87ceeb");
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
 
-        scene.add(pl);
 
         CameraShake cs = new CameraShake();
 
         MovementController mc = new MovementController();
         mc.physicsBased = true;
         mc.canMoveDown = false;
+
         player.addScript(mc);
         player.addScript(playerCam);
         /*Manager.queueGLFunction(new Runnable() {
@@ -128,7 +130,8 @@ public class BasicScene {
         player.setPosition(2,0);
         scene.setCamera(playerCam);
         cs.cameraReference = playerCam;
-        //scene.add(AmbientLight.ambientLightObject(1,Color.WHITE));
+        scene.add(AmbientLight.ambientLightObject(1,Color.WHITE));
+        scene.add(pl);
         //player.addScript(cs);
 
         //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
@@ -217,8 +220,8 @@ public class BasicScene {
 
         go.addScript(new PostProcessingVolume(new ShaderProgram(
                 PostProcessRegistry.POST_PROCESS_VERTEX,
-                PostProcessRegistry.BLOOM_FRAG
-        )));
+                PostProcessRegistry.BLUR_FRAG
+        ), new Vector2f(3,3)));
 
         go.addScript(new PhysicsBody());
         go.getPhysicsBody().defaultRestitution = 0.8f;

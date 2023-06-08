@@ -19,18 +19,20 @@ import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
  */
 public class PostProcessingVolume extends Script {
 
-    ShaderProgram screenShader;
-    Vector2f bounds = new Vector2f(5,5);
-    SpriteRenderer postProcessor = new SpriteRenderer();
+    private ShaderProgram screenShader;
+    private Vector2f bounds = new Vector2f(5,5);
+    private SpriteRenderer postProcessor = new SpriteRenderer();
 
-    public PostProcessingVolume(){
+    public PostProcessingVolume(Vector2f bounds){
         super();
+        this.bounds = bounds;
         screenShader = Window.getDefaultPostProcessShader();
         init();
     }
 
-    public PostProcessingVolume(ShaderProgram program){
+    public PostProcessingVolume(ShaderProgram program, Vector2f bounds){
         super();
+        this.bounds = bounds;
         screenShader = program;
         init();
     }
@@ -43,17 +45,17 @@ public class PostProcessingVolume extends Script {
                 new Vector2f(0, 1)
         }, screenShader);
         postProcessor.setSpriteVAO(screenQuadVAO);
-        postProcessor.getTexture().resource.getBundle().setImageSize(new Vector2i(Window.getWidth(), Window.getHeight()));
         postProcessor.getTexture().valid = true;
     }
 
-    float i = 0;
     @Override
     @GLThread
     public void postRender(){
         if(!inBounds()){
             return;
         }
+        postProcessor.getTexture().resource.getBundle().getImageSize().set(Window.getWidth(),Window.getHeight());
+
         postProcessor.getTexture().resource.setID(Window.getFramebufferTexture());
         postProcessor.Render(getAttachedObject());
     }
@@ -69,5 +71,22 @@ public class PostProcessingVolume extends Script {
             }
         }
         return false;
+    }
+
+    public ShaderProgram getScreenShader() {
+        return screenShader;
+    }
+
+    public void setScreenShader(ShaderProgram screenShader) {
+        this.screenShader = screenShader;
+        init();
+    }
+
+    public Vector2f getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(Vector2f bounds) {
+        this.bounds = bounds;
     }
 }

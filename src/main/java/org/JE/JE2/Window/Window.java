@@ -1,17 +1,14 @@
 package org.JE.JE2.Window;
 
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
-import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
-import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
 import org.JE.JE2.UI.UIElements.Style.Color;
-import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -401,12 +398,10 @@ public final class Window {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        System.out.println("COLOR TEXTURE:" + colorTexture);
-
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
 
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+            Logger.log(new JE2Error("Framebuffer Error: Framebuffer is not complete! No post-processing operations will work.", Logger.DEFAULT_ERROR_LOG_LEVEL));
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 

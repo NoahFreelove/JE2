@@ -7,7 +7,6 @@ import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Resources.*;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
-import org.JE.JE2.Resources.Bundles.ResourceBundle;
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -67,6 +66,10 @@ public class Texture implements Serializable {
         else{
             return new Texture(new Resource<>(TextureProcessor.processImage(DataLoader.getBytes(bytePath), flip,bytePath), name, ID), true);
         }
+    }
+
+    public static Texture createTexture(String bytePath, boolean flip){
+        return checkExistElseCreate("",-1, bytePath,flip);
     }
 
     /**

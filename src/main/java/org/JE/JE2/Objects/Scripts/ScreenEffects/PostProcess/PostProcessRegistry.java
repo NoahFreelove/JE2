@@ -3,69 +3,80 @@ package org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess;
 import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 
 public class PostProcessRegistry {
-    // you should always be using this for full-screen vertex post processing unless you have your own.
+    // you should always be using this for full-screen vertex post-processing unless you have your own.
     public static final String POST_PROCESS_VERTEX = ShaderRegistry.QUAD_VERTEX;
     public static final String POST_PROCESS_FRAGMENT = ShaderRegistry.QUAD_FRAGMENT;
 
-    public static final String INVERT_FRAG = "#version 330 core\n" +
-            "\n" +
-            "in vec2 UV;\n" +
-            "out vec4 FragColor;\n" +
-            "uniform sampler2D JE_Texture;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    vec4 color = texture(JE_Texture, UV);\n" +
-            "    vec3 invertedColor = vec3(1.0) - color.rgb; // Invert the RGB values\n" +
-            "    FragColor = vec4(invertedColor, color.a);\n" +
-            "}";
+    public static final String INVERT_FRAG = """
+            #version 330 core
 
-    public static final String BLUR_FRAG = "#version 330 core\n" +
-            "\n" +
-            "in vec2 UV;\n" +
-            "out vec4 FragColor;\n" +
-            "uniform sampler2D JE_Texture;\n" +
-            "uniform vec2 JE_TextureSize;\n" +
-            "\n" +
-            "void main() {\n" +
-            "    vec4 color = vec4(0.0);\n" +
-            "    vec2 texelSize = vec2(1.0) / JE_TextureSize;\n" +
-            "\n" +
-            "    for (float x = -1.0; x <= 1.0; x++) {\n" +
-            "        for (float y = -1.0; y <= 1.0; y++) {\n" +
-            "            vec2 offset = vec2(x, y) * texelSize;\n" +
-            "            color += texture(JE_Texture, UV + offset);\n" +
-            "        }\n" +
-            "    }\n" +
-            "\n" +
-            "    FragColor = color / 9.0; // Divide by the number of samples (9 in this case)\n" +
-            "}";
+            in vec2 UV;
+            out vec4 FragColor;
+            uniform sampler2D JE_Texture;
 
-    public static final String BLOOM_FRAG = "#version 330\n" +
-            "\n" +
-            "uniform sampler2D JE_Texture;\n" +
-            "in vec2 UV;\n" +
-            "out vec4 fragColor;\n" +
-            "\n" +
-            "const int kernelSize = 15;\n" +
-            "const float threshold = 0.7;\n" +
-            "const float intensity = 2.0;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    vec4 color = texture(JE_Texture, UV);\n" +
-            "    vec3 hdrColor = color.rgb;\n" +
-            "\n" +
-            "    vec3 brightPass = vec3(0.0);\n" +
-            "    for (int i = 0; i < kernelSize; i++)\n" +
-            "    {\n" +
-            "        vec2 offset = vec2(float(i) - float(kernelSize - 1) / 2.0);\n" +
-            "        vec4 sampleColor = texture(JE_Texture, UV + offset / textureSize(JE_Texture, 0));\n" +
-            "        float luminance = dot(sampleColor.rgb, vec3(0.2126, 0.7152, 0.0722));\n" +
-            "        brightPass += max(luminance - threshold, 0.0);\n" +
-            "    }\n" +
-            "    brightPass /= float(kernelSize);\n" +
-            "\n" +
-            "    fragColor = vec4(hdrColor + brightPass * intensity, color.a);\n" +
-            "}";
+            void main()
+            {
+                vec4 color = texture(JE_Texture, UV);
+                vec3 invertedColor = vec3(1.0) - color.rgb; // Invert the RGB values
+                FragColor = vec4(invertedColor, color.a);
+            }""";
+
+    public static final String BLUR_FRAG = """
+            #version 330 core
+                        
+            uniform sampler2D JE_Texture;
+            uniform vec2 JE_TextureSize;
+            in vec2 UV;
+            
+            const int kernelSize = 5;
+                        
+            void main()
+            {
+                vec2 texelSize = 1.0 / JE_TextureSize;
+               \s
+                vec3 blurColor = vec3(0.0);
+                float weightTotal = 0.0;
+                        
+                for (int i = -kernelSize; i <= kernelSize; i++)
+                {
+                    for (int j = -kernelSize; j <= kernelSize; j++)
+                    {
+                        vec2 offset = vec2(float(i), float(j)) * texelSize;
+                        blurColor += texture(JE_Texture, UV + offset).rgb;
+                        weightTotal += 1.0;
+                    }
+                }
+               \s
+                vec3 finalColor = blurColor / weightTotal;
+                gl_FragColor = vec4(finalColor, 1.0);
+            }""";
+
+    public static final String BLOOM_FRAG = """
+            #version 330
+
+            uniform sampler2D JE_Texture;
+            in vec2 UV;
+            out vec4 fragColor;
+
+            const int kernelSize = 50;
+            const float threshold = 0.4;
+            const float intensity = 2.0;
+
+            void main()
+            {
+                vec4 color = texture(JE_Texture, UV);
+                vec3 hdrColor = color.rgb;
+
+                vec3 brightPass = vec3(0.0);
+                for (int i = 0; i < kernelSize; i++)
+                {
+                    vec2 offset = vec2(float(i) - float(kernelSize - 1) / 2.0);
+                    vec4 sampleColor = texture(JE_Texture, UV + offset / textureSize(JE_Texture, 0));
+                    float luminance = dot(sampleColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+                    brightPass += max(luminance - threshold, 0.0);
+                }
+                brightPass /= float(kernelSize);
+
+                fragColor = vec4(hdrColor + brightPass * intensity, color.a);
+            }""";
 }

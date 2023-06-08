@@ -25,7 +25,7 @@ public class TextureBundle extends ResourceBundle{
     }
 
     public Vector2i getImageSize() {
-        return new Vector2i(imageSize);
+        return imageSize;
     }
 
     public ByteBuffer getImageData() {
