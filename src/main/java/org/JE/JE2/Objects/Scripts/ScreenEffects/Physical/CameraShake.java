@@ -1,4 +1,4 @@
-package org.JE.JE2.Objects.Scripts.CameraEffects;
+package org.JE.JE2.Objects.Scripts.ScreenEffects.Physical;
 
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;

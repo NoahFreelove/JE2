@@ -2,17 +2,16 @@ package org.JE.JE2.Examples;
 
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
-import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.AmbientLight;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationFrame;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationTimeline;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimator;
-import org.JE.JE2.Objects.Scripts.CameraEffects.CameraShake;
-import org.JE.JE2.Objects.Scripts.CameraEffects.PostProcessingVolume;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.CameraShake;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessingVolume;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
-import org.JE.JE2.Objects.Scripts.LambdaScript.LambdaScript;
 import org.JE.JE2.Objects.Scripts.Physics.BoxTrigger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
@@ -22,39 +21,26 @@ import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
-import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.Scene.Scene;
-import org.JE.JE2.UI.Font;
-import org.JE.JE2.UI.UIElements.ElementEventChanged;
 import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
-import org.JE.JE2.UI.UIElements.PreBuilt.SettingsGenerator;
 import org.JE.JE2.UI.UIElements.Sliders.Slider;
-import org.JE.JE2.UI.UIElements.Spacer;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
-import org.JE.JE2.Utility.GarbageCollection;
-import org.JE.JE2.Utility.Settings.Limits.*;
-import org.JE.JE2.Utility.Settings.Setting;
-import org.JE.JE2.Utility.Settings.SettingCategory;
-import org.JE.JE2.Utility.Settings.SettingManager;
 import org.JE.JE2.Window.Window;
-import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_CLOSABLE;
-import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 
 public class BasicScene {
     static GameObject pl;
     static{
-        pl = PointLight.pointLightObject(new Vector2f(1,-1), 0f,0f,0f,3, 1);
+        pl = PointLight.pointLightObject(new Vector2f(1,-1), 0f,0f,0.2f,8, 1);
 
     }
 
@@ -118,6 +104,7 @@ public class BasicScene {
         //sa.play();
 
         Camera playerCam = new Camera();
+        playerCam.backgroundColor = Color.createColorHex("#87ceeb");
         player.addScript(new PhysicsBody());
         player.addScript(new PlayerScript());
 
@@ -130,17 +117,18 @@ public class BasicScene {
         mc.canMoveDown = false;
         player.addScript(mc);
         player.addScript(playerCam);
-        Manager.queueGLFunction(new Runnable() {
+        /*Manager.queueGLFunction(new Runnable() {
             @Override
             public void run() {
                 player.getSpriteRenderer().getTexture().resource.setID(Window.colorTexture);
                 player.getSpriteRenderer().getNormalTexture().resource.setID(Window.colorTexture);
             }
-        },true);
+        },true);*/
 
         player.setPosition(2,0);
         scene.setCamera(playerCam);
         cs.cameraReference = playerCam;
+        //scene.add(AmbientLight.ambientLightObject(1,Color.WHITE));
         //player.addScript(cs);
 
         //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
@@ -155,7 +143,7 @@ public class BasicScene {
             }
         });
 
-        addPhysicsObject();
+        addPhysicsObject(scene);
         addFloors(scene);
         //createUI(scene);
         scene.add(player);
@@ -217,7 +205,7 @@ public class BasicScene {
         scene.addUI(FPSCounter.generateFPSBox(new Vector2f(1000 - 90, 1000 - 40)));
     }
 
-    private static void addPhysicsObject() {
+    private static void addPhysicsObject(Scene scene) {
         GameObject go = new GameObject();
         go.addScript(new ShapeRenderer());
         ((ShapeRenderer)go.getRenderer()).setPoints(new Vector2f[]{
@@ -227,7 +215,10 @@ public class BasicScene {
                 new Vector2f(0,1)
         });
 
-        go.addScript(new PostProcessingVolume());
+        go.addScript(new PostProcessingVolume(new ShaderProgram(
+                PostProcessRegistry.POST_PROCESS_VERTEX,
+                PostProcessRegistry.BLOOM_FRAG
+        )));
 
         go.addScript(new PhysicsBody());
         go.getPhysicsBody().defaultRestitution = 0.8f;
@@ -237,9 +228,8 @@ public class BasicScene {
         go.getRenderer().getVAO().setShaderProgram(ShaderProgram.spriteShader());
         go.getRenderer().getVAO().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
-        go.getRenderer().setDrawMode(GL_LINE_LOOP);
         go.getRenderer().material.setBaseColor(Color.BLUE);
-        //scene.add(go);
+        scene.add(go);
     }
 
     private static void addFloors(Scene scene) {

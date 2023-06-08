@@ -5,6 +5,7 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
@@ -39,6 +40,7 @@ public final class Window {
     private static long audioDevice =-1;
     private static long audioContext =-1;
     private static boolean hasInit = false;
+    private static boolean doubleRenderPostProcess = true;
     private static int width;
     private static int height;
     private static int monitorWidth;
@@ -51,12 +53,21 @@ public final class Window {
 
     private static double deltaTime = 0;
 
+    // The amount of time between frames before the frame time is capped
+    // Delta time will be set to 0 as to not break physics.
+    // This is put in place for when you move the window and deltatimes increase
+    // But no frames are rendered.
     private static double frameTimeMax = 0.08;
 
-    public static int framebuffer;
-    public static int colorTexture;
-    public static VAO2f screenVAO;
-    public static ShaderProgram defaultPostProcessShader;
+    private static int framebuffer;
+    private static int colorTexture;
+    private static final ShaderProgram defaultPostProcessShader;
+
+    static {
+        defaultPostProcessShader = new ShaderProgram(
+                PostProcessRegistry.POST_PROCESS_VERTEX,
+                PostProcessRegistry.POST_PROCESS_FRAGMENT,false);
+    }
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
@@ -397,39 +408,20 @@ public final class Window {
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-
-        defaultPostProcessShader = ShaderProgram.ShaderProgramNow(
-                ShaderRegistry.QUAD_VERTEX,
-                "#version 330 core\n" +
-                        "\n" +
-                        "in vec2 texCoord;\n" +
-                        "out vec4 FragColor;\n" +
-                        "uniform sampler2D JE_Texture;\n" +
-                        "uniform vec2 JE_TextureSize;\n" +
-                        "\n" +
-                        "void main() {\n" +
-                        "    vec4 color = vec4(0.0);\n" +
-                        "    vec2 texelSize = vec2(1.0) / JE_TextureSize;\n" +
-                        "\n" +
-                        "    for (float x = -1.0; x <= 1.0; x++) {\n" +
-                        "        for (float y = -1.0; y <= 1.0; y++) {\n" +
-                        "            vec2 offset = vec2(x, y) * texelSize;\n" +
-                        "            color += texture(JE_Texture, texCoord + offset);\n" +
-                        "        }\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    FragColor = color / 9.0; // Divide by the number of samples (9 in this case)\n" +
-                        "}",false);
-
-        screenVAO = new VAO2f(new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(1,1),
-                new Vector2f(0,1)
-        }, defaultPostProcessShader);
     }
 
+    public static int getFramebufferTexture(){return colorTexture;}
+    public static int getFramebuffer(){return framebuffer;}
 
+    public static boolean doubleRenderPostProcess() {
+        return doubleRenderPostProcess;
+    }
+
+    public static void setDoubleRenderPostProcess(boolean doubleRenderPostProcess) {
+        Window.doubleRenderPostProcess = doubleRenderPostProcess;
+    }
+
+    public static ShaderProgram getDefaultPostProcessShader() {
+        return defaultPostProcessShader;
+    }
 }

@@ -12,10 +12,14 @@ public record ShaderRegistry() {
             "}";
 
     public static final String DEFAULT_FRAGMENT = "#version 330 core\n" +
-            "out vec4 FragColor;" +
-            "uniform vec4 base_color;\n" +
-            "void main(){\n" +
-            "  FragColor = base_color;\n" +
+            "out vec4 FragColor;\n" +
+            "struct Material{\n" +
+            "    vec4 base_color;\n" +
+            "};\n" +
+            "\n" +
+            "uniform Material material;\n" +
+            "void main() {\n" +
+            "    FragColor = material.base_color;\n" +
             "}";
 
     public static final String SPRITE_VERTEX = "#version 330 core\n" +
@@ -36,14 +40,23 @@ public record ShaderRegistry() {
             "uniform sampler2D JE_Texture;\n" +
             "in vec2 UV;\n" +
             "uniform int use_texture;\n" +
-            "uniform vec4 base_color;\n" +
+            "\n" +
+            "struct Material{\n" +
+            "    vec4 base_color;\n" +
+            "    vec3 ambient;\n" +
+            "    vec3 diffuse;\n" +
+            "    vec3 specular;\n" +
+            "    float shininess;\n" +
+            "};\n" +
+            "\n" +
+            "uniform Material material;\n" +
             "\n" +
             "void main(){\n" +
             "    if(use_texture == 1){\n" +
             "        FragColor = texture(JE_Texture, UV);\n" +
             "    }\n" +
             "    else if (use_texture == 0){\n" +
-            "        FragColor = base_color;\n" +
+            "        FragColor = material.base_color;\n" +
             "    }\n" +
             "}";
 
@@ -183,23 +196,23 @@ public record ShaderRegistry() {
             "layout(location = 0) in vec2 vertexPosition;\n" +
             "layout(location = 1) in vec2 vertexTexCoord;\n" +
             "\n" +
-            "out vec2 texCoord;\n" +
+            "out vec2 UV;\n" +
             "\n" +
             "void main()\n" +
             "{\n" +
             "    gl_Position = vec4(vertexPosition * 2.0 - 1.0, 0.0, 1.0);\n" +
-            "    texCoord = vertexTexCoord;\n" +
+            "    UV = vertexTexCoord;\n" +
             "}";
     public static final String QUAD_FRAGMENT = "#version 330 core\n" +
             "\n" +
-            "in vec2 texCoord;\n" +
+            "in vec2 UV;\n" +
             "out vec4 fragColor;\n" +
             "\n" +
             "uniform sampler2D textureSampler;\n" +
             "\n" +
             "void main()\n" +
             "{\n" +
-            "    fragColor = texture(textureSampler, texCoord);\n" +
+            "    fragColor = texture(textureSampler, UV);\n" +
             "}\n";
 
 }

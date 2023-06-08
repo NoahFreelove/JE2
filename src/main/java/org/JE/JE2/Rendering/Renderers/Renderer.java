@@ -24,9 +24,10 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Script {
     @HideFromInspector
-    protected VAO vao = new VAO();
+    protected VAO vao = new VAO(); //TODO: Migrate Shader from VAO to Renderer
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Material material = new Material();
+    public boolean wireframe = false;
 
     @ActPublic
     protected boolean scale = true;
@@ -41,6 +42,7 @@ public class Renderer extends Script {
 
     public void SetShader(ShaderProgram shader){
         vao.setShaderProgram(shader);
+
     }
 
     protected void PreRender(){}
@@ -93,6 +95,8 @@ public class Renderer extends Script {
         {
             setLighting(layer);
         }
+
+        glPolygonMode(GL_FRONT_AND_BACK, (wireframe ? GL_LINE : GL_FILL));
 
         vao.Enable(0);
         enableLayouts();
