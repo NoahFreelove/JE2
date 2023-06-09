@@ -1,6 +1,5 @@
 package org.JE.JE2.Scene;
 
-import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.Objects.Audio.AudioSourcePlayer;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.Light;
@@ -22,10 +21,9 @@ public class World implements Serializable {
         physicsWorld.setContinuousPhysics(true);
     }
 
-    @Nullable
     public GameObject getObjectByID(long id){
         for (GameObject gameObject : gameObjects) {
-            if(gameObject.identity().uniqueID == id)
+            if(gameObject.uniqueID() == id)
                 return gameObject;
         }
         return null;

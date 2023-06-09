@@ -13,8 +13,7 @@ import org.lwjgl.system.MemoryStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.JE.JE2.Window.UIHandler.nuklearContext;
-import static org.JE.JE2.Window.UIHandler.triggerUIMouseInput;
+import static org.JE.JE2.Window.UIHandler.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.nk_input_motion;
 import static org.lwjgl.nuklear.Nuklear.nk_input_scroll;
@@ -198,12 +197,14 @@ public class Mouse {
 
         glfwSetCursorPosCallback(Window.getWindowHandle(), (window, xpos, ypos) -> {
             Mouse.triggerMouseMoved((float)xpos, (float)ypos);
-            if(UIHandler.nuklearReady && !disableUIInput)
+            if(nuklearReady && !disableUIInput)
                 nk_input_motion(nuklearContext, (int)xpos, (int)ypos);
         });
 
         glfwSetScrollCallback(Window.getWindowHandle(), (window, xoffset, yoffset) -> {
             if(disableUIInput)
+                return;
+            if(!nuklearReady)
                 return;
             try (MemoryStack stack = stackPush()) {
                 NkVec2 scroll = NkVec2.malloc(stack)

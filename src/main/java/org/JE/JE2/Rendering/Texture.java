@@ -1,7 +1,6 @@
 package org.JE.JE2.Rendering;
 
 import org.JE.JE2.Annotations.GLThread;
-import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.IO.Logging.Errors.ImageProcessError;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
@@ -77,7 +76,6 @@ public class Texture implements Serializable {
      * @param name The name of the texture indexed in ResourceManager
      * @return a new Texture object
      */
-    @Nullable
     public static Texture get(String name){
         return new Texture((Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, -1), false);
     }

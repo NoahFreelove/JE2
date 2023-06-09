@@ -1,7 +1,6 @@
 package org.JE.JE2.Resources;
 
 import org.JE.JE2.Annotations.JarSafe;
-import org.JE.JE2.Annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,7 +20,6 @@ public final class DataLoader {
         }
     }
 
-    @Nullable
     @JarSafe
     public static File getDataFile(String path){
         try {
@@ -65,7 +63,6 @@ public final class DataLoader {
      * @param path The path to the resource from the root of the project
      * @return The absolute path to the resource
      */
-    @Nullable
     public static String get(String path){
         return getDataFilePath("/" + path);
     }

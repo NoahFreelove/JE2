@@ -1,8 +1,6 @@
 package org.JE.JE2.Resources;
 
 import org.JE.JE2.Annotations.JarSafe;
-import org.JE.JE2.Annotations.Nullable;
-import org.JE.JE2.Objects.Audio.AudioSource;
 import org.JE.JE2.Objects.Audio.AudioSourcePlayer;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.AudioBundle;
@@ -10,11 +8,8 @@ import org.JE.JE2.Resources.Bundles.ResourceBundle;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Utility.Triplet;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
 
 public class ResourceManager implements Serializable {
     private final static CopyOnWriteArrayList<Resource<TextureBundle>> textures = new CopyOnWriteArrayList<>();
@@ -66,7 +61,6 @@ public class ResourceManager implements Serializable {
         return null;
     }
 
-    @Nullable
     public static Resource<?> getIfExists(Resource<?> resource){
         if(policy == ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS)
             return null;
@@ -90,7 +84,6 @@ public class ResourceManager implements Serializable {
         return null;
     }
 
-    @Nullable
     public static Resource<? extends ResourceBundle> getIfExists(Class<? extends ResourceBundle> clazz, String name, int ID){
         if(policy == ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS)
             return null;

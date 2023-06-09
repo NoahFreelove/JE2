@@ -1,6 +1,5 @@
 package org.JE.JE2.Utility;
 
-import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.Logging.Logger;
 
@@ -9,11 +8,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class InternetRequests {
-    public static void makeRequestAsync(String url, String requestMethod, @Nullable HashMap<String, String> queries, String contentType, RunnableGeneric<HashMap<String, Object>> callback) {
+    public static void makeRequestAsync(String url, String requestMethod, HashMap<String, String> queries, String contentType, RunnableGeneric<HashMap<String, Object>> callback) {
         Thread requestThread = new Thread(() -> {
             try {
                 HashMap<String, Object> res = makeRequest(url, requestMethod, queries, contentType);
@@ -24,7 +22,7 @@ public class InternetRequests {
         });
         requestThread.start();
     }
-    public static HashMap<String, Object> makeRequest(String url, String requestMethod, @Nullable HashMap<String,String> queries, String contentType) throws Exception{
+    public static HashMap<String, Object> makeRequest(String url, String requestMethod, HashMap<String,String> queries, String contentType) throws Exception{
         if(url == null)
             throw new Exception("URL cannot be null");
         url += getQueriesString(queries);

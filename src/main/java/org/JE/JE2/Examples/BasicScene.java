@@ -3,7 +3,6 @@ package org.JE.JE2.Examples;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
-import org.JE.JE2.Objects.Lights.AmbientLight;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationFrame;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationTimeline;
@@ -31,6 +30,7 @@ import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
+import org.JE.JE2.Utility.ForceNonNull;
 import org.JE.JE2.Window.Window;
 import org.joml.Vector2f;
 import org.lwjgl.system.windows.LARGE_INTEGER;
@@ -111,7 +111,6 @@ public class BasicScene {
         player.addScript(new PlayerScript());
 
 
-        CameraShake cs = new CameraShake();
 
         MovementController mc = new MovementController();
         mc.physicsBased = true;
@@ -129,9 +128,8 @@ public class BasicScene {
 
         player.setPosition(2,0);
         scene.setCamera(playerCam);
-        cs.cameraReference = playerCam;
-        scene.add(AmbientLight.ambientLightObject(1,Color.WHITE));
         scene.add(pl);
+        //scene.add(AmbientLight.ambientLightObject(1,Color.WHITE));
         //player.addScript(cs);
 
         //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
@@ -141,8 +139,9 @@ public class BasicScene {
                 Vector2f pos = new Vector2f(player.getTransform().position());
                 Vector2f mousePos = Mouse.getMouseWorldPosition2D();
                 Vector2f dir = mousePos.sub(pos).normalize();
-                Raycast r = player.getScript(PhysicsBody.class).raycast(player.getTransform().position().add(0.5f,0.1f),pos.add(dir.mul(2)),0);
-                System.out.println((r.gameObjectHit() == null)? "Nothing" : r.gameObjectHit().identity());
+                Raycast r = (new ForceNonNull<>(PhysicsBody.class).forceNonNull(player.getScript(PhysicsBody.class)))
+                        .raycast(player.getTransform().position().add(0.5f,0.1f),pos.add(dir.mul(2)),0);
+                System.out.println((r.gameObjectHit() == null)? "Nothing" : r.gameObjectHit().name);
             }
         });
 
@@ -219,8 +218,7 @@ public class BasicScene {
         });
 
         go.addScript(new PostProcessingVolume(new ShaderProgram(
-                PostProcessRegistry.POST_PROCESS_VERTEX,
-                PostProcessRegistry.BLUR_FRAG
+                PostProcessRegistry.invertShaderModule
         ), new Vector2f(3,3)));
 
         go.addScript(new PhysicsBody());

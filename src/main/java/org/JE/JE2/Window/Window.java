@@ -23,6 +23,7 @@ import java.nio.IntBuffer;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static org.JE.JE2.Rendering.Shaders.ShaderRegistry.loadDefaultShaders;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
@@ -36,7 +37,7 @@ public final class Window {
     private static long windowHandle = -1;
     private static long audioDevice =-1;
     private static long audioContext =-1;
-    private static boolean hasInit = false;
+    private static volatile boolean hasInit = false;
     private static boolean doubleRenderPostProcess = true;
     private static int width;
     private static int height;
@@ -52,7 +53,7 @@ public final class Window {
 
     // The amount of time between frames before the frame time is capped
     // Delta time will be set to 0 as to not break physics.
-    // This is put in place for when you move the window and deltatimes increase
+    // This is put in place for when you move the window and delta times increase
     // But no frames are rendered.
     private static double frameTimeMax = 0.08;
 
@@ -61,31 +62,38 @@ public final class Window {
     private static final ShaderProgram defaultPostProcessShader;
 
     static {
-        defaultPostProcessShader = new ShaderProgram(
-                PostProcessRegistry.POST_PROCESS_VERTEX,
-                PostProcessRegistry.POST_PROCESS_FRAGMENT,false);
+        defaultPostProcessShader = new ShaderProgram(PostProcessRegistry.defaultShaderModule);
     }
 
     public static void createWindow(WindowPreferences wp) {
         CreateOpenAL();
         isGLThread = new ThreadLocal<>();
         isGLThread.set(false);
+
         glThread = new Thread(() -> {
             isGLThread.set(true);
             initializeWindow(wp);
+            if (videoModeErrorCheck()) return;
             hasInit = true;
-            GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            if(vidMode == null){
-                Logger.log(new JE2Error("GLFW Video Mode is null, closing program.", Logger.DEFAULT_MAX_LOG_LEVEL));
-                Window.closeWindow(WindowCloseReason.ERROR);
-                return;
-            }
-            monitorHeight = vidMode.height();
-            monitorWidth = vidMode.width();
+
             loop();
         });
         glThread.start();
+
     }
+
+    private static boolean videoModeErrorCheck() {
+        GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        if(vidMode == null){
+            Logger.log(new JE2Error("GLFW Video Mode is null, closing program.", Logger.MAX));
+            Window.closeWindow(WindowCloseReason.ERROR);
+            return true;
+        }
+        monitorHeight = vidMode.height();
+        monitorWidth = vidMode.width();
+        return false;
+    }
+
     public static void closeWindow(int code){
         Logger.log("Quitting with code: " + code + "...");
         glfwSetWindowShouldClose(windowHandle, true);
@@ -93,7 +101,8 @@ public final class Window {
 
     public static void loop(){
         initFBO();
-        windowLoop();
+        loadDefaultShaders();
+        gameLoop();
         destroy();
     }
 
@@ -121,7 +130,7 @@ public final class Window {
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if ( !glfwInit() )
         {
-            Logger.log(new JE2Error("Could not initialize GLFW, closing program.", Logger.DEFAULT_MAX_LOG_LEVEL));
+            Logger.log(new JE2Error("Could not initialize GLFW, closing program.", Logger.MAX));
             Window.closeWindow(1);
             return;
         }
@@ -137,7 +146,7 @@ public final class Window {
         height = wp.windowSize.y();
         if ( windowHandle == NULL )
         {
-            Logger.log(new JE2Error("Failed to create the GLFW windowHandle.", Logger.DEFAULT_MAX_LOG_LEVEL));
+            Logger.log(new JE2Error("Failed to create the GLFW windowHandle.", Logger.MAX));
             Window.closeWindow(1);
         }
 
@@ -169,21 +178,23 @@ public final class Window {
                 );
             }
             else{
-                Logger.log(new JE2Error("Failed to retrieve primary monitor video mode.", Logger.DEFAULT_MAX_LOG_LEVEL));
+                Logger.log(new JE2Error("Failed to retrieve primary monitor video mode.", Logger.MAX));
             }
         } // the stack frame is popped automatically
 
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(windowHandle);
+        glfwMakeContextCurrent(windowHandle); //make active glfw context
+        glfwSwapInterval((wp.vSync? 1:0)); //vsync
+        glfwShowWindow(windowHandle); //make window visible
 
-        // Enable VSync if requested
-        glfwSwapInterval((wp.vSync? 1:0));
+        createCapabilities();
+        if(wp.initializeNuklear)
+            UIHandler.init();
+        else
+            Logger.log("Warning: Nuklear UI not initialized.", Logger.WARN);
+    }
 
-        // Make the windowHandle visible
-        glfwShowWindow(windowHandle);
-
+    private static void createCapabilities() {
         GLCapabilities caps = GL.createCapabilities();
-
         GL.setCapabilities(caps);
         GLUtil.setupDebugMessageCallback();
 
@@ -198,8 +209,6 @@ public final class Window {
                     false
             );
         }
-        if(wp.initializeNuklear)
-            UIHandler.init();
     }
 
     public static void CreateOpenAL() {
@@ -221,7 +230,7 @@ public final class Window {
         }
     }
 
-    private static void windowLoop() {
+    private static void gameLoop() {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -379,7 +388,6 @@ public final class Window {
         });
     }
 
-
     private static void initFBO() {
         // Create frame buffer
         framebuffer = GL30.glGenFramebuffers();
@@ -399,9 +407,13 @@ public final class Window {
         glBindTexture(GL_TEXTURE_2D, 0);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
-
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            Logger.log(new JE2Error("Framebuffer Error: Framebuffer is not complete! No post-processing operations will work.", Logger.DEFAULT_ERROR_LOG_LEVEL));
+        {
+            Logger.log(new JE2Error("Framebuffer Error: Framebuffer is not complete! Post-processing effects will not work."));
+            colorTexture = -1;
+            framebuffer = -1;
+        }
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 

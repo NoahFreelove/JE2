@@ -7,7 +7,7 @@ public class CameraShake extends Script {
     public float magnitude = 1f;
     public Camera cameraReference;
 
-    public CameraShake(){
+    public CameraShake(int i){
         super();
     }
     @Override

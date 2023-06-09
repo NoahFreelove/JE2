@@ -3,7 +3,7 @@ package org.JE.JE2.IO.Logging.Errors;
 import org.JE.JE2.IO.Logging.Logger;
 
 public class JE2Error extends Exception {
-    int level = Logger.DEFAULT_ERROR_LOG_LEVEL;
+    int level = Logger.ERROR;
     public JE2Error(){
         super("Unknown Error");
     }

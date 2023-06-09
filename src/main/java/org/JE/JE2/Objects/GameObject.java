@@ -1,7 +1,7 @@
 package org.JE.JE2.Objects;
 
+import jdk.jfr.Frequency;
 import org.JE.JE2.Annotations.ActPublic;
-import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.Annotations.RequireNonNull;
 import org.JE.JE2.IO.Logging.Errors.GameObjectError;
 import org.JE.JE2.IO.Logging.Logger;
@@ -16,6 +16,7 @@ import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Scene.Scene;
+import org.jetbrains.annotations.Contract;
 import org.joml.Vector2f;
 
 import java.io.Serializable;
@@ -41,12 +42,11 @@ public final class GameObject implements Serializable {
     private transient Renderer rendererRef = null;
     private transient PhysicsBody physicsBodyRef = null;
 
-    @ActPublic
-    private Identity identity = new Identity();
-    @ActPublic
-    private boolean active = true;
-    @ActPublic
-    private int layer = 0;
+    @ActPublic private Identity identity = new Identity();
+    @ReadOnly public String name = identity.name;
+    @ReadOnly public String tag = identity.tag;
+    @ActPublic private boolean active = true;
+    @ActPublic private int layer = 0;
 
     public GameObject(){
         Transform t = new Transform();
@@ -245,24 +245,28 @@ public final class GameObject implements Serializable {
         });
     }
 
-    public Identity identity() {
-        return identity;
+    public String name() {
+        return identity.name;
+    }
+    public String tag() {
+        return identity.tag;
+    }
+    public long uniqueID() {
+        return identity.uniqueID;
     }
 
     public void setIdentity(String name, String tag){
         identity.name = name;
         identity.tag = tag;
-    }
-
-    public void setIdentity(Identity identity) {
-        this.identity = identity;
+        this.name = name;
+        this.tag = tag;
     }
 
     public CopyOnWriteArrayList<Script> getScripts() {
         return scripts;
     }
 
-    @Nullable
+    @Contract(pure = true)
     public <T extends Script> T getScript(Class<T> clazz){
         for (Script s :
                 scripts) {
@@ -284,7 +288,6 @@ public final class GameObject implements Serializable {
         return list;
     }
 
-    @Nullable
     public Script getScript(int i){
         if(i >= scripts.size() || i<0)
             return null;
@@ -354,7 +357,6 @@ public final class GameObject implements Serializable {
         children.remove(gameObject);
     }
 
-    @Nullable
     public GameObject getChild(int index){
         if(children.size()-1>=index){
             return children.get(index);
@@ -381,7 +383,6 @@ public final class GameObject implements Serializable {
         return sprite;
     }
 
-    @Nullable
     public SpriteRenderer getSpriteRenderer(){
         if(getRenderer() instanceof SpriteRenderer sr){
             return sr;
@@ -389,12 +390,10 @@ public final class GameObject implements Serializable {
         return null;
     }
 
-    @Nullable
     public Renderer getRenderer(){
         return rendererRef;
     }
 
-    @Nullable
     public PhysicsBody getPhysicsBody(){
         return physicsBodyRef;
     }

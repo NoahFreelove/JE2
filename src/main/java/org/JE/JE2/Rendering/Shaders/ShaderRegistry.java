@@ -1,6 +1,6 @@
 package org.JE.JE2.Rendering.Shaders;
 
-public record ShaderRegistry() {
+public class ShaderRegistry {
     public static final String DEFAULT_VERTEX = """
             #version 330 core
             layout(location = 0) in vec2 vertexPos;
@@ -223,5 +223,20 @@ public record ShaderRegistry() {
                 fragColor = texture(textureSampler, UV);
             }
             """;
+    public static final ShaderModule defaultShaderModule = new ShaderModule(DEFAULT_VERTEX,DEFAULT_FRAGMENT,false,false);
+    public static final ShaderModule spriteShaderModule = new ShaderModule(SPRITE_VERTEX,SPRITE_FRAGMENT,true,false);
+    public static final ShaderModule lightSpriteShaderModule = new ShaderModule(LIGHTSPRITE_VERTEX,LIGHTSPRITE_FRAGMENT,true,true);
+    public static final ShaderModule quadShaderModule = new ShaderModule(QUAD_VERTEX,QUAD_FRAGMENT,false,false);
 
+    public static ShaderProgram Default;
+    public static ShaderProgram LightSprite;
+    public static ShaderProgram Sprite;
+    public static ShaderProgram Quad;
+
+    public static void loadDefaultShaders(){
+        Default = new ShaderProgram(defaultShaderModule);
+        LightSprite = new ShaderProgram(lightSpriteShaderModule);
+        Sprite = new ShaderProgram(spriteShaderModule);
+        Quad = new ShaderProgram(quadShaderModule);
+    }
 }

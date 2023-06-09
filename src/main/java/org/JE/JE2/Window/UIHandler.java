@@ -287,6 +287,8 @@ public class UIHandler {
 
     //region Rendering Nuklear
     public static void frameStart() {
+        if(!nuklearReady)
+            return;
         try (MemoryStack stack = stackPush()) {
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);

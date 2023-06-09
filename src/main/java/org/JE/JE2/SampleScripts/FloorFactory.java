@@ -4,6 +4,7 @@ import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Identity;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
+import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.DataLoader;
 import org.jbox2d.dynamics.BodyType;
@@ -19,10 +20,10 @@ public class FloorFactory {
         PhysicsBody pb = new PhysicsBody().setMode(BodyType.STATIC);
         pb.defaultFriction = 0;
         floor.addScript(pb);
-        floor.setIdentity(new Identity("Floor", "floor"));
+        floor.setIdentity("Floor", "floor");
         return floor;
     }
     public static GameObject createFloor(Vector2f pos, Vector2f size){
-        return createFloor(Texture.get("floor"), ShaderProgram.lightSpriteShader(), pos, size);
+        return createFloor(Texture.get("floor"), new ShaderProgram(ShaderRegistry.lightSpriteShaderModule), pos, size);
     }
 }

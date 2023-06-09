@@ -1,9 +1,12 @@
 package org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess;
 
+import org.JE.JE2.Rendering.Shaders.ShaderModule;
 import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 
 public class PostProcessRegistry {
-    // you should always be using this for full-screen vertex post-processing unless you have your own.
+
+    // you should always be using this for full-screen vertex post processing unless you have your own.
+
     public static final String POST_PROCESS_VERTEX = ShaderRegistry.QUAD_VERTEX;
     public static final String POST_PROCESS_FRAGMENT = ShaderRegistry.QUAD_FRAGMENT;
 
@@ -79,4 +82,16 @@ public class PostProcessRegistry {
 
                 fragColor = vec4(hdrColor + brightPass * intensity, color.a);
             }""";
+
+    public static final ShaderModule defaultShaderModule = new ShaderModule(PostProcessRegistry.POST_PROCESS_VERTEX,
+            PostProcessRegistry.POST_PROCESS_FRAGMENT,true,false);
+
+    public static final ShaderModule invertShaderModule = new ShaderModule(PostProcessRegistry.POST_PROCESS_VERTEX,
+            PostProcessRegistry.INVERT_FRAG,true,false);
+
+    public static final ShaderModule blurShaderModule = new ShaderModule(PostProcessRegistry.POST_PROCESS_VERTEX,
+            PostProcessRegistry.BLUR_FRAG,true,false);
+
+    public static final ShaderModule bloomShaderModule = new ShaderModule(PostProcessRegistry.POST_PROCESS_VERTEX,
+            PostProcessRegistry.BLOOM_FRAG,true,false);
 }

@@ -5,7 +5,6 @@ import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.Script;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SpriteAnimator extends Script {
     private final ArrayList<SpriteAnimationTimeline> spriteAnimationTimelines = new ArrayList<>();
@@ -38,7 +37,7 @@ public class SpriteAnimator extends Script {
     public void play(){
         if(state>= spriteAnimationTimelines.size())
         {
-            outOfRangeError("play",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            outOfRangeError("play",Logger.ERROR);
             return;
         }
         spriteAnimationTimelines.get(state).play();
@@ -46,7 +45,7 @@ public class SpriteAnimator extends Script {
     public void restart(){
         if(state>= spriteAnimationTimelines.size())
         {
-            outOfRangeError("restart",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            outOfRangeError("restart",Logger.ERROR);
             return;
         }
         spriteAnimationTimelines.get(state).restart();
@@ -54,14 +53,14 @@ public class SpriteAnimator extends Script {
     public void pause(){
         if(state>= spriteAnimationTimelines.size())
         {
-            outOfRangeError("pause",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            outOfRangeError("pause",Logger.ERROR);
             return;
         }
         spriteAnimationTimelines.get(state).pause();}
     public void stop(){
         if(state>= spriteAnimationTimelines.size())
         {
-            outOfRangeError("stop",Logger.DEFAULT_ERROR_LOG_LEVEL);
+            outOfRangeError("stop",Logger.ERROR);
             return;
         }
         spriteAnimationTimelines.get(state).stop();
@@ -69,7 +68,7 @@ public class SpriteAnimator extends Script {
     public void setPlaybackPosition(int pos){
         if(state>= spriteAnimationTimelines.size())
         {
-            outOfRangeError("set playback position", Logger.DEFAULT_ERROR_LOG_LEVEL);
+            outOfRangeError("set playback position", Logger.ERROR);
             return;
         }
         spriteAnimationTimelines.get(state).position = pos;

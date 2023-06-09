@@ -6,6 +6,7 @@ import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
+import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.ResourceLoadingPolicy;
@@ -54,7 +55,8 @@ public class ObjectStressTest {
     }
 
     private static GameObject objectFactory(Vector2f pos){
-        GameObject object = GameObject.Sprite(ShaderProgram.spriteShaderSHARED,
+        ShaderProgram sp = new ShaderProgram(ShaderRegistry.spriteShaderModule);
+        GameObject object = GameObject.Sprite(sp,
                 Texture.checkExistElseCreate("player",-1,"texture1.png"),
                 Texture.checkExistElseCreate("player_normal",-1,"texture1_N.png"));
 

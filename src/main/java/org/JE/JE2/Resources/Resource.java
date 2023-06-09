@@ -1,10 +1,8 @@
 package org.JE.JE2.Resources;
 
-import org.JE.JE2.Annotations.Nullable;
 import org.JE.JE2.Resources.Bundles.ResourceBundle;
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 
 public class Resource<T extends ResourceBundle> implements Serializable {
     public final Class<T> type;
@@ -26,7 +24,6 @@ public class Resource<T extends ResourceBundle> implements Serializable {
         this.ID = ID;
     }
 
-    @Nullable
     public T getBundle() {
         return ref;
     }

@@ -84,6 +84,8 @@ public class SpriteRenderer extends Renderer {
     @Override
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
+        if(vao.getShaderProgram() == null)
+            return;
         if (!vao.getShaderProgram().use() || !getActive())
             return;
 

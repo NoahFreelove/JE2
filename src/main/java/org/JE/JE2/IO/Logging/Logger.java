@@ -1,12 +1,9 @@
 package org.JE.JE2.IO.Logging;
 
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
-import org.JE.JE2.Window.Window;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
 
 public class Logger {
 
@@ -31,9 +28,10 @@ public class Logger {
     private static LogEntry[] logEntries = new LogEntry[1000];
     public static int logEntryIndex = 0;
 
-    public static int DEFAULT_LOG_LEVEL = 10;
-    public static int DEFAULT_ERROR_LOG_LEVEL = 20;
-    public static int DEFAULT_MAX_LOG_LEVEL = Integer.MAX_VALUE-1;
+    public static int LOG = 10;
+    public static int WARN = 15;
+    public static int ERROR = 20;
+    public static int MAX = Integer.MAX_VALUE-1;
 
     public static void log(String message, int level){
         if(!masterLog)
@@ -96,7 +94,7 @@ public class Logger {
     }
 
     public static void log(String message){
-        log(message, DEFAULT_LOG_LEVEL);
+        log(message, LOG);
     }
 
     public static void log(float f){
@@ -120,7 +118,7 @@ public class Logger {
     }
 
     public static void log(Object o){
-    log(o.toString(),DEFAULT_LOG_LEVEL);
+    log(o.toString(), LOG);
     }
 
     public static void log(Object o, int level){
@@ -128,7 +126,7 @@ public class Logger {
     }
 
     public static void log(JE2Error error){
-        log(error,DEFAULT_ERROR_LOG_LEVEL);
+        log(error, ERROR);
     }
 
     public static void log(JE2Error error, int level){

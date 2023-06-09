@@ -33,20 +33,28 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     public static boolean logShaderSourceUponError = true;
 
-    // TODO: future testing to see if multiple objects can shader the same shader
-    public static final ShaderProgram defaultShaderSHARED;
-    public static final ShaderProgram spriteShaderSHARED;
-    public static final ShaderProgram lightSpriteShaderSHARED;
-
-    static {
-        defaultShaderSHARED = defaultShader();
-        spriteShaderSHARED = spriteShader();
-        lightSpriteShaderSHARED = lightSpriteShader();
-    }
-
     public ShaderProgram(){}
+
     public ShaderProgram(String vertex, String fragment){
         createShader(vertex,fragment);
+    }
+
+    public ShaderProgram(String vertexShader, String fragmentShader, boolean supportsTextures, boolean supportsLighting){
+        createShader(vertexShader, fragmentShader);
+        this.supportsTextures = supportsTextures;
+        this.supportsLighting = supportsLighting;
+    }
+
+    public ShaderProgram(File vertexShader, File fragmentShader, boolean supportsTextures, boolean supportsLighting){
+        createShader(vertexShader, fragmentShader);
+        this.supportsLighting = supportsLighting;
+        this.supportsTextures = supportsTextures;
+    }
+
+    public ShaderProgram(ShaderModule sm){
+        createShader(sm.vertex(),sm.fragment());
+        this.supportsLighting = sm.supportsLighting();
+        this.supportsTextures = sm.supportsTextures();
     }
 
     public static ShaderProgram invalidShader(){
@@ -55,38 +63,23 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     public static ShaderProgram defaultShader(){
         ShaderProgram sp = new ShaderProgram();
-        sp.setDefaultShader();
+        sp.createShader(ShaderRegistry.DEFAULT_VERTEX, ShaderRegistry.DEFAULT_FRAGMENT);
         return sp;
     }
-    private void setDefaultShader(){
-        createShader(ShaderRegistry.DEFAULT_VERTEX, ShaderRegistry.DEFAULT_FRAGMENT);
-    }
+
     public static ShaderProgram spriteShader(){
         ShaderProgram sp = new ShaderProgram();
-        sp.setSpriteShader();
+        sp.createShader(ShaderRegistry.SPRITE_VERTEX, ShaderRegistry.SPRITE_FRAGMENT);
+        sp.supportsTextures = true;
         return sp;
     }
-    private void setSpriteShader(){
-        createShader(ShaderRegistry.SPRITE_VERTEX, ShaderRegistry.SPRITE_FRAGMENT);
-        supportsTextures = true;
-    }
+
     public static ShaderProgram lightSpriteShader(){
         ShaderProgram sp = new ShaderProgram();
-        sp.setLightSpriteShader();
+        sp.createShader(ShaderRegistry.LIGHTSPRITE_VERTEX, ShaderRegistry.LIGHTSPRITE_FRAGMENT);
+        sp.supportsLighting = true;
+        sp.supportsTextures = true;
         return sp;
-    }
-    private void setLightSpriteShader(){
-        createShader(ShaderRegistry.LIGHTSPRITE_VERTEX, ShaderRegistry.LIGHTSPRITE_FRAGMENT);
-        supportsLighting = true;
-        supportsTextures = true;
-    }
-    public ShaderProgram(String vertexShader, String fragmentShader, boolean supportsLighting){
-        createShader(vertexShader, fragmentShader);
-        this.supportsLighting = supportsLighting;
-    }
-    public ShaderProgram(File vertexShader, File fragmentShader, boolean supportsLighting){
-        createShader(vertexShader, fragmentShader);
-        this.supportsLighting = supportsLighting;
     }
 
     @GLThread
@@ -254,26 +247,6 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     @Override
     public void load() {
-        /*if(vertex == null || fragment == null)
-        {
-            System.out.println("Preset:" + presetIndex);
-            switch (presetIndex)
-            {
-                case 0 -> setDefaultShader();
-                case 1 -> setSpriteShader();
-                case 2 -> {
-                    System.out.println("setting 2");
-                    setLightSpriteShader();
-                }
-            }
-        }
-        else
-            createShader(vertex, fragment);*/
-        switch (presetIndex)
-        {
-            case 0 -> setDefaultShader();
-            case 1 -> setSpriteShader();
-            case 2 -> setLightSpriteShader();
-        }
+
     }
 }
