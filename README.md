@@ -11,8 +11,10 @@ You can find all the JEngine 2 documentation [here](https://noahfreelove.github.
 - Textures ✅
 - Simple lighting ✅
 - Audio ✅
-- GUI✅ (WIP)
+- GUI✅
 - Physics✅
+- Post Processing✅
+- Object Scripting✅
 
 ## Planned Features
 (In order of priority)
@@ -25,9 +27,9 @@ You can find all the JEngine 2 documentation [here](https://noahfreelove.github.
 - Quick Setup
 - To implement all planned features
 
-### Advantages over JEngine
+## Advantages over JEngine
 - Much lower memory usage (not creating new objects every frame)
 - More control over objects and scripts
-- Uses a much better physics library
+- Uses the JBox2D physics library (not the homemade one from JEngine)
 - Easy audio playback + Filters
 - Improved, controlled Lighting
