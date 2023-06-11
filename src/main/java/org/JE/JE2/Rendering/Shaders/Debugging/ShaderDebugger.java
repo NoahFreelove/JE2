@@ -99,7 +99,7 @@ public class ShaderDebugger {
 
         // Configure Renderer
         Renderer r = new Renderer();
-        r.getVAO().setShaderProgram(shader);
+        r.setShaderProgram(shader);
         r.material.setBaseColor(data.baseColor);
         testObject.addScript(r);
 

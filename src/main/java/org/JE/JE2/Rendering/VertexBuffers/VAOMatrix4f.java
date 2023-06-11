@@ -18,19 +18,10 @@ public class VAOMatrix4f extends VAO {
         QueueGenerateBuffers();
     }
 
-    public VAOMatrix4f(Matrix4f vertices, ShaderProgram sp) {
-        this.matrix = vertices;
-        this.shaderProgram = sp;
-        this.data = dataConversion();
-        dataSize = 3;
-        QueueGenerateBuffers();
-    }
-
     public VAOMatrix4f(VAO2f vao) {
         this.matrix = new Matrix4f();
         this.data = dataConversion();
         dataSize = 3;
-        this.shaderProgram = vao.shaderProgram;
         QueueGenerateBuffers();
     }
 

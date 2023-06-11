@@ -118,6 +118,13 @@ public class Keyboard {
     public static boolean isKeyPressed(int code) {
         return keys[code];
     }
+    public static boolean isAnyKeyPressed(){
+        for (boolean key : keys) {
+            if(key)
+                return true;
+        }
+        return false;
+    }
 
     public static boolean isComboPressed(KeyCombo combo){
         return combo.or(keys);

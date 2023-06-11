@@ -43,7 +43,8 @@ public class PostProcessingVolume extends Script {
                 new Vector2f(1, 0),
                 new Vector2f(1, 1),
                 new Vector2f(0, 1)
-        }, screenShader);
+        });
+        postProcessor.setShaderProgram(screenShader);
         postProcessor.setSpriteVAO(screenQuadVAO);
         postProcessor.getTexture().valid = true;
     }

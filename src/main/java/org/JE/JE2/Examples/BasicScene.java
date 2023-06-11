@@ -93,7 +93,7 @@ public class BasicScene {
             }
         });
 
-        player.getRenderer().getVAO().getShaderProgram().supportsTextures = true;
+        player.getRenderer().getShaderProgram().supportsTextures = true;
 
         player.setIdentity("Player", "player");
 
@@ -217,7 +217,7 @@ public class BasicScene {
                 new Vector2f(0,1)
         });
 
-        go.addScript(new PostProcessingVolume(new ShaderProgram(
+        pl.addScript(new PostProcessingVolume(new ShaderProgram(
                 PostProcessRegistry.invertShaderModule
         ), new Vector2f(3,3)));
 
@@ -226,8 +226,8 @@ public class BasicScene {
         go.getPhysicsBody().defaultDensity = 0.1f;
         go.getPhysicsBody().defaultFriction = 0.05f;
 
-        go.getRenderer().getVAO().setShaderProgram(ShaderProgram.spriteShader());
-        go.getRenderer().getVAO().getShaderProgram().supportsTextures = false;
+        go.getRenderer().setShaderProgram(ShaderProgram.spriteShader());
+        go.getRenderer().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
         go.getRenderer().material.setBaseColor(Color.BLUE);
         scene.add(go);

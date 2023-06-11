@@ -142,7 +142,7 @@ public class Scene implements Serializable {
     }
 
     public void update(){
-        update(true);
+        update(world.supportPhysics);
     }
 
     public void update(boolean physicsUpdate) {

@@ -59,7 +59,8 @@ public class DefaultPipeline extends Pipeline{
                 new Vector2f(1, 0),
                 new Vector2f(1, 1),
                 new Vector2f(0, 1)
-        }, Window.getDefaultPostProcessShader());
+        });
+        postProcessor.setShaderProgram(Window.getDefaultPostProcessShader());
         postProcessor.setSpriteVAO(screenQuadVAO);
         postProcessor.getTexture().resource.setID(Window.getFramebufferTexture());
         postProcessor.getTexture().resource.getBundle().setImageSize(new Vector2i(Window.getWidth(), Window.getHeight()));

@@ -18,18 +18,10 @@ public class VAO3f extends VAO{
         QueueGenerateBuffers();
     }
 
-    public VAO3f(Vector3f[] vertices, ShaderProgram sp){
-        this.vertices = vertices;
-        this.shaderProgram = sp;
-        this.data = dataConversion();
-        dataSize = 3;
-        QueueGenerateBuffers();
-    }
     public VAO3f(VAO2f vao){
         this.vertices = new Vector3f[vao.getVertices().length];
         this.data = dataConversion();
         dataSize = 3;
-        this.shaderProgram = vao.shaderProgram;
         QueueGenerateBuffers();
     }
 

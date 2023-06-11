@@ -15,7 +15,8 @@ public class ShapeRenderer extends Renderer{
     private transient final VAO2f pointVAO;
 
     public ShapeRenderer(){
-        pointVAO = new VAO2f(new Vector2f[]{}, ShaderProgram.defaultShader());
+        pointVAO = new VAO2f(new Vector2f[]{});
+        setShaderProgram(ShaderProgram.defaultShader());
         vao = pointVAO;
     }
 
@@ -47,8 +48,8 @@ public class ShapeRenderer extends Renderer{
     public void load() {
         if(pointVAO !=null)
         {
-            pointVAO.getShaderProgram().presetIndex = defaultShaderIndex;
-            vao.getShaderProgram().presetIndex = defaultShaderIndex;
+            getShaderProgram().presetIndex = defaultShaderIndex;
+            getShaderProgram().presetIndex = defaultShaderIndex;
             vao = pointVAO;
             pointVAO.load();
             vao.load();

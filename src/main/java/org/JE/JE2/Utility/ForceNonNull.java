@@ -16,7 +16,7 @@ public class ForceNonNull<T> {
             try {
                 return clazz.getConstructor().newInstance();
             } catch (Exception e) {
-                Logger.log(new JE2Error("Reflect Non Null Error: You cannot use this method on a class that does not have a default constructor. Please create a default constructor for the class: " + clazz.getName()));
+                Logger.log(new JE2Error("Force Non Null Error: You cannot use this method on a class that does not have a default constructor. Please create a default constructor for the class: " + clazz.getName()));
             }
         }
         return (T) o;
@@ -28,7 +28,7 @@ public class ForceNonNull<T> {
             try {
                 return type.getConstructor().newInstance();
             } catch (Exception e) {
-                Logger.log(new JE2Error("Reflect Non Null Error: You cannot use this method on a class that does not have a default constructor. Please create a default constructor for the class: " + type.getName()));
+                Logger.log(new JE2Error("Force Non Null Error: You cannot use this method on a class that does not have a default constructor. Please create a default constructor for the class: " + type.getName()));
             }
         }
         return o;

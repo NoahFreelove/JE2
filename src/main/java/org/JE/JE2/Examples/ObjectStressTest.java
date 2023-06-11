@@ -22,12 +22,12 @@ public class ObjectStressTest {
         Manager.start(new WindowPreferences(800,800, "JE2", false, true));
 
         ResourceManager.warmupAssets(
-                new String[]{"texture1.png",
-                        "texture1_N.png"
-                },
                 new String[]{
                         "player",
                         "player_normal"
+                },
+                new String[]{"texture1.png",
+                        "texture1_N.png"
                 },
                 new Class[]{
                         TextureBundle.class,
@@ -55,8 +55,7 @@ public class ObjectStressTest {
     }
 
     private static GameObject objectFactory(Vector2f pos){
-        ShaderProgram sp = new ShaderProgram(ShaderRegistry.spriteShaderModule);
-        GameObject object = GameObject.Sprite(sp,
+        GameObject object = GameObject.Sprite(ShaderRegistry.Sprite,
                 Texture.checkExistElseCreate("player",-1,"texture1.png"),
                 Texture.checkExistElseCreate("player_normal",-1,"texture1_N.png"));
 

@@ -13,13 +13,13 @@ public class Main {
 
     public static void main(String[] args) {
         WindowPreferences preferences = new WindowPreferences(
-                500,500,
+                1000,1000,
                 "JE2",
-                true, true, true);
+                false, true, true);
         Manager.start(preferences);
         Logger.logErrors = true;
 
         Manager.setScene(mainScene());
-        Window.setWindowIcon(Texture.checkExistElseCreate("",-1,"texture2.png",false));
+        Window.setWindowIcon(Texture.createTexture("texture2.png",false));
     }
 }

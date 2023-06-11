@@ -24,10 +24,17 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Script {
     @HideFromInspector
-    protected VAO vao = new VAO(); //TODO: Migrate Shader from VAO to Renderer
+    protected VAO vao = new VAO();
     public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Material material = new Material();
     public boolean wireframe = false;
+    protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
+
+    public Renderer(){}
+    public Renderer(VAO vao, ShaderProgram sp){
+        this.shaderProgram = sp;
+        this.vao = vao;
+    }
 
     @ActPublic
     protected boolean scale = true;
@@ -40,9 +47,12 @@ public class Renderer extends Script {
     @EditorEnum(values = {"Base Color", "Textured", "Textured with Lighting"})
     public int defaultShaderIndex = 1;
 
-    public void SetShader(ShaderProgram shader){
-        vao.setShaderProgram(shader);
+    public void setShaderProgram(ShaderProgram shader){
+        this.shaderProgram = shader;
+    }
 
+    public ShaderProgram getShaderProgram() {
+        return shaderProgram;
     }
 
     protected void PreRender(){}
@@ -77,21 +87,17 @@ public class Renderer extends Script {
 
         glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
         PreRender();
-        ShaderProgram shader = vao.getShaderProgram();
-        if(!shader.use())
+
+        if(!shaderProgram.use())
             return;
 
-        setProjections(camera, shader, t);
-        setPositions(shader, t);
-        setMaterial(shader);
+        setProjections(camera, shaderProgram, t);
+        setPositions(shaderProgram, t);
+        setMaterial(shaderProgram);
 
+        shaderProgram.setUniform1i("use_texture", (shaderProgram.supportsTextures? 1 : 0));
 
-        if (shader.supportsTextures)
-        {
-            vao.getShaderProgram().setUniform1i("use_texture", (shader.supportsTextures? 1 : 0));
-        }
-
-        if(shader.supportsLighting)
+        if(shaderProgram.supportsLighting)
         {
             setLighting(layer);
         }
@@ -128,12 +134,12 @@ public class Renderer extends Script {
 
     @GLThread
     private void setLighting(int selectedLayer) {
-        vao.getShaderProgram().setUniform1i("light_count", Manager.activeScene().world.lights.size());
-        vao.getShaderProgram().setUniform1i("layer", selectedLayer);
+        shaderProgram.setUniform1i("light_count", Manager.activeScene().world.lights.size());
+        shaderProgram.setUniform1i("layer", selectedLayer);
 
         int i = 0;
         for (Light light : Manager.activeScene().world.lights) {
-            light.setLighting(vao.getShaderProgram(), i);
+            light.setLighting(shaderProgram, i);
             i++;
         }
     }
@@ -161,7 +167,7 @@ public class Renderer extends Script {
 
     @Override
     public void destroy() {
-        getVAO().getShaderProgram().destroy();
+        shaderProgram.destroy();
     }
 
     @Override

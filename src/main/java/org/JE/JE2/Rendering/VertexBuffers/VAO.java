@@ -20,7 +20,6 @@ public class VAO implements Serializable, Loadable {
     protected transient int vertexBufferID = 0;
     protected transient int location;
 
-    protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
     protected int dataSize = 1;
 
     public VAO(){
@@ -31,14 +30,10 @@ public class VAO implements Serializable, Loadable {
         this.data = data;
         QueueGenerateBuffers();
     }
-    public VAO(float[] data, ShaderProgram sp){
-        this.data = data;
-        this.shaderProgram = sp;
-        QueueGenerateBuffers();
-    }
+
     public VAO(VAO2f vao)
     {
-        this(vao.dataConversion(), vao.shaderProgram);
+        this(vao.dataConversion());
     }
 
     protected float[] dataConversion(){
@@ -100,19 +95,9 @@ public class VAO implements Serializable, Loadable {
         return data;
     }
 
-    public void setShaderProgram(ShaderProgram sp){
-        this.shaderProgram = sp;
-    }
-    public ShaderProgram getShaderProgram(){
-        return shaderProgram;
-    }
 
     @Override
     public void load(){
-        if(shaderProgram != null)
-        {
-            shaderProgram.load();
-        }
         QueueGenerateBuffers();
     }
 }

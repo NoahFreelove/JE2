@@ -49,9 +49,6 @@ public class PhysicsBody extends Script {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(initialSize.x/2*1, initialSize.y/2);
 
-
-
-
         activeFixture = body.createFixture(shape, 1.0f);
         activeFixture.setRestitution(defaultRestitution);
         activeFixture.setDensity(defaultDensity);

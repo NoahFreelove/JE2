@@ -33,7 +33,7 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     public static boolean logShaderSourceUponError = true;
 
-    public ShaderProgram(){}
+    private ShaderProgram(){}
 
     public ShaderProgram(String vertex, String fragment){
         createShader(vertex,fragment);

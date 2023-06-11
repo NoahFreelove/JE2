@@ -41,7 +41,8 @@ public class SpriteRenderer extends Renderer {
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
-        }, ShaderProgram.spriteShader());
+        });
+        shaderProgram = ShaderProgram.spriteShader();
     }
 
     public SpriteRenderer(ShaderProgram shader){
@@ -50,7 +51,8 @@ public class SpriteRenderer extends Renderer {
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
-        }, shader);
+        });
+        this.shaderProgram = shader;
         vao = spriteCoordVAO;
     }
 
@@ -84,18 +86,18 @@ public class SpriteRenderer extends Renderer {
     @Override
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
-        if(vao.getShaderProgram() == null)
+        if(shaderProgram == null)
             return;
-        if (!vao.getShaderProgram().use() || !getActive())
+        if (!shaderProgram.use() || !getActive())
             return;
 
         if(texture.activateTexture(GL_TEXTURE0)) {
-            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Texture"), 0);
-            vao.getShaderProgram().setUniform2f("JE_TextureSize", texture.resource.getBundle().getImageSize().x, texture.resource.getBundle().getImageSize().y);
+            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Texture"), 0);
+            shaderProgram.setUniform2f("JE_TextureSize", texture.resource.getBundle().getImageSize().x, texture.resource.getBundle().getImageSize().y);
         }
 
         if(normal.activateTexture(GL_TEXTURE1))
-            glUniform1i(glGetUniformLocation(vao.getShaderProgram().programID, "JE_Normal"), 1);
+            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
 
         spriteCoordVAO.Enable(1); super.Render(gameObject, 0, camera); spriteCoordVAO.Disable();
     }
@@ -138,8 +140,7 @@ public class SpriteRenderer extends Renderer {
     public void load() {
         if(spriteCoordVAO !=null)
         {
-            spriteCoordVAO.getShaderProgram().presetIndex = defaultShaderIndex;
-            vao.getShaderProgram().presetIndex = defaultShaderIndex;
+            shaderProgram.presetIndex = defaultShaderIndex;
             vao = spriteCoordVAO;
             spriteCoordVAO.load();
             vao.load();
@@ -195,6 +196,6 @@ public class SpriteRenderer extends Renderer {
     }
 
     public void invalidateShader(){
-        vao.setShaderProgram(ShaderProgram.invalidShader());
+        setShaderProgram(ShaderProgram.invalidShader());
     }
 }

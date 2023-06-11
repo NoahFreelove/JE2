@@ -17,19 +17,10 @@ public class VAO2f extends VAO {
         dataSize = 2;
         QueueGenerateBuffers();
     }
-
-    public VAO2f(Vector2f[] vertices, ShaderProgram sp){
-        this.vertices = vertices;
-        this.shaderProgram = sp;
-        this.data = dataConversion();
-        dataSize = 2;
-        QueueGenerateBuffers();
-    }
-    public VAO2f(VAO2f vao){
+   public VAO2f(VAO2f vao){
         this.vertices = new Vector2f[vao.getVertices().length];
         this.data = dataConversion();
         dataSize = 2;
-        this.shaderProgram = vao.shaderProgram;
         QueueGenerateBuffers();
     }
 

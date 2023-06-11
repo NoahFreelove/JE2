@@ -1,7 +1,7 @@
 package org.JE.JE2.Objects;
 
-import jdk.jfr.Frequency;
 import org.JE.JE2.Annotations.ActPublic;
+import org.JE.JE2.Annotations.ReadOnly;
 import org.JE.JE2.Annotations.RequireNonNull;
 import org.JE.JE2.IO.Logging.Errors.GameObjectError;
 import org.JE.JE2.IO.Logging.Logger;
@@ -43,7 +43,8 @@ public final class GameObject implements Serializable {
     private transient PhysicsBody physicsBodyRef = null;
 
     @ActPublic private Identity identity = new Identity();
-    @ReadOnly public String name = identity.name;
+    @ReadOnly
+    public String name = identity.name;
     @ReadOnly public String tag = identity.tag;
     @ActPublic private boolean active = true;
     @ActPublic private int layer = 0;
