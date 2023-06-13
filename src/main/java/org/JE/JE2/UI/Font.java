@@ -174,4 +174,15 @@ public class Font {
     public ByteBuffer getFontData(){
         return fontData;
     }
+
+
+    public void setFontSize(int size){
+        Manager.queueGLFunction(() -> setFontHeight(size));
+    }
+
+    @GLThread
+    public void setFontHeight(int fontHeight){
+        this.fontHeight = fontHeight;
+        generateFont();
+    }
 }

@@ -1,7 +1,9 @@
 package org.JE.JE2.Examples;
 
+import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
+import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationFrame;
@@ -147,7 +149,7 @@ public class BasicScene {
 
         addPhysicsObject(scene);
         addFloors(scene);
-        //createUI(scene);
+        createUI(scene);
         scene.add(player);
 
         return scene;
@@ -199,7 +201,6 @@ public class BasicScene {
         yPos.onChange = value -> {
             pl.setPosition(pl.getTransform().position().x, value);
         };
-
         uiWindow.addElement(Constant, constant, Linear, linear, Quadratic, quadratic, radiusLabel, radius, intensityLabel, intensity);
         //uiWindow.addElement(xPosLabel, xPos, yPosLabel, yPos);
 
@@ -218,7 +219,7 @@ public class BasicScene {
         });
 
         pl.addScript(new PostProcessingVolume(new ShaderProgram(
-                PostProcessRegistry.invertShaderModule
+                PostProcessRegistry.blurShaderModule
         ), new Vector2f(3,3)));
 
         go.addScript(new PhysicsBody());
