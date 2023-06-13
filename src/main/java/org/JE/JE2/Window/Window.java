@@ -6,6 +6,7 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
+import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.UI.UIElements.Style.Color;
@@ -56,9 +57,9 @@ public final class Window {
     // This is put in place for when you move the window and delta times increase
     // But no frames are rendered.
     private static double frameTimeMax = 0.08;
+    private static long frameCount = 0;
 
-    private static int framebuffer;
-    private static int colorTexture;
+    private static Framebuffer defaultFramebuffer;
     private static final ShaderProgram defaultPostProcessShader;
 
     static {
@@ -243,6 +244,7 @@ public final class Window {
         pipeline.init();
         //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
+            frameCount++;
             double startTime = System.currentTimeMillis();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
@@ -389,36 +391,12 @@ public final class Window {
     }
 
     private static void initFBO() {
-        // Create frame buffer
-        framebuffer = GL30.glGenFramebuffers();
-        GL30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-        int rbo = glGenRenderbuffers();
-        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-        glViewport(0, 0, width, height);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-        colorTexture = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,GL_RGB, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
-        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        {
-            Logger.log(new JE2Error("Framebuffer Error: Framebuffer is not complete! Post-processing effects will not work."));
-            colorTexture = -1;
-            framebuffer = -1;
-        }
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        defaultFramebuffer = new Framebuffer(width,height);
+        defaultFramebuffer.create();
     }
 
-    public static int getFramebufferTexture(){return colorTexture;}
-    public static int getFramebuffer(){return framebuffer;}
+    public static int getFramebufferTexture(){return defaultFramebuffer.getTexture();}
+    public static int getFramebuffer(){return defaultFramebuffer.getFramebuffer();}
 
     public static boolean doubleRenderPostProcess() {
         return doubleRenderPostProcess;
@@ -430,5 +408,11 @@ public final class Window {
 
     public static ShaderProgram getDefaultPostProcessShader() {
         return defaultPostProcessShader;
+    }
+
+    public static Framebuffer getDefaultFramebuffer(){return defaultFramebuffer;}
+
+    public static long getFrameCount() {
+        return frameCount;
     }
 }

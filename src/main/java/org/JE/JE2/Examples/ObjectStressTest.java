@@ -5,7 +5,6 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Camera;
-import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
@@ -35,7 +34,7 @@ public class ObjectStressTest {
                 });
 
         Logger.logErrors = true;
-        Logger.logLevel = 0;
+        Logger.logThreshold = 0;
         GameObject cameraRig = new GameObject();
         Camera cam = new Camera();
         cameraRig.addScript(cam);

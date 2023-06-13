@@ -1,11 +1,13 @@
 package org.JE.JE2.Window;
 
 import org.JE.JE2.Annotations.GLThread;
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
+import org.JE.JE2.Utility.GarbageCollection;
 
 public abstract class Pipeline {
 
-    int gcThreshold = 1000;
+    int gcThreshold = 500;
 
     @GLThread
     protected abstract void run(); // will be called every frame
@@ -18,10 +20,9 @@ public abstract class Pipeline {
 
     @GLThread
     protected void onEnd(){
-
-        if(Manager.activeScene().world.gameObjects.size() > gcThreshold)
+        if(Window.getFrameCount() % gcThreshold == 0)
         {
-            System.gc();
+            GarbageCollection.takeOutDaTrash();
         }
     }
     @GLThread
@@ -29,11 +30,9 @@ public abstract class Pipeline {
     @GLThread
     public abstract void postProcess(); // GameObjects
     @GLThread
-    public abstract void renderUI(); // UI / Gizmos
+    public abstract void renderUI(); // UI
     @GLThread
     public abstract void runQueuedEvents(); // GL thread events
-    @GLThread
-    public abstract void pollEvents(); // check for keyboard inputs, window updates, etc.
     @GLThread
     public abstract void updateScene(); // run GameObject update methods
 

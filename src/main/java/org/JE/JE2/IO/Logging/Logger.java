@@ -23,7 +23,7 @@ public class Logger {
     public static boolean showTime = false;
     public static boolean stackTrace = false;
 
-    public static int logLevel = 0;
+    public static int logThreshold = 0;
 
     private static LogEntry[] logEntries = new LogEntry[1000];
     public static int logEntryIndex = 0;
@@ -50,7 +50,7 @@ public class Logger {
             }
         }
 
-        if(logLevel > level)
+        if(logThreshold > level)
             return;
         if(logEntryIndex >= logEntries.length){
             LogEntry[] newLogEntries = new LogEntry[logEntries.length * 2];
@@ -134,7 +134,7 @@ public class Logger {
             return;
         if(!logErrors && !quietLog)
             return;
-        if(logLevel > level)
+        if(logThreshold > level)
             return;
 
         if(logEntryIndex >= logEntries.length){
@@ -180,7 +180,7 @@ public class Logger {
     }
 
     public static void logEverything(){
-        logLevel = 0;
+        logThreshold = 0;
         log = true;
         masterLog = true;
         quietLog = false;

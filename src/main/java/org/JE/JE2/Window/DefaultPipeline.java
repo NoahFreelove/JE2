@@ -2,6 +2,8 @@ package org.JE.JE2.Window;
 
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Rendering.Framebuffer;
+import org.JE.JE2.Rendering.Renderers.FramebufferRenderer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
 import org.JE.JE2.Utility.Watcher;
@@ -12,20 +14,17 @@ import org.lwjgl.opengl.GL30;
 public class DefaultPipeline extends Pipeline{
     @Override
     public void run() {
-        // clear framebuffers
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, Window.getFramebuffer());
-        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+        Window.getDefaultFramebuffer().clearAndActivate();
 
         runQueuedEvents();
         updateScene();
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, Window.getFramebuffer());
         renderObjects();
 
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        Framebuffer.bindDefault();
+
         if(Window.doubleRenderPostProcess())
             renderObjects();
+
         postProcess();
         renderUI();
         checkWatchers();
@@ -50,26 +49,15 @@ public class DefaultPipeline extends Pipeline{
         //GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
-    SpriteRenderer postProcessor = new SpriteRenderer();
-
+    FramebufferRenderer fbRenderer;
     @Override
     public void init() {
-        VAO2f screenQuadVAO = new VAO2f(new Vector2f[]{
-                new Vector2f(0, 0),
-                new Vector2f(1, 0),
-                new Vector2f(1, 1),
-                new Vector2f(0, 1)
-        });
-        postProcessor.setShaderProgram(Window.getDefaultPostProcessShader());
-        postProcessor.setSpriteVAO(screenQuadVAO);
-        postProcessor.getTexture().resource.setID(Window.getFramebufferTexture());
-        postProcessor.getTexture().resource.getBundle().setImageSize(new Vector2i(Window.getWidth(), Window.getHeight()));
-        postProcessor.getTexture().valid = true;
+        fbRenderer = new FramebufferRenderer(Window.getDefaultFramebuffer(), Window.getDefaultPostProcessShader());
     }
     @Override
     public void postProcess() {
         if(!Window.doubleRenderPostProcess())
-            postProcessor.Render(GameObject.emptyGameObject);
+            fbRenderer.Render();
 
         Manager.activeScene().world.gameObjects.forEach((gameObject) -> {
             if(gameObject == null)
@@ -89,10 +77,6 @@ public class DefaultPipeline extends Pipeline{
     public void runQueuedEvents() {
         Window.actionQueue.forEach(Runnable::run);
         Window.actionQueue.clear();
-    }
-
-    @Override
-    public void pollEvents() {
     }
 
     @Override
