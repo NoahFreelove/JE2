@@ -1,6 +1,7 @@
 package org.JE.JE2.IO.Logging;
 
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
+import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -118,9 +119,21 @@ public class Logger {
     }
 
     public static void log(Object o){
-    log(o.toString(), LOG);
+        log(o.toString(), LOG);
     }
+    public static void log(Vector2f vec){
+        log("X: " + vec.x() + " Y:" + vec.y());
+    }
+    public static void log(Vector2f vec, int decimals){
 
+        float x = vec.x();
+        float y = vec.y();
+
+        x = (float) (Math.round(x * Math.pow(10, decimals)) / Math.pow(10, decimals));
+        y = (float) (Math.round(y * Math.pow(10, decimals)) / Math.pow(10, decimals));
+
+        log("X: " + x + " Y:" + y);
+    }
     public static void log(Object o, int level){
         log(o.toString(), level);
     }

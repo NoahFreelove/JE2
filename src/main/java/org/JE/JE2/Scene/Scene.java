@@ -35,6 +35,14 @@ public class Scene implements Serializable {
         world.physicsWorld = new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,-9.8f));
     }
 
+    /**
+     * For when you don't care anymore and just want to add an object to the damn scene
+     * @param go the object in question
+     */
+    public static void addNow(GameObject go){
+        Manager.activeScene().add(go);
+    }
+
     public void add(GameObject newGameObject)
     {
         if(newGameObject == null)

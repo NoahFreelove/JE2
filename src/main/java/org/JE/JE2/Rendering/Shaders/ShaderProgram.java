@@ -4,6 +4,7 @@ import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.Logging.Errors.ShaderError;
 import org.JE.JE2.Manager;
+import org.JE.JE2.Rendering.Shaders.Uniforms.ShaderUniform;
 import org.JE.JE2.Utility.Loadable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -25,6 +26,7 @@ public final class ShaderProgram implements Serializable, Loadable {
 
     public String vertex;
     public String fragment;
+    private ShaderUniform[] uniforms = new ShaderUniform[0];
     public int presetIndex = 0;
     public transient boolean vertexCompileStatus;
     public transient boolean fragmentCompileStatus;
@@ -238,7 +240,12 @@ public final class ShaderProgram implements Serializable, Loadable {
                 Logger.log(ShaderError.invalidProgramIDError);
             }
         }
-        else glUseProgram(programID);
+        else {
+            for (ShaderUniform uniform : uniforms) {
+                uniform.set(this);
+            }
+            glUseProgram(programID);
+        }
         return valid();
     }
     public boolean valid(){
@@ -248,5 +255,22 @@ public final class ShaderProgram implements Serializable, Loadable {
     @Override
     public void load() {
 
+    }
+
+    public void addUniform(ShaderUniform shaderUniform){
+        // increase the size of the array by 1
+        ShaderUniform[] newArray = new ShaderUniform[uniforms.length + 1];
+        // copy the old array into the new one
+        System.arraycopy(uniforms, 0, newArray, 0, uniforms.length);
+        // add the new uniform to the end of the array
+        newArray[newArray.length - 1] = shaderUniform;
+        // set the old array to the new array
+        uniforms = newArray;
+    }
+
+    public void nullifyUniform(int index){
+        if (index<uniforms.length && index>=0){
+            uniforms[index] = ShaderUniform.EMPTY;
+        }
     }
 }

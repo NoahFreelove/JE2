@@ -7,6 +7,7 @@ import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
+import org.JE.JE2.Rendering.Shaders.Uniforms.UniformInt;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
 import org.JE.JE2.Resources.DataLoader;

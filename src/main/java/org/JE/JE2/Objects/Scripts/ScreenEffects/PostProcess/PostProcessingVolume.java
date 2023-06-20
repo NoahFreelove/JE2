@@ -3,6 +3,7 @@ package org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
@@ -22,6 +23,13 @@ public class PostProcessingVolume extends Script {
     private ShaderProgram screenShader;
     private Vector2f bounds = new Vector2f(5,5);
     private SpriteRenderer postProcessor = new SpriteRenderer();
+    public Framebuffer framebuffer = Window.getDefaultFramebuffer();
+
+    public PostProcessingVolume(){
+        super();
+        screenShader = Window.getDefaultPostProcessShader();
+        init();
+    }
 
     public PostProcessingVolume(Vector2f bounds){
         super();
@@ -55,9 +63,16 @@ public class PostProcessingVolume extends Script {
         if(!inBounds()){
             return;
         }
+        if(framebuffer == null)
+        {
+            framebuffer = Window.getDefaultFramebuffer();
+            if(framebuffer == null)
+                return;
+        }
+
         postProcessor.getTexture().resource.getBundle().getImageSize().set(Window.getWidth(),Window.getHeight());
 
-        postProcessor.getTexture().resource.setID(Window.getFramebufferTexture());
+        postProcessor.getTexture().resource.setID(framebuffer.getTexture());
         postProcessor.Render(getAttachedObject());
     }
 

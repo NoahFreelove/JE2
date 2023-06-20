@@ -112,6 +112,16 @@ public class Transform extends Script {
         position.z += z;
     }
 
+    public void translate(Vector2f vec){
+        translateX(vec.x());
+        translateY(vec.y());
+    }
+    public void translate(Vector3f vec){
+        translateX(vec.x());
+        translateY(vec.y());
+        translateZ(vec.z());
+    }
+
     public Vector3f lookAt(Vector2f target){
         Vector2f direction = new Vector2f(target).sub(position());
         float angle = (float) Math.atan2(direction.y, direction.x);

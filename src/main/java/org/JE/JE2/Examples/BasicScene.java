@@ -1,18 +1,16 @@
 package org.JE.JE2.Examples;
 
-import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
-import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationFrame;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationTimeline;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimator;
-import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.CameraShake;
-import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
-import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessingVolume;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
+import org.JE.JE2.Objects.Scripts.Pathfinding.NavigableArea;
+import org.JE.JE2.Objects.Scripts.Pathfinding.PathfindingActor;
+import org.JE.JE2.Objects.Scripts.Pathfinding.SimplePathfindingAgent;
 import org.JE.JE2.Objects.Scripts.Physics.BoxTrigger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
@@ -33,14 +31,11 @@ import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.ForceNonNull;
+import org.JE.JE2.Utility.FloatExp;
 import org.JE.JE2.Window.Window;
 import org.joml.Vector2f;
-import org.lwjgl.system.windows.LARGE_INTEGER;
-
-import java.math.BigInteger;
 
 import static org.lwjgl.nuklear.Nuklear.*;
-import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_CLOSABLE;
 
 public class BasicScene {
     static GameObject pl;
@@ -109,14 +104,18 @@ public class BasicScene {
 
         Camera playerCam = new Camera();
         //playerCam.backgroundColor = Color.createColorHex("#87ceeb");
-        player.addScript(new PhysicsBody());
+        PhysicsBody pb = new PhysicsBody();
+        player.addScript(pb);
         player.addScript(new PlayerScript());
 
 
 
         MovementController mc = new MovementController();
         mc.physicsBased = true;
-        mc.canMoveDown = false;
+        mc.absoluteYPositioning = true;
+        mc.canMoveDown = true;
+        mc.enableJump = false;
+        pb.setGravity(0);
 
         player.addScript(mc);
         player.addScript(playerCam);
@@ -147,7 +146,7 @@ public class BasicScene {
             }
         });
 
-        addPhysicsObject(scene);
+        addPhysicsObject(scene, player);
         addFloors(scene);
         createUI(scene);
         scene.add(player);
@@ -208,7 +207,7 @@ public class BasicScene {
         scene.addUI(FPSCounter.generateFPSBox(new Vector2f(1000 - 90, 1000 - 40)));
     }
 
-    private static void addPhysicsObject(Scene scene) {
+    private static void addPhysicsObject(Scene scene, GameObject player) {
         GameObject go = new GameObject();
         go.addScript(new ShapeRenderer());
         ((ShapeRenderer)go.getRenderer()).setPoints(new Vector2f[]{
@@ -218,26 +217,31 @@ public class BasicScene {
                 new Vector2f(0,1)
         });
 
-        pl.addScript(new PostProcessingVolume(new ShaderProgram(
-                PostProcessRegistry.blurShaderModule
-        ), new Vector2f(3,3)));
-
         go.addScript(new PhysicsBody());
-        go.getPhysicsBody().defaultRestitution = 0.8f;
+        go.getPhysicsBody().setGravity(0);
+        /*go.getPhysicsBody().defaultRestitution = 0.8f;
         go.getPhysicsBody().defaultDensity = 0.1f;
-        go.getPhysicsBody().defaultFriction = 0.05f;
+        go.getPhysicsBody().defaultFriction = 0.05f;*/
 
         go.getRenderer().setShaderProgram(ShaderProgram.spriteShader());
         go.getRenderer().getShaderProgram().supportsTextures = false;
         go.getTransform().translateY(-1.5f);
         go.getRenderer().material.setBaseColor(Color.BLUE);
         scene.add(go);
+
+        NavigableArea na = new NavigableArea(new Vector2f(-2,-3), new Vector2f(4,1));
+        SimplePathfindingAgent spa = new SimplePathfindingAgent(na);
+        PathfindingActor pa = new PathfindingActor(spa, FloatExp.get(5,-2));
+        pa.setTargetObject(player);
+        pa.setSnapInRange(false);
+        pa.setSuccessRange(1.5f);
+        go.addScript(pa);
+        scene.add(na.getDebugArea());
     }
 
     private static void addFloors(Scene scene) {
         scene.add(FloorFactory.createFloor(new Vector2f(-2,-4), new Vector2f(6,1)));
-        GameObject rightWall = FloorFactory.createFloor(new Vector2f(4,-3), new Vector2f(1,4));
-        scene.add(rightWall);
+
         scene.add(FloorFactory.createFloor(new Vector2f(-3,-4), new Vector2f(1,6)));
         scene.add(FloorFactory.createFloor(new Vector2f(-2,1), new Vector2f(6,1)));
         scene.add(FloorFactory.createFloor(new Vector2f(4,-4), new Vector2f(3,1)));
@@ -246,10 +250,12 @@ public class BasicScene {
         scene.add(FloorFactory.createFloor(new Vector2f(9,-1), new Vector2f(1,1)));
         scene.add(FloorFactory.createFloor(new Vector2f(10,0), new Vector2f(1,1)));
         scene.add(FloorFactory.createFloor(new Vector2f(11,0), new Vector2f(1,6)));
-        scene.add(FloorFactory.createFloor(new Vector2f(11,6), new Vector2f(-10,1)));
+        scene.add(FloorFactory.createFloor(new Vector2f(1,6), new Vector2f(11,1)));
 
         scene.add(FloorFactory.createFloor(new Vector2f(4,1), new Vector2f(3,1)));
 
+        GameObject rightWall = FloorFactory.createFloor(new Vector2f(4,-3), new Vector2f(1,4));
+        scene.add(rightWall);
         scene.add(BoxTrigger.triggerObject(new Vector2f(4, -3), new Vector2f(1, 5), new TriggerEvent() {
             @Override
             public void onTriggerEnter(GameObject other) {

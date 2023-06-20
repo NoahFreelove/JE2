@@ -5,9 +5,9 @@ import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 
 public class PostProcessRegistry {
 
-    // you should always be using this for full-screen vertex post processing unless you have your own.
-
+    // you should always be using Post_Process_Vertex for full-screen vertex post processing unless you have your own.
     public static final String POST_PROCESS_VERTEX = ShaderRegistry.QUAD_VERTEX;
+
     public static final String POST_PROCESS_FRAGMENT = ShaderRegistry.QUAD_FRAGMENT;
 
     public static final String INVERT_FRAG = """

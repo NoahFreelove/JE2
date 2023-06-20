@@ -11,26 +11,33 @@ import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Material;
-import org.JE.JE2.Rendering.Shaders.ShaderLayout;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO;
+import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
-import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Script {
     @HideFromInspector
     protected VAO vao = new VAO();
-    public ArrayList<ShaderLayout> layouts = new ArrayList<>();
     public Material material = new Material();
     public boolean wireframe = false;
     protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
 
-    public Renderer(){}
+    public Renderer(){
+        vao = new VAO2f(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        });
+        shaderProgram = ShaderProgram.defaultShader();
+    }
     public Renderer(VAO vao, ShaderProgram sp){
         this.shaderProgram = sp;
         this.vao = vao;
@@ -68,12 +75,6 @@ public class Renderer extends Script {
         Render(t,additionalBufferSize, Manager.getMainCamera());
     }
 
-    public void enableLayouts(){
-        layouts.forEach(ShaderLayout::Enable);
-    }
-    public void disableLayouts(){
-        layouts.forEach(ShaderLayout::Disable);
-    }
 
     @GLThread
     public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
@@ -105,9 +106,7 @@ public class Renderer extends Script {
         glPolygonMode(GL_FRONT_AND_BACK, (wireframe ? GL_LINE : GL_FILL));
 
         vao.Enable(0);
-        enableLayouts();
         glDrawArrays(drawMode, 0, vao.getData().length + additionalBufferSize);
-        disableLayouts();
         vao.Disable();
     }
 

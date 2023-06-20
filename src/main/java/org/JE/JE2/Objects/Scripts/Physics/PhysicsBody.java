@@ -3,6 +3,7 @@ package org.JE.JE2.Objects.Scripts.Physics;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Utility.MethodTimer;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.RayCastInput;
 import org.jbox2d.collision.RayCastOutput;
@@ -27,6 +28,7 @@ public class PhysicsBody extends Script {
     public float defaultRestitution = 0;
     public float defaultDensity = 1;
     public float defaultFriction = 1f;
+    public float defaultGravity = 1f;
 
     public PhysicsBody(){
         super();
@@ -44,7 +46,7 @@ public class PhysicsBody extends Script {
         bodyDef.position.set(adjustedPos.x(),adjustedPos.y());
         body = getAttachedObject().linkedScene.world.physicsWorld.createBody(this.bodyDef);
         body.setTransform(new Vec2(adjustedPos.x(),adjustedPos.y()), 0);
-
+        body.setGravityScale(defaultGravity);
         // Create box shape
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(initialSize.x/2*1, initialSize.y/2);
@@ -197,5 +199,14 @@ public class PhysicsBody extends Script {
             return new Raycast(true, userData, new Vector2f(output.normal.x,output.normal.y));
         }
         return new Raycast(false, null, null);
+    }
+
+    public void setGravity(float newScale){
+        if(!hasInitialized)
+        {
+            defaultGravity = newScale;
+            return;
+        }
+        body.setGravityScale(newScale);
     }
 }

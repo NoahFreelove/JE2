@@ -99,6 +99,27 @@ public class Color implements Serializable {
         return new Color(1-c.r,1-c.g,1-c.b,c.a);
     }
 
+    public Color clone() {
+        return Color.createColor(r,g,b,a);
+    }
+
+    public Color a(float val){
+        this.a = val;
+        return this;
+    }
+    public Color r(float val){
+        this.r = val;
+        return this;
+    }
+    public Color g(float val){
+        this.g = val;
+        return this;
+    }
+    public Color b(float val){
+        this.b = val;
+        return this;
+    }
+
     public void set(float r, float g, float b, float a){
         this.r = r;
         this.g = g;

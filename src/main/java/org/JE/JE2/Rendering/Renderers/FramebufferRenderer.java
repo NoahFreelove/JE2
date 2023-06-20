@@ -4,7 +4,6 @@ import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
-import org.JE.JE2.Window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
