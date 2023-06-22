@@ -1,5 +1,6 @@
 package org.JE.JE2.Examples;
 
+import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
@@ -7,6 +8,7 @@ import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationFrame;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationTimeline;
 import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimator;
+import org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Objects.Scripts.Pathfinding.NavigableArea;
 import org.JE.JE2.Objects.Scripts.Pathfinding.PathfindingActor;
@@ -15,6 +17,7 @@ import org.JE.JE2.Objects.Scripts.Physics.BoxTrigger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
 import org.JE.JE2.Objects.Scripts.Physics.TriggerEvent;
+import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
@@ -45,7 +48,7 @@ public class BasicScene {
 
     public static Scene mainScene(){
         Scene scene = new Scene();
-
+        scene.name = "Basic Scene";
         ResourceManager.warmupAssets(
                 new String[]{
                         "PlayerTexture",
@@ -63,9 +66,33 @@ public class BasicScene {
                         TextureBundle.class
                 });
 
-        GameObject player = GameObject.Sprite(ShaderProgram.lightSpriteShader(),
+        GameObject player = GameObject.Sprite(ShaderProgram.spriteShader(),
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
+        TransformRecorder tr = new TransformRecorder();
+
+        player.addScript(new DontDestroyOnLoad());
+        player.addScript(tr);
+        Keyboard.addKeyReleasedEvent(new KeyReleasedEvent() {
+            @Override
+            public void invoke(int key, int mods) {
+                if(Keyboard.nameToCode("4") == key){
+                    player.getTransform().setPosition(0,0);
+                }
+                if(Keyboard.nameToCode("1") == key){
+                    tr.recording = true;
+                    tr.playing = false;
+                }
+                if(Keyboard.nameToCode("2") == key){
+                    tr.recording = false;
+                    tr.playing = true;
+                }
+                if(Keyboard.nameToCode("3") == key){
+                    tr.recording = false;
+                    tr.playing = false;
+                }
+            }
+        });
 
         pl.addScript(new ILambdaScript() {
             @Override
@@ -146,7 +173,7 @@ public class BasicScene {
             }
         });
 
-        addPhysicsObject(scene, player);
+        //addPhysicsObject(scene, player);
         addFloors(scene);
         createUI(scene);
         scene.add(player);

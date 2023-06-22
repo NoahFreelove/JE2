@@ -3,11 +3,13 @@ package org.JE.JE2.Scene;
 import org.JE.JE2.Annotations.RequireNonNull;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Objects.Identity;
 import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.UI.UIObjects.UIObject;
+import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.Watcher;
 
 import java.io.*;
@@ -21,6 +23,7 @@ public class Scene implements Serializable {
     public final World world = new World();
 
     public int buildIndex = -1;
+    public String name = "scene";
 
     public CopyOnWriteArrayList<Watcher> watchers = new CopyOnWriteArrayList<>();
 
@@ -168,6 +171,12 @@ public class Scene implements Serializable {
 
     public void unload(Scene oldScene, Scene newScene) {
         world.gameObjects.forEach(gameObject -> gameObject.scriptUnload(oldScene,newScene));
+        world.UI.forEach(ui ->{
+            if(ui instanceof UIWindow window){
+                if(!window.destroyOnLoad)
+                    newScene.addUI(window);
+            }
+        });
     }
 
     public Camera mainCamera() {
@@ -177,16 +186,25 @@ public class Scene implements Serializable {
         this.activeCamera = cam;
     }
 
-    /*public void saveSceneToFolder(String path){
-        if(!path.endsWith("/") && !path.endsWith("\\")){
-            path += "\\";
+    public boolean setIfExists(Identity id, GameObject object, boolean strict){
+        int i = 0;
+        for (GameObject go : world.gameObjects) {
+            if(strict){
+                if(go.uniqueID() == id.uniqueID)
+                {
+                    world.gameObjects.set(i,object);
+                    return true;
+                }
+            }else{
+                if(go.uniqueID() == id.uniqueID || (go.name.equals(id.name) && go.tag.equals(id.tag)))
+                {
+                    world.gameObjects.set(i,object);
+                    return true;
+                }
+            }
+            i++;
         }
-        ObjectSaver<GameObject> saver = new ObjectSaver<>();
-
-        for (GameObject object : world.gameObjects) {
-            saver.saveToFile(object, path + object.identity().uniqueID + ".txt");
-        }
-    }*/
-
+        return false;
+    }
 }
 

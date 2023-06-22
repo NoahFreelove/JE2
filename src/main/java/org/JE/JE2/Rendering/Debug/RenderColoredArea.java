@@ -5,7 +5,9 @@ import org.JE.JE2.Rendering.Renderers.Renderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.jbox2d.common.MathUtils;
 import org.joml.Vector2f;
+import org.lwjgl.system.MathUtil;
 
 public class RenderColoredArea {
 
@@ -53,8 +55,23 @@ public class RenderColoredArea {
         GameObject obj = new GameObject();
         obj.setPosition(pos);
         obj.setScale(radius,radius);
+
+        sides = (int) MathUtils.clamp(sides,30,200);
         VAO2f circlePoints = new VAO2f(generateCircleCoords(sides));
 
+        Renderer renderer = new Renderer(circlePoints, ShaderProgram.defaultShader());
+
+        renderer.material.setBaseColor(c);
+        obj.addScript(renderer);
+        return obj;
+    }
+
+    public static GameObject getRadius(float x, float y, float radius, int sides, Color c){
+        GameObject obj = new GameObject();
+        obj.setPosition(x,y);
+        obj.setScale(radius,radius);
+        sides = (int) MathUtils.clamp(sides,30,200);
+        VAO2f circlePoints = new VAO2f(generateCircleCoords(sides));
         Renderer renderer = new Renderer(circlePoints, ShaderProgram.defaultShader());
 
         renderer.material.setBaseColor(c);

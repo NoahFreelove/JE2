@@ -23,6 +23,16 @@ public class Identity implements Serializable {
         this.uniqueID = generateID();
     }
 
+    private Identity(String name, String tag, long uniqueID) {
+        this.name = name;
+        this.tag = tag;
+        this.uniqueID = uniqueID;
+    }
+
+    public static Identity createFakeID(String name, String tag, long uniqueID){
+        return new Identity(name,tag,uniqueID);
+    }
+
     @Override
     public String toString(){
         return "Name: '" + name + "' Tag: '" + tag + "'";
@@ -33,5 +43,22 @@ public class Identity implements Serializable {
         if(uniqueOffset >= Long.MAX_VALUE-1)
             uniqueOffset = 0;
         return uniqueOffset;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj instanceof Identity other)
+        {
+            return other.uniqueID == this.uniqueID;
+        }
+        return false;
+    }
+    public boolean equals(Identity other, boolean strict){
+        if(strict)
+            return equals(other);
+        else {
+            return other.name.equals(this.name) && other.tag.equals(this.tag);
+        }
     }
 }

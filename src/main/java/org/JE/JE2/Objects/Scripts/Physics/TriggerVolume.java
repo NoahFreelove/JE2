@@ -18,10 +18,19 @@ public abstract class TriggerVolume extends PhysicsBody {
     }
 
     @Override
+    public void start() {
+        super.start();
+    }
+
+    @Override
     public void update(){
         if(!hasInitialized)
             return;
 
+        if(attachedScene != null){
+            if(!isInCorrectScene())
+                return;
+        }
         if (body !=null) {
             ContactEdge contactEdge = body.getContactList();
             if(contactEdge == null)

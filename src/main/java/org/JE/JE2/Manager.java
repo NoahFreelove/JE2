@@ -22,6 +22,7 @@ public class Manager {
     private static Vector4f defaultViewport = new Vector4f(0,0,1920,1080);
     static{
         activeScene = new Scene(0);
+        activeScene.name = "Default Scene";
         buildScenes.add(activeScene);
     }
     public static Camera getMainCamera(){
@@ -105,9 +106,14 @@ public class Manager {
         return defaultViewport;
     }
 
-    public static void addBuildScene(Scene s){
+    public static void indexScene(Scene s){
         s.buildIndex = buildScenes.size();
         buildScenes.add(s);
+    }
+
+    public static void indexAndSet(Scene s){
+        indexScene(s);
+        setScene(buildScenes.size()-1);
     }
 
     public static void onWindowSizeChange(int width, int height){

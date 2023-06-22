@@ -29,6 +29,8 @@ public class UIWindow extends UIObject {
 
     public boolean reset = false;
 
+    public boolean destroyOnLoad = true;
+
     private CopyOnWriteArrayList<UIElement> children = new CopyOnWriteArrayList<>();
 
     public UIWindow() {

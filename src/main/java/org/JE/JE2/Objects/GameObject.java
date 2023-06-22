@@ -17,6 +17,7 @@ import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Scene.Scene;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 
 import java.io.Serializable;
@@ -40,12 +41,15 @@ public final class GameObject implements Serializable {
     private transient ArrayList<GameObject> children = new ArrayList<>();
     private transient CopyOnWriteArrayList<Script> scripts = new CopyOnWriteArrayList<>();
     private transient Renderer rendererRef = null;
-    private transient PhysicsBody physicsBodyRef = null;
+    private transient PhysicsBody activePhysicsBody = null;
 
     @ActPublic private Identity identity = new Identity();
+
     @ReadOnly
     public String name = identity.name;
-    @ReadOnly public String tag = identity.tag;
+    @ReadOnly
+    public String tag = identity.tag;
+
     @ActPublic private boolean active = true;
     @ActPublic private int layer = 0;
 
@@ -128,9 +132,7 @@ public final class GameObject implements Serializable {
         {
             rendererRef = r;
         }
-        else if (script instanceof PhysicsBody p){
-            physicsBodyRef = p;
-        }
+
         script.setAttachedObject(this);
         script.onAddedToGameObject(this);
 
@@ -182,12 +184,12 @@ public final class GameObject implements Serializable {
     public void physicsUpdate(){
         if(!active)
             return;
-        if(physicsBodyRef == null)
+        if(activePhysicsBody == null)
             return;
 
-        if(physicsBodyRef.getActive())
+        if(activePhysicsBody.getActive())
         {
-            physicsBodyRef.update();
+            activePhysicsBody.update();
         }
     }
 
@@ -268,7 +270,10 @@ public final class GameObject implements Serializable {
     }
 
     @Contract(pure = true)
+    @Nullable
     public <T extends Script> T getScript(Class<T> clazz){
+        if(clazz == null)
+            return null;
         for (Script s :
                 scripts) {
             if(s.getClass() == clazz){
@@ -282,7 +287,7 @@ public final class GameObject implements Serializable {
         CopyOnWriteArrayList<T> list = new CopyOnWriteArrayList<>();
         for (Script s :
                 scripts) {
-            if(s.getClass() == clazz){
+            if(s.getClass() == clazz || clazz.isAssignableFrom(s.getClass())){
                 list.add((T) s);
             }
         }
@@ -396,7 +401,20 @@ public final class GameObject implements Serializable {
     }
 
     public PhysicsBody getPhysicsBody(){
-        return physicsBodyRef;
+        CopyOnWriteArrayList<PhysicsBody> physicsBodies = getScripts(PhysicsBody.class);
+        for (PhysicsBody pb : physicsBodies) {
+            if(physicsBodies.size() == 1)
+            {
+                activePhysicsBody = pb;
+                break;
+            }
+            if(pb.isInCorrectScene())
+            {
+                activePhysicsBody = pb;
+                break;
+            }
+        }
+        return activePhysicsBody;
     }
 
     public void setChildren(ArrayList<GameObject> children) {
@@ -415,4 +433,5 @@ public final class GameObject implements Serializable {
         }
         return false;
     }
+
 }

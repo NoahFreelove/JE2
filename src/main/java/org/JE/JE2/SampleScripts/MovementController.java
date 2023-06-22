@@ -1,9 +1,12 @@
 package org.JE.JE2.SampleScripts;
 
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.jbox2d.common.Vec2;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.JE.JE2.IO.UserInput.Keyboard.Combos.ComboList.*;
 import static org.JE.JE2.Window.Window.deltaTime;
@@ -28,7 +31,7 @@ public class MovementController extends Script {
     private PhysicsBody physicsBody;
     @Override
     public void start(){
-        physicsBody = getAttachedObject().getScript(PhysicsBody.class);
+        physicsBody = getAttachedObject().getPhysicsBody();
     }
 
     @Override
@@ -42,6 +45,7 @@ public class MovementController extends Script {
             if (physicsBody == null) {
                 return;
             }
+            //Logger.log(getAttachedObject().getTransform().position(),2);
             if(Keyboard.isKeyPressed(65) && canMoveLeft){
                 physicsBody.body.setLinearVelocity(new Vec2(-moveSpeed, physicsBody.body.getLinearVelocity().y));
             }

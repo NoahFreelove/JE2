@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 public class Color implements Serializable {
 
+    //region Pre-made Colors
     public static final Color TRANSPARENT = Color.createColor(0,0,0,0);
     public static final Color WHITE = Color.createColor(1,1,1,1);
     public static final Color BLACK = Color.createColor(0,0,0,1);
@@ -21,6 +22,21 @@ public class Color implements Serializable {
     public static final Color YELLOW = Color.createColor(1,1,0,1);
     public static final Color CYAN = Color.createColor(0,1,1,1);
     public static final Color MAGENTA = Color.createColor(1,0,1,1);
+
+    public static final Color BROWN = Color.createColor(0.6f,0.4f,0.2f);
+    public static final Color PURPLE = Color.createColor(0.6f,0.2f,0.6f);
+    public static final Color ORANGE = Color.createColor(1,0.5f,0);
+    public static final Color PINK = Color.createColor(1,0.5f,0.5f);
+    public static final Color TEAL = Color.createColor(0,0.5f,0.5f);
+    public static final Color LIME = Color.createColor(0.5f,1,0);
+
+    public static final Color PASTEL_RED = Color.createColor(1,0.5f,0.5f);
+    public static final Color PASTEL_GREEN = Color.createColor(0.5f,1,0.5f);
+    public static final Color PASTEL_BLUE = Color.createColor(0.5f,0.5f,1);
+    public static final Color PASTEL_YELLOW = Color.createColor(1,1,0.5f);
+    public static final Color PASTEL_CYAN = Color.createColor(0.5f,1,1);
+    public static final Color PASTEL_MAGENTA = Color.createColor(1,0.5f,1);
+    //endregion
 
     @ActPublic private float r;
     @ActPublic private float g;

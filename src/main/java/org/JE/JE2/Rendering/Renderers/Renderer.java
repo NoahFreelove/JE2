@@ -14,7 +14,6 @@ import org.JE.JE2.Rendering.Material;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO;
 import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
-import org.JE.JE2.UI.UIElements.Style.Color;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
@@ -55,6 +54,7 @@ public class Renderer extends Script {
     public int defaultShaderIndex = 1;
 
     public void setShaderProgram(ShaderProgram shader){
+
         this.shaderProgram = shader;
     }
 

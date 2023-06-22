@@ -13,7 +13,7 @@ public class PathfindingActor extends Script {
     /*
     Snap in range isn't really noticeable for any successRange value under 0.1f
      */
-    private float successRange = FloatExp.get(5,-2);
+    private float successRange = FloatExp.get(5,-1);
     private boolean snapInRange = true;
     public PathfindingActor(PathfindingAgent pathfinder, float speed) {
         this.pathfinder = pathfinder;

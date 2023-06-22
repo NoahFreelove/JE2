@@ -1,6 +1,7 @@
 package org.JE.JE2.Objects.Scripts;
 
 import org.JE.JE2.Annotations.ActPublic;
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.jbox2d.common.Vec2;
 import org.joml.*;
@@ -51,27 +52,41 @@ public class Transform extends Script {
     }
 
     public Vector3f setPosition(Vector2f position){
-        return this.position.set(position.x, position.y, this.position.z);
+        this.position.set(position.x, position.y, this.position.z);
+        update();
+        return this.position;
     }
 
     public Vector3f setPosition(Vector3f position){
-        return this.position.set(position);
+        position.set(position);
+        update();
+        return position;
     }
 
     public Vector3f setPosition(float x, float y){
-        return this.position.set(x, y, this.position.z);
+
+        this.position.set(x, y, this.position.z);
+        update();
+        return position;
+
     }
 
     public Vector3f setPosition(float x, float y, float z){
-        return this.position.set(x, y, z);
+        this.position.set(x, y, z);
+        update();
+        return position;
     }
 
     public Vector3f setRotation(Vector3f rotation){
-        return this.rotation.set(rotation);
+        this.rotation.set(rotation);
+        update();
+        return this.rotation;
     }
 
     public Vector3f setRotation(float x, float y, float z){
-        return this.rotation.set(x, y, z);
+        this.rotation.set(x, y, z);
+        update();
+        return this.rotation;
     }
 
     public Vector3f setScale(Vector2f scale){
@@ -136,7 +151,7 @@ public class Transform extends Script {
 
     @Override
     public void start() {
-        physicsBody = getAttachedObject().getScript(PhysicsBody.class);
+        physicsBody = getAttachedObject().getPhysicsBody();
     }
 
     private final Vector2f adjustedPos = new Vector2f();
