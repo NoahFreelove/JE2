@@ -11,7 +11,6 @@ public class UniformInt extends ShaderUniform{
 
     @Override
     public void set(ShaderProgram program){
-        System.out.println("setting int");
         program.setUniform1i(name,value);
     }
 

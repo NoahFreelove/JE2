@@ -2,10 +2,10 @@ package org.JE.JE2.Objects.Scripts.AI;
 
 public class AIDecision {
 
-    AICondition successCondition;
     boolean hasSucceeded;
     boolean inProgress;
 
+    AICondition successCondition;
     AIDecision subsequentDecision;
 
     public AIDecision(AICondition successCondition, AIDecision subsequentDecision) {
@@ -13,13 +13,18 @@ public class AIDecision {
         this.subsequentDecision = subsequentDecision;
     }
 
-    public void start(){
+    private void start(){
         inProgress = true;
     }
     protected void success(){
         hasSucceeded = true;
         if(subsequentDecision !=null)
             subsequentDecision.start();
+    }
+
+    protected void failed(){
+        hasSucceeded = false;
+
     }
 
     public void check(){
@@ -34,6 +39,10 @@ public class AIDecision {
             if(successCondition.passed()){
                 inProgress = false;
                 success();
+            }
+            else if(successCondition.failed()){
+                inProgress = false;
+                failed();
             }
         }
     }

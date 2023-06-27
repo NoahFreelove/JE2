@@ -100,7 +100,7 @@ public class SpriteRenderer extends Renderer {
         if(normal.activateTexture(GL_TEXTURE1))
             glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
 
-        spriteCoordVAO.Enable(1); super.Render(gameObject, 0, camera); spriteCoordVAO.Disable();
+        spriteCoordVAO.Enable(1); super.Render(gameObject.getTransform(),0,camera.viewportSize, gameObject.getLayer(), camera); spriteCoordVAO.Disable();
     }
 
     public void setTexture(Texture texture){

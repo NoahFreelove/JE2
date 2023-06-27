@@ -3,6 +3,7 @@ package org.JE.JE2;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
+import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.Scripts.Pathfinding.NavigableArea;
 import org.JE.JE2.Objects.Scripts.Pathfinding.PathfindingActor;
 import org.JE.JE2.Objects.Scripts.Pathfinding.SimplePathfindingAgent;
@@ -31,11 +32,11 @@ public class Main {
 
         Manager.activeScene().add(RenderColoredArea.getRadius(new Vector2f(5,0),2,30, Color.PASTEL_RED.clone().a(0.7f)));
         Manager.indexAndSet(mainScene());
-        Manager.indexScene(mainScene());
+        //Manager.indexScene(mainScene());
         Manager.activeScene().addUI(SceneSwitcherUI.getWindow());
 
 
-        Scene.addNow(RenderColoredArea.getRadius(new Vector2f(5,0),2,30, Color.PASTEL_BLUE.clone().a(0.7f)));
+        //Scene.addNow(RenderColoredArea.getRadius(new Vector2f(5,0),2,30, Color.PASTEL_BLUE.clone().a(0.7f)));
 
         Window.setWindowIcon(Texture.createTexture("texture2.png",false));
     }

@@ -124,6 +124,7 @@ public class PhysicsBody extends Script {
                 return;
         }
 
+
         if (body !=null)
         {
             if(mode == BodyType.STATIC)

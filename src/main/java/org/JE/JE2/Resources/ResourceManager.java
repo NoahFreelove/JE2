@@ -91,6 +91,8 @@ public class ResourceManager implements Serializable {
 
         // Check if texture or audio bundle
 
+        System.out.println("Checking for " + clazz.getName() + " with name " + name + " and ID " + ID);
+
         if(clazz == TextureBundle.class){
             for (Resource<TextureBundle> t : textures) {
                 if(policy== ResourceLoadingPolicy.CHECK_BY_NAME && t.getName().equals(name)){

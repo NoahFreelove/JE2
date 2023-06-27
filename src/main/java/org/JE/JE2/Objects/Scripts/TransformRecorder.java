@@ -23,16 +23,27 @@ public class TransformRecorder extends Script {
             scales.add(new Vector2f(getAttachedObject().getTransform().scale()));
             currentFrame++;
         } else if (playing) {
-            if(currentFrame <= 0)
+            if(currentFrame <= 1)
             {
                 currentFrame = 1;
             }
+            if(positions.size()<1)
+                return;
+            /*System.out.println("size: " + positions.size());
+            System.out.println(currentFrame-1);*/
             getAttachedObject().getTransform().setPosition(positions.get(currentFrame-1));
             getAttachedObject().getTransform().setRotation(rotations.get(currentFrame-1));
             getAttachedObject().getTransform().setScale(scales.get(currentFrame-1));
             currentFrame--;
         }
 
+    }
+
+    public void setFrame(int i)
+    {
+        currentFrame = i;
+        if(currentFrame>positions.size())
+            currentFrame = positions.size();
     }
 
     public void reset()

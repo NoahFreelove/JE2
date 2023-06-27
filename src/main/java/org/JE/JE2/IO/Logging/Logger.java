@@ -134,6 +134,10 @@ public class Logger {
 
         log("X: " + x + " Y:" + y);
     }
+    public static void log(String var1, float val1, String var2, float val2){
+
+        log(val1 + ": " + val1 + " | " + var2 + ": " + val2);
+    }
     public static void log(Object o, int level){
         log(o.toString(), level);
     }

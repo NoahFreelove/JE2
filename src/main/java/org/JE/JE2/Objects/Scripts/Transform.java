@@ -13,13 +13,13 @@ public class Transform extends Script {
     public static Transform zero = new Transform();
 
     @ActPublic
-    private Vector3f position;
+    private Vector3f position = new Vector3f();
     private Vector2f position2d = new Vector2f();
     @ActPublic
-    private Vector3f rotation;
+    private Vector3f rotation = new Vector3f();
 
     @ActPublic
-    private Vector3f scale;
+    private Vector3f scale = new Vector3f();
     private Vector2f scale2d = new Vector2f();
 
     private transient PhysicsBody physicsBody;
@@ -28,6 +28,18 @@ public class Transform extends Script {
         position = new Vector3f();
         rotation = new Vector3f();
         scale = new Vector3f(1,1,1);
+        setRestrictions(new ScriptRestrictions(false,false,false));
+    }
+
+    public Transform(Vector2f pos){
+        this();
+        setPosition(pos);
+    }
+
+    public Transform(Vector2f pos,  Vector3f rot, Vector2f scale){
+        setPosition(pos);
+        setRotation(rot);
+        setScale(scale);
         setRestrictions(new ScriptRestrictions(false,false,false));
     }
 
@@ -64,11 +76,9 @@ public class Transform extends Script {
     }
 
     public Vector3f setPosition(float x, float y){
-
         this.position.set(x, y, this.position.z);
         update();
         return position;
-
     }
 
     public Vector3f setPosition(float x, float y, float z){
@@ -186,5 +196,31 @@ public class Transform extends Script {
     public void load(){
         super.load();
         setRestrictions(new ScriptRestrictions(false,false,false));
+    }
+
+    public void set(Transform transform) {
+        setPosition(transform.position());
+        setRotation(transform.rotation());
+        setScale(transform.scale());
+    }
+
+    public Transform relativeAdd(Transform other){
+        this.translate(other.position());
+        this.setRotation(rotation().add(other.rotation()));
+        this.setScale(scale().mul(other.scale()));
+        return this;
+    }
+
+    public Transform copy() {
+        return new Transform(new Vector2f(position2d),new Vector3f(rotation),new Vector2f(scale2d));
+    }
+
+    @Override
+    public String toString() {
+        return "Transform{" +
+                "position=" + position +
+                ", rotation=" + rotation +
+                ", scale=" + scale +
+                '}';
     }
 }

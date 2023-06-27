@@ -4,6 +4,7 @@ import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
+import org.JE.JE2.Utility.MethodLimiter;
 import org.jbox2d.common.Vec2;
 
 import java.util.concurrent.CopyOnWriteArrayList;

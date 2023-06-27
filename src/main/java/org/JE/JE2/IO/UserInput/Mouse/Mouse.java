@@ -1,5 +1,6 @@
 package org.JE.JE2.IO.UserInput.Mouse;
 
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Window.UIHandler;
@@ -22,6 +23,8 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 public class Mouse {
     private static float x;
     private static float y;
+    private static float deltaX = 0;
+    private static float deltaY = 0;
 
     public static boolean disableGameInput = false;
     public static boolean disableUIInput = false;
@@ -50,6 +53,9 @@ public class Mouse {
     public static void triggerMouseMoved(float x, float y){
         if(disableGameInput)
             return;
+        deltaX = Mouse.x-x;
+        deltaY = Mouse.y-y;
+
         Mouse.x = x;
         Mouse.y = y;
     }
@@ -184,7 +190,7 @@ public class Mouse {
             return;
         setupMouse = true;
 
-        glfwSetMouseButtonCallback(Window.getWindowHandle(), (windowHandle, button, action, mods) -> {
+        glfwSetMouseButtonCallback(Window.handle(), (windowHandle, button, action, mods) -> {
             if(action == GLFW_PRESS){
                 Mouse.triggerMousePressed(MouseButton.values()[button], mods);
                 triggerUIMouseInput(button,true);
@@ -195,13 +201,13 @@ public class Mouse {
             }
         });
 
-        glfwSetCursorPosCallback(Window.getWindowHandle(), (window, xpos, ypos) -> {
+        glfwSetCursorPosCallback(Window.handle(), (window, xpos, ypos) -> {
             Mouse.triggerMouseMoved((float)xpos, (float)ypos);
             if(nuklearReady && !disableUIInput)
                 nk_input_motion(nuklearContext, (int)xpos, (int)ypos);
         });
 
-        glfwSetScrollCallback(Window.getWindowHandle(), (window, xoffset, yoffset) -> {
+        glfwSetScrollCallback(Window.handle(), (window, xoffset, yoffset) -> {
             if(disableUIInput)
                 return;
             if(!nuklearReady)
@@ -213,5 +219,26 @@ public class Mouse {
                 nk_input_scroll(nuklearContext, scroll);
             }
         });
+    }
+
+    public static void lockMouseInWindow(){
+        Manager.queueGLFunction(() -> glfwSetInputMode(Window.handle(), GLFW_CURSOR ,GLFW_CURSOR_DISABLED));
+    }
+
+    public static void unlockMouse(){
+        Manager.queueGLFunction(() -> glfwSetInputMode(Window.handle(), GLFW_CURSOR ,GLFW_CURSOR_NORMAL));
+    }
+
+    public static void frameReset() {
+        deltaY = 0;
+        deltaX = 0;
+    }
+
+    public static float getDeltaX() {
+        return deltaX;
+    }
+
+    public static float getDeltaY() {
+        return deltaY;
     }
 }

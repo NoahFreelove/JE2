@@ -4,8 +4,8 @@ import org.JE.JE2.Objects.Scripts.Script;
 
 public class AIGraph extends Script {
 
-    AIDecision[] functions;
-    boolean[] runStatus;
+    private final AIDecision[] functions;
+    private final boolean[] runStatus;
 
     public AIGraph(){
         functions = new AIDecision[0];
@@ -17,10 +17,18 @@ public class AIGraph extends Script {
         functions = new AIDecision[]{decision};
         runStatus = new boolean[1];
     }
-
+    public AIGraph(AIDecision... decisions){
+        functions = decisions;
+        runStatus = new boolean[decisions.length];
+    }
 
     public void runFunction(int index){
         runStatus[index] = true;
+    }
+
+    public void interruptFunction(int index){
+         functions[index].successCondition.onInterrupt();
+         runStatus[index] = false;
     }
 
     @Override
@@ -30,4 +38,6 @@ public class AIGraph extends Script {
                 functions[i].check();
         }
     }
+
+
 }

@@ -304,7 +304,7 @@ public class Keyboard {
             return;
         setupKeyboard = true;
 
-        glfwSetKeyCallback(Window.getWindowHandle(), (windowHandle, key, scancode, action, mods) -> {
+        glfwSetKeyCallback(Window.handle(), (windowHandle, key, scancode, action, mods) -> {
 
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(windowHandle, true);
@@ -323,7 +323,7 @@ public class Keyboard {
             }
         });
 
-        glfwSetCharCallback(Window.getWindowHandle(), (window, unicode) -> {
+        glfwSetCharCallback(Window.handle(), (window, unicode) -> {
             if(!nuklearReady || disableUIInput)
                 return;
             nk_input_unicode(nuklearContext, unicode);
@@ -332,4 +332,7 @@ public class Keyboard {
 
     }
 
+    public static void frameReset() {
+
+    }
 }

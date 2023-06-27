@@ -263,6 +263,8 @@ public final class Window {
 
             glfwPollEvents();
 
+            Mouse.frameReset();
+            Keyboard.frameReset();
             pipeline.onStart();
 
             glfwSwapBuffers(windowHandle);
@@ -300,9 +302,6 @@ public final class Window {
         actionQueue.add(r);
     }
 
-    public static long getWindowHandle(){
-        return windowHandle;
-    }
 
     public static float deltaTime(){
         return (float)deltaTime;
