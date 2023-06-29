@@ -24,7 +24,7 @@ public class Texture implements Serializable {
     public boolean valid = false;
     public int forceValidateMode = 0;
     public Texture(){
-        resource = new Resource<>(new TextureBundle(), "null", 0);
+        resource = new Resource<>(new TextureBundle(), "empty", 0);
     }
 
     private Texture(Resource<TextureBundle> resource, boolean newTexture){
@@ -44,7 +44,6 @@ public class Texture implements Serializable {
     }
 
     public static Texture checkExistElseCreate(String name, int ID, String bytePath){
-        //System.out.println("warming up: " + bytePath);
         Resource<TextureBundle> finalRef = (Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, ID);
 
         if(finalRef != null){

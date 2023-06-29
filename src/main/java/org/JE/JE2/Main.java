@@ -38,6 +38,6 @@ public class Main {
 
         //Scene.addNow(RenderColoredArea.getRadius(new Vector2f(5,0),2,30, Color.PASTEL_BLUE.clone().a(0.7f)));
 
-        Window.setWindowIcon(Texture.createTexture("texture2.png",false));
+        //Window.setWindowIcon(Texture.createTexture("texture2.png",false));
     }
 }

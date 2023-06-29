@@ -3,6 +3,7 @@ package org.JE.JE2.Resources;
 import org.JE.JE2.Resources.Bundles.ResourceBundle;
 
 import java.io.Serializable;
+import java.util.Random;
 
 public class Resource<T extends ResourceBundle> implements Serializable {
     public final Class<T> type;
@@ -14,13 +15,20 @@ public class Resource<T extends ResourceBundle> implements Serializable {
         type = null;
         name = "";
     }
+
+    private static int increment = 0;
+    public Resource(T bundle) {
+        type = (Class<T>) bundle.getClass();
+        name = "unknown resource " + increment++;
+        ref = bundle;
+    }
+
     public Resource (T bundle, String name, int ID) {
         ref = bundle;
         type = (Class<T>) bundle.getClass();
         if(name == null)
             name = "resource";
         this.name = name;
-
         this.ID = ID;
     }
 

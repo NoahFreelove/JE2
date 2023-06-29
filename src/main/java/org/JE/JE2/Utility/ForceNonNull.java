@@ -3,6 +3,10 @@ package org.JE.JE2.Utility;
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.Logging.Logger;
 
+/**
+ * Creates new instance of class if input is null
+ * @param <T> Class type
+ */
 public class ForceNonNull<T> {
 
     Class<T> clazz;

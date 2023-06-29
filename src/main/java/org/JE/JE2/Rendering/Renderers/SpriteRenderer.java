@@ -5,6 +5,7 @@ import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Shaders.Uniforms.UniformInt;
@@ -74,19 +75,7 @@ public class SpriteRenderer extends Renderer {
 
     @Override
     @GLThread
-    public void Render(GameObject gameObject) {
-        Render(gameObject, 0);
-    }
-
-    @Override
-    @GLThread
-    public void Render(GameObject gameObject, int additionalBufferSize) {
-        Render(gameObject,additionalBufferSize,Manager.getMainCamera());
-    }
-
-    @Override
-    @GLThread
-    public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
+    public void Render(Transform t, int additionalBufferSize, int layer, Camera camera){
         if(shaderProgram == null)
             return;
         if (!shaderProgram.use() || !getActive())
@@ -100,7 +89,7 @@ public class SpriteRenderer extends Renderer {
         if(normal.activateTexture(GL_TEXTURE1))
             glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
 
-        spriteCoordVAO.Enable(1); super.Render(gameObject.getTransform(),0,camera.viewportSize, gameObject.getLayer(), camera); spriteCoordVAO.Disable();
+        spriteCoordVAO.Enable(1); super.Render(t,0, layer, camera); spriteCoordVAO.Disable();
     }
 
     public void setTexture(Texture texture){

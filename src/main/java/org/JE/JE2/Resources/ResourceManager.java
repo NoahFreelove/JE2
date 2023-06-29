@@ -90,9 +90,6 @@ public class ResourceManager implements Serializable {
 
 
         // Check if texture or audio bundle
-
-        System.out.println("Checking for " + clazz.getName() + " with name " + name + " and ID " + ID);
-
         if(clazz == TextureBundle.class){
             for (Resource<TextureBundle> t : textures) {
                 if(policy== ResourceLoadingPolicy.CHECK_BY_NAME && t.getName().equals(name)){
@@ -130,7 +127,7 @@ public class ResourceManager implements Serializable {
             return;
 
         for (int i = 0; i < assets.length; i++) {
-            //System.out.println("Warming up asset: " + names[i]);
+            //System.out.println("Warming up asset: " + names[i] + " with path: " + assets[i] + " and class: " + classes[i].getName());
             warmupAsset(names[i], assets[i], classes[i]);
         }
         policy = ResourceLoadingPolicy.values()[prevPolicy];

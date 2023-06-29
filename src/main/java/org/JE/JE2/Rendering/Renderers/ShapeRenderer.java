@@ -4,6 +4,7 @@ import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
@@ -20,23 +21,12 @@ public class ShapeRenderer extends Renderer{
         vao = pointVAO;
     }
 
-    @Override
-    @GLThread
-    public void Render(GameObject t) {
-        Render(t, 0);
-    }
 
     @Override
     @GLThread
-    public void Render(GameObject t, int additionalBufferSize) {
-        Render(t,additionalBufferSize, Manager.getMainCamera());
-    }
-
-    @Override
-    @GLThread
-    public void Render(GameObject t, int additionalBufferSize, Camera camera){
+    public void Render(Transform t, int additionalBufferSize, int layer, Camera camera){
         pointVAO.Enable(1);
-        super.Render(t, pointVAO.getVertices().length*2+additionalBufferSize, camera);
+        super.Render(t, pointVAO.getVertices().length*2+additionalBufferSize, layer, camera);
         pointVAO.Disable();
     }
 

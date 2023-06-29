@@ -17,6 +17,8 @@ import org.JE.JE2.Objects.Scripts.Physics.BoxTrigger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
 import org.JE.JE2.Objects.Scripts.Physics.TriggerEvent;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.Particle;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.ParticleEmitter;
 import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
@@ -27,6 +29,7 @@ import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
+import org.JE.JE2.SampleScripts.SampleParticleEmitter.SampleEmitter;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
@@ -36,6 +39,7 @@ import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.ForceNonNull;
 import org.JE.JE2.Utility.FloatExp;
 import org.JE.JE2.Window.Window;
+import org.joml.Random;
 import org.joml.Vector2f;
 
 import static org.lwjgl.nuklear.Nuklear.*;
@@ -53,14 +57,17 @@ public class BasicScene {
                 new String[]{
                         "PlayerTexture",
                         "PlayerNormal",
-                        "floor"
+                        "floor",
+                        "fire"
                 },
                 new String[]{
                         "texture1.png",
                         "texture1_N.png",
                         "texture2.png",
+                        "fire.png"
                 },
                 new Class[]{
+                        TextureBundle.class,
                         TextureBundle.class,
                         TextureBundle.class,
                         TextureBundle.class
@@ -69,10 +76,13 @@ public class BasicScene {
         GameObject player = GameObject.Sprite(ShaderProgram.spriteShader(),
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
+        addParticles(scene);
+
+
         TransformRecorder tr = new TransformRecorder();
 
         player.addScript(new DontDestroyOnLoad());
-        player.addScript(tr);
+        //player.addScript(tr);
         Keyboard.addKeyReleasedEvent(new KeyReleasedEvent() {
             @Override
             public void invoke(int key, int mods) {
@@ -80,12 +90,14 @@ public class BasicScene {
                     player.getTransform().setPosition(0,0);
                 }
                 if(Keyboard.nameToCode("1") == key){
+                    tr.reset();
                     tr.recording = true;
                     tr.playing = false;
                 }
                 if(Keyboard.nameToCode("2") == key){
                     tr.recording = false;
                     tr.playing = true;
+                    tr.setFrame(Integer.MAX_VALUE);
                 }
                 if(Keyboard.nameToCode("3") == key){
                     tr.recording = false;
@@ -121,11 +133,11 @@ public class BasicScene {
 
         player.setIdentity("Player", "player");
 
-        SpriteAnimator sa = new SpriteAnimator();
+        /*SpriteAnimator sa = new SpriteAnimator();
         sa.addTimelines(new SpriteAnimationTimeline(
                 new SpriteAnimationFrame(Texture.get("PlayerTexture"), Texture.get("PlayerNormal"), 500),
                 new SpriteAnimationFrame(Texture.get("floor"), Texture.get("PlayerNormal"), 500)));
-        player.addScript(sa);
+        player.addScript(sa);*/
 
         //sa.play();
 
@@ -179,6 +191,14 @@ public class BasicScene {
         scene.add(player);
 
         return scene;
+    }
+
+    private static void addParticles(Scene scene) {
+        SampleEmitter pe = new SampleEmitter(30);
+        GameObject emitterObject = new GameObject();
+        emitterObject.getTransform().translateY(-1);
+        emitterObject.addScript(pe);
+        scene.add(emitterObject);
     }
 
     private static void createUI(Scene scene) {

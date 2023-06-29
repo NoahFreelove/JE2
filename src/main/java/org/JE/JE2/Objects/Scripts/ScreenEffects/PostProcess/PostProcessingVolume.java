@@ -73,7 +73,7 @@ public class PostProcessingVolume extends Script {
         postProcessor.getTexture().resource.getBundle().getImageSize().set(Window.getWidth(),Window.getHeight());
 
         postProcessor.getTexture().resource.setID(framebuffer.getTexture());
-        postProcessor.Render(getAttachedObject());
+        postProcessor.Render(getAttachedObject().getTransform(),0,getAttachedObject().getLayer(),Manager.getMainCamera());
     }
 
     private boolean inBounds(){

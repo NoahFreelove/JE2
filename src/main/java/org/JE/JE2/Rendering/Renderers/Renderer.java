@@ -65,24 +65,7 @@ public class Renderer extends Script {
     protected void PreRender(){}
 
     @GLThread
-    public void Render(GameObject t)
-    {
-        Render(t,0, Manager.getMainCamera());
-    }
-
-    @GLThread
-    public void Render(GameObject t, int additionalBufferSize) {
-        Render(t,additionalBufferSize, Manager.getMainCamera());
-    }
-
-
-    @GLThread
-    public void Render(GameObject gameObject, int additionalBufferSize, Camera camera) {
-        Render(gameObject.getTransform(), additionalBufferSize, camera.viewportSize, gameObject.getLayer(), camera);
-    }
-
-    @GLThread
-    public void Render(Transform t, int additionalBufferSize, Vector4f viewport, int layer, Camera camera){
+    public void Render(Transform t, int additionalBufferSize, int layer, Camera camera){
         if(!camera.withinRenderDistance(t.position(),t.scale()))
             return;
 

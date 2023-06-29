@@ -1,5 +1,6 @@
 package org.JE.JE2.Rendering.Renderers;
 
+import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
@@ -45,6 +46,6 @@ public class FramebufferRenderer {
     }
 
     public void Render(){
-        postProcessor.Render(empty);
+        postProcessor.Render(empty.getTransform(),0,0, Manager.getMainCamera());
     }
 }

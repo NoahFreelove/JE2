@@ -99,6 +99,17 @@ public class Transform extends Script {
         return this.rotation;
     }
 
+    public void rotate(float x, float y, float z){
+        this.rotation.add(x, y, z);
+        update();
+    }
+
+    public void rotateZ(float z){
+        this.rotation.add(0, 0, z);
+        update();
+    }
+
+
     public Vector3f setScale(Vector2f scale){
         return this.scale.set(scale.x, scale.y, this.scale.z);
     }
