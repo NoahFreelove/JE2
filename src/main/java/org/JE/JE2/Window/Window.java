@@ -10,6 +10,7 @@ import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.JE.JE2.Utility.Time;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -274,11 +275,13 @@ public final class Window {
             // If the window was moved or resized, the delta time will be very large.
             // This is to prevent that and physics from breaking.
             // This is a very temporary fix. Haha "temporary".
-            if(deltaTime() >= frameTimeMax){
+            if(deltaTime >= frameTimeMax){
                 deltaTime = 0;
                 Keyboard.reset();
                 Mouse.reset();
             }
+
+            Time.setDeltaTime((float)deltaTime);
         }
     }
 
@@ -303,9 +306,6 @@ public final class Window {
     }
 
 
-    public static float deltaTime(){
-        return (float)deltaTime;
-    }
 
     public static long handle()
     {

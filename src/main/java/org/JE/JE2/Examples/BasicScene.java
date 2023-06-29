@@ -21,6 +21,7 @@ import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.Particle;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.ParticleEmitter;
 import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Rendering.Debug.QuickDebugUI;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
@@ -31,6 +32,7 @@ import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
 import org.JE.JE2.SampleScripts.SampleParticleEmitter.SampleEmitter;
 import org.JE.JE2.Scene.Scene;
+import org.JE.JE2.UI.UIElements.Group;
 import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.Sliders.Slider;
@@ -38,6 +40,7 @@ import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.ForceNonNull;
 import org.JE.JE2.Utility.FloatExp;
+import org.JE.JE2.Utility.Time;
 import org.JE.JE2.Window.Window;
 import org.joml.Random;
 import org.joml.Vector2f;
@@ -111,19 +114,19 @@ public class BasicScene {
             public void update(GameObject parent) {
                 if(Keyboard.isKeyPressed(Keyboard.nameToCode("LEFT")))
                 {
-                    parent.getTransform().translateX(-5f * Window.deltaTime());
+                    parent.getTransform().translateX(-5f * Time.deltaTime());
                 }
                 if(Keyboard.isKeyPressed(Keyboard.nameToCode("RIGHT")))
                 {
-                    parent.getTransform().translateX(5f * Window.deltaTime());
+                    parent.getTransform().translateX(5f * Time.deltaTime());
                 }
                 if(Keyboard.isKeyPressed(Keyboard.nameToCode("UP")))
                 {
-                    parent.getTransform().translateY(5f * Window.deltaTime());
+                    parent.getTransform().translateY(5f * Time.deltaTime());
                 }
                 if(Keyboard.isKeyPressed(Keyboard.nameToCode("DOWN")))
                 {
-                    parent.getTransform().translateY(-5f * Window.deltaTime());
+                    parent.getTransform().translateY(-5f * Time.deltaTime());
                 }
                 //System.out.println(pl.getScript(PointLight.class).isObjectInsideRadius(player));
             }
@@ -249,6 +252,13 @@ public class BasicScene {
         };
         uiWindow.addElement(Constant, constant, Linear, linear, Quadratic, quadratic, radiusLabel, radius, intensityLabel, intensity);
         //uiWindow.addElement(xPosLabel, xPos, yPosLabel, yPos);
+
+        Label timeScaleLabel = new Label("Time Scale");
+        Slider timeScale = new Slider(1f, 0f, 2f, 0.01f);
+        timeScale.onChange = Time::setTimeScale;
+
+        scene.addUI(QuickDebugUI.quickDebugWindow(new Group(timeScaleLabel,timeScale)));
+
 
         scene.addUI(uiWindow);
         scene.addUI(FPSCounter.generateFPSBox(new Vector2f(1000 - 90, 1000 - 40)));

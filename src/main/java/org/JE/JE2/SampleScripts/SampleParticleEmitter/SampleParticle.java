@@ -4,6 +4,7 @@ import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.Particle;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Utility.Time;
 
 public class SampleParticle extends Particle {
 
@@ -34,10 +35,10 @@ public class SampleParticle extends Particle {
         if(yVelocity< -4f)
             yVelocity = -4f;
 
-        float delta = yVelocity * Manager.deltaTime();
+        float delta = yVelocity * Time.deltaTime();
         relativeT.translateY(delta);
-        relativeT.translateX(xVelocity * Manager.deltaTime());
-        relativeT.rotateZ(30f * Manager.deltaTime()*rotateDirection);
+        relativeT.translateX(xVelocity * Time.deltaTime());
+        relativeT.rotateZ(30f * Time.deltaTime()*rotateDirection);
         relativeT.setScale(0.6f,0.6f);
     }
 }

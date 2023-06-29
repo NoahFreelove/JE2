@@ -5,12 +5,9 @@ import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Utility.MethodLimiter;
+import org.JE.JE2.Utility.Time;
 import org.jbox2d.common.Vec2;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import static org.JE.JE2.IO.UserInput.Keyboard.Combos.ComboList.*;
-import static org.JE.JE2.Window.Window.deltaTime;
 
 public class MovementController extends Script {
 
@@ -86,16 +83,16 @@ public class MovementController extends Script {
         }
         else{
             if(Keyboard.isKeyPressed(65) && canMoveLeft){
-                getAttachedObject().getTransform().translateX(-moveSpeed * deltaTime());
+                getAttachedObject().getTransform().translateX(-moveSpeed * Time.deltaTime);
             }
             if(Keyboard.isKeyPressed(68) && canMoveRight){
-                getAttachedObject().getTransform().translateX(moveSpeed * deltaTime());
+                getAttachedObject().getTransform().translateX(moveSpeed * Time.deltaTime);
             }
             if(Keyboard.isKeyPressed(87) && canMoveUp){
-                getAttachedObject().getTransform().translateY(moveSpeed * deltaTime());
+                getAttachedObject().getTransform().translateY(moveSpeed * Time.deltaTime);
             }
             if(Keyboard.isKeyPressed(83) && canMoveDown){
-                getAttachedObject().getTransform().translateY(-moveSpeed * deltaTime());
+                getAttachedObject().getTransform().translateY(-moveSpeed * Time.deltaTime);
             }
         }
     }

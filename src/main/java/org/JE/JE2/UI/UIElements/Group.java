@@ -13,7 +13,7 @@ public class Group extends UIElement{
 
     public Group(){}
 
-    public Group(UIElement[] elements) {
+    public Group(UIElement... elements) {
         this.elements.addAll(List.of(elements));
     }
 

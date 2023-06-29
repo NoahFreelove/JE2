@@ -8,8 +8,10 @@ import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.UI.UIObjects.UIObject;
 import org.JE.JE2.UI.UIObjects.UIWindow;
+import org.JE.JE2.Utility.Time;
 import org.JE.JE2.Utility.Watcher;
 
 import java.io.*;
@@ -158,7 +160,7 @@ public class Scene implements Serializable {
 
     public void update(boolean physicsUpdate) {
         if (physicsUpdate){
-            world.physicsWorld.step(Manager.deltaTime(), 8, 3);
+            world.physicsWorld.step(Time.deltaTime(), 8, 3);
             world.gameObjects.forEach(GameObject::physicsUpdate);
         }
         world.gameObjects.forEach(GameObject::scriptUpdate);

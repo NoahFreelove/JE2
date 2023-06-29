@@ -3,6 +3,7 @@ package org.JE.JE2;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Scene.SceneLoading.LoadingSequence;
 import org.JE.JE2.Scene.Scene;
+import org.JE.JE2.Utility.Time;
 import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowCloseReason;
 import org.JE.JE2.Window.WindowPreferences;
@@ -95,11 +96,8 @@ public class Manager {
         return new Vector2i(preferences.windowSize.x(), preferences.windowSize.y());
     }
 
-    public static float deltaTime(){
-        return Window.deltaTime();
-    }
     public static int getFPS(){
-        return (int)(1/Window.deltaTime());
+        return (int)(1/ Time.deltaTimeIndependent());
     }
 
     public static Vector4f defaultViewport(){
