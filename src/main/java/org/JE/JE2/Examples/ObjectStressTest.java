@@ -1,5 +1,6 @@
 package org.JE.JE2.Examples;
 
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Manager;
@@ -25,8 +26,8 @@ public class ObjectStressTest {
                         "player",
                         "player_normal"
                 },
-                new String[]{"texture1.png",
-                        "texture1_N.png"
+                new Filepath[]{new Filepath("texture1.png",true),
+                        new Filepath("texture1_N.png",true)
                 },
                 new Class[]{
                         TextureBundle.class,
@@ -55,8 +56,8 @@ public class ObjectStressTest {
 
     private static GameObject objectFactory(Vector2f pos){
         GameObject object = GameObject.Sprite(ShaderRegistry.Sprite,
-                Texture.checkExistElseCreate("player",-1,"texture1.png"),
-                Texture.checkExistElseCreate("player_normal",-1,"texture1_N.png"));
+                Texture.get("player"),
+                Texture.get("player_normal"));
 
         object.setPosition(pos);
         return object;

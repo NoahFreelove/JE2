@@ -30,8 +30,6 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL30C.glFramebufferTexture2D;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -52,6 +50,12 @@ public final class Window {
     private static Pipeline pipeline = new DefaultPipeline();
 
     private static double deltaTime = 0;
+    public static final Environment ENVIRONMENT;
+    public static final boolean isJar;
+    static {
+        ENVIRONMENT = getEnvironment();
+        isJar = (ENVIRONMENT == Environment.JAR);
+    }
 
     // The amount of time between frames before the frame time is capped
     // Delta time will be set to 0 as to not break physics.
@@ -413,5 +417,16 @@ public final class Window {
 
     public static long getFrameCount() {
         return frameCount;
+    }
+
+    private static Environment getEnvironment() {
+        String className = Window.class.getName().replace('.', '/');
+        String classJar = Window.class.getResource("/" + className + ".class").toString();
+
+        if(classJar.startsWith("jar:")){
+            return Environment.JAR;
+        }
+        else
+            return Environment.STANDARD;
     }
 }

@@ -1,6 +1,7 @@
 package org.JE.JE2.Resources;
 
 import org.JE.JE2.Annotations.JarSafe;
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Objects.Audio.AudioSourcePlayer;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.AudioBundle;
@@ -120,7 +121,7 @@ public class ResourceManager implements Serializable {
      * @param classes Their respective Bundle type
      */
     @JarSafe
-    public static void warmupAssets(String[] names, String[] assets, Class<? extends ResourceBundle>[] classes){
+    public static void warmupAssets(String[] names, Filepath[] assets, Class<? extends ResourceBundle>[] classes){
         int prevPolicy = policy.ordinal();
         policy = ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS;
         if(assets.length != names.length || assets.length != classes.length)
@@ -133,19 +134,19 @@ public class ResourceManager implements Serializable {
         policy = ResourceLoadingPolicy.values()[prevPolicy];
     }
     @JarSafe
-    public static void warmupAssets(Triplet<String, String, Class<? extends ResourceBundle>>[] assets){
-        for (Triplet<String,String,Class<? extends ResourceBundle>> t: assets) {
+    public static void warmupAssets(Triplet<String, Filepath, Class<? extends ResourceBundle>>[] assets){
+        for (Triplet<String,Filepath,Class<? extends ResourceBundle>> t: assets) {
             warmupAsset(t.x,t.y,t.z);
         }
     }
 
     @JarSafe
-    public static void warmupAsset(String name, String asset, Class<? extends ResourceBundle> clazz){
+    public static void warmupAsset(String name, Filepath asset, Class<? extends ResourceBundle> clazz){
         if(clazz== TextureBundle.class)
         {
             Texture.checkExistElseCreate(name,-1, asset);
         } else if (clazz == AudioBundle.class) {
-            AudioSourcePlayer.checkExistElseCreate(name,-1, asset);
+            AudioSourcePlayer.checkExistElseCreate(name,-1, asset.getPath(true));
         }
     }
 

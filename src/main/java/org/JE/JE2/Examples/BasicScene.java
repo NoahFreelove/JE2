@@ -1,5 +1,6 @@
 package org.JE.JE2.Examples;
 
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
@@ -39,7 +40,7 @@ import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.ForceNonNull;
-import org.JE.JE2.Utility.FloatExp;
+import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
 import org.JE.JE2.Window.Window;
 import org.joml.Random;
@@ -63,11 +64,11 @@ public class BasicScene {
                         "floor",
                         "fire"
                 },
-                new String[]{
-                        "texture1.png",
-                        "texture1_N.png",
-                        "texture2.png",
-                        "fire.png"
+                new Filepath[]{
+                        new Filepath("texture1.png", true),
+                        new Filepath("texture1_N.png", true),
+                        new Filepath("texture2.png", true),
+                        new Filepath("fire.png", true)
                 },
                 new Class[]{
                         TextureBundle.class,
@@ -288,7 +289,7 @@ public class BasicScene {
 
         NavigableArea na = new NavigableArea(new Vector2f(-2,-3), new Vector2f(4,1));
         SimplePathfindingAgent spa = new SimplePathfindingAgent(na);
-        PathfindingActor pa = new PathfindingActor(spa, FloatExp.get(5,-2));
+        PathfindingActor pa = new PathfindingActor(spa, JE2Math.floatExp(5,-2));
         pa.setTargetObject(player);
         pa.setSnapInRange(false);
         pa.setSuccessRange(1.5f);

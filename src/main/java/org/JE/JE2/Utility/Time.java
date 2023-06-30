@@ -1,7 +1,6 @@
 package org.JE.JE2.Utility;
 
 import org.JE.JE2.Annotations.ReadOnly;
-import org.JE.JE2.Window.Window;
 
 public class Time {
 
@@ -25,6 +24,6 @@ public class Time {
     }
 
     public static void setTimeScale(float timeScale) {
-        Time.timeScale = timeScale;
+        Time.timeScale = JE2Math.clamp0(timeScale);
     }
 }

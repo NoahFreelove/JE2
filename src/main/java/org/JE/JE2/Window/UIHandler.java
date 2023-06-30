@@ -74,7 +74,7 @@ public class UIHandler {
     @GLThread
     public static void init(){
         NkContext ctx = setupWindow(Window.handle());
-        default_font = new Font(DataLoader.getBytes("arial.ttf"), true);
+        default_font = new Font(DataLoader.getClassLoaderBytes("arial.ttf"), true);
         active_font = default_font;
         nk_style_set_font(ctx, default_font.getFont());
         nuklearReady = true;

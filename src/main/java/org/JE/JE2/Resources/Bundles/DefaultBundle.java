@@ -17,7 +17,7 @@ public class DefaultBundle extends ResourceBundle{
     }
 
     public DefaultBundle(String dataPath) {
-        byte[] loadedData = DataLoader.getBytes(dataPath);
+        byte[] loadedData = DataLoader.getClassLoaderBytes(dataPath);
         data = ByteBuffer.allocateDirect(loadedData.length);
         data.put(loadedData);
         data.flip();

@@ -25,17 +25,8 @@ public class SpriteRenderer extends Renderer {
     private VAO2f spriteCoordVAO;
 
     private transient Texture texture = new Texture();
-    @ActPublic
-    private String textureFilepath = "";
-    @ActPublic
-    private String textureName = "";
 
     private transient Texture normal = new Texture();
-    @ActPublic
-    private String normalFilepath = "";
-    @ActPublic
-    private String normalTextureName = "";
-
 
     public SpriteRenderer() {
         spriteCoordVAO = new VAO2f(new Vector2f[]{
@@ -94,20 +85,14 @@ public class SpriteRenderer extends Renderer {
 
     public void setTexture(Texture texture){
         setTexture(texture, spriteCoordVAO.getVertices(), true);
-        textureFilepath = texture.resource.getBundle().filepath;
-        textureName = texture.resource.getName();
     }
 
     public void setNormalTexture(Texture texture) {
         this.normal = texture;
-        normalFilepath = texture.resource.getBundle().filepath;
-        normalTextureName = texture.resource.getName();
     }
 
     public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
         this.texture = texture;
-        textureFilepath = texture.resource.getBundle().filepath;
-        textureName = texture.resource.getName();
         if(softSet) return;
         Runnable r = () ->{
             spriteCoordVAO.setVertices(textCoords);
@@ -126,7 +111,7 @@ public class SpriteRenderer extends Renderer {
 
     public Texture getNormalTexture(){ return normal; }
 
-    @Override
+    /*@Override
     public void load() {
         if(spriteCoordVAO !=null)
         {
@@ -139,7 +124,7 @@ public class SpriteRenderer extends Renderer {
 
         setTexture(Texture.checkExistElseCreate(textureName,-1,textureFilepath));
         setNormalTexture(Texture.checkExistElseCreate(normalTextureName,-1,normalFilepath));
-    }
+    }*/
 
     public void customTile(Vector2f scale){
         spriteCoordVAO.setVertices(new Vector2f[]{
@@ -165,13 +150,6 @@ public class SpriteRenderer extends Renderer {
         this.scale = true;
     }
 
-    public String getTextureFilepath() {
-        return textureFilepath;
-    }
-
-    public String getNormalFilepath() {
-        return normalFilepath;
-    }
     public void invalidateTextures(){
         normal.valid = false;
         normal.forceValidateMode = 2;

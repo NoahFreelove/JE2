@@ -12,7 +12,7 @@ public class StyleInfo {
     public Font font;
 
     public StyleInfo(){
-        font = new Font(DataLoader.getBytes("arial.ttf"), false);
+        font = new Font(DataLoader.getClassLoaderBytes("arial.ttf"), false);
     }
     public StyleInfo setHoverColor(Color c){
         this.hoverColor = c;

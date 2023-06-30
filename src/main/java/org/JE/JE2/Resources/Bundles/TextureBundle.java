@@ -1,5 +1,6 @@
 package org.JE.JE2.Resources.Bundles;
 
+import org.JE.JE2.IO.Filepath;
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 
@@ -8,7 +9,6 @@ import java.nio.ByteBuffer;
 public class TextureBundle extends ResourceBundle{
     private transient Vector2i imageSize;
     private transient ByteBuffer imageData;
-    public transient String filepath;
 
     private boolean altered = false;
 
@@ -17,10 +17,10 @@ public class TextureBundle extends ResourceBundle{
         imageData = BufferUtils.createByteBuffer(1);
     }
 
-    public TextureBundle(Vector2i imageSize, ByteBuffer imageData, String bytePath) {
+    public TextureBundle(Vector2i imageSize, ByteBuffer imageData, Filepath filepath) {
         this.imageSize = imageSize;
         this.imageData = imageData;
-        this.filepath = bytePath;
+        this.filepath = filepath;
         load();
     }
 
@@ -75,7 +75,7 @@ public class TextureBundle extends ResourceBundle{
     }
 
     @Override
-    public void setFilepath(String filepath) {
+    public void setFilepath(Filepath filepath) {
         this.filepath = filepath;
         altered = true;
     }

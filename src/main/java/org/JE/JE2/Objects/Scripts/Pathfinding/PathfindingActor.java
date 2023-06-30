@@ -2,7 +2,7 @@ package org.JE.JE2.Objects.Scripts.Pathfinding;
 
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Script;
-import org.JE.JE2.Utility.FloatExp;
+import org.JE.JE2.Utility.JE2Math;
 import org.joml.Vector2f;
 
 public class PathfindingActor extends Script {
@@ -13,7 +13,7 @@ public class PathfindingActor extends Script {
     /*
     Snap in range isn't really noticeable for any successRange value under 0.1f
      */
-    private float successRange = FloatExp.get(5,-1);
+    private float successRange = JE2Math.floatExp(5,-1);
     private boolean snapInRange = true;
     public PathfindingActor(PathfindingAgent pathfinder, float speed) {
         this.pathfinder = pathfinder;

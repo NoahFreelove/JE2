@@ -1,5 +1,6 @@
 package org.JE.JE2.SampleScripts.SampleParticleEmitter;
 
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.Particle;
 import org.JE.JE2.Objects.Scripts.Transform;
@@ -11,8 +12,9 @@ public class SampleParticle extends Particle {
     private float yVelocity = 0f;
     private float xVelocity = 0f;
     private int rotateDirection = 1;
+    private static Filepath fireFilepath = new Filepath("fire.png", true);
     public SampleParticle() {
-        super(Texture.checkExistElseCreate("fire",-1,"fire.png"), Texture.checkExistElseCreate("fire",-1,"fire.png"), 2000, true);
+        super(Texture.checkExistElseCreate("fire",-1,fireFilepath, true), Texture.checkExistElseCreate("fire",-1,fireFilepath,true), 2000, true);
         yVelocity = (float) (Math.random() * 3f);
         xVelocity = (float) (Math.random() * 2f);
         if(Math.random()>0.5f)
