@@ -153,4 +153,8 @@ public class ResourceManager implements Serializable {
     public static void warmupQueue(){
         warmupAssets(queuedWarmupAssets.toArray(new Triplet[0]));
     }
+
+    public static void clearTextureCache(){
+        textures.clear();
+    }
 }

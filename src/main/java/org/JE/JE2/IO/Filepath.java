@@ -23,6 +23,10 @@ public class Filepath {
         System.out.println("______________");*/
     }
 
+    public Filepath(String filepath){
+        this(filepath,false);
+    }
+
     public String getPath(boolean forClassLoader)
     {
         if(forClassLoader)

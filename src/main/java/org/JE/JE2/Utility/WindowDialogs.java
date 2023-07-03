@@ -7,7 +7,7 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import java.io.File;
 import java.nio.ByteBuffer;
 
-public class FileDialogs {
+public class WindowDialogs {
 
     public static String[] getFiles(String title, String defaultPath, String[] extensions, boolean multiFiles){
         PointerBuffer filterPatterns = MemoryUtil.memAllocPointer(extensions.length);
@@ -30,5 +30,10 @@ public class FileDialogs {
 
     public static File getFile(String title, String defaultPath, String[] extensions){
         return new File(getFiles(title,defaultPath,extensions,false)[0]);
+    }
+
+    public static void infoBox(String title, String message){
+        TinyFileDialogs.tinyfd_messageBox(title,message,"ok","info",true);
+
     }
 }

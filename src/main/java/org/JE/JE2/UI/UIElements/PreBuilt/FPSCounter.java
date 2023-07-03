@@ -18,7 +18,7 @@ public class FPSCounter extends Label {
         start();
     }
     public FPSCounter(String prefix){
-        this.text = prefix;
+        setText(prefix);
         start();
     }
 

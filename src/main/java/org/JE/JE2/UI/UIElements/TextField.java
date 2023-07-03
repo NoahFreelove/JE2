@@ -55,7 +55,16 @@ public class TextField extends UIElement {
         this.height = height;
         setValue(defaultValue);
     }
-
+    public TextField(int maxLength, int height, String defaultValue, String title) {
+        this.maxLength = maxLength;
+        content = BufferUtils.createByteBuffer(maxLength + 1);
+        length = BufferUtils.createIntBuffer(1);
+        length.put(0);
+        filter = NkPluginFilter.create(Nuklear::nnk_filter_ascii);
+        this.height = height;
+        setValue(defaultValue);
+        this.title = title;
+    }
     public TextField(int maxLength, int height, String defaultValue, String title, Setting<String> bindedSetting) {
         this.maxLength = maxLength;
         content = BufferUtils.createByteBuffer(maxLength + 1);

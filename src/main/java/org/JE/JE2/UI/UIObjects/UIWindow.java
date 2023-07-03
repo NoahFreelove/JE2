@@ -115,6 +115,10 @@ public class UIWindow extends UIObject {
         }));
     }
 
+    public CopyOnWriteArrayList<UIElement> getChildren(){
+        return children;
+    }
+
     public void closeWindow() {
         isAlive = false;
     }
@@ -145,6 +149,10 @@ public class UIWindow extends UIObject {
         this.size = size;
         isCreated = false;
         reset = true;
+    }
+
+    public Vector2f getSize() {
+        return size;
     }
 
     public void openWindow(){

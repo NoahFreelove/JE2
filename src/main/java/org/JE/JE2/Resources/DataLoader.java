@@ -14,6 +14,7 @@ public final class DataLoader {
     public static File getClassLoaderFile(String path){
         try {
             URL resourceURL = DataLoader.class.getResource(path);
+
             File resourceFile = new File(resourceURL.getPath());
             return resourceFile;
         }
@@ -37,8 +38,10 @@ public final class DataLoader {
     public static String getClassLoaderAbsoluteFilePath(String path){
         File result = getClassLoaderFile("/" + path);
 
-        if(result == null)
-            return "";
+        if(result == null) {
+            String rootPath = DataLoader.class.getClassLoader().getResource("").getPath().substring(1);
+            return rootPath + path;
+        }
         else return result.getAbsolutePath();
     }
 
