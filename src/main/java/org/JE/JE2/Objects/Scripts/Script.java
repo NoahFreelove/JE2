@@ -4,6 +4,7 @@ import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.IO.Logging.Errors.ScriptError;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.Utility.Loadable;
 
@@ -21,6 +22,9 @@ import java.io.Serializable;
 public class Script implements Serializable, Loadable {
     @ActPublic
     protected ScriptRestrictions restrictions = new ScriptRestrictions();
+    protected ILambdaScript externalScriptBehaviourPre = new ILambdaScript() {};
+    protected ILambdaScript externalScriptBehaviourPost = new ILambdaScript() {};
+
     private transient GameObject parentObject;
 
     public ScriptRestrictions getRestrictions(){
@@ -72,5 +76,21 @@ public class Script implements Serializable, Loadable {
 
     public void load() {
         this.restrictions = new ScriptRestrictions();
+    }
+
+    public ILambdaScript getExternalScriptBehaviourPre() {
+        return externalScriptBehaviourPre;
+    }
+
+    public void setExternalScriptBehaviourPre(ILambdaScript externalScriptBehaviourPre) {
+        this.externalScriptBehaviourPre = externalScriptBehaviourPre;
+    }
+
+    public ILambdaScript getExternalScriptBehaviourPost() {
+        return externalScriptBehaviourPost;
+    }
+
+    public void setExternalScriptBehaviourPost(ILambdaScript externalScriptBehaviourPost) {
+        this.externalScriptBehaviourPost = externalScriptBehaviourPost;
     }
 }

@@ -1,6 +1,7 @@
-package org.JE.JE2.Objects.Scripts.Physics;
+package org.JE.JE2.Objects.Scripts.Physics.Collision;
 
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.contacts.ContactEdge;
 import org.joml.Vector2f;

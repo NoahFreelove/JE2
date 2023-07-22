@@ -4,3 +4,5 @@ out/
 ignore/
 *.xml
 docs_old/
+*.ogg
+*.wav

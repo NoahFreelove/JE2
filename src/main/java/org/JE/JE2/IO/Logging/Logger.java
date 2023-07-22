@@ -29,6 +29,7 @@ public class Logger {
     private static LogEntry[] logEntries = new LogEntry[1000];
     public static int logEntryIndex = 0;
 
+    public static int DEBUG = 0;
     public static int LOG = 10;
     public static int WARN = 15;
     public static int ERROR = 20;
@@ -41,6 +42,7 @@ public class Logger {
             return;
 
         if(enableIgnoreList){
+
             for(Class<?> c : ignoreList){
                 String className = Thread.currentThread().getStackTrace()[2].getClassName();
                 if(!className.equals("org.JE.JE2.IO.Logging.Logger")){
@@ -53,6 +55,7 @@ public class Logger {
 
         if(logThreshold > level)
             return;
+
         if(logEntryIndex >= logEntries.length){
             LogEntry[] newLogEntries = new LogEntry[logEntries.length * 2];
             System.arraycopy(logEntries, 0, newLogEntries, 0, logEntries.length);
@@ -136,7 +139,7 @@ public class Logger {
     }
     public static void log(String var1, float val1, String var2, float val2){
 
-        log(val1 + ": " + val1 + " | " + var2 + ": " + val2);
+        log(var1 + ": " + val1 + " | " + var2 + ": " + val2);
     }
     public static void log(Object o, int level){
         log(o.toString(), level);

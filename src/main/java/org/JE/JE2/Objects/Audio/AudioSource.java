@@ -1,5 +1,6 @@
 package org.JE.JE2.Objects.Audio;
 
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Objects.Audio.Filters.SoundFilter;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.Script;
@@ -34,12 +35,17 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     private transient int audioBuffer;
     private transient float duration = 0;
 
+    protected float maxDistance = 10;
+    protected float fadeOutDistance = 5;
+    protected float panStrength;
     protected AudioSource(){
         super();
     }
 
     protected AudioSource(Resource<AudioBundle> bundleResource){
         this.audioResource = bundleResource;
+        generateAudioBuffer();
+
     }
 
     public AudioSource setAudio(Resource<AudioBundle> resource){
@@ -48,7 +54,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         return this;
     }
 
-    private void generateAudioBuffer(){
+    public void generateAudioBuffer(){
 
         alcMakeContextCurrent(Window.audioContext());
 
@@ -59,7 +65,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
                 audioResource.getBundle().getSampleRate());
 
         // Generate source
-        audioResource.setID(alGenBuffers());
+        audioResource.setID(alGenSources());
         alSourcei(audioResource.getID(), AL10.AL_BUFFER, audioBuffer);
         alSourcei(audioResource.getID(), AL10.AL_LOOPING, loops?1:0);
 
@@ -69,6 +75,11 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         setGain(1);
         setFilter(new SoundFilter());
         duration = getDuration();
+
+        /*int err = alGetError();
+        if(err != AL_NO_ERROR){
+            Logger.log("Error: " + err);
+        }*/
     }
 
     protected void delete(){
@@ -81,6 +92,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
     protected void playAt(int pos){
         int state = alGetSourcei(audioResource.getID(), AL_SOURCE_STATE);
+        System.out.println(audioResource.getID() + " " + state);
 
         if(state == AL_STOPPED)
         {
@@ -91,6 +103,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
         if(!isPlaying){
             alSourcePlay(audioResource.getID());
+
             isPlaying = true;
         }
     }
@@ -134,12 +147,34 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     public void setMaxGain(float maxGain){
         alSourcef(audioResource.getID(),AL_MAX_GAIN, maxGain);
     }
+
+    public void setReferenceDistance(float distance){
+        fadeOutDistance = distance;
+    }
+
+    public void setPanStrength(float factor){
+        panStrength = factor;
+        alSourcef(audioResource.getID(), AL_ROLLOFF_FACTOR, factor);
+    }
+
+    public void setMaxDistance(float distance){
+        maxDistance = distance;
+    }
+
+    public void setPositionWorld(float x, float y){
+        if(x > 1 || y > 1 || x < -1 || y < -1){
+            Logger.log("Audio Warning For Clip <" + getAudioResource().getName() + ">: " +
+                    "setPositionWorld position is out of bounds. Must be between -1 and 1", Logger.WARN);
+        }
+        alSource3f(audioResource.getID(), AL_POSITION, x, y, 0);
+    }
+
     public int getBufferPosition(){
-        // get alError
+        /*// get alError
         int error = alGetError();
         if(error != AL_NO_ERROR){
             Logger.log("Error: " + error);
-        }
+        }*/
         return alGetSourcei(audioResource.getID(), AL_SAMPLE_OFFSET);
     }
     public void setAttribute3f(int attribute, Vector3f value)
@@ -168,8 +203,12 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         return getPositionTime() / getDuration() *2;
     }
 
+    public Resource<AudioBundle> getAudioResource(){
+        return audioResource;
+    }
+
     protected static class AudioProcessor {
-        public static AudioBundle processAudio(String filePath)
+        public static AudioBundle processAudio(Filepath filePath)
         {
             ShortBuffer soundData;
             int format;
@@ -184,9 +223,9 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
             stackPush();
             IntBuffer sampleRateBuffer = stackMallocInt(1);
 
-            ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(filePath, channelsBuffer, sampleRateBuffer);
+            ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(filePath.getPath(false), channelsBuffer, sampleRateBuffer);
             if(rawAudioBuffer == null){
-                Logger.log("Error loading sound file: " + filePath);
+                Logger.log("Error loading sound file: " + filePath.getPath(false));
                 stackPop();
                 stackPop();
                 return new AudioBundle();
@@ -208,12 +247,15 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
             soundData = rawAudioBuffer;
 
-        /*System.out.println("Sound loaded: " + filePath);
-        System.out.println("Channels: " + channels);
-        System.out.println("Sample Rate: " + sampleRate);
-        System.out.println("Format: " + format);
-        System.out.println("Buffer: " + rawAudioBuffer);
-        System.out.println("Buffer Size: " + rawAudioBuffer.capacity());*/
+            String data = "Sound loaded: " + filePath.getPath(false) + "\n" +
+                    "Channels: " + channels + "\n" +
+                    "Sample Rate: " + sampleRate + "\n" +
+                    "Format: " + format + "\n" +
+                    "Buffer: " + rawAudioBuffer + "\n" +
+                    "Buffer Size: " + rawAudioBuffer.capacity() + "\n";
+
+            Logger.log(data, Logger.DEBUG);
+
             return new AudioBundle(soundData,format,sampleRate,channels);
         }
 

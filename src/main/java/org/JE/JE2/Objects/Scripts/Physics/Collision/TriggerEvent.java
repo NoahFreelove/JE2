@@ -1,4 +1,4 @@
-package org.JE.JE2.Objects.Scripts.Physics;
+package org.JE.JE2.Objects.Scripts.Physics.Collision;
 
 import org.JE.JE2.Objects.GameObject;
 

@@ -26,7 +26,7 @@ public class LambdaScript extends Script {
     public void awake(){
         if(getAttachedObject() == null || lambdaScript == null)
             return;
-        lambdaScript.awake();
+        lambdaScript.awake(getAttachedObject());
     }
     @Override
     public void unload(Scene oldScene, Scene newScene){
@@ -38,7 +38,7 @@ public class LambdaScript extends Script {
     public void destroy(){
         if(getAttachedObject() == null || lambdaScript == null)
             return;
-        lambdaScript.destroy();
+        lambdaScript.destroy(getAttachedObject());
     }
     @Override
     public void onForeignScriptAdded(Script script){
@@ -62,7 +62,7 @@ public class LambdaScript extends Script {
     public void postRender(){
         if(getAttachedObject() == null || lambdaScript == null)
             return;
-        lambdaScript.postRender();
+        lambdaScript.postRender(getAttachedObject());
     }
 }
 

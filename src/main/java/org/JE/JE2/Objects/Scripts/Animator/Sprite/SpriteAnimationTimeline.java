@@ -8,7 +8,7 @@ import java.util.Date;
 public class SpriteAnimationTimeline {
     boolean isPlaying = false;
     boolean loops = true;
-    float totalDuration = 0f;
+    long totalDuration = 0L;
     public int position;
     ArrayList<SpriteAnimationFrame> frames = new ArrayList<>();
     long updateDelta = 0;
@@ -43,7 +43,6 @@ public class SpriteAnimationTimeline {
     public void animUpdate(SpriteRenderer sprite){
         float newDelta = System.currentTimeMillis() - updateDelta;
         updateDelta = System.currentTimeMillis();
-
 
         if(!isPlaying)
             return;
@@ -94,7 +93,7 @@ public class SpriteAnimationTimeline {
     }
 
     private void calculateDuration(){
-        totalDuration = 0f;
+        totalDuration = 0L;
         for (SpriteAnimationFrame frame : frames) {
             totalDuration += frame.duration;
         }

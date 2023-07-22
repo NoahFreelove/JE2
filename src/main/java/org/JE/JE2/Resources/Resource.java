@@ -8,7 +8,7 @@ import java.util.Random;
 public class Resource<T extends ResourceBundle> implements Serializable {
     public final Class<T> type;
     private transient T ref;
-    private final String name;
+    private String name;
     private int ID = -1;
 
     private Resource(){
@@ -73,6 +73,10 @@ public class Resource<T extends ResourceBundle> implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getID() {
         return ID;
     }
@@ -80,4 +84,6 @@ public class Resource<T extends ResourceBundle> implements Serializable {
     public void setID(int ID) {
         this.ID = ID;
     }
+
+
 }

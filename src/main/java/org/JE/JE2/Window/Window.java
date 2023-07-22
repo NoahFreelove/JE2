@@ -10,6 +10,7 @@ import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.Time;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -150,6 +151,7 @@ public final class Window {
         windowHandle = glfwCreateWindow(wp.windowSize.x(), wp.windowSize.y(), wp.windowTitle, NULL, NULL);
         width = wp.windowSize.x();
         height = wp.windowSize.y();
+        UIScaler.setNewRes(width,height);
         if ( windowHandle == NULL )
         {
             Logger.log(new JE2Error("Failed to create the GLFW windowHandle.", Logger.MAX));

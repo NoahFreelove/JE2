@@ -8,6 +8,7 @@ public class MethodTimer {
         startTime = System.nanoTime();
     }
 
+    public void reset(){startTime = System.nanoTime();}
     public void end(){
         endTime = System.nanoTime();
     }

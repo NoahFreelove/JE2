@@ -175,7 +175,9 @@ public final class GameObject implements Serializable {
             if(!c.getActive())
                 continue;
             if(c.updateOnScriptUpdate){
+                c.getExternalScriptBehaviourPre().update(this);
                 c.update();
+                c.getExternalScriptBehaviourPost().update(this);
             }
         }
         getTransform().update();
@@ -189,7 +191,9 @@ public final class GameObject implements Serializable {
 
         if(activePhysicsBody.getActive())
         {
+            activePhysicsBody.getExternalScriptBehaviourPre().update(this);
             activePhysicsBody.update();
+            activePhysicsBody.getExternalScriptBehaviourPost().update(this);
         }
     }
 
@@ -199,7 +203,9 @@ public final class GameObject implements Serializable {
         for(Script c : scripts){
             if(!c.getActive())
                 continue;
+            c.getExternalScriptBehaviourPre().start(this);
             c.start();
+            c.getExternalScriptBehaviourPost().start(this);
         }
     }
     public void scriptAwake(){
@@ -208,7 +214,10 @@ public final class GameObject implements Serializable {
         scripts.forEach((c)->{
             if(!c.getActive())
                 return;
+            c.getExternalScriptBehaviourPre().awake(this);
             c.awake();
+            c.getExternalScriptBehaviourPost().awake(this);
+
         });
     }
     private void notifyScriptsForeign(Script newScript){
@@ -221,20 +230,28 @@ public final class GameObject implements Serializable {
         });
     }
     public void scriptDestroy(){
-        scripts.forEach(Script::destroy);
+        for (Script s : scripts) {
+            s.getExternalScriptBehaviourPre().destroy(this);
+            s.destroy();
+            s.getExternalScriptBehaviourPost().destroy(this);
+        }
     }
     public void scriptUnload(Scene oldScene, Scene newScene){
         for(Script c : scripts){
             if(!c.getActive())
                 continue;
+            c.getExternalScriptBehaviourPre().unload(oldScene, newScene);
             c.unload(oldScene, newScene);
+            c.getExternalScriptBehaviourPost().unload(oldScene, newScene);
         }
     }
     public void scriptParentAdded(Scene s){
         for(Script c : scripts){
             if(!c.getActive())
                 continue;
+            c.getExternalScriptBehaviourPre().gameObjectAddedToScene(s);
             c.gameObjectAddedToScene(s);
+            c.getExternalScriptBehaviourPost().gameObjectAddedToScene(s);
         }
     }
 
@@ -244,7 +261,9 @@ public final class GameObject implements Serializable {
         scripts.forEach((c)->{
             if(!c.getActive())
                 return;
+            c.getExternalScriptBehaviourPre().postRender(this);
             c.postRender();
+            c.getExternalScriptBehaviourPost().postRender(this);
         });
     }
 

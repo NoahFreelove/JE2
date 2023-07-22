@@ -4,25 +4,22 @@ import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
+import org.JE.JE2.Objects.Audio.AudioSourcePlayer;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
-import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationFrame;
-import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimationTimeline;
-import org.JE.JE2.Objects.Scripts.Animator.Sprite.SpriteAnimator;
 import org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Objects.Scripts.Pathfinding.NavigableArea;
 import org.JE.JE2.Objects.Scripts.Pathfinding.PathfindingActor;
 import org.JE.JE2.Objects.Scripts.Pathfinding.SimplePathfindingAgent;
-import org.JE.JE2.Objects.Scripts.Physics.BoxTrigger;
+import org.JE.JE2.Objects.Scripts.Physics.Collision.BoxTrigger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
-import org.JE.JE2.Objects.Scripts.Physics.TriggerEvent;
-import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.Particle;
-import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.ParticleEmitter;
+import org.JE.JE2.Objects.Scripts.Physics.Collision.TriggerEvent;
 import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Debug.QuickDebugUI;
+import org.JE.JE2.Rendering.Debug.RenderColoredArea;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
@@ -39,11 +36,10 @@ import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIObjects.UIWindow;
+import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.ForceNonNull;
 import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
-import org.JE.JE2.Window.Window;
-import org.joml.Random;
 import org.joml.Vector2f;
 
 import static org.lwjgl.nuklear.Nuklear.*;
@@ -82,6 +78,26 @@ public class BasicScene {
                 Texture.get("PlayerNormal"));
         addParticles(scene);
 
+
+
+        Camera playerCam = new Camera();
+
+        /*asp.setExternalScriptBehaviourPost(new ILambdaScript() {
+            @Override
+            public void update(GameObject parent) {
+                parent.getTransform().translateX(0.5f * Time.deltaTime());
+
+                asp.setRelativeAudioBasedOnCamera(playerCam);
+            }
+        });
+
+        GameObject sound = RenderColoredArea.getArea(0,0,1,1, Color.RED);
+
+        sound.addScript(asp);
+        sound.setPosition(-1,-1);
+
+        scene.add(sound);*/
+        //asp.play(true);
 
         TransformRecorder tr = new TransformRecorder();
 
@@ -145,7 +161,6 @@ public class BasicScene {
 
         //sa.play();
 
-        Camera playerCam = new Camera();
         //playerCam.backgroundColor = Color.createColorHex("#87ceeb");
         PhysicsBody pb = new PhysicsBody();
         player.addScript(pb);
@@ -209,6 +224,9 @@ public class BasicScene {
         UIWindow uiWindow = new UIWindow("Adjust Lighting",
                 NK_WINDOW_TITLE | NK_WINDOW_BORDER | NK_WINDOW_MINIMIZABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE,
                 new Vector2f(100, 100));
+
+
+        uiWindow.setBackgroundColor(Color.BROWN);
 
         Label Constant = new Label("Constant");
         Slider constant = new Slider(0f, 0f, 0.2f, 0.01f);

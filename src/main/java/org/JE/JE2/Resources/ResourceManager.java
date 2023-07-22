@@ -146,7 +146,7 @@ public class ResourceManager implements Serializable {
         {
             Texture.checkExistElseCreate(name,-1, asset);
         } else if (clazz == AudioBundle.class) {
-            AudioSourcePlayer.checkExistElseCreate(name,-1, asset.getPath(true));
+            AudioSourcePlayer.checkExistElseCreate(name,-1, asset);
         }
     }
 

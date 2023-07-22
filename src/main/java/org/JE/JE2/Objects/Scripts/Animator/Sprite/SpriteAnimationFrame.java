@@ -6,10 +6,10 @@ import org.JE.JE2.Rendering.Texture;
 public class SpriteAnimationFrame {
     private final Texture texture;
     private final Texture normalTexture;
-    public final float duration;
+    public final long duration;
 
 
-    public SpriteAnimationFrame(Texture t, Texture normalTexture, float durationInMilliseconds){
+    public SpriteAnimationFrame(Texture t, Texture normalTexture, long durationInMilliseconds){
         this.texture = t;
         this.duration = durationInMilliseconds;
         this.normalTexture = normalTexture;

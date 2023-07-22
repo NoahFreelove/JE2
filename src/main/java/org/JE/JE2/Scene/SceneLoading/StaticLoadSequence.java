@@ -22,7 +22,7 @@ public class StaticLoadSequence extends LoadingSequence {
         super(loadType);
         screen.setPos(new Vector2f(0,0));
         screen.setSize(new Vector2f(Manager.getWindowSize().x(), Manager.getWindowSize().y()));
-        screen.setBackgroundColor(Color.BLACK);
+        //screen.setBackgroundColor(Color.BLACK);
         screen.addElement(new Label("Loading..."));
     }
 

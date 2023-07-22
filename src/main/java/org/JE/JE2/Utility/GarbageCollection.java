@@ -15,4 +15,6 @@ public class GarbageCollection {
     public static float getMemoryUsageMb(){
         return (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1000000f;
     }
+
+
 }

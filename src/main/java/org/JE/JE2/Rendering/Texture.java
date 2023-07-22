@@ -67,8 +67,10 @@ public class Texture implements Serializable {
         }
     }
 
-    public static Texture createTexture(Filepath fp, boolean flip){
-        return checkExistElseCreate("",-1, fp,flip);
+    public static Texture createTexture(String name, Filepath fp, boolean flip){
+        Texture t = checkExistElseCreate("",-1, fp,flip);
+        t.resource.setName(name);
+        return t;
     }
 
     /**

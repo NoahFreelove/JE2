@@ -5,6 +5,8 @@ import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Identity;
 import org.JE.JE2.Objects.Lights.Light;
+import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
+import org.JE.JE2.Objects.Scripts.LambdaScript.LambdaScript;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;
@@ -46,6 +48,15 @@ public class Scene implements Serializable {
      */
     public static void addNow(GameObject go){
         Manager.activeScene().add(go);
+    }
+
+    public void add(Script s){
+        GameObject temp = new GameObject();
+        temp.addScript(s);
+        add(temp);
+    }
+    public void add(ILambdaScript s){
+        add(new LambdaScript(s));
     }
 
     public void add(GameObject newGameObject)

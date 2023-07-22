@@ -18,6 +18,8 @@ public class Camera extends Script {
     public Vector2f positionOffset = new Vector2f();
     public float zoomMultiplier = 1f;
 
+    private float width = 5; // How many units can the camera see in any direction
+    private float height;
     public Vector4f viewportSize = new Vector4f();
     public boolean useDefaultViewport = true;
 
@@ -87,8 +89,8 @@ public class Camera extends Script {
     public Matrix4f getOrtho(){
         projection.identity();
         float aspect = (float) viewportSize.z / (float) viewportSize.w;
-        float width = 4;
-        float height = width/aspect;
+
+        height = width/aspect;
         float near = 0;
         float far = 100;
         // take viewport position into account
@@ -130,5 +132,13 @@ public class Camera extends Script {
 
 
         }
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }

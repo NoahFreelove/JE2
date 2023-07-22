@@ -3,6 +3,7 @@ package org.JE.JE2;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Scene.SceneLoading.LoadingSequence;
 import org.JE.JE2.Scene.Scene;
+import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.Time;
 import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowCloseReason;
@@ -116,6 +117,7 @@ public class Manager {
 
     public static void onWindowSizeChange(int width, int height){
         preferences.windowSize = new Vector2i(width,height);
+        UIScaler.setNewRes(width,height);
         defaultViewport = new Vector4f(0,0,width,height);
     }
 }

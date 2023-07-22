@@ -3,6 +3,7 @@ package org.JE.JE2.UI.UIObjects;
 import org.JE.JE2.Manager;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIElements.UIElement;
+import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Window.UIHandler;
 import org.joml.Vector2f;
 import org.lwjgl.nuklear.*;
@@ -16,14 +17,15 @@ import static org.lwjgl.nuklear.Nuklear.nk_end;
 
 public class UIWindow extends UIObject {
     private final NkContext context = nuklearContext;
-    public String name = "Window";
+    public String name = "Window" + Math.random();
     public int windowOptions = NK_WINDOW_TITLE | NK_WINDOW_BORDER | NK_WINDOW_MINIMIZABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE;
     private NkStyleWindow window;
     private NkRect rect = NkRect.create();
     // Will reset to this position upon showing window from a hidden state. definitely a feature.
     private Vector2f pos = new Vector2f(50, 50);
     private Vector2f size = new Vector2f(200, 200);
-    private Color backgroundColor = Color.createColor(0.1f, 0.1f, 0.1f, 1f);
+
+    private Color color = Color.DARK_GREY;
     private boolean isMinimized = false;
     public boolean closedFromWindow = false;
 
@@ -41,6 +43,7 @@ public class UIWindow extends UIObject {
     public UIWindow(String name) {
         this.name = name;
         window = NkStyleWindow.create();
+
     }
 
     public UIWindow(String name, int windowOptions) {
@@ -94,15 +97,22 @@ public class UIWindow extends UIObject {
             }
         }
 
-        if (nk_begin(context, name, nk_rect(pos.x, pos.y, size.x, size.y, rect), windowOptions)) {
+        float scaledPosX = pos.x * UIScaler.MULTIPLIERX;
+        float scaledPosY = pos.y * UIScaler.MULTIPLIERY;
+
+        float scaledSizeX = size.x * UIScaler.MULTIPLIERX;
+        float scaledSizeY = size.y * UIScaler.MULTIPLIERY;
+
+        context.style().window().fixed_background().data().color().set(color.nkColor());
+        if (nk_begin(context, name, nk_rect(scaledPosX, scaledPosY, scaledSizeX, scaledSizeY, rect), windowOptions)) {
             isCreated = true;
             closedFromWindow = false;
-            // align elements
-            window = context.style().window();
-            window.fixed_background().data().color().set((byte) backgroundColor.r255(), (byte) backgroundColor.g255(), (byte) backgroundColor.b255(), (byte) backgroundColor.a255());
+            // set colo
+
 
             renderChildren();
         }
+
 
         nk_end(context);
     }
@@ -160,8 +170,10 @@ public class UIWindow extends UIObject {
         closedFromWindow = false;
     }
 
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
+    public void setBackgroundColor(Color c) {
+        this.color = c;
+        reset = true;
+        isCreated = false;
     }
 
     public void addElement(UIElement element) {
