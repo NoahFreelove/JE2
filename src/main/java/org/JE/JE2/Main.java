@@ -28,8 +28,8 @@ import static org.JE.JE2.Examples.BasicScene.mainScene;
 public class Main {
 
     public static void main(String[] args) {
-        UIScaler.BASE_WINDOW_WIDTH = 1000;
-        UIScaler.BASE_WINDOW_HEIGHT = 1000;
+        UIScaler.BASE_WINDOW_WIDTH = 1280;
+        UIScaler.BASE_WINDOW_HEIGHT = 720;
         WindowPreferences preferences = new WindowPreferences(
                 1920,1080,
                 "JE2",

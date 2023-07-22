@@ -18,8 +18,6 @@ public class UIScaler {
         MULTIPLIERX = (float)newWidth / (float)BASE_WINDOW_WIDTH;
         MULTIPLIERY = (float)newHeight / (float)BASE_WINDOW_HEIGHT;
 
-        System.out.println("MULTIPLIERX: " + MULTIPLIERX);
-        System.out.println("MULTIPLIERY: " + MULTIPLIERY);
     }
 
     public static Vector2f scaleUI(Vector2f referenceScale)

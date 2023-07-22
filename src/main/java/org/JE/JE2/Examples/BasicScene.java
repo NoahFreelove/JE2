@@ -35,6 +35,7 @@ import org.JE.JE2.UI.UIElements.Label;
 import org.JE.JE2.UI.UIElements.PreBuilt.FPSCounter;
 import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.JE.JE2.UI.UIElements.UIImage;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.ForceNonNull;
@@ -77,8 +78,6 @@ public class BasicScene {
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
         addParticles(scene);
-
-
 
         Camera playerCam = new Camera();
 
@@ -225,6 +224,7 @@ public class BasicScene {
                 NK_WINDOW_TITLE | NK_WINDOW_BORDER | NK_WINDOW_MINIMIZABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE,
                 new Vector2f(100, 100));
 
+        uiWindow.addElement(new UIImage(Texture.createTexture("icon",new Filepath("texture1.png",true),false)));
 
         uiWindow.setBackgroundColor(Color.BROWN);
 

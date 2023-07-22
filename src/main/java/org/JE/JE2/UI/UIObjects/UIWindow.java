@@ -33,6 +33,9 @@ public class UIWindow extends UIObject {
 
     public boolean destroyOnLoad = true;
 
+    public int rowHeight = 30;
+    public int maxElementsPerRow = 1;
+
     private CopyOnWriteArrayList<UIElement> children = new CopyOnWriteArrayList<>();
 
     public UIWindow() {
@@ -107,9 +110,6 @@ public class UIWindow extends UIObject {
         if (nk_begin(context, name, nk_rect(scaledPosX, scaledPosY, scaledSizeX, scaledSizeY, rect), windowOptions)) {
             isCreated = true;
             closedFromWindow = false;
-            // set colo
-
-
             renderChildren();
         }
 
@@ -118,9 +118,9 @@ public class UIWindow extends UIObject {
     }
 
     private void renderChildren() {
+        nk_layout_row_dynamic(context, rowHeight*UIScaler.MULTIPLIERY, maxElementsPerRow);
         children.forEach((uiElement -> {
             nk_style_set_font(nuklearContext, UIHandler.active_font.getFont());
-            nk_layout_row_dynamic(context, 20, 1);
             uiElement.requestRender();
         }));
     }

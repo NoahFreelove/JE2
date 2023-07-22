@@ -1,6 +1,7 @@
 package org.JE.JE2.UI.UIElements;
 
 import org.JE.JE2.UI.UIElements.Style.Color;
+import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.Settings.Setting;
 import org.JE.JE2.Window.UIHandler;
 import org.joml.sampling.Callback2d;
@@ -93,7 +94,7 @@ public class TextField extends UIElement {
         if(title != null){
             nk_label_colored(UIHandler.nuklearContext, title, NK_TEXT_ALIGN_LEFT, Color.WHITE.nkColor());
         }
-        nk_layout_row_dynamic(UIHandler.nuklearContext, height, 1);
+        nk_layout_row_dynamic(UIHandler.nuklearContext, height* UIScaler.BASE_WINDOW_HEIGHT, 1);
 
         prevString = getValue();
 
