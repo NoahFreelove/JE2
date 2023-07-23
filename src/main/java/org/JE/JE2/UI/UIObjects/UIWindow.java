@@ -117,7 +117,7 @@ public class UIWindow extends UIObject {
         nk_end(context);
     }
 
-    private void renderChildren() {
+    protected void renderChildren() {
         nk_layout_row_dynamic(context, rowHeight*UIScaler.MULTIPLIERY, maxElementsPerRow);
         children.forEach((uiElement -> {
             nk_style_set_font(nuklearContext, UIHandler.active_font.getFont());

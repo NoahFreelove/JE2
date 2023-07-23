@@ -5,6 +5,7 @@ import org.joml.Vector4f;
 import org.lwjgl.nuklear.NkColor;
 
 import java.io.Serializable;
+import java.util.Random;
 
 public class Color implements Serializable {
 
@@ -207,6 +208,11 @@ public class Color implements Serializable {
     }
     public Vector4f getVec4(){
         return new Vector4f(r,g,b,a);
+    }
+
+    static Random rand = new Random(System.currentTimeMillis());
+    public static Color random(){
+        return new Color(rand.nextFloat(),rand.nextFloat(),rand.nextFloat(),1);
     }
 
     @Override

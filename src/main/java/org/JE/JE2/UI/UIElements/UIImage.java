@@ -27,9 +27,6 @@ public class UIImage extends UIElement {
         if(text == null)
             return;
         nk_image_id(text.resource.getID(),img);
-        nk_layout_row_template_begin(UIHandler.nuklearContext, text.resource.getBundle().getImageSize().y* UIScaler.MULTIPLIERY);
-        nk_layout_row_template_push_static(UIHandler.nuklearContext, text.resource.getBundle().getImageSize().x* UIScaler.MULTIPLIERX);
-        nk_layout_row_template_end(UIHandler.nuklearContext);
         nk_image(UIHandler.nuklearContext, img);
 
     }

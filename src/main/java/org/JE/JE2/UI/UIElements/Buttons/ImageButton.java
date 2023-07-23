@@ -18,28 +18,39 @@ public class ImageButton extends UIElement {
     public NkImage img = NkImage.create();
     private Texture texture;
     private NkRect rect = NkRect.create();
+    public int sizeX;
+    public int sizeY;
 
     public ImageButton(Texture texture) {
         super();
         this.texture = texture;
+        sizeX = texture.resource.getBundle().getImageSize().x();
+        sizeY = texture.resource.getBundle().getImageSize().y();
     }
 
     public ImageButton(Texture texture, Runnable onClickEvent) {
         super();
         this.texture = texture;
         this.onClickEvent = onClickEvent;
+        sizeX = texture.resource.getBundle().getImageSize().x();
+        sizeY = texture.resource.getBundle().getImageSize().y();
     }
 
     @Override
     protected void render() {
         nk_image_id(texture.resource.getID(), img);
-        nk_layout_row_template_begin(UIHandler.nuklearContext, texture.resource.getBundle().getImageSize().y* UIScaler.MULTIPLIERY);
-        nk_layout_row_template_push_static(UIHandler.nuklearContext, texture.resource.getBundle().getImageSize().x* UIScaler.MULTIPLIERX);
-        nk_layout_row_template_end(UIHandler.nuklearContext);
+        /*nk_layout_row_template_begin(UIHandler.nuklearContext, sizeY* UIScaler.MULTIPLIERY);
+        nk_layout_row_template_push_static(UIHandler.nuklearContext, sizeX* UIScaler.MULTIPLIERX);
+        nk_layout_row_template_end(UIHandler.nuklearContext);*/
+        nuklearContext.style().button().normal().data().color().set(style.normalColor.nkColor());
+        nuklearContext.style().button().hover().data().color().set(style.hoverColor.nkColor());
+        nuklearContext.style().button().active().data().color().set(style.pressedColor.nkColor());
 
         if (nk_button_image(nuklearContext, img)) {
             if (isActive())
                 onClickEvent.run();
         }
+        nuklearContext.style().clear();
+
     }
 }
