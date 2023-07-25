@@ -35,6 +35,7 @@ public class Main {
                 "JE2",
                 false, true, true);
         Manager.start(preferences);
+
         Logger.logErrors = true;
         Logger.logThreshold = 2;
         Scene s = Manager.activeScene();

@@ -8,6 +8,7 @@ public class WindowPreferences {
     public boolean windowResizable = false;
     public boolean vSync = true;
     public boolean initializeNuklear = true;
+    public boolean waitForInit = false;
     public WindowPreferences(){}
 
     public WindowPreferences(Vector2i windowSize, String windowTitle, boolean windowResizable, boolean vSync) {

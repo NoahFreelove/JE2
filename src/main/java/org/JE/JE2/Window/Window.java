@@ -86,6 +86,9 @@ public final class Window {
             loop();
         });
         glThread.start();
+        /*if(wp.waitForInit){
+            while (!hasInit) Thread.onSpinWait();
+        }*/
 
     }
 
@@ -244,9 +247,11 @@ public final class Window {
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
         glEnable(GL_COLOR_MATERIAL);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthFunc(GL_LEQUAL);
+
+        //Setup blend func and equation
 
         pipeline.init();
         //Logger.stackTrace = true;

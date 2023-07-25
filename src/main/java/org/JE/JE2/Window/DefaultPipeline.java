@@ -11,6 +11,10 @@ import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.opengl.GL30;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.GL_FUNC_ADD;
+import static org.lwjgl.opengl.GL14.glBlendEquation;
+
 public class DefaultPipeline extends Pipeline{
     @Override
     public void run() {
@@ -32,6 +36,10 @@ public class DefaultPipeline extends Pipeline{
 
     @Override
     public void renderObjects() {
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendEquation(GL_FUNC_ADD);
 
         Manager.activeScene().world.gameObjects.forEach((gameObject) ->{
             if(gameObject == null)

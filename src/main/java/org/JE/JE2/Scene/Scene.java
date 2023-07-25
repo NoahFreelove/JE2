@@ -31,6 +31,8 @@ public class Scene implements Serializable {
 
     public CopyOnWriteArrayList<Watcher> watchers = new CopyOnWriteArrayList<>();
 
+    public boolean sortByZOnAdd = true;
+
     public Scene(){}
     public Scene(int buildIndex){
         this.buildIndex = buildIndex;
@@ -50,17 +52,7 @@ public class Scene implements Serializable {
         Manager.activeScene().add(go);
     }
 
-    public void add(Script s){
-        GameObject temp = new GameObject();
-        temp.addScript(s);
-        add(temp);
-    }
-    public void add(ILambdaScript s){
-        add(new LambdaScript(s));
-    }
-
-    public void add(GameObject newGameObject)
-    {
+    public void addTo(GameObject newGameObject, int index){
         if(newGameObject == null)
             return;
         if(world.gameObjects.contains(newGameObject)) {
@@ -76,13 +68,33 @@ public class Scene implements Serializable {
             }
         }
 
-        world.gameObjects.add(newGameObject);
+        world.gameObjects.add(index,newGameObject);
         for (GameObject child :
                 newGameObject.getChildren()) {
-            add(child);
+            addTo(child, index);
         }
         newGameObject.linkedScene = this;
         newGameObject.scriptParentAdded(this);
+        if(sortByZOnAdd)
+            sortByZ();
+    }
+
+    public void add(Script s){
+        GameObject temp = new GameObject();
+        temp.addScript(s);
+        add(temp);
+    }
+    public void add(ILambdaScript s){
+        add(new LambdaScript(s));
+    }
+
+    public void add(GameObject newGameObject)
+    {
+        addTo(newGameObject, world.gameObjects.size());
+    }
+
+    private void sortByZ() {
+        world.gameObjects.sort(Comparator.comparingDouble(o -> o.getTransform().zPos()));
     }
 
     public void add(GameObject... newGameObjects)

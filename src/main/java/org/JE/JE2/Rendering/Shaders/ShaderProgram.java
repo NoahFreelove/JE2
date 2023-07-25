@@ -6,6 +6,8 @@ import org.JE.JE2.IO.Logging.Errors.ShaderError;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Rendering.Shaders.Uniforms.ShaderUniform;
 import org.JE.JE2.Utility.Loadable;
+import org.JE.JE2.Window.Window;
+import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -32,8 +34,11 @@ public final class ShaderProgram implements Serializable, Loadable {
     public transient boolean fragmentCompileStatus;
     private transient int vertexShaderID;
     private transient int fragmentShaderID;
+    public boolean logCommonErrors = true;
 
     public static boolean logShaderSourceUponError = true;
+
+    private boolean hasQueuedCompile = false;
 
     private ShaderProgram(){}
 
@@ -182,6 +187,7 @@ public final class ShaderProgram implements Serializable, Loadable {
         this.fragment = fragment;
         Runnable r = () -> createShaderNow(vertex,fragment);
         Manager.queueGLFunction(r);
+        hasQueuedCompile = true;
     }
 
     @GLThread
@@ -199,13 +205,15 @@ public final class ShaderProgram implements Serializable, Loadable {
         vertexCompileStatus = glGetShaderi(vertexShaderID, GL_COMPILE_STATUS) == 1;
         fragmentCompileStatus = glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS) == 1;
 
-        if(!vertexCompileStatus){
-            Logger.log(new ShaderError("Vertex shader did not compile...", vertex, fragment));
-        }
+        if(logCommonErrors){
+            if(!vertexCompileStatus){
+                Logger.log(new ShaderError("Vertex shader did not compile...", vertex, fragment));
+            }
 
-        if(!fragmentCompileStatus)
-        {
-            Logger.log(new ShaderError("Fragment shader did not compile...", vertex, fragment));
+            if(!fragmentCompileStatus)
+            {
+                Logger.log(new ShaderError("Fragment shader did not compile...", vertex, fragment));
+            }
         }
 
         programID = glCreateProgram();
@@ -213,6 +221,7 @@ public final class ShaderProgram implements Serializable, Loadable {
         glAttachShader(programID, fragmentShaderID);
         glLinkProgram(programID);
         glValidateProgram(programID);
+        hasQueuedCompile = false;
     }
 
     public void destroy(){
@@ -233,11 +242,20 @@ public final class ShaderProgram implements Serializable, Loadable {
     @GLThread
     public boolean use(){
         if(!valid()){
-            if(logShaderSourceUponError){
-                Logger.log(new ShaderError("Shader program ID is not valid", vertex, fragment));
-            }
-            else {
-                Logger.log(ShaderError.invalidProgramIDError);
+            if(logCommonErrors){
+                //System.out.println("Has Queued Compile: " + hasQueuedCompile);
+                if(!hasQueuedCompile){
+                    System.out.println("shader ID invalid, recompiling...");
+                    createShader(vertex,fragment);
+                }
+                else
+                    return false;
+                if(logShaderSourceUponError){
+                    Logger.log(new ShaderError("Shader program ID is not valid", vertex, fragment));
+                }
+                else {
+                    Logger.log(ShaderError.invalidProgramIDError);
+                }
             }
         }
         else {

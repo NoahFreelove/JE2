@@ -54,4 +54,6 @@ public class SimpleAABB extends Script {
         adjustedPos.y += offset.y();
         return adjustedPos;
     }
+
+
 }

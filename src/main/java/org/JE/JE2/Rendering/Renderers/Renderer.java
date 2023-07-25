@@ -69,12 +69,12 @@ public class Renderer extends Script {
         if(!camera.withinRenderDistance(t.position(),t.scale()))
             return;
 
+
         glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
         PreRender();
 
         if(!shaderProgram.use())
             return;
-
         setProjections(camera, shaderProgram, t);
         setPositions(shaderProgram, t);
         setMaterial(shaderProgram);
