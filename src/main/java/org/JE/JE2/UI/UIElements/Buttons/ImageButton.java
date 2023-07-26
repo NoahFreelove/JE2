@@ -20,6 +20,7 @@ public class ImageButton extends UIElement {
     private NkRect rect = NkRect.create();
     public int sizeX;
     public int sizeY;
+    public static NkImage empty = NkImage.create();
 
     public ImageButton(Texture texture) {
         super();
@@ -46,9 +47,17 @@ public class ImageButton extends UIElement {
         nuklearContext.style().button().hover().data().color().set(style.hoverColor.nkColor());
         nuklearContext.style().button().active().data().color().set(style.pressedColor.nkColor());
 
-        if (nk_button_image(nuklearContext, img)) {
-            if (isActive())
-                onClickEvent.run();
+        if(!isActive()){
+            if (nk_button_image(nuklearContext, empty)) {
+                if (isActive())
+                    onClickEvent.run();
+            }
+        }
+        else {
+            if (nk_button_image(nuklearContext, img)) {
+                if (isActive())
+                    onClickEvent.run();
+            }
         }
         nuklearContext.style().clear();
 

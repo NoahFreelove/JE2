@@ -52,7 +52,7 @@ public class Scene implements Serializable {
         Manager.activeScene().add(go);
     }
 
-    public void addTo(GameObject newGameObject, int index){
+    public void addTo(GameObject newGameObject, int index, boolean sort){
         if(newGameObject == null)
             return;
         if(world.gameObjects.contains(newGameObject)) {
@@ -71,11 +71,11 @@ public class Scene implements Serializable {
         world.gameObjects.add(index,newGameObject);
         for (GameObject child :
                 newGameObject.getChildren()) {
-            addTo(child, index);
+            addTo(child, index, sort);
         }
         newGameObject.linkedScene = this;
         newGameObject.scriptParentAdded(this);
-        if(sortByZOnAdd)
+        if(sort)
             sortByZ();
     }
 
@@ -90,7 +90,7 @@ public class Scene implements Serializable {
 
     public void add(GameObject newGameObject)
     {
-        addTo(newGameObject, world.gameObjects.size());
+        addTo(newGameObject, world.gameObjects.size(), sortByZOnAdd);
     }
 
     private void sortByZ() {

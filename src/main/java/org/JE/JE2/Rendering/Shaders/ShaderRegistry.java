@@ -57,7 +57,7 @@ public class ShaderRegistry {
 
             void main(){
                 if(use_texture == 1){
-                    FragColor = texture(JE_Texture, UV);
+                    FragColor = texture(JE_Texture, UV) * material.base_color;
                 }
                 else if (use_texture == 0){
                     FragColor = material.base_color;
@@ -190,10 +190,10 @@ public class ShaderRegistry {
                     total_light += light.color.rgb * falloff * intensity;
                 }
                 if(use_texture == 1){
-                    color = texture(JE_Texture, UV) * vec4(total_light, 1.0);
+                    color = texture(JE_Texture, UV) * vec4(total_light, 1.0) * material.base_color;
                 }
                 else if (use_texture == 0){
-                    color = material.base_color * vec4(total_light, 1.0);
+                    color = material.base_color * vec4(total_light, 1.0)* material.base_color;
                 }
             }""";
 
