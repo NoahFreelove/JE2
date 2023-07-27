@@ -19,8 +19,6 @@ public class DefaultPipeline extends Pipeline{
     @Override
     public void run() {
         Window.getDefaultFramebuffer().clearAndActivate();
-
-        runQueuedEvents();
         updateScene();
         renderObjects();
 
@@ -32,6 +30,7 @@ public class DefaultPipeline extends Pipeline{
         postProcess();
         renderUI();
         checkWatchers();
+        runQueuedEvents();
     }
 
     @Override

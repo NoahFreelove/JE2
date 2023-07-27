@@ -133,6 +133,20 @@ public class ResourceManager implements Serializable {
         }
         policy = ResourceLoadingPolicy.values()[prevPolicy];
     }
+
+    @JarSafe
+    public static void warmupAssets(String[] names, Filepath[] assets, Class<?extends ResourceBundle> clazz){
+        int prevPolicy = policy.ordinal();
+        policy = ResourceLoadingPolicy.DONT_CHECK_IF_EXISTS;
+        if(assets.length != names.length)
+            return;
+
+        for (int i = 0; i < assets.length; i++) {
+            //System.out.println("Warming up asset: " + names[i] + " with path: " + assets[i] + " and class: " + classes[i].getName());
+            warmupAsset(names[i], assets[i], clazz);
+        }
+        policy = ResourceLoadingPolicy.values()[prevPolicy];
+    }
     @JarSafe
     public static void warmupAssets(Triplet<String, Filepath, Class<? extends ResourceBundle>>[] assets){
         for (Triplet<String,Filepath,Class<? extends ResourceBundle>> t: assets) {
