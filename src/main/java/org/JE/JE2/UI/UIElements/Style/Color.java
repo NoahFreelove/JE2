@@ -12,6 +12,7 @@ public class Color implements Serializable {
     //region Pre-made Colors
     public static final Color TRANSPARENT = Color.createColor(0,0,0,0);
     public static final Color WHITE = Color.createColor(1,1,1,1);
+    public static final Color SUPER_WHITE = Color.createColor(5,5,5,1);
     public static final Color BLACK = Color.createColor(0,0,0,1);
     public static final Color GREY = Color.createColor(0.6f,0.6f,0.6f);
     public static final Color DARK_GREY = Color.createColor(0.3f,0.3f,0.3f);

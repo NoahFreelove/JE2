@@ -7,7 +7,7 @@ import org.JE.JE2.Utility.GarbageCollection;
 
 public abstract class Pipeline {
 
-    int gcThreshold = 500;
+    int gcThreshold = 500; // set to -1 to disable
 
     @GLThread
     protected abstract void run(); // will be called every frame
@@ -20,9 +20,11 @@ public abstract class Pipeline {
 
     @GLThread
     protected void onEnd(){
-        if(Window.getFrameCount() % gcThreshold == 0)
-        {
-            GarbageCollection.takeOutDaTrash();
+        if(gcThreshold>0){
+            if(Window.getFrameCount() % gcThreshold == 0)
+            {
+                GarbageCollection.takeOutDaTrash();
+            }
         }
     }
     @GLThread
