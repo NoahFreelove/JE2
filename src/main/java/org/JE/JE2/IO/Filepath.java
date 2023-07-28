@@ -8,6 +8,7 @@ public class Filepath {
     public final boolean isClassLoaderPath;
     String absolute;
     String classLoaderPath;
+    public boolean flag_flipTexture = true;
     public Filepath(String filepath, boolean isClassLoaderPath){
         this.classLoaderPath = filepath;
         this.isClassLoaderPath = isClassLoaderPath;
@@ -21,6 +22,10 @@ public class Filepath {
         System.out.println("bytePath: " + classLoaderPath);
         System.out.println("isClassLoaderPath: " + this.isClassLoaderPath);
         System.out.println("______________");*/
+    }
+    public Filepath(String filepath, boolean isClassLoaderPath, boolean flag_flipTexture){
+        this(filepath,isClassLoaderPath);
+        this.flag_flipTexture = flag_flipTexture;
     }
 
     public Filepath(String filepath){

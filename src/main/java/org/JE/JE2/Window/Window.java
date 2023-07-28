@@ -256,44 +256,48 @@ public final class Window {
         pipeline.init();
         //Logger.stackTrace = true;
         while ( !glfwWindowShouldClose(windowHandle) ) {
-            frameCount++;
-            double startTime = System.currentTimeMillis();
-
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
-            UIHandler.frameStart();
-            Color clear = Manager.activeScene().mainCamera().backgroundColor;
-
-            try (MemoryStack stack = stackPush()) {
-                IntBuffer width  = stack.mallocInt(1);
-                IntBuffer height = stack.mallocInt(1);
-
-                glfwGetWindowSize(windowHandle, width, height);
-                glViewport(0, 0, width.get(0), height.get(0));
-                glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
-            }
-
-            glfwPollEvents();
-
-            Mouse.frameReset();
-            Keyboard.frameReset();
-            pipeline.onStart();
-
-            glfwSwapBuffers(windowHandle);
-            deltaTime = (System.currentTimeMillis() - startTime)/1000.0;
-
-
-            // If the window was moved or resized, the delta time will be very large.
-            // This is to prevent that and physics from breaking.
-            // This is a very temporary fix. Haha "temporary".
-            if(deltaTime >= frameTimeMax){
-                deltaTime = 0;
-                Keyboard.reset();
-                Mouse.reset();
-            }
-
-            Time.setDeltaTime((float)deltaTime);
+            frameStart();
         }
+    }
+
+    public static void frameStart() {
+        frameCount++;
+        double startTime = System.currentTimeMillis();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+        UIHandler.frameStart();
+        Color clear = Manager.activeScene().mainCamera().backgroundColor;
+
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer width  = stack.mallocInt(1);
+            IntBuffer height = stack.mallocInt(1);
+
+            glfwGetWindowSize(windowHandle, width, height);
+            glViewport(0, 0, width.get(0), height.get(0));
+            glClearColor(clear.r(), clear.g(), clear.b(), clear.a());
+        }
+
+        glfwPollEvents();
+
+        Mouse.frameReset();
+        Keyboard.frameReset();
+        pipeline.onStart();
+
+        glfwSwapBuffers(windowHandle);
+        deltaTime = (System.currentTimeMillis() - startTime)/1000.0;
+
+
+        // If the window was moved or resized, the delta time will be very large.
+        // This is to prevent that and physics from breaking.
+        // This is a very temporary fix. Haha "temporary".
+        if(deltaTime >= frameTimeMax){
+            deltaTime = 0;
+            Keyboard.reset();
+            Mouse.reset();
+        }
+
+        Time.setDeltaTime((float)deltaTime);
     }
 
     public static void onPreferenceUpdated(WindowPreferences wp){
@@ -316,7 +320,9 @@ public final class Window {
         actionQueue.add(r);
     }
 
-
+    public static void queueGLFunction(Runnable r, int priority) {
+        actionQueue.add(priority,r);
+    }
 
     public static long handle()
     {

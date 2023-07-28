@@ -7,12 +7,10 @@ import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Resources.*;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
-import org.JE.JE2.Window.Window;
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
-import java.io.File;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -46,7 +44,7 @@ public class Texture implements Serializable {
     }
 
     public static Texture checkExistElseCreate(String name, int ID, Filepath filepath){
-        return checkExistElseCreate(name, ID, filepath, true);
+        return checkExistElseCreate(name, ID, filepath, filepath.flag_flipTexture);
     }
 
 

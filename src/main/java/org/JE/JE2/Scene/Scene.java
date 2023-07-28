@@ -32,6 +32,8 @@ public class Scene implements Serializable {
     public CopyOnWriteArrayList<Watcher> watchers = new CopyOnWriteArrayList<>();
 
     public boolean sortByZOnAdd = true;
+    public boolean updateObjects = true;
+    public boolean updateUI = true;
 
     public Scene(){}
     public Scene(int buildIndex){
@@ -186,8 +188,10 @@ public class Scene implements Serializable {
             world.physicsWorld.step(Time.deltaTime(), 8, 3);
             world.gameObjects.forEach(GameObject::physicsUpdate);
         }
-        world.gameObjects.forEach(GameObject::scriptUpdate);
-        world.UI.forEach(UIObject::update);
+        if(updateObjects)
+            world.gameObjects.forEach(GameObject::scriptUpdate);
+        if(updateUI)
+            world.UI.forEach(UIObject::update);
     }
 
     public void start(){

@@ -16,20 +16,30 @@ import static org.lwjgl.opengl.GL14.GL_FUNC_ADD;
 import static org.lwjgl.opengl.GL14.glBlendEquation;
 
 public class DefaultPipeline extends Pipeline{
+    public boolean renderObjects = true;
+    public boolean renderUI = true;
+
     @Override
     public void run() {
         Window.getDefaultFramebuffer().clearAndActivate();
+
         updateScene();
-        renderObjects();
+
+        if(renderObjects)
+            renderObjects();
 
         Framebuffer.bindDefault();
 
-        if(Window.doubleRenderPostProcess())
+        if(Window.doubleRenderPostProcess() && renderObjects)
             renderObjects();
 
         postProcess();
-        renderUI();
+
+        if(renderUI)
+            renderUI();
+
         checkWatchers();
+
         runQueuedEvents();
     }
 
@@ -82,7 +92,11 @@ public class DefaultPipeline extends Pipeline{
 
     @Override
     public void runQueuedEvents() {
-        Window.actionQueue.forEach(Runnable::run);
+        while (Window.actionQueue.size()>0){
+            Runnable r = Window.actionQueue.get(0);
+            Window.actionQueue.remove(0);
+            r.run();
+        }
         Window.actionQueue.clear();
     }
 
@@ -94,6 +108,19 @@ public class DefaultPipeline extends Pipeline{
     @Override
     public void checkWatchers() {
         Manager.activeScene().watchers.forEach(Watcher::invoke);
+    }
+
+    public void pushNoUpdateRender(){
+        Window.queueGLFunction(new Runnable() {
+            @Override
+            public void run() {
+                Manager.activeScene().updateUI = false;
+                Manager.activeScene().updateObjects = false;
+                Window.frameStart();
+                Manager.activeScene().updateUI = true;
+                Manager.activeScene().updateObjects = true;
+            }
+        },0);
     }
 
 
