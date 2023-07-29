@@ -7,6 +7,8 @@ public class Delayer implements Serializable {
     private long duration;
     private long startTimestamp;
     private boolean forceTriggerable = false;
+    public boolean autoReset = false;
+
     public Delayer(long durationInMilliseconds){
         this.duration = durationInMilliseconds;
         this.startTimestamp = System.currentTimeMillis();
@@ -30,13 +32,19 @@ public class Delayer implements Serializable {
         if(currTime - startTimestamp >= duration || forceTriggerable){
             triggered = true;
             forceTriggerable = false;
+            if(autoReset)
+                triggered = false;
+
             return true;
         }
         return false;
     }
     public void reset(){
+        reset(false);
+    }
+    public void reset(boolean forceTriggerable){
         triggered = false;
-        forceTriggerable = false;
+        this.forceTriggerable = forceTriggerable;
         startTimestamp = System.currentTimeMillis();
     }
     public void setDuration(long duration)

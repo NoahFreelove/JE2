@@ -2,6 +2,7 @@ package org.JE.JE2.IO.UserInput.Mouse;
 
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
+import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Window.UIHandler;
 import org.JE.JE2.Window.Window;
@@ -181,6 +182,24 @@ public class Mouse {
         worldPos.mul(inverted);
 
         return new Vector2f(worldPos.x(),worldPos.y());
+    }
+
+    public static boolean didClickObject(GameObject gameObject){
+        return didClickObject(Manager.getMainCamera(),gameObject);
+    }
+
+    public static boolean didClickObject(Camera c, GameObject gameObject){
+        Vector2f cursorWorldPos = getMouseWorldPosition2D(c);
+        Vector2f boundMin = gameObject.getTransform().position();
+        Vector2f boundMax = new Vector2f(boundMin);
+        boundMax.add(gameObject.getTransform().scale().x(),gameObject.getTransform().scale().y());
+
+        if(cursorWorldPos.x()< boundMax.x() && cursorWorldPos.x()> boundMin.x()){
+            if(cursorWorldPos.y()< boundMax.y() && cursorWorldPos.y()> boundMin.y()){
+                return true;
+            }
+        }
+        return false;
     }
 
 
