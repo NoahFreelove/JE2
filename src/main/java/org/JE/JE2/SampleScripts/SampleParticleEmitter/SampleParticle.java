@@ -13,6 +13,7 @@ public class SampleParticle extends Particle {
     private float xVelocity = 0f;
     private int rotateDirection = 1;
     private static Filepath fireFilepath = new Filepath("fire.png", true);
+
     public SampleParticle() {
         super(Texture.checkExistElseCreate("fire",-1,fireFilepath, true), Texture.checkExistElseCreate("fire",-1,fireFilepath,true), 2000, true);
         yVelocity = (float) (Math.random() * 3f);

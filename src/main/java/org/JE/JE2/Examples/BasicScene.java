@@ -16,6 +16,7 @@ import org.JE.JE2.Objects.Scripts.Physics.Collision.BoxTrigger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
 import org.JE.JE2.Objects.Scripts.Physics.Collision.TriggerEvent;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.TemporaryParticleEmitter;
 import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Debug.QuickDebugUI;
@@ -212,9 +213,10 @@ public class BasicScene {
     }
 
     private static void addParticles(Scene scene) {
-        SampleEmitter pe = new SampleEmitter(30);
+        //SampleEmitter pe = new SampleEmitter(30);
         GameObject emitterObject = new GameObject();
         emitterObject.getTransform().translateY(-1);
+        TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
         emitterObject.addScript(pe);
         scene.add(emitterObject);
     }

@@ -21,7 +21,9 @@ public class ParticleEmitter extends SpriteRenderer {
     public int layer;
     public int maxGenerationsPerFrame = 1;
     private long delayBetweenGenerations = 0L;
-
+    public float randXPos = 2f;
+    public float randYPos = 2f;
+    public float randMagnitude = 2f;
     public ParticleEmitter(Particle particleTemplate, int maxAmount, int layer){
         super(ShaderProgram.spriteShader());
         this.template = particleTemplate;
@@ -91,9 +93,9 @@ public class ParticleEmitter extends SpriteRenderer {
     }
 
     protected void spawnParticle(Particle newParticle){
-        Vector2f randomOffset = new Vector2f((float) Math.random() * 2 - 1, (float) Math.random() * 2 - 1);
+        Vector2f randomOffset = new Vector2f((float) Math.random() * randXPos - 1, (float) Math.random() * randYPos - 1);
         randomOffset.normalize();
-        randomOffset.mul((float) Math.random() * 2f);
+        randomOffset.mul((float) Math.random() * randMagnitude);
         newParticle.setRelativeT(new Transform(randomOffset));
         particles.add(newParticle);
     }

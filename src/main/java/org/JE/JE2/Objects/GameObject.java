@@ -71,6 +71,14 @@ public final class GameObject implements Serializable {
         getTransform().setPosition(x,y);
     }
 
+    public void setPosition(Vector2f pos, float z){
+        getTransform().setPosition(pos.x(),pos.y(),z);
+    }
+    public void setPosition(float x,float y, float z)
+    {
+        getTransform().setPosition(x,y,z);
+    }
+
     public void setScale(Vector2f scale){
         getTransform().setScale(scale);
     }
