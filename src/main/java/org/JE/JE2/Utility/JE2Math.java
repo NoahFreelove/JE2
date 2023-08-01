@@ -35,4 +35,8 @@ public class JE2Math {
     public static float floatExp(float val, int exp){
         return (float) (val* Math.pow(10,exp));
     }
+
+    public static float lerp(int a, int b, float level) {
+        return a + (b-a)*level;
+    }
 }

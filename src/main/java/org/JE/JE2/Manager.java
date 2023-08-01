@@ -63,6 +63,14 @@ public class Manager {
         s.start();
     }
 
+    public static void setScene(Scene s, Runnable postFirstFrame){
+        activeScene.unload(activeScene, s);
+        activeScene = s;
+        s.start();
+        Window.newScene = true;
+        Window.firstFrameRunnable = postFirstFrame;
+    }
+
     public static void setScene(int i){
         Scene newScene = buildScenes.get(i);
         activeScene.unload(activeScene, newScene);

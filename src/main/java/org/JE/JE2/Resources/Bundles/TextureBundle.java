@@ -11,16 +11,19 @@ public class TextureBundle extends ResourceBundle{
     private transient ByteBuffer imageData;
 
     private boolean altered = false;
-
+    private final int channels = 4;
+    private final int actualChannels;
     public TextureBundle(){
         imageSize = new Vector2i();
         imageData = BufferUtils.createByteBuffer(1);
+        actualChannels = 0;
     }
 
-    public TextureBundle(Vector2i imageSize, ByteBuffer imageData, Filepath filepath) {
+    public TextureBundle(Vector2i imageSize, ByteBuffer imageData, int actualChannels, Filepath filepath) {
         this.imageSize = imageSize;
         this.imageData = imageData;
         this.filepath = filepath;
+        this.actualChannels = actualChannels;
         load();
     }
 
@@ -54,6 +57,10 @@ public class TextureBundle extends ResourceBundle{
             data[i] = imageData.get(i);
         }
         return data;
+    }
+
+    public int getChannels() {
+        return channels;
     }
 
     @Override

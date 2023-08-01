@@ -47,6 +47,12 @@ public class Texture implements Serializable {
         return checkExistElseCreate(name, ID, filepath, filepath.flag_flipTexture);
     }
 
+    public static Texture checkExistElseCreate(String name, Filepath filepath){
+        return checkExistElseCreate(name, -1, filepath, filepath.flag_flipTexture);
+    }
+    public static Texture checkExistElseCreate(String name, Filepath filepath, boolean flip){
+        return checkExistElseCreate(name, -1, filepath, flip);
+    }
 
         public static Texture checkExistElseCreate(String name, int ID, Filepath filepath, boolean flip){
         //System.out.println("warming up: " + bytePath);
@@ -78,6 +84,12 @@ public class Texture implements Serializable {
      */
     public static Texture get(String name){
         return new Texture((Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, -1), false);
+    }
+
+    public static Texture createTextureFromBytes(String name, TextureBundle tb){
+        Resource<TextureBundle> newResource = new Resource<>(tb, name,-1);
+        ResourceManager.indexResource(newResource);
+        return new Texture(newResource, true);
     }
 
 
@@ -129,7 +141,7 @@ public class Texture implements Serializable {
                 Logger.log(new ImageProcessError("Invalid Filepath: null"));
                 imageData = BufferUtils.createByteBuffer(1);
                 imageSize = new Vector2i(1,1);
-                return new TextureBundle(imageSize,imageData,filepath);
+                return new TextureBundle(imageSize,imageData,0,filepath);
             }
 
             IntBuffer widthBuf = BufferUtils.createIntBuffer(1);
@@ -147,27 +159,13 @@ public class Texture implements Serializable {
                 imageData = image;
                 Logger.log(new ImageProcessError("Failed to load image: " + STBImage.stbi_failure_reason() + "\nbytes:" + data.length));
 
-                return new TextureBundle(new Vector2i(),imageData,filepath);
+                return new TextureBundle(new Vector2i(),imageData,0,filepath);
             }
             image.flip();
             imageData = image;
             imageSize = new Vector2i(widthBuf.get(), heightBuf.get());
-            return new TextureBundle(imageSize,imageData,filepath);
-        }
-
-        static TextureBundle generateSolidColorImage(Vector2i size, int color){
-            Vector2i imageSize;
-            ByteBuffer imageData;
-            imageSize = size;
-            imageData = BufferUtils.createByteBuffer(size.x * size.y * 4);
-            for (int i = 0; i < size.x * size.y; i++) {
-                imageData.put((byte) ((color >> 16) & 0xFF));
-                imageData.put((byte) ((color >> 8) & 0xFF));
-                imageData.put((byte) (color & 0xFF));
-                imageData.put((byte) ((color >> 24) & 0xFF));
-            }
-            imageData.flip();
-            return new TextureBundle(imageSize,imageData,Filepath.empty());
+            int channels = channelsBuf.get();
+            return new TextureBundle(imageSize,imageData,channels,filepath);
         }
     }
 

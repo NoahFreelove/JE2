@@ -17,7 +17,7 @@ public class ImageButton extends UIElement {
     public Runnable onClickEvent = () -> {};
     public NkImage img = NkImage.create();
     private Texture texture;
-    private NkRect rect = NkRect.create();
+
     public int sizeX;
     public int sizeY;
     public static NkImage empty = NkImage.create();
@@ -37,28 +37,22 @@ public class ImageButton extends UIElement {
         sizeY = texture.resource.getBundle().getImageSize().y();
     }
 
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
     @Override
     protected void render() {
         nk_image_id(texture.resource.getID(), img);
-        /*nk_layout_row_template_begin(UIHandler.nuklearContext, sizeY* UIScaler.MULTIPLIERY);
-        nk_layout_row_template_push_static(UIHandler.nuklearContext, sizeX* UIScaler.MULTIPLIERX);
-        nk_layout_row_template_end(UIHandler.nuklearContext);*/
         nuklearContext.style().button().normal().data().color().set(style.normalColor.nkColor());
         nuklearContext.style().button().hover().data().color().set(style.hoverColor.nkColor());
         nuklearContext.style().button().active().data().color().set(style.pressedColor.nkColor());
 
-        if(!isActive()){
-            if (nk_button_image(nuklearContext, empty)) {
-                if (isActive())
-                    onClickEvent.run();
-            }
+        if (nk_button_image(nuklearContext, img)) {
+            if (isActive())
+                onClickEvent.run();
         }
-        else {
-            if (nk_button_image(nuklearContext, img)) {
-                if (isActive())
-                    onClickEvent.run();
-            }
-        }
+
         nuklearContext.style().clear();
 
     }

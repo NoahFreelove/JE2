@@ -68,6 +68,9 @@ public final class Window {
     private static Framebuffer defaultFramebuffer;
     private static final ShaderProgram defaultPostProcessShader;
 
+    public static boolean newScene = false;
+    public static Runnable firstFrameRunnable = () -> {};
+
     static {
         defaultPostProcessShader = new ShaderProgram(PostProcessRegistry.defaultShaderModule);
     }
@@ -298,6 +301,12 @@ public final class Window {
         }
 
         Time.setDeltaTime((float)deltaTime);
+
+        if(newScene)
+        {
+            newScene = false;
+            firstFrameRunnable.run();
+        }
     }
 
     public static void onPreferenceUpdated(WindowPreferences wp){

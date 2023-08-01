@@ -4,7 +4,6 @@ import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
-import org.JE.JE2.Objects.Audio.AudioSourcePlayer;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad;
@@ -20,16 +19,15 @@ import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.TemporaryPart
 import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Debug.QuickDebugUI;
-import org.JE.JE2.Rendering.Debug.RenderColoredArea;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Rendering.TextureUtils;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
-import org.JE.JE2.SampleScripts.SampleParticleEmitter.SampleEmitter;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIElements.Group;
 import org.JE.JE2.UI.UIElements.Label;
@@ -38,7 +36,6 @@ import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIElements.UIImage;
 import org.JE.JE2.UI.UIObjects.UIWindow;
-import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.ForceNonNull;
 import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
@@ -76,8 +73,12 @@ public class BasicScene {
                 });
 
         GameObject player = GameObject.Sprite(ShaderProgram.spriteShader(),
-                Texture.get("PlayerTexture"),
+                Texture.get("fire"),
                 Texture.get("PlayerNormal"));
+
+        Texture newText = TextureUtils.saturateTexture(Texture.checkExistElseCreate("fire",new Filepath("fire.png",true)), "playerTint", 1f);
+        player.getSpriteRenderer().setTexture(newText);
+
         addParticles(scene);
 
         Camera playerCam = new Camera();
@@ -107,7 +108,7 @@ public class BasicScene {
             @Override
             public void invoke(int key, int mods) {
                 if(Keyboard.nameToCode("4") == key){
-                    player.getTransform().setPosition(0,0);
+
                 }
                 if(Keyboard.nameToCode("1") == key){
                     tr.reset();

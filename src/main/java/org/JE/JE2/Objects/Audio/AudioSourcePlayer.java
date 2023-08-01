@@ -3,7 +3,9 @@ package org.JE.JE2.Objects.Audio;
 import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.AudioBundle;
+import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.Resource;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.Scene.Scene;
@@ -39,6 +41,10 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
         AudioSourcePlayer asp = checkExistElseCreate("",-1,fp);
         asp.getAudioResource().setName(name);
         return asp;
+    }
+
+    public static AudioSourcePlayer get(String name){
+        return new AudioSourcePlayer((Resource<AudioBundle>) ResourceManager.getIfExists(AudioBundle.class, name, -1), false);
     }
 
     public void play(boolean playOnNextSceneLoad){
