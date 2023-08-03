@@ -3,7 +3,7 @@ package org.JE.JE2.Rendering.Debug;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Renderers.Renderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.Utility.JE2Math;
 import org.joml.Vector2f;

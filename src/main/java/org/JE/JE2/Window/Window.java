@@ -44,7 +44,7 @@ public final class Window {
     private static int height;
     private static int monitorWidth;
     private static int monitorHeight;
-    public static final CopyOnWriteArrayList<Runnable> actionQueue = new CopyOnWriteArrayList<>();
+    private static final CopyOnWriteArrayList<GLAgent> actionQueue = new CopyOnWriteArrayList<>();
     public static final CopyOnWriteArrayList<Thread> fileDialogs = new CopyOnWriteArrayList<>();
     private static Thread glThread;
     private static ThreadLocal<Boolean> isGLThread;
@@ -310,7 +310,7 @@ public final class Window {
     }
 
     public static void onPreferenceUpdated(WindowPreferences wp){
-        actionQueue.add(() -> {
+        queueGLFunction(() -> {
             glfwSetWindowSize(windowHandle, wp.windowSize.x(), wp.windowSize.y());
             glfwSetWindowTitle(windowHandle, wp.windowTitle);
             glfwSetWindowAttrib(windowHandle, GLFW_RESIZABLE, (wp.windowResizable? 1:0));
@@ -325,12 +325,27 @@ public final class Window {
      * Equivalent to the JavaFX Platform.runLater() method. But way cooler.
      * @param r The runnable to be executed on the main thread.
      */
-    public static void queueGLFunction(Runnable r) {
-        actionQueue.add(r);
+    public static GLAgent queueGLFunction(Runnable r) {
+        GLAgent actionAgent = new GLAgent(r);
+        actionQueue.add(actionAgent);
+        actionAgent.updateStatus(GLAgent.QUEUED);
+        return actionAgent;
     }
 
-    public static void queueGLFunction(Runnable r, int priority) {
-        actionQueue.add(priority,r);
+    public static void runQueuedEvents(){
+        while (!Window.actionQueue.isEmpty()){
+            GLAgent agent = Window.actionQueue.get(0);
+            agent.updateStatus(GLAgent.IN_PROGRESS);
+            Window.actionQueue.remove(0);
+            agent.PROCESS().run();
+            agent.updateStatus(GLAgent.COMPLETED);
+        }
+    }
+
+    public static GLAgent queueGLFunction(Runnable r, int priority) {
+        GLAgent actionAgent = new GLAgent(r);
+        actionQueue.add(priority, actionAgent);
+        return actionAgent;
     }
 
     public static long handle()
@@ -404,7 +419,7 @@ public final class Window {
     }
 
     public static void setWindowIcon(Texture texture){
-        actionQueue.add(() -> {
+        queueGLFunction(() -> {
             GLFWImage image = GLFWImage.malloc();
             image.set(texture.resource.getBundle().getImageSize().x, texture.resource.getBundle().getImageSize().y, texture.resource.getBundle().getImageData());
             GLFWImage.Buffer imageBuffer = GLFWImage.malloc(1);

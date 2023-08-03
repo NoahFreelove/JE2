@@ -57,31 +57,29 @@ public class BasicScene {
                         "PlayerTexture",
                         "PlayerNormal",
                         "floor",
-                        "fire"
+                        "fire",
                 },
                 new Filepath[]{
                         new Filepath("texture1.png", true),
                         new Filepath("texture1_N.png", true),
                         new Filepath("texture2.png", true),
-                        new Filepath("fire.png", true)
+                        new Filepath("fire.png", true),
                 },
-                new Class[]{
-                        TextureBundle.class,
-                        TextureBundle.class,
-                        TextureBundle.class,
-                        TextureBundle.class
-                });
+                TextureBundle.class);
+
+        /*Texture newText = TextureUtils.saturateTexture(Texture.checkExistElseCreate("fire",new Filepath("fire.png",true)), "playerTint", 1f);
+        player.getSpriteRenderer().setTexture(newText);*/
 
         GameObject player = GameObject.Sprite(ShaderProgram.spriteShader(),
-                Texture.get("fire"),
+                Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
-
-        Texture newText = TextureUtils.saturateTexture(Texture.checkExistElseCreate("fire",new Filepath("fire.png",true)), "playerTint", 1f);
-        player.getSpriteRenderer().setTexture(newText);
-
-        addParticles(scene);
-
         Camera playerCam = new Camera();
+
+        //addParticles(scene);
+
+        scene.add(GameObject.Sprite(ShaderProgram.spriteShader(), Texture.get("PlayerNormal")));
+
+        //addParticles(scene);
 
         /*asp.setExternalScriptBehaviourPost(new ILambdaScript() {
             @Override
@@ -130,6 +128,7 @@ public class BasicScene {
         pl.addScript(new ILambdaScript() {
             @Override
             public void update(GameObject parent) {
+                parent.setPosition(player.getTransform().position());
                 if(Keyboard.isKeyPressed(Keyboard.nameToCode("LEFT")))
                 {
                     parent.getTransform().translateX(-5f * Time.deltaTime());

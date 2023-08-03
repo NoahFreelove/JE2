@@ -1,6 +1,5 @@
-package org.JE.JE2.Rendering.VertexBuffers;
+package org.JE.JE2.Rendering.Renderers.VertexBuffers;
 
-import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector2f;
 
 public class VAO2f extends VAO {
@@ -19,6 +18,9 @@ public class VAO2f extends VAO {
     }
    public VAO2f(VAO2f vao){
         this.vertices = new Vector2f[vao.getVertices().length];
+       for (int i = 0; i < vao.getVertices().length; i++) {
+           this.vertices[i] = new Vector2f(vao.getVertices()[i]);
+       }
         this.data = dataConversion();
         dataSize = 2;
         QueueGenerateBuffers();
@@ -52,10 +54,14 @@ public class VAO2f extends VAO {
 
     @Override
     protected float[] dataConversion(){
-        float[] data = new float[vertices.length * 2];
-        for(int i = 0; i < vertices.length; i++){
-            data[i*2] = vertices[i].x;
-            data[i*2+1] = vertices[i].y;
+        return vec2fToFloat(vertices);
+    }
+
+    public static float[] vec2fToFloat(Vector2f[] arr){
+        float[] data = new float[arr.length * 2];
+        for(int i = 0; i < arr.length; i++){
+            data[i*2] = arr[i].x;
+            data[i*2+1] = arr[i].y;
         }
         return data;
     }

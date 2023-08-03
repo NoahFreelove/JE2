@@ -1,15 +1,10 @@
 package org.JE.JE2.Window;
 
 import org.JE.JE2.Manager;
-import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Renderers.FramebufferRenderer;
-import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
-import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
+import org.JE.JE2.Rendering.Renderers.Renderer;
 import org.JE.JE2.Utility.Watcher;
-import org.joml.Vector2f;
-import org.joml.Vector2i;
-import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.GL_FUNC_ADD;
@@ -56,11 +51,13 @@ public class DefaultPipeline extends Pipeline{
             if(!gameObject.active())
                 return;
 
-            if(gameObject.getRenderer() != null)
+            Renderer r = gameObject.getRenderer();
+
+            if(r != null)
             {
-                if(!gameObject.getRenderer().getActive())
+                if(!r.getActive())
                     return;
-                gameObject.getRenderer().Render(gameObject.getTransform(),0,gameObject.getLayer(),Manager.getMainCamera());
+                r.requestRender(Manager.getMainCamera());
             }
         });
         //GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
@@ -92,12 +89,7 @@ public class DefaultPipeline extends Pipeline{
 
     @Override
     public void runQueuedEvents() {
-        while (Window.actionQueue.size()>0){
-            Runnable r = Window.actionQueue.get(0);
-            Window.actionQueue.remove(0);
-            r.run();
-        }
-        Window.actionQueue.clear();
+        Window.runQueuedEvents();
     }
 
     @Override

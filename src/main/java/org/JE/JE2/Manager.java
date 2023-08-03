@@ -5,6 +5,7 @@ import org.JE.JE2.Scene.SceneLoading.LoadingSequence;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.Time;
+import org.JE.JE2.Window.GLAgent;
 import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowCloseReason;
 import org.JE.JE2.Window.WindowPreferences;
@@ -91,13 +92,8 @@ public class Manager {
         initiateLoadingSequence(sequence);
     }
 
-    public static void queueGLFunction(Runnable r){
-        Window.queueGLFunction(r);
-    }
-    public static void queueGLFunction(Runnable r, boolean jk){
-        if(jk)
-            return;
-        Window.queueGLFunction(r);
+    public static GLAgent queueGLFunction(Runnable r){
+        return Window.queueGLFunction(r);
     }
     public static Scene activeScene(){return activeScene;}
 

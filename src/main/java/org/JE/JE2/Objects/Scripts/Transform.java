@@ -1,12 +1,10 @@
 package org.JE.JE2.Objects.Scripts;
 
 import org.JE.JE2.Annotations.ActPublic;
-import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.jbox2d.common.Vec2;
-import org.joml.*;
-
-import java.lang.Math;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class Transform extends Script {
 
@@ -209,12 +207,6 @@ public class Transform extends Script {
         setRestrictions(new ScriptRestrictions(false,false,false));
     }
 
-    public void set(Transform transform) {
-        setPosition(transform.position());
-        setRotation(transform.rotation());
-        setScale(transform.scale());
-    }
-
     public Transform relativeAdd(Transform other){
         this.translate(other.position());
         this.setRotation(rotation().add(other.rotation()));
@@ -222,8 +214,22 @@ public class Transform extends Script {
         return this;
     }
 
+    public Transform relativeSub(Transform other){
+        this.translate(other.position().negate());
+        this.setRotation(rotation().sub(other.rotation()));
+        this.setScale(scale().div(other.scale()));
+        return this;
+    }
+
     public Transform copy() {
         return new Transform(new Vector2f(position2d),new Vector3f(rotation),new Vector2f(scale2d));
+    }
+
+    public Transform set(Transform other){
+        this.position.set(other.position);
+        this.rotation.set(other.rotation);
+        this.scale.set(other.scale);
+        return this;
     }
 
     @Override

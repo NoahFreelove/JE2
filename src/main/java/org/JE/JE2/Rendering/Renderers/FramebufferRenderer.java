@@ -4,7 +4,7 @@ import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -13,9 +13,7 @@ public class FramebufferRenderer {
     private Framebuffer fb;
     private ShaderProgram sp;
     private final SpriteRenderer postProcessor = new SpriteRenderer();
-    private final GameObject empty;
     public FramebufferRenderer(Framebuffer buffer, ShaderProgram shader){
-        empty = new GameObject();
         VAO2f screenQuadVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0, 0),
                 new Vector2f(1, 0),
@@ -46,6 +44,6 @@ public class FramebufferRenderer {
     }
 
     public void Render(){
-        postProcessor.Render(empty.getTransform(),0,0, Manager.getMainCamera());
+        postProcessor.requestRender(Manager.getMainCamera());
     }
 }

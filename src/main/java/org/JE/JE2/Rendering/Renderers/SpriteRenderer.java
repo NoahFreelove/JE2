@@ -1,52 +1,63 @@
 package org.JE.JE2.Rendering.Renderers;
 
-import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.Shaders.Uniforms.UniformInt;
 import org.JE.JE2.Rendering.Texture;
-import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
-import org.JE.JE2.Resources.DataLoader;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 
+import static org.lwjgl.opengl.GL11C.GL_TRIANGLE_FAN;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer {
-
-    @HideFromInspector
-    private VAO2f spriteCoordVAO;
-
-    private transient Texture texture = new Texture();
-
-    private transient Texture normal = new Texture();
+    TextureSegment[] textureSegments = new TextureSegment[0];
 
     public SpriteRenderer() {
-        spriteCoordVAO = new VAO2f(new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(1,1),
-                new Vector2f(0,1)
-        });
-        shaderProgram = ShaderProgram.spriteShader();
+        this(ShaderProgram.spriteShader());
     }
 
     public SpriteRenderer(ShaderProgram shader){
-        spriteCoordVAO = new VAO2f(new Vector2f[]{
+        VAO2f spriteCoordVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         });
-        this.shaderProgram = shader;
-        vao = spriteCoordVAO;
+        shaderProgram = shader;
+        textureSegments = new TextureSegment[1];
+        textureSegments[0] = new TextureSegment(spriteCoordVAO, new Transform(), GL_TRIANGLE_FAN, new Texture(),new Texture());
+
+    }
+
+    @Override
+    public void requestRender(Camera camera) {
+        for (TextureSegment ts : textureSegments) {
+            RenderTextureSegment(ts,camera);
+        }
+    }
+
+    private void RenderTextureSegment(TextureSegment seg, Camera c){
+        if(shaderProgram == null)
+            return;
+        if (!shaderProgram.use() || !getActive())
+            return;
+
+        if(seg.getTexture().activateTexture(GL_TEXTURE0)) {
+            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Texture"), 0);
+            shaderProgram.setUniform2f("JE_TextureSize", seg.getTexture().resource.getBundle().getImageSize().x, seg.getTexture().resource.getBundle().getImageSize().y);
+        }
+
+        if(seg.getTexture().activateTexture(GL_TEXTURE1))
+            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
+
+        seg.getVao().Enable(1); super.Render(seg,c); seg.getVao().Disable();
     }
 
     @Override
@@ -64,52 +75,32 @@ public class SpriteRenderer extends Renderer {
 
     }
 
-    @Override
-    @GLThread
-    public void Render(Transform t, int additionalBufferSize, int layer, Camera camera){
-        if(shaderProgram == null)
-            return;
-        if (!shaderProgram.use() || !getActive())
-            return;
-
-        if(texture.activateTexture(GL_TEXTURE0)) {
-            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Texture"), 0);
-            shaderProgram.setUniform2f("JE_TextureSize", texture.resource.getBundle().getImageSize().x, texture.resource.getBundle().getImageSize().y);
-        }
-
-        if(normal.activateTexture(GL_TEXTURE1))
-            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
-
-        spriteCoordVAO.Enable(1); super.Render(t,0, layer, camera); spriteCoordVAO.Disable();
-    }
-
     public void setTexture(Texture texture){
-        setTexture(texture, spriteCoordVAO.getVertices(), true);
+        if(textureSegments.length == 1)
+            setTexture(texture, textureSegments[0]);
     }
 
     public void setNormalTexture(Texture texture) {
-        this.normal = texture;
+        if(textureSegments.length == 1)
+            setNormalTexture(texture, textureSegments[0]);
     }
 
-    public void setTexture(Texture texture, Vector2f[] textCoords, boolean softSet) {
-        this.texture = texture;
-        if(softSet) return;
-        Runnable r = () ->{
-            spriteCoordVAO.setVertices(textCoords);
-        };
-        Manager.queueGLFunction(r);
+    public void setNormalTexture(Texture texture, TextureSegment seg){
+        seg.setNormal(texture);
     }
 
-    public VAO2f getSpriteVAO(){return spriteCoordVAO;}
+    public void setTexture(Texture texture, TextureSegment seg) {
+        seg.setTexture(texture);
+    }
+
 
     public void setSpriteVAO(VAO2f vao){
-        this.spriteCoordVAO = vao;
-        this.vao = vao;
+        textureSegments[0].setVao(vao);
     }
 
-    public Texture getTexture(){ return texture; }
+    public Texture getTexture(){ return textureSegments[0].getTexture(); }
 
-    public Texture getNormalTexture(){ return normal; }
+    public Texture getNormalTexture(){ return textureSegments[0].getNormal(); }
 
     /*@Override
     public void load() {
@@ -126,31 +117,11 @@ public class SpriteRenderer extends Renderer {
         setNormalTexture(Texture.checkExistElseCreate(normalTextureName,-1,normalFilepath));
     }*/
 
-    public void customTile(Vector2f scale){
-        spriteCoordVAO.setVertices(new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(1,1),
-                new Vector2f(0,1),
-                new Vector2f(0,0),
-                new Vector2f(scale.x(),0),
-                new Vector2f(scale.x(),scale.y()),
-                new Vector2f(0,scale.y()),
 
-        });
-        this.scale = false;
-    }
 
-    public void defaultTile(){
-        customTile(getAttachedObject().getTransform().scale());
-    }
 
-    public void disableTile(){
-        customTile(new Vector2f(1,1));
-        this.scale = true;
-    }
 
-    public void invalidateTextures(){
+    /*public void invalidateTextures(){
         normal.valid = false;
         normal.forceValidateMode = 2;
         texture.valid = false;
@@ -161,9 +132,14 @@ public class SpriteRenderer extends Renderer {
         normal.forceValidateMode = 1;
         texture.valid = true;
         texture.forceValidateMode = 1;
-    }
+    }*/
 
     public void invalidateShader(){
         setShaderProgram(ShaderProgram.invalidShader());
+    }
+
+
+    public TextureSegment[] getTextureSegments() {
+        return textureSegments;
     }
 }

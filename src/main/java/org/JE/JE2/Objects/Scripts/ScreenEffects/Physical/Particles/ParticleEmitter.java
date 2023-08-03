@@ -5,6 +5,7 @@ import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Rendering.Renderers.RenderSegment;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Utility.Delayer;
@@ -32,44 +33,36 @@ public class ParticleEmitter extends SpriteRenderer {
         particles = new ArrayList<>();
     }
 
-    Transform relative = new Transform();
     ArrayList<Integer> queuedRemovals = new ArrayList<>();
-    @Override
-    public void Render(Transform t, int additionalBuffer, int layer, Camera camera){
-        int i = 0;
 
+    @Override
+    public void requestRender(Camera camera) {
         removeDead();
         generateParticle();
-
-        //System.out.println(particles.size());
-        for (Particle particle : particles) {
-            if(particle == null)
+        int i = 0;
+        for (Particle p : particles) {
+            if(p == null)
                 return;
-            if(!particle.isAlive())
+            if(!p.isAlive())
             {
                 // we cant modify the list while iterating through it
                 queuedRemovals.add(i);
+                i++;
                 continue;
             }
 
-            particle.particleUpdate();
+            p.particleUpdate();
 
-            setTexture(particle.getSprite());
-            setNormalTexture(particle.getSpriteNormal());
 
-            relative.set(getAttachedObject().getTransform());
-            relative.relativeAdd(particle.getRelativeT());
-
-            //System.out.println(particle.getSprite().resource.getID());
-
-            super.Render(relative,0, layer, Manager.getMainCamera());
+            Render(p.getTextSeg(), camera);
             i++;
         }
     }
 
     private void removeDead() {
         queuedRemovals.forEach((integer -> {
-            particles.remove(integer.intValue());
+            if(integer< particles.size())
+                particles.remove(integer.intValue());
         }));
         queuedRemovals.clear();
     }

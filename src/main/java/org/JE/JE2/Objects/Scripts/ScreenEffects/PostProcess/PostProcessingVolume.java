@@ -6,11 +6,9 @@ import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
-import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.JE.JE2.Window.Window;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
@@ -73,7 +71,7 @@ public class PostProcessingVolume extends Script {
         postProcessor.getTexture().resource.getBundle().getImageSize().set(Window.getWidth(),Window.getHeight());
 
         postProcessor.getTexture().resource.setID(framebuffer.getTexture());
-        postProcessor.Render(getAttachedObject().getTransform(),0,getAttachedObject().getLayer(),Manager.getMainCamera());
+        postProcessor.requestRender(Manager.getMainCamera());
     }
 
     private boolean inBounds(){

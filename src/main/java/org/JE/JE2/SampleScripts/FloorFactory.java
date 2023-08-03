@@ -16,7 +16,7 @@ public class FloorFactory {
         GameObject floor = GameObject.Sprite(sp,texture);
         floor.setScale(size);
         floor.setPosition(position);
-        floor.getSpriteRenderer().defaultTile();
+        floor.getSpriteRenderer().getTextureSegments()[0].customTile(size);
         PhysicsBody pb = new PhysicsBody().setMode(BodyType.STATIC);
         pb.defaultFriction = 0;
         floor.addScript(pb);

@@ -12,10 +12,9 @@ public class SampleParticle extends Particle {
     private float yVelocity = 0f;
     private float xVelocity = 0f;
     private int rotateDirection = 1;
-    private static Filepath fireFilepath = new Filepath("fire.png", true);
 
     public SampleParticle() {
-        super(Texture.checkExistElseCreate("fire",-1,fireFilepath, true), Texture.checkExistElseCreate("fire",-1,fireFilepath,true), 2000, true);
+        super(Texture.get("fire"), Texture.get("fire"), 2000, true);
         yVelocity = (float) (Math.random() * 3f);
         xVelocity = (float) (Math.random() * 2f);
         if(Math.random()>0.5f)
@@ -39,9 +38,9 @@ public class SampleParticle extends Particle {
             yVelocity = -4f;
 
         float delta = yVelocity * Time.deltaTime();
-        relativeT.translateY(delta);
-        relativeT.translateX(xVelocity * Time.deltaTime());
-        relativeT.rotateZ(30f * Time.deltaTime()*rotateDirection);
-        relativeT.setScale(0.6f,0.6f);
+        getRelativeT().translateY(delta);
+        getRelativeT().translateX(xVelocity * Time.deltaTime());
+        getRelativeT().rotateZ(30f * Time.deltaTime()*rotateDirection);
+        getRelativeT().setScale(0.6f,0.6f);
     }
 }

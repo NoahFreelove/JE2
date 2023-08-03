@@ -1,6 +1,5 @@
-package org.JE.JE2.Rendering.VertexBuffers;
+package org.JE.JE2.Rendering.Renderers.VertexBuffers;
 
-import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.joml.Vector3f;
 
 public class VAO3f extends VAO{

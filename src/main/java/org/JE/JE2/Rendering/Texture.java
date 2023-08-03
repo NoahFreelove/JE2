@@ -54,7 +54,7 @@ public class Texture implements Serializable {
         return checkExistElseCreate(name, -1, filepath, flip);
     }
 
-        public static Texture checkExistElseCreate(String name, int ID, Filepath filepath, boolean flip){
+    public static Texture checkExistElseCreate(String name, int ID, Filepath filepath, boolean flip){
         //System.out.println("warming up: " + bytePath);
         Resource<TextureBundle> finalRef = (Resource<TextureBundle>) ResourceManager.getIfExists(TextureBundle.class, name, ID);
 
@@ -75,6 +75,10 @@ public class Texture implements Serializable {
         Texture t = checkExistElseCreate("",-1, fp,flip);
         t.resource.setName(name);
         return t;
+    }
+
+    public static Texture createTexture(Resource<TextureBundle> res, boolean newTexture){
+        return new Texture(res,newTexture);
     }
 
     /**

@@ -1,8 +1,7 @@
-package org.JE.JE2.Rendering.VertexBuffers;
+package org.JE.JE2.Rendering.Renderers.VertexBuffers;
 
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Utility.Loadable;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;

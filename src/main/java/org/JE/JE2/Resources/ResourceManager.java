@@ -155,6 +155,7 @@ public class ResourceManager implements Serializable {
     }
 
     @JarSafe
+    // Loads on the main thread, generates ID on game thread.
     public static void warmupAsset(String name, Filepath asset, Class<? extends ResourceBundle> clazz){
         if(clazz== TextureBundle.class)
         {

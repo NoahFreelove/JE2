@@ -5,45 +5,46 @@ import org.JE.JE2.Annotations.EditorEnum;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Material;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.VertexBuffers.VAO;
-import org.JE.JE2.Rendering.VertexBuffers.VAO2f;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer extends Script {
-    @HideFromInspector
-    protected VAO vao = new VAO();
+    protected RenderSegment[] renderSegments = new RenderSegment[0];
     public Material material = new Material();
-    public boolean wireframe = false;
     protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
 
     public Renderer(){
-        vao = new VAO2f(new Vector2f[]{
+        VAO defaultVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
         });
+        renderSegments = new RenderSegment[1];
+        renderSegments[0] = new RenderSegment(defaultVAO, new Transform(), GL_TRIANGLE_FAN);
         shaderProgram = ShaderProgram.defaultShader();
     }
     public Renderer(VAO vao, ShaderProgram sp){
         this.shaderProgram = sp;
-        this.vao = vao;
+        renderSegments = new RenderSegment[1];
+        renderSegments[0] = new RenderSegment(vao, new Transform(), GL_TRIANGLE_FAN);
     }
-
-    @ActPublic
-    protected boolean scale = true;
+    public Renderer (RenderSegment seg, ShaderProgram sp){
+        this.shaderProgram = sp;
+        renderSegments = new RenderSegment[1];
+        renderSegments[0] = seg;
+    }
 
     @ActPublic
     @EditorEnum(values = {"Points", "Lines", "Line Loop", "Line Strip", "Triangles", "Triangle Strip", "Triangle Fan", "Quads", "Quad Strip", "Polygons"})
@@ -65,8 +66,22 @@ public class Renderer extends Script {
     protected void PreRender(){}
 
     @GLThread
-    public void Render(Transform t, int additionalBufferSize, int layer, Camera camera){
-        if(!camera.withinRenderDistance(t.position(),t.scale()))
+    public void requestRender(Camera camera){
+        for (RenderSegment rs :
+                renderSegments) {
+            Render(rs,camera);
+        }
+    }
+
+    Transform adjustedTransform = new Transform();
+    @GLThread
+    protected void Render(RenderSegment seg, Camera camera){
+        Transform segTransform = seg.getRelativeTransform();
+        Transform rootTransform = getAttachedObject().getTransform();
+        adjustedTransform.set(rootTransform);
+        adjustedTransform.relativeAdd(segTransform);
+
+        if(!camera.withinRenderDistance(adjustedTransform.position(),adjustedTransform.scale()))
             return;
 
 
@@ -75,21 +90,21 @@ public class Renderer extends Script {
 
         if(!shaderProgram.use())
             return;
-        setProjections(camera, shaderProgram, t);
-        setPositions(shaderProgram, t);
+        setProjections(camera, shaderProgram, adjustedTransform, seg.scale());
+        setPositions(shaderProgram, adjustedTransform);
         setMaterial(shaderProgram);
 
         shaderProgram.setUniform1i("use_texture", (shaderProgram.supportsTextures? 1 : 0));
 
         if(shaderProgram.supportsLighting)
         {
-            setLighting(layer);
+            setLighting(seg.getLightLayer());
         }
 
-        glPolygonMode(GL_FRONT_AND_BACK, (wireframe ? GL_LINE : GL_FILL));
-
+        glPolygonMode(GL_FRONT_AND_BACK, (seg.isWireframe() ? GL_LINE : GL_FILL));
+        VAO vao = seg.getVao();
         vao.Enable(0);
-        glDrawArrays(drawMode, 0, vao.getData().length + additionalBufferSize);
+        glDrawArrays(drawMode, 0, vao.getData().length + seg.getAdditionalBufferSize());
         vao.Disable();
     }
 
@@ -107,7 +122,7 @@ public class Renderer extends Script {
         shader.setUniform3f("world_rotation", t.rotation());
     }
 
-    private void setProjections(Camera camera, ShaderProgram shader, Transform t) {
+    private void setProjections(Camera camera, ShaderProgram shader, Transform t, boolean scale) {
         shader.setUniformMatrix4f("MVP", camera.MVPOrtho(t,scale).get(BufferUtils.createFloatBuffer(16)));
         shader.setUniformMatrix4f("model", camera.getModel(t,scale).get(BufferUtils.createFloatBuffer(16)));
         shader.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
@@ -145,17 +160,8 @@ public class Renderer extends Script {
         drawMode = mode;
     }
 
-    public VAO getVAO(){return vao;}
-
     @Override
     public void destroy() {
         shaderProgram.destroy();
-    }
-
-    @Override
-    public void load(){
-        super.load();
-        if(vao !=null)
-            vao.load();
     }
 }
