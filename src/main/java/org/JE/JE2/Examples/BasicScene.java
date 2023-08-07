@@ -16,11 +16,14 @@ import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
 import org.JE.JE2.Objects.Scripts.Physics.Collision.TriggerEvent;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.TemporaryParticleEmitter;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
+import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessingVolume;
 import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Debug.QuickDebugUI;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
+import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Rendering.TextureUtils;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
@@ -28,6 +31,7 @@ import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
+import org.JE.JE2.SampleScripts.SampleParticleEmitter.SampleEmitter;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIElements.Group;
 import org.JE.JE2.UI.UIElements.Label;
@@ -76,8 +80,6 @@ public class BasicScene {
         Camera playerCam = new Camera();
 
         //addParticles(scene);
-
-        scene.add(GameObject.Sprite(ShaderProgram.spriteShader(), Texture.get("PlayerNormal")));
 
         //addParticles(scene);
 
@@ -204,19 +206,29 @@ public class BasicScene {
             }
         });
 
+        PostProcessingVolume ppv = new PostProcessingVolume(new Vector2f(1,1));
+        ppv.setScreenShader(new ShaderProgram(PostProcessRegistry.blurShaderModule));
+        //new ShaderProgram(PostProcessRegistry.invertShaderModule)
+        GameObject ppo = new GameObject();
+        ppo.setPosition(2,-1);
+        ppo.addScript(ppv);
+        scene.add(ppo);
+
         //addPhysicsObject(scene, player);
         addFloors(scene);
         createUI(scene);
         scene.add(player);
 
+        //addParticles(scene);
+
         return scene;
     }
 
     private static void addParticles(Scene scene) {
-        //SampleEmitter pe = new SampleEmitter(30);
+        SampleEmitter pe = new SampleEmitter(30);
         GameObject emitterObject = new GameObject();
         emitterObject.getTransform().translateY(-1);
-        TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
+        //TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
         emitterObject.addScript(pe);
         scene.add(emitterObject);
     }
@@ -314,7 +326,7 @@ public class BasicScene {
         pa.setSnapInRange(false);
         pa.setSuccessRange(1.5f);
         go.addScript(pa);
-        scene.add(na.getDebugArea());
+        //scene.add(na.getDebugArea());
     }
 
     private static void addFloors(Scene scene) {

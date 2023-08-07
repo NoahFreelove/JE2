@@ -13,6 +13,7 @@ public class FramebufferRenderer {
     private Framebuffer fb;
     private ShaderProgram sp;
     private final SpriteRenderer postProcessor = new SpriteRenderer();
+    private final GameObject empty = new GameObject();
     public FramebufferRenderer(Framebuffer buffer, ShaderProgram shader){
         VAO2f screenQuadVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0, 0),
@@ -44,6 +45,7 @@ public class FramebufferRenderer {
     }
 
     public void Render(){
-        postProcessor.requestRender(Manager.getMainCamera());
+        postProcessor.getTextureSegments()[0].setRenderDistance(false);
+        postProcessor.requestRender(empty.getTransform(), Manager.getMainCamera());
     }
 }

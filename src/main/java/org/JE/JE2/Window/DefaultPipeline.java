@@ -57,7 +57,7 @@ public class DefaultPipeline extends Pipeline{
             {
                 if(!r.getActive())
                     return;
-                r.requestRender(Manager.getMainCamera());
+                r.requestRender(gameObject.getTransform(), Manager.getMainCamera());
             }
         });
         //GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);

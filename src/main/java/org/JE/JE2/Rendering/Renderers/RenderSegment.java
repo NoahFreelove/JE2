@@ -11,6 +11,8 @@ public class RenderSegment {
     private int lightLayer;
     private int additionalBufferSize;
     private boolean scale = true;
+    private boolean active = true;
+    private boolean renderDistance = true;
 
     public RenderSegment(VAO vao, Transform relativeTransform, int drawMode) {
         this.vao = vao;
@@ -73,5 +75,25 @@ public class RenderSegment {
 
     public void setScale(boolean scale) {
         this.scale = scale;
+    }
+
+    public boolean isScale() {
+        return scale;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean usesRenderDistance() {
+        return renderDistance;
+    }
+
+    public void setRenderDistance(boolean renderDistance) {
+        this.renderDistance = renderDistance;
     }
 }

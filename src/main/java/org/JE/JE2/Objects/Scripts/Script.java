@@ -68,6 +68,15 @@ public class Script implements Serializable, Loadable {
         return parentObject;
     }
 
+    public GameObject linked(){
+        return parentObject;
+    }
+
+    public GameObject parent(){
+        return parentObject;
+    }
+
+
     public void setAttachedObject(GameObject newParent){
         if(parentObject !=null)
             parentObject.removeScript(this);

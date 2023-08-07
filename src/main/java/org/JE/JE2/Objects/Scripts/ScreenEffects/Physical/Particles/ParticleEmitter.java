@@ -31,14 +31,18 @@ public class ParticleEmitter extends SpriteRenderer {
         this.maxAmount = maxAmount;
         this.layer = layer;
         particles = new ArrayList<>();
+        debug = true;
     }
 
     ArrayList<Integer> queuedRemovals = new ArrayList<>();
 
     @Override
-    public void requestRender(Camera camera) {
+    public void requestRender(Transform t, Camera camera) {
+
         removeDead();
+
         generateParticle();
+
         int i = 0;
         for (Particle p : particles) {
             if(p == null)
@@ -54,7 +58,8 @@ public class ParticleEmitter extends SpriteRenderer {
             p.particleUpdate();
 
 
-            Render(p.getTextSeg(), camera);
+
+            RenderTextureSegment(p.getTextSeg(), t, camera);
             i++;
         }
     }

@@ -29,12 +29,7 @@ public class TextureSegment extends RenderSegment{
 
 
     public TextureSegment(Transform relativeTransform, Texture texture, Texture normal) {
-        super(new VAO2f(new VAO2f(new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(1,1),
-                new Vector2f(0,1)
-        })), relativeTransform, GL_TRIANGLE_FAN);
+        super(new VAO2f(squareSpriteVAO), relativeTransform, GL_TRIANGLE_FAN);
         this.texture = texture;
         this.normal = normal;
     }

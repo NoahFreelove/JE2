@@ -33,21 +33,25 @@ public class SpriteRenderer extends Renderer {
         shaderProgram = shader;
         textureSegments = new TextureSegment[1];
         textureSegments[0] = new TextureSegment(spriteCoordVAO, new Transform(), GL_TRIANGLE_FAN, new Texture(),new Texture());
-
     }
 
     @Override
-    public void requestRender(Camera camera) {
+    public void requestRender(Transform t, Camera camera) {
         for (TextureSegment ts : textureSegments) {
-            RenderTextureSegment(ts,camera);
+            if(!ts.isActive())
+                continue;
+            RenderTextureSegment(ts,t,camera);
         }
     }
 
-    private void RenderTextureSegment(TextureSegment seg, Camera c){
+    protected void RenderTextureSegment(TextureSegment seg, Transform t, Camera c){
         if(shaderProgram == null)
             return;
         if (!shaderProgram.use() || !getActive())
             return;
+
+        if(debug)
+            System.out.println("passed shader check");
 
         if(seg.getTexture().activateTexture(GL_TEXTURE0)) {
             glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Texture"), 0);
@@ -57,7 +61,10 @@ public class SpriteRenderer extends Renderer {
         if(seg.getTexture().activateTexture(GL_TEXTURE1))
             glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
 
-        seg.getVao().Enable(1); super.Render(seg,c); seg.getVao().Disable();
+        if(debug)
+            System.out.println("passed texture check");
+
+        seg.getVao().Enable(1); super.Render(seg,t,c); seg.getVao().Disable();
     }
 
     @Override
@@ -96,6 +103,7 @@ public class SpriteRenderer extends Renderer {
 
     public void setSpriteVAO(VAO2f vao){
         textureSegments[0].setVao(vao);
+        renderSegments[0].setVao(vao);
     }
 
     public Texture getTexture(){ return textureSegments[0].getTexture(); }

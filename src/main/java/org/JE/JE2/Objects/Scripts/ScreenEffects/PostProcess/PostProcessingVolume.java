@@ -2,6 +2,7 @@ package org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess;
 
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
+import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
@@ -44,15 +45,16 @@ public class PostProcessingVolume extends Script {
     }
 
     private void init(){
+        postProcessor = new SpriteRenderer(screenShader);
         VAO2f screenQuadVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0, 0),
                 new Vector2f(1, 0),
                 new Vector2f(1, 1),
                 new Vector2f(0, 1)
         });
-        postProcessor.setShaderProgram(screenShader);
-        postProcessor.setSpriteVAO(screenQuadVAO);
+        postProcessor.getRenderSegments()[0].setVao(screenQuadVAO);
         postProcessor.getTexture().valid = true;
+        postProcessor.getTextureSegments()[0].setRenderDistance(false);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class PostProcessingVolume extends Script {
         postProcessor.getTexture().resource.getBundle().getImageSize().set(Window.getWidth(),Window.getHeight());
 
         postProcessor.getTexture().resource.setID(framebuffer.getTexture());
-        postProcessor.requestRender(Manager.getMainCamera());
+        postProcessor.requestRender(getAttachedObject().getTransform(), Manager.getMainCamera());
     }
 
     private boolean inBounds(){

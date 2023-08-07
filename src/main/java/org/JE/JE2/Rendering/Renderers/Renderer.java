@@ -3,7 +3,6 @@ package org.JE.JE2.Rendering.Renderers;
 import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.EditorEnum;
 import org.JE.JE2.Annotations.GLThread;
-import org.JE.JE2.Annotations.HideFromInspector;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Transform;
@@ -23,6 +22,7 @@ public class Renderer extends Script {
     protected RenderSegment[] renderSegments = new RenderSegment[0];
     public Material material = new Material();
     protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
+    public boolean debug = false;
 
     public Renderer(){
         VAO defaultVAO = new VAO2f(new Vector2f[]{
@@ -66,30 +66,42 @@ public class Renderer extends Script {
     protected void PreRender(){}
 
     @GLThread
-    public void requestRender(Camera camera){
-        for (RenderSegment rs :
-                renderSegments) {
-            Render(rs,camera);
+    public void requestRender(Transform t, Camera camera){
+        for (RenderSegment rs : renderSegments) {
+            if(!rs.isActive())
+                continue;
+            Render(rs,t,camera);
         }
     }
 
     Transform adjustedTransform = new Transform();
     @GLThread
-    protected void Render(RenderSegment seg, Camera camera){
+    protected void Render(RenderSegment seg, Transform t, Camera camera){
+
         Transform segTransform = seg.getRelativeTransform();
-        Transform rootTransform = getAttachedObject().getTransform();
-        adjustedTransform.set(rootTransform);
+
+        if(debug)
+            System.out.println("passed attached object check");
+
+        adjustedTransform.set(t);
         adjustedTransform.relativeAdd(segTransform);
 
-        if(!camera.withinRenderDistance(adjustedTransform.position(),adjustedTransform.scale()))
-            return;
-
+        if(seg.usesRenderDistance()){
+            if(!camera.withinRenderDistance(adjustedTransform.position(),adjustedTransform.scale()))
+                return;
+        }
+        if(debug)
+            System.out.println("passed render distance check");
 
         glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
         PreRender();
 
         if(!shaderProgram.use())
             return;
+
+        if(debug)
+            System.out.println("passed second shader check");
+
         setProjections(camera, shaderProgram, adjustedTransform, seg.scale());
         setPositions(shaderProgram, adjustedTransform);
         setMaterial(shaderProgram);
@@ -106,6 +118,9 @@ public class Renderer extends Script {
         vao.Enable(0);
         glDrawArrays(drawMode, 0, vao.getData().length + seg.getAdditionalBufferSize());
         vao.Disable();
+
+        if(debug)
+            System.out.println("passed draw call");
     }
 
     private void setMaterial(ShaderProgram shader) {
@@ -163,5 +178,9 @@ public class Renderer extends Script {
     @Override
     public void destroy() {
         shaderProgram.destroy();
+    }
+
+    public RenderSegment[] getRenderSegments() {
+        return renderSegments;
     }
 }

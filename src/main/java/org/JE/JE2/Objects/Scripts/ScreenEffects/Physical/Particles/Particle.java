@@ -30,8 +30,9 @@ public class Particle {
     }
 
     public Particle clone(Transform t){
-        Particle particle = new Particle(Texture.createTexture(getSprite().resource,false), Texture.createTexture(getSprite().resource,false), lifespan, hasLifespan);
+        Particle particle = new Particle(getSprite(), getSpriteNormal(), lifespan, hasLifespan);
         particle.setRelativeT(t);
+        particle.getTextSeg().setAdditionalBufferSize(particle.getTextSeg().getVao().getData().length);
         return particle;
     }
 
