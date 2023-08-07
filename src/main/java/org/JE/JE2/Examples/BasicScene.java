@@ -81,7 +81,7 @@ public class BasicScene {
 
         //addParticles(scene);
 
-        //addParticles(scene);
+        addParticles(scene);
 
         /*asp.setExternalScriptBehaviourPost(new ILambdaScript() {
             @Override
@@ -219,16 +219,15 @@ public class BasicScene {
         createUI(scene);
         scene.add(player);
 
-        //addParticles(scene);
 
         return scene;
     }
 
     private static void addParticles(Scene scene) {
-        SampleEmitter pe = new SampleEmitter(30);
+        //SampleEmitter pe = new SampleEmitter(30);
         GameObject emitterObject = new GameObject();
         emitterObject.getTransform().translateY(-1);
-        //TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
+        TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
         emitterObject.addScript(pe);
         scene.add(emitterObject);
     }

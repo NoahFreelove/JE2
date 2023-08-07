@@ -19,7 +19,7 @@ public class TextureSegment extends RenderSegment{
     private Texture texture;
     private Texture normal;
 
-    VAO2f vao2fRef; // To limit casting
+    private VAO2f vao2fRef; // To limit casting
     public TextureSegment(VAO2f vao, Transform relativeTransform, int drawMode, Texture texture, Texture normal) {
         super(vao, relativeTransform, drawMode);
         this.vao2fRef = vao;
@@ -29,7 +29,12 @@ public class TextureSegment extends RenderSegment{
 
 
     public TextureSegment(Transform relativeTransform, Texture texture, Texture normal) {
-        super(new VAO2f(squareSpriteVAO), relativeTransform, GL_TRIANGLE_FAN);
+        super(new VAO2f(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        }), relativeTransform, GL_TRIANGLE_FAN);
         this.texture = texture;
         this.normal = normal;
     }
@@ -68,5 +73,9 @@ public class TextureSegment extends RenderSegment{
 
         });
         setScale(false);
+    }
+
+    public VAO2f getVao2fRef() {
+        return vao2fRef;
     }
 }

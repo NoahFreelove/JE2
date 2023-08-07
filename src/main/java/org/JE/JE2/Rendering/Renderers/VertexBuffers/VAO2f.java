@@ -16,6 +16,13 @@ public class VAO2f extends VAO {
         dataSize = 2;
         QueueGenerateBuffers();
     }
+    public VAO2f(Vector2f[] vertices, int pregeneratedBuffer){
+        this.vertices = vertices;
+        this.data = dataConversion();
+        dataSize = 2;
+        if(pregeneratedBuffer > 0)
+            vertexBufferID = pregeneratedBuffer;
+    }
    public VAO2f(VAO2f vao){
         this.vertices = new Vector2f[vao.getVertices().length];
        for (int i = 0; i < vao.getVertices().length; i++) {

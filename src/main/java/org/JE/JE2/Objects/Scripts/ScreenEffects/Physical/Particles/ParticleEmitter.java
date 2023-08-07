@@ -31,7 +31,6 @@ public class ParticleEmitter extends SpriteRenderer {
         this.maxAmount = maxAmount;
         this.layer = layer;
         particles = new ArrayList<>();
-        debug = true;
     }
 
     ArrayList<Integer> queuedRemovals = new ArrayList<>();

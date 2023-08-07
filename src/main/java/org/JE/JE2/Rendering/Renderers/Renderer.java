@@ -14,6 +14,7 @@ import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO;
 import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
 
 import static org.lwjgl.opengl.GL20.*;
@@ -115,8 +116,22 @@ public class Renderer extends Script {
 
         glPolygonMode(GL_FRONT_AND_BACK, (seg.isWireframe() ? GL_LINE : GL_FILL));
         VAO vao = seg.getVao();
-        vao.Enable(0);
+        if(vao.Enable(0))
+        {
+            if(debug)
+                System.out.println("passed vao call");
+        }
+        else{
+            return;
+        }
+        int error = GL11.glGetError();
+
         glDrawArrays(drawMode, 0, vao.getData().length + seg.getAdditionalBufferSize());
+        if (error != GL11.GL_NO_ERROR) {
+            System.out.println("OpenGL Error: " + error);
+        }
+        if(debug)
+            System.out.println("passed vao disable ");
         vao.Disable();
 
         if(debug)

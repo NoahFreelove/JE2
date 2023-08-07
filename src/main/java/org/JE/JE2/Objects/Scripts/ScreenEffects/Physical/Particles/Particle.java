@@ -2,8 +2,11 @@ package org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles;
 
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Renderers.TextureSegment;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.JE.JE2.Rendering.Texture;
 import org.joml.Vector2f;
+
+import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
 
 public class Particle {
     private TextureSegment textSeg;
@@ -16,8 +19,8 @@ public class Particle {
         textSeg = new TextureSegment(relativeT, sprite, spriteNormal);
     }
 
-    public Particle(Texture sprite, Texture spriteNormal, long lifespan, boolean hasLifespan) {
-        this.textSeg = new TextureSegment(new Transform(), sprite, spriteNormal);
+    public Particle(VAO2f vao, Texture sprite, Texture spriteNormal, long lifespan, boolean hasLifespan) {
+        this.textSeg = new TextureSegment(vao, new Transform(), GL_TRIANGLE_FAN, sprite, spriteNormal);
         this.lifespan = lifespan;
         this.timestamp = System.currentTimeMillis() + lifespan;
         this.hasLifespan = hasLifespan;
@@ -30,7 +33,7 @@ public class Particle {
     }
 
     public Particle clone(Transform t){
-        Particle particle = new Particle(getSprite(), getSpriteNormal(), lifespan, hasLifespan);
+        Particle particle = new Particle(getTextSeg().getVao2fRef(), getSprite(), getSpriteNormal(), lifespan, hasLifespan);
         particle.setRelativeT(t);
         particle.getTextSeg().setAdditionalBufferSize(particle.getTextSeg().getVao().getData().length);
         return particle;

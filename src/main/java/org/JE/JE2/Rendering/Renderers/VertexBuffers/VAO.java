@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
 public class VAO implements Serializable, Loadable {
     protected float[] data = {};
-    protected transient int vertexBufferID = 0;
+    protected transient int vertexBufferID = -1;
     protected transient int location;
 
     protected int dataSize = 1;
@@ -28,6 +28,13 @@ public class VAO implements Serializable, Loadable {
     public VAO(float[] data){
         this.data = data;
         QueueGenerateBuffers();
+    }
+
+    public VAO(float[] data, int pregeneratedBuffer){
+        this.data = data;
+        if(pregeneratedBuffer > 0)
+            vertexBufferID = pregeneratedBuffer;
+
     }
 
     public VAO(VAO2f vao)
@@ -74,11 +81,20 @@ public class VAO implements Serializable, Loadable {
     }
 
     @GLThread
-    public void Enable(int location){
+    public boolean Enable(int location){
+        if(vertexBufferID == -1){
+            System.out.println("regenerating buffer");
+            GenerateBuffers();
+        }
+
+        if(vertexBufferID == -1){
+            return false;
+        }
         this.location = location;
         glEnableVertexAttribArray(location);
         glBindBuffer(GL20.GL_ARRAY_BUFFER, vertexBufferID);
         glVertexAttribPointer(location, dataSize, GL_FLOAT, false, 0, 0);
+        return true;
     }
 
     @GLThread

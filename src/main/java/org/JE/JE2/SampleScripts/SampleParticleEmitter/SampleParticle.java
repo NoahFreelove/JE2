@@ -4,8 +4,10 @@ import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.Particle;
 import org.JE.JE2.Objects.Scripts.Transform;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Utility.Time;
+import org.joml.Vector2f;
 
 public class SampleParticle extends Particle {
 
@@ -14,7 +16,12 @@ public class SampleParticle extends Particle {
     private int rotateDirection = 1;
 
     public SampleParticle() {
-        super(Texture.get("fire"), Texture.get("fire"), 2000, true);
+        super(new VAO2f(new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(1,1),
+                new Vector2f(0,1)
+        }), Texture.get("fire"), Texture.get("fire"), 2000, true);
         yVelocity = (float) (Math.random() * 3f);
         xVelocity = (float) (Math.random() * 2f);
         if(Math.random()>0.5f)
