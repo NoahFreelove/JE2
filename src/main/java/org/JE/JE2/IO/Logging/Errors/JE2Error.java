@@ -7,6 +7,10 @@ public class JE2Error extends Exception {
     public JE2Error(){
         super("Unknown Error");
     }
+
+    public JE2Error(Exception e){
+        super(e);
+    }
     public JE2Error(String message){
         super(message);
     }

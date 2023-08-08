@@ -1,9 +1,13 @@
 package org.JE.JE2.Resources;
 
 import org.JE.JE2.Annotations.JarSafe;
+import org.JE.JE2.IO.Filepath;
+import org.JE.JE2.IO.Logging.Errors.JE2Error;
+import org.JE.JE2.IO.Logging.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
@@ -53,17 +57,11 @@ public final class DataLoader {
     @JarSafe
     public static byte[] getClassLoaderBytes(String path){
         try {
-            InputStream stream = DataLoader.class.getResourceAsStream("/" + path);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-            // buffer should be large enough to hold the entire file
-            byte[] buffer = new byte[stream.available() + 1];
-            int length;
-            while ((length = stream.read(buffer)) != -1) {
-                byteArrayOutputStream.write(buffer, 0, length);
+            try (InputStream stream = DataLoader.class.getResourceAsStream("/" + path)) {
+                if(stream == null)
+                    return new byte[0];
+                return getBytesFromStream(stream);
             }
-
-            return byteArrayOutputStream.toByteArray();
         }
         catch (Exception e){
             return new byte[]{};
@@ -74,10 +72,18 @@ public final class DataLoader {
         File f = new File(path);
         if(!f.exists())
             return new byte[0];
-        // Read file to byte array
-        try {
-            InputStream stream = f.toURI().toURL().openStream();
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try (InputStream stream = f.toURI().toURL().openStream()) {
+            return getBytesFromStream(stream);
+        }
+        catch (Exception e){
+            return new byte[]{};
+        }
+    }
+
+    private static byte[] getBytesFromStream(InputStream stream){
+        byte[] arr;
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 
             // buffer should be large enough to hold the entire file
             byte[] buffer = new byte[stream.available() + 1];
@@ -85,12 +91,20 @@ public final class DataLoader {
             while ((length = stream.read(buffer)) != -1) {
                 byteArrayOutputStream.write(buffer, 0, length);
             }
+            arr = byteArrayOutputStream.toByteArray();
+            stream.close();
+        } catch (IOException e) {
+            return new byte[0];
+        }
+        return arr;
+    }
 
-            return byteArrayOutputStream.toByteArray();
+    public static byte[] getBytes(Filepath filepath){
+        if(filepath.isClassLoaderPath){
+            return getClassLoaderBytes(filepath.getPath(true));
         }
-        catch (Exception e){
-            return new byte[]{};
-        }
+        else
+            return getFileData(filepath.getPath(false));
     }
 
     public static String[] readTextFile(String path){
@@ -103,7 +117,7 @@ public final class DataLoader {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logger.log(new JE2Error(e));
         }
         return sb.toString().split("\n");
     }

@@ -65,7 +65,13 @@ public final class ShaderProgram implements Serializable, Loadable {
     }
 
     public static ShaderProgram invalidShader(){
-        return new ShaderProgram();
+        ShaderProgram sp = new ShaderProgram();
+        sp.attemptedCompile = true;
+        sp.attemptedCompile = true;
+        sp.programID = -1;
+        sp.fragmentCompileStatus = false;
+        sp.vertexCompileStatus = false;
+        return sp;
     }
 
     public static ShaderProgram defaultShader(){
@@ -214,6 +220,10 @@ public final class ShaderProgram implements Serializable, Loadable {
             {
                 Logger.log(new ShaderError("Fragment shader did not compile...", vertex, fragment));
             }
+        }
+
+        if(!vertexCompileStatus || !fragmentCompileStatus){
+            return;
         }
 
         programID = glCreateProgram();
