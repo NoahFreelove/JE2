@@ -78,7 +78,7 @@ public class RenderColoredArea {
         return obj;
     }
 
-    private static Vector2f[] generateCircleCoords(int sides){
+    public static Vector2f[] generateCircleCoords(int sides){
         Vector2f[] coords = new Vector2f[sides];
         for(int i = 0; i < sides; i++){
             float angle = (float) (i * 2 * Math.PI / sides);

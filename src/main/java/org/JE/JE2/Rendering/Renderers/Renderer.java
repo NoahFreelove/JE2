@@ -198,4 +198,8 @@ public class Renderer extends Script {
     public RenderSegment[] getRenderSegments() {
         return renderSegments;
     }
+
+    public Material getMaterial() {
+        return material;
+    }
 }

@@ -138,6 +138,11 @@ public class UIWindow extends UIObject {
         isVisible = !isVisible;
     }
 
+    public void setVisibility(boolean vis) {
+        closedFromWindow = true;
+        isVisible = vis;
+    }
+
     public void toggleMinimize() {
         isMinimized = !isMinimized;
         nk_window_collapse(context, name, (isMinimized ? 1 : 0));
@@ -151,6 +156,12 @@ public class UIWindow extends UIObject {
 
     public void setPos(Vector2f pos) {
         this.pos = pos;
+        isCreated = false;
+        reset = true;
+    }
+
+    public void setPos(float x, float y) {
+        this.pos = new Vector2f(x,y);
         isCreated = false;
         reset = true;
     }

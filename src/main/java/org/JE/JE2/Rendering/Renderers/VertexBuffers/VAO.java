@@ -3,6 +3,7 @@ package org.JE.JE2.Rendering.Renderers.VertexBuffers;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Utility.Loadable;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -29,6 +30,7 @@ public class VAO implements Serializable, Loadable {
         this.data = data;
         QueueGenerateBuffers();
     }
+
 
     public VAO(float[] data, int pregeneratedBuffer){
         this.data = data;
