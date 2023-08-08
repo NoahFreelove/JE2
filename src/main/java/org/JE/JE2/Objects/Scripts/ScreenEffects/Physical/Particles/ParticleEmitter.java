@@ -1,16 +1,11 @@
 package org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles;
 
-import org.JE.JE2.IO.Logging.Logger;
-import org.JE.JE2.Manager;
-import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
-import org.JE.JE2.Rendering.Renderers.RenderSegment;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Utility.Delayer;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 
