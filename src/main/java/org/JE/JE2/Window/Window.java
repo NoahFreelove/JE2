@@ -21,6 +21,7 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
 import java.util.Objects;
@@ -214,6 +215,7 @@ public final class Window {
 
         if (caps.OpenGL43) {
             GL43.glDebugMessageControl(GL43.GL_DEBUG_SOURCE_API, GL43.GL_DEBUG_TYPE_OTHER, GL43.GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
+            setupDebugMessageCallback();
         } else if (caps.GL_KHR_debug) {
             KHRDebug.glDebugMessageControl(
                     KHRDebug.GL_DEBUG_SOURCE_API,
@@ -466,4 +468,28 @@ public final class Window {
         else
             return Environment.STANDARD;
     }
+
+    private static GLDebugMessageCallbackI setupDebugMessageCallback() {
+        // Set up a debug callback using GL43.glDebugMessageCallback()
+        GLDebugMessageCallbackI callback = new GLDebugMessageCallback() {
+            @Override
+            public void invoke(int i, int i1, int i2, int i3, int i4, long l, long l1) {
+                String message = MemoryUtil.memUTF8(l);
+                logErrorMessage(i, i1, i2, i3, message);
+            }
+        };
+        GL43.glDebugMessageCallback(callback, MemoryUtil.NULL);
+
+        GL43.glEnable(GL43.GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+        return callback;
+    }
+
+    private static void logErrorMessage(int source, int type, int id, int severity, String message) {
+        //System.out.println("[OpenGL Error] Source: " + source + " | Type: " + type + " | ID: " + id + " | Severity: " + severity);
+        //System.out.println("Error Message: " + message);
+        Logger.log(new JE2Error(message));
+    }
+
+
 }

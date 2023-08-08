@@ -200,7 +200,6 @@ public final class ShaderProgram implements Serializable, Loadable {
     public void createShaderNow(String vertex, String fragment){
         this.vertex = vertex;
         this.fragment = fragment;
-        this.attemptedCompile = true;
         vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
         fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -208,6 +207,8 @@ public final class ShaderProgram implements Serializable, Loadable {
         glShaderSource(fragmentShaderID, fragment);
         glCompileShader(vertexShaderID);
         glCompileShader(fragmentShaderID);
+        this.attemptedCompile = true;
+
         vertexCompileStatus = glGetShaderi(vertexShaderID, GL_COMPILE_STATUS) == 1;
         fragmentCompileStatus = glGetShaderi(fragmentShaderID, GL_COMPILE_STATUS) == 1;
 

@@ -1,6 +1,8 @@
 package org.JE.JE2.IO.Logging;
 
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
+import org.JE.JE2.Utility.RunnableArg;
+import org.JE.JE2.Utility.RunnableGeneric;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
@@ -28,6 +30,10 @@ public class Logger {
 
     private static LogEntry[] logEntries = new LogEntry[1000];
     public static int logEntryIndex = 0;
+
+    private static LogEntry[] errorEntries = new LogEntry[1000];
+    public static int errorEntriesIndex = 0;
+    public static ArrayList<RunnableGeneric<JE2Error>> errorListeners = new ArrayList<>();
 
     public static int DEBUG = 0;
     public static int LOG = 10;
@@ -152,15 +158,15 @@ public class Logger {
     public static void log(JE2Error error, int level){
         if(!masterLog)
             return;
-        if(!logErrors && !quietLog)
+        if(!logErrors)
             return;
         if(logThreshold > level)
             return;
 
-        if(logEntryIndex >= logEntries.length){
-            LogEntry[] newLogEntries = new LogEntry[logEntries.length * 2];
-            System.arraycopy(logEntries, 0, newLogEntries, 0, logEntries.length);
-            logEntries = newLogEntries;
+        if(errorEntriesIndex >= errorEntries.length){
+            LogEntry[] newLogEntries = new LogEntry[errorEntries.length * 2];
+            System.arraycopy(errorEntries, 0, newLogEntries, 0, errorEntries.length);
+            errorEntries = newLogEntries;
         }
         String appendedMessage = "";
         if(showTime){
@@ -174,9 +180,10 @@ public class Logger {
         }
         appendedMessage += error.getMessage();
 
-        logEntries[logEntryIndex] = new LogEntry(appendedMessage, level);
-        logEntryIndex++;
+        errorEntries[errorEntriesIndex] = new LogEntry(appendedMessage, level);
+        errorEntriesIndex++;
 
+        errorListeners.forEach(listener -> listener.invoke(error));
         if(throwErrors)
         {
             throw new RuntimeException(error);

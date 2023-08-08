@@ -1,6 +1,7 @@
 package org.JE.JE2.Examples;
 
 import org.JE.JE2.IO.Filepath;
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
