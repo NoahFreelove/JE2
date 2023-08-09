@@ -94,7 +94,6 @@ public class TextField extends UIElement {
         if(title != null){
             nk_label_colored(UIHandler.nuklearContext, title, NK_TEXT_ALIGN_LEFT, Color.WHITE.nkColor());
         }
-        nk_layout_row_dynamic(UIHandler.nuklearContext, height* UIScaler.BASE_WINDOW_HEIGHT, 1);
 
         prevString = getValue();
 
@@ -103,7 +102,9 @@ public class TextField extends UIElement {
             nk_style_set_font(UIHandler.nuklearContext, style.font.getFont());
         }
 
-        nk_edit_string(UIHandler.nuklearContext, NK_EDIT_FIELD, content, length, maxLength, filter);
+        int options = NK_EDIT_SELECTABLE | NK_EDIT_MULTILINE | NK_EDIT_CLIPBOARD | NK_EDIT_ALLOW_TAB | NK_EDIT_SIG_ENTER | NK_EDIT_AUTO_SELECT | NK_EDIT_ALWAYS_INSERT_MODE | NK_EDIT_CTRL_ENTER_NEWLINE;
+
+        nk_edit_string(UIHandler.nuklearContext, options, content, length, maxLength, filter);
 
         if(!getValue().equals(prevString))
         {

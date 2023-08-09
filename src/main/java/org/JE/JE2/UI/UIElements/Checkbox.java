@@ -69,7 +69,7 @@ public class Checkbox extends UIElement {
         toggle.draw_begin();
         if(isChecked){
             toggle.active().data().color().set(style.pressedColor.nkColor());
-            toggle.normal().data().color().set(style.pressedColor.nkColor());
+            toggle.normal().data().color().set(style.normalColor.nkColor());
             toggle.hover().data().color().set(style.hoverColor.nkColor());
         }
         else {

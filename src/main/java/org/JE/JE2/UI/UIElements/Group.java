@@ -38,4 +38,8 @@ public class Group extends UIElement{
         nk_style_set_font(nuklearContext, UIHandler.default_font.getFont());
         elements.forEach(UIElement::requestRender);
     }
+
+    public UIElement[] getElements() {
+        return elements.toArray(new UIElement[0]);
+    }
 }
