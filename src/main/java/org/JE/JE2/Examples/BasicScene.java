@@ -78,6 +78,12 @@ public class BasicScene {
         GameObject player = GameObject.Sprite(ShaderProgram.spriteShader(),
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
+
+        GameObject child = GameObject.Sprite(ShaderProgram.spriteShader(),
+                Texture.get("PlayerTexture"),
+                Texture.get("PlayerNormal"));
+        child.setPosition(-1,-1);
+        child.setParent(player);
         Camera playerCam = new Camera();
 
         //addParticles(scene);

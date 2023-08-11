@@ -1,6 +1,7 @@
 package org.JE.JE2.Objects.Scripts;
 
 import org.JE.JE2.Annotations.ActPublic;
+import org.JE.JE2.Annotations.PrimarySetter;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.jbox2d.common.Vec2;
 import org.joml.Vector2f;
@@ -22,11 +23,18 @@ public class Transform extends Script {
 
     private transient PhysicsBody physicsBody;
 
+    private TransformRestrictions restrictions = new TransformRestrictions();
+
     public Transform(){
         position = new Vector3f();
         rotation = new Vector3f();
         scale = new Vector3f(1,1,1);
         setRestrictions(new ScriptRestrictions(false,false,false));
+    }
+
+    public Transform(Transform clone){
+        this();
+        this.set(clone);
     }
 
     public Transform(Vector2f pos){
@@ -62,66 +70,87 @@ public class Transform extends Script {
     }
 
     public Vector3f setPosition(Vector2f position){
-        this.position.set(position.x, position.y, this.position.z);
-        update();
-        return this.position;
+        return this.setPosition(position.x(), position.y(), zPos());
     }
 
     public Vector3f setPosition(Vector3f position){
-        position.set(position);
-        update();
-        return position;
+        return this.setPosition(position.x, position.y, position.z);
     }
 
     public Vector3f setPosition(float x, float y){
-        this.position.set(x, y, this.position.z);
-        update();
-        return position;
+        return this.setPosition(x,y,zPos());
     }
 
+    @PrimarySetter
     public Vector3f setPosition(float x, float y, float z){
+        if(restrictions.LOCK)
+            return position3D();
+        if(!restrictions.TRANSLATE_X)
+            x = position.x;
+        if(!restrictions.TRANSLATE_Y)
+            y = position.y;
+        if(!restrictions.TRANSLATE_Z)
+            z = position.z;
+
         this.position.set(x, y, z);
         update();
-        return position;
+        return position3D();
     }
 
     public Vector3f setRotation(Vector3f rotation){
-        this.rotation.set(rotation);
-        update();
-        return this.rotation;
+        return setRotation(rotation.x, rotation.y, rotation.z);
     }
 
+    @PrimarySetter
     public Vector3f setRotation(float x, float y, float z){
+        if(restrictions.LOCK)
+            return rotation();
+        if(!restrictions.ROTATE_X)
+            x = rotation.x;
+        if(!restrictions.ROTATE_Y)
+            y = rotation.y;
+        if(!restrictions.ROTATE_Z)
+            z = rotation.z;
+
         this.rotation.set(x, y, z);
         update();
-        return this.rotation;
+        return this.rotation();
     }
 
     public void rotate(float x, float y, float z){
-        this.rotation.add(x, y, z);
-        update();
+        setRotation(rotation.x + x, rotation.y + y, rotation.z + z);
     }
 
     public void rotateZ(float z){
-        this.rotation.add(0, 0, z);
-        update();
+        setRotation(rotation.x, rotation.y, rotation.z + z);
     }
 
 
     public Vector3f setScale(Vector2f scale){
-        return this.scale.set(scale.x, scale.y, this.scale.z);
+        return this.setScale(scale.x, scale.y, scale3D().z);
     }
 
     public Vector3f setScale(Vector3f scale){
-        return this.scale.set(scale);
+       return this.scale.set(scale.x, scale.y, scale.z);
     }
 
     public Vector3f setScale(float x, float y){
-        return this.scale.set(x, y, this.scale.z);
+        return this.setScale(x, y, scale.z);
     }
 
+    @PrimarySetter
     public Vector3f setScale(float x, float y, float z){
-        return this.scale.set(x, y, z);
+        if(restrictions.LOCK)
+            return scale3D();
+        if(!restrictions.SCALE_X)
+            x = scale.x;
+        if(!restrictions.SCALE_Y)
+            y = scale.y;
+        if(!restrictions.SCALE_Z)
+            z = scale.z;
+
+        this.scale.set(x, y, z);
+        return this.scale3D();
     }
 
     public float zPos()
@@ -135,15 +164,15 @@ public class Transform extends Script {
     }
 
     public void translateX(float x){
-        position.x += x;
+        setPosition(position.x + x, position.y);
     }
 
     public void translateY(float y){
-        position.y += y;
+        setPosition(position.x, position.y + y);
     }
 
     public void translateZ(float z){
-        position.z += z;
+        setPosition(position.x, position.y, position.z + z);
     }
 
     public void translate(Vector2f vec){
@@ -154,6 +183,21 @@ public class Transform extends Script {
         translateX(vec.x());
         translateY(vec.y());
         translateZ(vec.z());
+    }
+
+    public void scale(float x, float y){
+        setScale(scale.x + x, scale.y + y);
+    }
+
+    public void scale(Vector2f vec){
+        scale(vec.x(), vec.y());
+    }
+
+    private void translate(float x, float y, float z) {
+        setPosition(position.x + x, position.y + y, position.z + z);
+    }
+    private void rotate(Vector3f vec) {
+        setRotation(rotation.x + vec.x(), rotation.y + vec.y(), rotation.z + vec.z());
     }
 
     public Vector3f lookAt(Vector2f target){
@@ -221,14 +265,29 @@ public class Transform extends Script {
         return this;
     }
 
+    public Transform sub(Transform other){
+        this.position.sub(other.position3D());
+        this.rotation.sub(other.rotation());
+        this.scale.sub(other.scale3D());
+        return this;
+    }
+
+    private static Transform temp = new Transform();
+    public static Transform anonymousSub(Transform t1, Transform t2){
+        temp.set(t1);
+        temp.relativeSub(t2);
+        return new Transform(temp);
+    }
+
     public Transform copy() {
         return new Transform(new Vector2f(position2d),new Vector3f(rotation),new Vector2f(scale2d));
     }
 
+    @PrimarySetter
     public Transform set(Transform other){
-        this.position.set(other.position);
-        this.rotation.set(other.rotation);
-        this.scale.set(other.scale);
+        setPosition(other.position());
+        setRotation(other.rotation());
+        setScale(other.scale());
         return this;
     }
 
@@ -240,4 +299,24 @@ public class Transform extends Script {
                 ", scale=" + scale +
                 '}';
     }
+
+
+    public static void getDelta(Transform t1, Transform t2, Transform result){
+        result.set(t1);
+        result.sub(t2);
+    }
+
+    public void inheritTransform(Transform delta){
+        if(!restrictions.INHERIT || restrictions.LOCK)
+            return;
+        //System.out.println("Inheriting: " + delta.toString());
+        if(restrictions.INHERIT_POSITION)
+            this.translate(delta.position().negate());
+        if(restrictions.INHERIT_ROTATION)
+            this.rotate(delta.rotation().negate());
+        if(restrictions.INHERIT_SCALE)
+            this.scale(delta.scale().negate());
+    }
+
+
 }

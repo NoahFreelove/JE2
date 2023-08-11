@@ -57,6 +57,7 @@ public final class GameObject implements Serializable {
         Transform t = new Transform();
         t.setRestrictions(new ScriptRestrictions(false,false,false));
         addScript(t);
+        preUpdateTransform.set(getTransform());
     }
 
     public Transform getTransform(){
@@ -176,6 +177,7 @@ public final class GameObject implements Serializable {
         c.destroy();
         return scripts.remove(c);
     }
+    private final Transform preUpdateTransform = new Transform();
     public void scriptUpdate(){
         if(!active)
             return;
@@ -190,6 +192,22 @@ public final class GameObject implements Serializable {
             }
         }
         getTransform().update();
+        propagateToChildren();
+        preUpdateTransform.set(getTransform());
+
+    }
+    private Transform delta = new Transform();
+    private void propagateToChildren(){
+
+        Transform.getDelta(preUpdateTransform, getTransform(), delta);
+
+        if(!children.isEmpty()){
+            //System.out.println("Pre update:" + preUpdateTransform);
+            //System.out.println("Post update:" + getTransform());
+            children.forEach((c)->{
+                c.getTransform().inheritTransform(delta);
+            });
+        }
     }
 
     public void physicsUpdate(){
@@ -207,6 +225,8 @@ public final class GameObject implements Serializable {
     }
 
     public void scriptStart(){
+        preUpdateTransform.set(getTransform());
+
         if(!active)
             return;
         for(Script c : scripts){
