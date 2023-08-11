@@ -1,10 +1,10 @@
 package org.JE.JE2.Rendering.Renderers;
 
 import org.JE.JE2.Objects.Scripts.Transform;
-import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 
 public class RenderSegment {
-    private VAO vao;
+    protected VAO2f vao;
     private Transform relativeTransform;
     private int drawMode;
     private boolean wireframe = false;
@@ -13,15 +13,15 @@ public class RenderSegment {
     private boolean scale = true;
     private boolean active = true;
     private boolean renderDistance = true;
+    protected boolean refuseDestroy = false;
 
-    public RenderSegment(VAO vao, Transform relativeTransform, int drawMode) {
+    public RenderSegment(VAO2f vao, Transform relativeTransform, int drawMode) {
         this.vao = vao;
         this.relativeTransform = relativeTransform;
         this.drawMode = drawMode;
     }
 
-
-    public VAO getVao() {
+    public VAO2f getVao() {
         return vao;
     }
 
@@ -45,7 +45,7 @@ public class RenderSegment {
         return additionalBufferSize;
     }
 
-    public void setVao(VAO vao) {
+    public void setVao(VAO2f vao) {
         this.vao = vao;
     }
 
@@ -95,5 +95,23 @@ public class RenderSegment {
 
     public void setRenderDistance(boolean renderDistance) {
         this.renderDistance = renderDistance;
+    }
+
+    public boolean useRenderDistance() {
+        return renderDistance;
+    }
+
+    public boolean refuseDestroy() {
+        return refuseDestroy;
+    }
+
+    public void setRefuseDestroy(boolean refuseDestroy) {
+        this.refuseDestroy = refuseDestroy;
+    }
+
+    public void destroy() {
+        if(refuseDestroy())
+            return;
+        getVao().destroy();
     }
 }

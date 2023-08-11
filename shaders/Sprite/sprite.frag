@@ -16,7 +16,7 @@ uniform Material material;
 
 void main(){
     if(use_texture == 1){
-        FragColor = texture(JE_Texture, UV);
+        FragColor = texture(JE_Texture, UV) * material.base_color;
     }
     else if (use_texture == 0){
         FragColor = material.base_color;

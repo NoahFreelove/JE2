@@ -11,16 +11,20 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
 public class Particle {
     private TextureSegment textSeg;
     private boolean enabled = true;
-    private long lifespan = 0L;
+    protected long lifespan = 0L;
     private long timestamp = 0L;
-    private boolean hasLifespan = false;
+    protected boolean hasLifespan = false;
 
-    public Particle(Transform relativeT, Texture sprite, Texture spriteNormal) {
-        textSeg = new TextureSegment(relativeT, sprite, spriteNormal);
+
+    public Particle(Vector2f[] shape, Texture sprite, Texture spriteNormal, long lifespan, boolean hasLifespan) {
+        this.textSeg = new TextureSegment(shape, new Transform(), GL_TRIANGLE_FAN, sprite, spriteNormal);
+        this.lifespan = lifespan;
+        this.timestamp = System.currentTimeMillis() + lifespan;
+        this.hasLifespan = hasLifespan;
     }
 
-    public Particle(VAO2f vao, Texture sprite, Texture spriteNormal, long lifespan, boolean hasLifespan) {
-        this.textSeg = new TextureSegment(vao, new Transform(), GL_TRIANGLE_FAN, sprite, spriteNormal);
+    public Particle(TextureSegment clone, long lifespan, boolean hasLifespan) {
+        this.textSeg = new TextureSegment(new VAO2f(clone.getVao()),new VAO2f(clone.getCoords()), new Transform(), GL_TRIANGLE_FAN, clone.getTexture(), clone.getNormal());
         this.lifespan = lifespan;
         this.timestamp = System.currentTimeMillis() + lifespan;
         this.hasLifespan = hasLifespan;
@@ -33,7 +37,7 @@ public class Particle {
     }
 
     public Particle clone(Transform t){
-        Particle particle = new Particle(getTextSeg().getVao2fRef(), getSprite(), getSpriteNormal(), lifespan, hasLifespan);
+        Particle particle = new Particle(getTextSeg(), lifespan, hasLifespan);
         particle.setRelativeT(t);
         particle.getTextSeg().setAdditionalBufferSize(particle.getTextSeg().getVao().getData().length);
         return particle;

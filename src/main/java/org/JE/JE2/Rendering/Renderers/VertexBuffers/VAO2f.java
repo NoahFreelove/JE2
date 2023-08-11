@@ -30,7 +30,7 @@ public class VAO2f extends VAO {
        }
         this.data = dataConversion();
         dataSize = 2;
-        QueueGenerateBuffers();
+        this.vertexBufferID = vao.vertexBufferID;
     }
 
     public void addVertex(Vector2f vertex){

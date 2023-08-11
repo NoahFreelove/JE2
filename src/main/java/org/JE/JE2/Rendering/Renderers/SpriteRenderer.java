@@ -1,14 +1,10 @@
 package org.JE.JE2.Rendering.Renderers;
 
-import org.JE.JE2.Annotations.GLThread;
-import org.JE.JE2.Annotations.HideFromInspector;
-import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
-import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL11C.GL_TRIANGLE_FAN;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
@@ -17,22 +13,18 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer {
-    TextureSegment[] textureSegments = new TextureSegment[0];
+    private TextureSegment[] textureSegments;
 
     public SpriteRenderer() {
         this(ShaderProgram.spriteShader());
+        textureSegments[0] = new TextureSegment(TextureSegment.squareSpritePoints, new Transform(), GL_TRIANGLE_FAN, new Texture(),new Texture());
     }
 
     public SpriteRenderer(ShaderProgram shader){
-        VAO2f spriteCoordVAO = new VAO2f(new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(1,1),
-                new Vector2f(0,1)
-        });
+
         shaderProgram = shader;
         textureSegments = new TextureSegment[1];
-        textureSegments[0] = new TextureSegment(spriteCoordVAO, new Transform(), GL_TRIANGLE_FAN, new Texture(),new Texture());
+        textureSegments[0] = new TextureSegment(TextureSegment.squareSpritePoints, new Transform(), GL_TRIANGLE_FAN, new Texture(),new Texture());
     }
 
     @Override
@@ -61,10 +53,19 @@ public class SpriteRenderer extends Renderer {
         if(seg.getTexture().activateTexture(GL_TEXTURE1))
             glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
 
+        shaderProgram.setUniform2f("tile_factor", seg.getTileFactor());
+
+
         if(debug)
             System.out.println("passed texture check");
 
-        seg.getVao().Enable(1); super.Render(seg,t,c); seg.getVao().Disable();
+
+        seg.getCoords().Enable(1);
+        super.Render(seg,t,c);
+        seg.getTexture().unbindTexture(GL_TEXTURE0);
+        seg.getTexture().unbindTexture(GL_TEXTURE1);
+
+        seg.getCoords().Disable();
     }
 
     @Override
@@ -110,38 +111,6 @@ public class SpriteRenderer extends Renderer {
 
     public Texture getNormalTexture(){ return textureSegments[0].getNormal(); }
 
-    /*@Override
-    public void load() {
-        if(spriteCoordVAO !=null)
-        {
-            shaderProgram.presetIndex = defaultShaderIndex;
-            vao = spriteCoordVAO;
-            spriteCoordVAO.load();
-            vao.load();
-        }
-        super.load();
-
-        setTexture(Texture.checkExistElseCreate(textureName,-1,textureFilepath));
-        setNormalTexture(Texture.checkExistElseCreate(normalTextureName,-1,normalFilepath));
-    }*/
-
-
-
-
-
-    /*public void invalidateTextures(){
-        normal.valid = false;
-        normal.forceValidateMode = 2;
-        texture.valid = false;
-        texture.forceValidateMode = 2;
-    }
-    public void forceValidateTextures(){
-        normal.valid = true;
-        normal.forceValidateMode = 1;
-        texture.valid = true;
-        texture.forceValidateMode = 1;
-    }*/
-
     public void invalidateShader(){
         setShaderProgram(ShaderProgram.invalidShader());
     }
@@ -150,4 +119,30 @@ public class SpriteRenderer extends Renderer {
     public TextureSegment[] getTextureSegments() {
         return textureSegments;
     }
+
+    public TextureSegment getTextureSegment(int index) {
+        return textureSegments[index];
+    }
+
+    public TextureSegment getTextureSegment(){
+        return textureSegments[0];
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        for (TextureSegment ts : textureSegments) {
+            ts.destroy();
+        }
+    }
+
+    public void addTextureSegment(TextureSegment ts) {
+        TextureSegment[] temp = new TextureSegment[textureSegments.length + 1];
+        for (int i = 0; i < textureSegments.length; i++) {
+            temp[i] = textureSegments[i];
+        }
+        temp[temp.length - 1] = ts;
+        textureSegments = temp;
+    }
+
 }

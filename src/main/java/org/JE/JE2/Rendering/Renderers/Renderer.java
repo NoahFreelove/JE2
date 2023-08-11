@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.GL_MAX_ARRAY_TEXTURE_LAYERS;
 
 public class Renderer extends Script {
     protected RenderSegment[] renderSegments = new RenderSegment[0];
@@ -26,7 +27,7 @@ public class Renderer extends Script {
     public boolean debug = false;
 
     public Renderer(){
-        VAO defaultVAO = new VAO2f(new Vector2f[]{
+        VAO2f defaultVAO = new VAO2f(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
                 new Vector2f(1,1),
@@ -36,7 +37,7 @@ public class Renderer extends Script {
         renderSegments[0] = new RenderSegment(defaultVAO, new Transform(), GL_TRIANGLE_FAN);
         shaderProgram = ShaderProgram.defaultShader();
     }
-    public Renderer(VAO vao, ShaderProgram sp){
+    public Renderer(VAO2f vao, ShaderProgram sp){
         this.shaderProgram = sp;
         renderSegments = new RenderSegment[1];
         renderSegments[0] = new RenderSegment(vao, new Transform(), GL_TRIANGLE_FAN);
@@ -115,7 +116,7 @@ public class Renderer extends Script {
         }
 
         glPolygonMode(GL_FRONT_AND_BACK, (seg.isWireframe() ? GL_LINE : GL_FILL));
-        VAO vao = seg.getVao();
+        VAO2f vao = seg.getVao();
         if(vao.Enable(0))
         {
             if(debug)
@@ -126,7 +127,7 @@ public class Renderer extends Script {
         }
         int error = GL11.glGetError();
 
-        glDrawArrays(drawMode, 0, vao.getData().length + seg.getAdditionalBufferSize());
+        glDrawArrays(drawMode, 0, vao.getVertices().length*vao.getDataSize() + seg.getAdditionalBufferSize());
         if (error != GL11.GL_NO_ERROR) {
             System.out.println("OpenGL Error: " + error);
         }
@@ -193,6 +194,9 @@ public class Renderer extends Script {
     @Override
     public void destroy() {
         shaderProgram.destroy();
+        for (RenderSegment renderSegment : renderSegments) {
+            renderSegment.destroy();
+        }
     }
 
     public RenderSegment[] getRenderSegments() {
@@ -201,5 +205,11 @@ public class Renderer extends Script {
 
     public Material getMaterial() {
         return material;
+    }
+
+    public static void getHighestBuffer(){
+        Manager.queueGLFunction(() -> {
+            System.out.println("Highest Buffer " + glGenBuffers());
+        });
     }
 }

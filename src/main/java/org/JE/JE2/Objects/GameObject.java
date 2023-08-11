@@ -173,6 +173,7 @@ public final class GameObject implements Serializable {
             Logger.log(new GameObjectError(this, "Can't Remove Script. This GameObject does not own Script: " + c.getClass().getName()));
             return false;
         }
+        c.destroy();
         return scripts.remove(c);
     }
     public void scriptUpdate(){

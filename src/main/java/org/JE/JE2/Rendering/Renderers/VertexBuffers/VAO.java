@@ -59,9 +59,11 @@ public class VAO implements Serializable, Loadable {
     }
 
     @GLThread
-    private void GenerateBuffers(){
+    private int GenerateBuffers(){
+        Disable();
         vertexBufferID = glGenBuffers();
         changeBuffer();
+        return vertexBufferID;
     }
 
     @GLThread
@@ -74,6 +76,8 @@ public class VAO implements Serializable, Loadable {
         }
         fb.flip();
         glBufferData(GL_ARRAY_BUFFER, fb, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     @GLThread
@@ -85,8 +89,7 @@ public class VAO implements Serializable, Loadable {
     @GLThread
     public boolean Enable(int location){
         if(vertexBufferID == -1){
-            System.out.println("regenerating buffer");
-            GenerateBuffers();
+            System.out.println("regenerating buffer: " + GenerateBuffers());
         }
 
         if(vertexBufferID == -1){
@@ -95,7 +98,7 @@ public class VAO implements Serializable, Loadable {
         this.location = location;
         glEnableVertexAttribArray(location);
         glBindBuffer(GL20.GL_ARRAY_BUFFER, vertexBufferID);
-        glVertexAttribPointer(location, dataSize, GL_FLOAT, false, 0, 0);
+        glVertexAttribPointer(location, dataSize, GL_FLOAT, true, 0, 0);
         return true;
     }
 
@@ -116,5 +119,18 @@ public class VAO implements Serializable, Loadable {
     @Override
     public void load(){
         QueueGenerateBuffers();
+    }
+
+    public void destroy() {
+        glDeleteBuffers(vertexBufferID);
+    }
+
+
+    public int getDataSize() {
+        return dataSize;
+    }
+
+    public int getVertexBufferID() {
+        return vertexBufferID;
     }
 }

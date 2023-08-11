@@ -2,6 +2,7 @@ package org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles;
 
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Rendering.Renderers.Renderer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Utility.Delayer;
@@ -51,8 +52,6 @@ public class ParticleEmitter extends SpriteRenderer {
 
             p.particleUpdate();
 
-
-
             RenderTextureSegment(p.getTextSeg(), t, camera);
             i++;
         }
@@ -61,7 +60,10 @@ public class ParticleEmitter extends SpriteRenderer {
     private void removeDead() {
         queuedRemovals.forEach((integer -> {
             if(integer< particles.size())
+            {
+                particles.get(integer).getTextSeg().destroy();
                 particles.remove(integer.intValue());
+            }
         }));
         queuedRemovals.clear();
     }
@@ -90,5 +92,11 @@ public class ParticleEmitter extends SpriteRenderer {
         randomOffset.mul((float) Math.random() * randMagnitude);
         newParticle.setRelativeT(new Transform(randomOffset));
         particles.add(newParticle);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        template.getTextSeg().destroy();
     }
 }

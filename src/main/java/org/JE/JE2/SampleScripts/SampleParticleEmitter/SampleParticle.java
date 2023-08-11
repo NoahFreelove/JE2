@@ -4,6 +4,8 @@ import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.Particle;
 import org.JE.JE2.Objects.Scripts.Transform;
+import org.JE.JE2.Rendering.Renderers.RenderSegment;
+import org.JE.JE2.Rendering.Renderers.TextureSegment;
 import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Utility.Time;
@@ -16,12 +18,12 @@ public class SampleParticle extends Particle {
     private int rotateDirection = 1;
 
     public SampleParticle() {
-        super(new VAO2f(new Vector2f[]{
+        super(new Vector2f[]{
                 new Vector2f(0,0),
                 new Vector2f(1,0),
                 new Vector2f(1,1),
                 new Vector2f(0,1)
-        }), Texture.get("fire"), Texture.get("fire"), 2000, true);
+        }, Texture.get("fire"), Texture.get("fire"), 2000, true);
         yVelocity = (float) (Math.random() * 3f);
         xVelocity = (float) (Math.random() * 2f);
         if(Math.random()>0.5f)
@@ -29,11 +31,17 @@ public class SampleParticle extends Particle {
             xVelocity*=-1;
             rotateDirection = -1;
         }
+        getTextSeg().setRefuseDestroy(false);
+    }
+
+    public SampleParticle(TextureSegment base, long duration, boolean destroy){
+        super(base, duration, destroy);
     }
 
     @Override
     public Particle clone(Transform t) {
-        SampleParticle particle = new SampleParticle();
+        SampleParticle particle = new SampleParticle(getTextSeg(), lifespan, hasLifespan);
+        particle.getTextSeg().setRefuseDestroy(true);
         particle.setRelativeT(t);
         return particle;
     }

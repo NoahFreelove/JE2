@@ -54,15 +54,15 @@ public class Script implements Serializable, Loadable {
 
     public boolean getActive(){return active;}
 
-    public void update(){}
-    public void postRender(){}
-    public void start(){}
-    public void awake(){}
-    public void unload(Scene oldScene, Scene newScene){}
-    public void destroy(){}
-    public void onForeignScriptAdded(Script script){}
-    public void onAddedToGameObject(GameObject gameObject){}
-    public void gameObjectAddedToScene(Scene scene){}
+    public void update(){} // Every frame
+    public void postRender(){} // After the scene is rendered
+    public void start(){} // When the scene starts
+    public void awake(){} // When active state is changed to true
+    public void unload(Scene oldScene, Scene newScene){} // When scene is changed
+    public void destroy(){} // When parent is removed from scene or script is removed from parent
+    public void onForeignScriptAdded(Script script){} // When parent has a script added
+    public void onAddedToGameObject(GameObject gameObject){} // When this script is added to a game object
+    public void gameObjectAddedToScene(Scene scene){} // When parent is added to scene
 
     public GameObject getAttachedObject(){
         return parentObject;

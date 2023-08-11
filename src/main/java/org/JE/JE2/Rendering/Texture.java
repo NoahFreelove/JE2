@@ -135,6 +135,11 @@ public class Texture implements Serializable {
         return true;
     }
 
+    public void unbindTexture(int glTexture0) {
+        glActiveTexture(glTexture0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
     private static class TextureProcessor {
 
         static TextureBundle processImage(byte[] data, boolean flip, Filepath filepath){
