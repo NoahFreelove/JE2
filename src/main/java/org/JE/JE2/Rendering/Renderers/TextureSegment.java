@@ -20,10 +20,18 @@ public class TextureSegment extends RenderSegment{
 
     private Vector2f tileFactor = new Vector2f(1,1);
 
-    private VAO2f coords; // To limit casting
+    private VAO2f coords;
     public TextureSegment(Vector2f[] vaoPoints, Transform relativeTransform, int drawMode, Texture texture, Texture normal) {
         super(new VAO2f(vaoPoints), relativeTransform, drawMode);
         this.coords = new VAO2f(vaoPoints);
+        this.texture = texture;
+        this.normal = normal;
+        setAdditionalBufferSize(coords.getVertices().length*coords.getDataSize());
+    }
+
+    public TextureSegment(Vector2f[] vaoPoints, Vector2f[] normalPoints, Transform relativeTransform, int drawMode, Texture texture, Texture normal) {
+        super(new VAO2f(vaoPoints), relativeTransform, drawMode);
+        this.coords = new VAO2f(normalPoints);
         this.texture = texture;
         this.normal = normal;
         setAdditionalBufferSize(coords.getVertices().length*coords.getDataSize());

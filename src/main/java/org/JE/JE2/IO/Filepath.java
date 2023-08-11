@@ -44,6 +44,13 @@ public class Filepath {
             return absolute;
     }
 
+    public String getDefault(){
+        if(isClassLoaderPath)
+            return classLoaderPath;
+        else
+            return absolute;
+    }
+
     public static Filepath empty(){
         return new Filepath("",false);
     }

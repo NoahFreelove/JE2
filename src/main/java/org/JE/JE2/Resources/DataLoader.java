@@ -121,4 +121,8 @@ public final class DataLoader {
         }
         return sb.toString().split("\n");
     }
+
+    public static String[] readTextFile(Filepath path){
+        return readTextFile(path.getDefault());
+    }
 }
