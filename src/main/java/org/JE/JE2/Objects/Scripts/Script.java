@@ -6,8 +6,6 @@ import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Scene.Scene;
-import org.JE.JE2.Utility.Loadable;
-
 import java.io.Serializable;
 
 /**
@@ -19,7 +17,7 @@ import java.io.Serializable;
  You can think of it as a script you attach to your objects.
  Scripts MUST have a default constructor if you want to use *future* JE2 save and load features
  **/
-public class Script implements Serializable, Loadable {
+public class Script implements Serializable {
     @ActPublic
     protected ScriptRestrictions restrictions = new ScriptRestrictions();
     protected ILambdaScript externalScriptBehaviourPre = new ILambdaScript() {};

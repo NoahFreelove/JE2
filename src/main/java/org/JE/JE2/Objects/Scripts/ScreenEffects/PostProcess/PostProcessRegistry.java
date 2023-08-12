@@ -28,14 +28,14 @@ public class PostProcessRegistry {
             #version 330 core
                         
             uniform sampler2D JE_Texture;
-            uniform vec2 JE_TextureSize;
+            uniform vec2 texture_size;
             in vec2 UV;
             
             const int kernelSize = 5;
                         
             void main()
             {
-                vec2 texelSize = 1.0 / JE_TextureSize;
+                vec2 texelSize = 1.0 / texture_size;
                \s
                 vec3 blurColor = vec3(0.0);
                 float weightTotal = 0.0;

@@ -236,7 +236,7 @@ public class BasicScene {
         emitterObject.getTransform().translateY(-1);
         TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
         emitterObject.addScript(pe);
-        scene.add(emitterObject);
+        //scene.add(emitterObject);
     }
 
     private static void createUI(Scene scene) {

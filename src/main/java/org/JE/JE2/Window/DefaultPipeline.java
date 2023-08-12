@@ -23,7 +23,7 @@ public class DefaultPipeline extends Pipeline{
         if(renderObjects)
             renderObjects();
 
-        Framebuffer.bindDefault();
+       Framebuffer.bindDefault();
 
         if(Window.doubleRenderPostProcess() && renderObjects)
             renderObjects();

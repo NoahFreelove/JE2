@@ -1,13 +1,11 @@
 package org.JE.JE2.Rendering.Shaders;
 
 import org.JE.JE2.Annotations.GLThread;
-import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.Logging.Errors.ShaderError;
+import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Rendering.Shaders.Uniforms.ShaderUniform;
-import org.JE.JE2.Utility.Loadable;
-import org.JE.JE2.Window.Window;
-import org.JE.JE2.Window.WindowPreferences;
+import org.JE.JE2.Rendering.Shaders.Uniforms.*;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -19,26 +17,51 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 
-public final class ShaderProgram implements Serializable, Loadable {
-    public transient int programID = -1;
+public final class ShaderProgram implements Serializable {
+    public int programID = -1;
 
     public boolean supportsLighting = false;
     public boolean supportsTextures = false;
-    public transient volatile boolean attemptedCompile = false;
 
     public String vertex;
     public String fragment;
     private ShaderUniform[] uniforms = new ShaderUniform[0];
-    public int presetIndex = 0;
-    public transient boolean vertexCompileStatus;
-    public transient boolean fragmentCompileStatus;
-    private transient int vertexShaderID;
-    private transient int fragmentShaderID;
-    public boolean logCommonErrors = true;
 
+    public volatile boolean attemptedCompile = false;
+    public boolean vertexCompileStatus;
+    public boolean fragmentCompileStatus;
+
+    private int vertexShaderID;
+    private int fragmentShaderID;
+
+    public boolean logCommonErrors = true;
     public static boolean logShaderSourceUponError = true;
 
     private boolean hasQueuedCompile = false;
+
+    //region default uniforms
+    public UniformInt use_texture;
+    public UniformInt use_lighting;
+    public UniformMatrix4f MVP;
+    public UniformMatrix4f model;
+    public UniformMatrix4f view;
+    public UniformMatrix4f projection;
+    public UniformVec3 world_position;
+    public UniformVec2 world_scale;
+    public UniformVec3 world_rotation;
+    public UniformVec3 material_ambient;
+    public UniformVec3 material_diffuse;
+    public UniformVec3 material_specular;
+    public UniformFloat material_shininess;
+    public UniformVec4 material_base_color;
+    public UniformInt light_count;
+    public UniformInt layer;
+    public UniformInt JE_Texture;
+    public UniformInt JE_Normal;
+    public UniformVec2 texture_size;
+    public UniformVec2 normal_texture_size;
+    public UniformVec2 tile_factor;
+    //endregion
 
     private ShaderProgram(){}
 
@@ -103,52 +126,60 @@ public final class ShaderProgram implements Serializable, Loadable {
         return sp;
     }
 
-    public static ShaderProgram getProgramFromIndex(int i){
-        return switch (i){
-            case 1 -> spriteShader();
-            case 2 -> lightSpriteShader();
-            default -> defaultShader();
-        };
-    }
-
     @GLThread
     public void setUniformMatrix4f(String name, FloatBuffer matrix){
         int location = glGetUniformLocation(programID, name);
-        glUniformMatrix4fv(location, false, matrix);
+        if(location != -1)
+            glUniformMatrix4fv(location, false, matrix);
     }
 
     @GLThread
     public void setUniform1f(String name, float value){
         int location = glGetUniformLocation(programID, name);
-        glUniform1f(location, value);
+        if(location != -1)
+            glUniform1f(location, value);
+    }
+
+    @GLThread
+    public void setSampler2D(String name, int value){
+        int location = glGetUniformLocation(programID, name);
+        if(location != -1)
+            glUniform1i(location, value);
     }
 
     @GLThread
     public void setUniform1i(String name, int value){
         int location = glGetUniformLocation(programID, name);
-        glUniform1i(location, value);
+        if(location != -1)
+        {
+            glUniform1i(location, value);
+        }
     }
 
     @GLThread
     public void setUniform2f(String name, Vector2f value){
         int location = glGetUniformLocation(programID, name);
-        glUniform2f(location, value.x, value.y);
+        if(location != -1)
+            glUniform2f(location, value.x, value.y);
     }
     @GLThread
     public void setUniform2f(String name, float x, float y){
         int location = glGetUniformLocation(programID, name);
-        glUniform2f(location, x, y);
+        if(location != -1)
+            glUniform2f(location, x, y);
     }
     @GLThread
     public void setUniform4f(String name, Vector4f value){
         int location = glGetUniformLocation(programID, name);
-        glUniform4f(location, value.x, value.y, value.z, value.w);
+        if(location != -1)
+            glUniform4f(location, value.x, value.y, value.z, value.w);
     }
 
     @GLThread
     public void setUniform3f(String name, Vector3f value){
         int location = glGetUniformLocation(programID, name);
-        glUniform3f(location, value.x, value.y, value.z);
+        if(location != -1)
+            glUniform3f(location, value.x, value.y, value.z);
     }
 
     public void createShader(File vertex, File fragment){
@@ -233,6 +264,33 @@ public final class ShaderProgram implements Serializable, Loadable {
         glLinkProgram(programID);
         glValidateProgram(programID);
         hasQueuedCompile = false;
+
+        addDefaultUniforms();
+    }
+
+    private void addDefaultUniforms() {
+        use_texture = new UniformInt("use_texture", (supportsTextures? 1:0));
+        use_lighting = new UniformInt("use_lighting", (supportsLighting? 1:0));
+        MVP = new UniformMatrix4f("MVP", new Matrix4f());
+        model = new UniformMatrix4f("model", new Matrix4f());
+        view = new UniformMatrix4f("view", new Matrix4f());
+        projection = new UniformMatrix4f("projection", new Matrix4f());
+        world_position = new UniformVec3("world_position", new Vector3f());
+        world_scale = new UniformVec2("world_scale", new Vector2f());
+        world_rotation = new UniformVec3("world_rotation", new Vector3f());
+        material_ambient = new UniformVec3("material.ambient", new Vector3f());
+        material_diffuse = new UniformVec3("material.diffuse", new Vector3f());
+        material_specular = new UniformVec3("material.specular", new Vector3f());
+        material_shininess = new UniformFloat("material.shininess", 0);
+        material_base_color = new UniformVec4("material.base_color", new Vector4f());
+        light_count = new UniformInt("light_count", 0);
+        layer = new UniformInt("layer", 0);
+        JE_Texture = new UniformInt("JE_Texture", 0);
+        JE_Normal = new UniformInt("JE_Normal", 1);
+        texture_size = new UniformVec2("texture_size", new Vector2f());
+        normal_texture_size = new UniformVec2("normal_texture_size", new Vector2f());
+        tile_factor = new UniformVec2("tile_factor", new Vector2f(1,1));
+        setUniforms(use_texture, use_lighting, MVP, model, view, projection, world_position, world_scale, world_rotation, material_ambient, material_diffuse, material_specular, material_shininess, material_base_color, light_count, layer, JE_Texture, JE_Normal, texture_size, normal_texture_size, tile_factor);
     }
 
     public void destroy(){
@@ -270,9 +328,6 @@ public final class ShaderProgram implements Serializable, Loadable {
             }
         }
         else {
-            for (ShaderUniform uniform : uniforms) {
-                uniform.set(this);
-            }
             glUseProgram(programID);
         }
         return valid();
@@ -281,12 +336,18 @@ public final class ShaderProgram implements Serializable, Loadable {
         return (programID >0);
     }
 
-    @Override
-    public void load() {
-
+    public void useUniforms(){
+        for (ShaderUniform uniform : uniforms) {
+            uniform.set(this);
+        }
     }
 
     public void addUniform(ShaderUniform shaderUniform){
+        int index = hasEmptyUniform();
+        if(index>-1){
+            uniforms[index] = shaderUniform;
+            return;
+        }
         // increase the size of the array by 1
         ShaderUniform[] newArray = new ShaderUniform[uniforms.length + 1];
         // copy the old array into the new one
@@ -295,6 +356,18 @@ public final class ShaderProgram implements Serializable, Loadable {
         newArray[newArray.length - 1] = shaderUniform;
         // set the old array to the new array
         uniforms = newArray;
+    }
+
+    public void setUniforms(ShaderUniform... uniforms){
+        this.uniforms = uniforms;
+    }
+
+    public int hasEmptyUniform(){
+        for (int i = 0; i < uniforms.length; i++) {
+            if(uniforms[i] == ShaderUniform.EMPTY)
+                return i;
+        }
+        return -1;
     }
 
     public void nullifyUniform(int index){

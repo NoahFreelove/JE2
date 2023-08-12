@@ -26,6 +26,7 @@ public abstract class Light extends Script {
     public final void setLighting(ShaderProgram shaderProgram, int index){
         if(getAttachedObject() == null)
             return;
+
         shaderProgram.setUniform3f("lights[" + index + "].position", new Vector3f(new Vector2f(getAttachedObject().getTransform().position()).add(offset), getAttachedObject().getTransform().zPos()));
         shaderProgram.setUniform1i("lights[" + index + "].type", type);
         shaderProgram.setUniform4f("lights[" + index + "].color", color.getVec4());

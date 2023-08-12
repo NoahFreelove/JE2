@@ -46,7 +46,7 @@ public class CharacterCreator {
             renderers[i].setNormalTexture(normals[i]);
             renderers[i].getTextureSegment().getVao().setVertices(fragPos[i]);
             renderers[i].getTextureSegment().getCoords().setVertices(UVs[i]);
-            renderers[i].getTextureSegment().setRelativeTransform(relativeTransforms[i]);
+            children[i].setTransform(relativeTransforms[i]);
             children[i].setIdentity(ids[i].name, ids[i].tag);
             children[i].addScript(renderers[i]);
             children[i].setParent(parent);

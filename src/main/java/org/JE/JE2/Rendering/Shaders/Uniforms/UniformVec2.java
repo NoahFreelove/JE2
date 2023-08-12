@@ -18,4 +18,9 @@ public class UniformVec2 extends ShaderUniform{
     public void setValue(Vector2f value) {
         this.value = value;
     }
+
+    public void setValue(float x, float y) {
+        this.value.x = x;
+        this.value.y = y;
+    }
 }

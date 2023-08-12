@@ -72,11 +72,4 @@ public class VAO2f extends VAO {
         }
         return data;
     }
-
-    @Override
-    public void load(){
-        this.data = dataConversion();
-        dataSize = 2;
-        super.load();
-    }
 }

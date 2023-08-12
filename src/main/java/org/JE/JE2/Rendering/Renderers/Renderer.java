@@ -92,28 +92,26 @@ public class Renderer extends Script {
             if(!camera.withinRenderDistance(adjustedTransform.position(),adjustedTransform.scale()))
                 return;
         }
-        if(debug)
-            System.out.println("passed render distance check");
-
-        glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
-        PreRender();
-
         if(!shaderProgram.use())
             return;
 
-        if(debug)
-            System.out.println("passed second shader check");
+        glViewport((int) camera.viewportSize.x, (int) camera.viewportSize.y, (int) camera.viewportSize.z, (int) camera.viewportSize.w);
+        PreRender();
 
         setProjections(camera, shaderProgram, adjustedTransform, seg.scale());
         setPositions(shaderProgram, adjustedTransform);
         setMaterial(shaderProgram);
 
-        shaderProgram.setUniform1i("use_texture", (shaderProgram.supportsTextures? 1 : 0));
+        shaderProgram.use_texture.setValue((shaderProgram.supportsTextures? 1 : 0));
+        shaderProgram.use_lighting.setValue((shaderProgram.supportsLighting? 1 : 0));
 
         if(shaderProgram.supportsLighting)
         {
             setLighting(seg.getLightLayer());
         }
+
+
+        shaderProgram.useUniforms();
 
         glPolygonMode(GL_FRONT_AND_BACK, (seg.isWireframe() ? GL_LINE : GL_FILL));
         VAO2f vao = seg.getVao();
@@ -140,30 +138,31 @@ public class Renderer extends Script {
     }
 
     private void setMaterial(ShaderProgram shader) {
-        shader.setUniform3f("material.ambient", material.getAmbient());
-        shader.setUniform3f("material.diffuse", material.getDiffuse());
-        shader.setUniform3f("material.specular", material.getSpecular());
-        shader.setUniform1f("material.shininess", material.getShininess());
-        shader.setUniform4f("material.base_color", material.getBaseColor().getVec4());
+
+        shader.material_ambient.setValue(material.getAmbient());
+        shader.material_diffuse.setValue(material.getDiffuse());
+        shader.material_specular.setValue(material.getSpecular());
+        shader.material_shininess.setValue(material.getShininess());
+        shader.material_base_color.setValue(material.getBaseColor().getVec4());
     }
 
     private void setPositions(ShaderProgram shader, Transform t) {
-        shader.setUniform3f("world_position", t.position3D());
-        shader.setUniform2f("world_scale", t.scale());
-        shader.setUniform3f("world_rotation", t.rotation());
+        shader.world_position.setValue(t.position3D());
+        shader.world_scale.setValue(t.scale());
+        shader.world_rotation.setValue(t.rotation());
     }
 
     private void setProjections(Camera camera, ShaderProgram shader, Transform t, boolean scale) {
-        shader.setUniformMatrix4f("MVP", camera.MVPOrtho(t,scale).get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniformMatrix4f("model", camera.getModel(t,scale).get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniformMatrix4f("view", camera.getViewMatrix().get(BufferUtils.createFloatBuffer(16)));
-        shader.setUniformMatrix4f("projection", camera.getOrtho().get(BufferUtils.createFloatBuffer(16)));
+        shader.MVP.setValue(camera.MVPOrtho(t,scale));
+        shader.model.setValue(camera.getModel(t,scale));
+        shader.view.setValue(camera.getViewMatrix());
+        shader.projection.setValue(camera.getOrtho());
     }
 
     @GLThread
     private void setLighting(int selectedLayer) {
-        shaderProgram.setUniform1i("light_count", Manager.activeScene().world.lights.size());
-        shaderProgram.setUniform1i("layer", selectedLayer);
+        shaderProgram.light_count.setValue(Manager.activeScene().world.lights.size());
+        shaderProgram.layer.setValue(selectedLayer);
 
         int i = 0;
         for (Light light : Manager.activeScene().world.lights) {

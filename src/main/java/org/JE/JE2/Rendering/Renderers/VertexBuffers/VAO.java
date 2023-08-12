@@ -2,8 +2,6 @@ package org.JE.JE2.Rendering.Renderers.VertexBuffers;
 
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
-import org.JE.JE2.Utility.Loadable;
-import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -11,11 +9,9 @@ import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
-public class VAO implements Serializable, Loadable {
+public class VAO implements Serializable {
     protected float[] data = {};
     protected transient int vertexBufferID = -1;
     protected transient int location;
@@ -113,12 +109,6 @@ public class VAO implements Serializable, Loadable {
     }
     public float[] getData(){
         return data;
-    }
-
-
-    @Override
-    public void load(){
-        QueueGenerateBuffers();
     }
 
     public void destroy() {

@@ -5,6 +5,8 @@ import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import static org.lwjgl.opengl.GL11C.GL_TRIANGLE_FAN;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
@@ -46,19 +48,25 @@ public class SpriteRenderer extends Renderer {
             System.out.println("passed shader check");
 
         if(seg.getTexture().activateTexture(GL_TEXTURE0)) {
-            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Texture"), 0);
-            shaderProgram.setUniform2f("JE_TextureSize", seg.getTexture().resource.getBundle().getImageSize().x, seg.getTexture().resource.getBundle().getImageSize().y);
+            shaderProgram.JE_Texture.setValue(0);
+            //glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Texture"), 0);
+
+            Vector2i size = seg.getTexture().resource.getBundle().getImageSize();
+            shaderProgram.texture_size.setValue(size.x, size.y);
         }
 
-        if(seg.getTexture().activateTexture(GL_TEXTURE1))
-            glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 1);
+        if(seg.getTexture().activateTexture(GL_TEXTURE1)) {
+            shaderProgram.JE_Normal.setValue(1);
+            //glUniform1i(glGetUniformLocation(shaderProgram.programID, "JE_Normal"), 0);
 
-        shaderProgram.setUniform2f("tile_factor", seg.getTileFactor());
+            Vector2i size = seg.getNormal().resource.getBundle().getImageSize();
+            shaderProgram.normal_texture_size.setValue(size.x, size.y);
+        }
 
+        shaderProgram.tile_factor.setValue(seg.getTileFactor());
 
         if(debug)
             System.out.println("passed texture check");
-
 
         seg.getCoords().Enable(1);
         super.Render(seg,t,c);

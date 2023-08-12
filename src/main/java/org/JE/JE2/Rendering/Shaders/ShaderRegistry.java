@@ -221,11 +221,11 @@ public class ShaderRegistry {
             in vec2 UV;
             out vec4 fragColor;
 
-            uniform sampler2D textureSampler;
+            uniform sampler2D JE_Texture;
 
             void main()
             {
-                fragColor = texture(textureSampler, UV);
+                fragColor = texture(JE_Texture, UV);
             }
             """;
     public static final ShaderModule defaultShaderModule = new ShaderModule(DEFAULT_VERTEX,DEFAULT_FRAGMENT,false,false);
