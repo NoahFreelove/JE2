@@ -1,5 +1,8 @@
 package org.JE.JE2.Rendering.Renderers;
 
+import org.JE.JE2.IO.Filepath;
+import org.JE.JE2.Objects.Scripts.Serialize.Load;
+import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
@@ -8,13 +11,15 @@ import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
+import java.util.HashMap;
+
 import static org.lwjgl.opengl.GL11C.GL_TRIANGLE_FAN;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
-public class SpriteRenderer extends Renderer {
+public class SpriteRenderer extends Renderer implements Save, Load {
     private TextureSegment[] textureSegments;
 
     public SpriteRenderer() {
@@ -74,21 +79,6 @@ public class SpriteRenderer extends Renderer {
         seg.getTexture().unbindTexture(GL_TEXTURE1);
 
         seg.getCoords().Disable();
-    }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void awake() {
-
     }
 
     public void setTexture(Texture texture){
@@ -153,4 +143,51 @@ public class SpriteRenderer extends Renderer {
         textureSegments = temp;
     }
 
+    @Override
+    public void load(HashMap<String, String> data) {
+        // Need to load the Texture Segments, Its VAO points, its relative transform, texture, and normal texture, and tile factor and draw mode
+        // In Future material and shader program
+        int i = 0;
+        while (data.containsKey("TextureSegment" + i + ":VAO")) {
+            VAO2f vao = new VAO2f();
+            vao.setVertices(VAO2f.stringToVerts(data.get("TextureSegment" + i + ":VAO")));
+            VAO2f coords = new VAO2f();
+            coords.setVertices(VAO2f.stringToVerts(data.get("TextureSegment" + i + ":COORDS")));
+
+            Transform relativeTransform = new Transform();
+            relativeTransform.simpleDeserialize(data.get("TextureSegment" + i + ":RELATIVE_TRANSFORM"));
+            String[] textureData = data.get("TextureSegment" + i + ":TEXTURE").split(":");
+            Texture texture = Texture.checkExistElseCreate(textureData[0],-1, new Filepath(textureData[1],true));
+            String[] normalData = data.get("TextureSegment" + i + ":NORMAL").split(":");
+            Texture normal = Texture.checkExistElseCreate(normalData[0],-1, new Filepath(normalData[1],true));
+            String[] tileFactorData = data.get("TextureSegment" + i + ":TILE_FACTOR").split(":");
+            Vector2f tileFactor = new Vector2f(Float.parseFloat(tileFactorData[0]), Float.parseFloat(tileFactorData[1]));
+
+            int drawMode = Integer.parseInt(data.get("TextureSegment" + i + ":DRAW_MODE"));
+            TextureSegment ts = new TextureSegment(vao, coords, relativeTransform, drawMode, texture, normal);
+            ts.customTile(tileFactor);
+            addTextureSegment(ts);
+            i++;
+        }
+    }
+
+    @Override
+    public HashMap<String, String> save() {
+        HashMap<String, String> data = new HashMap<>();
+        // Need to save the Texture Segments, Its VAO points, its relative transform, texture, and normal texture, and tile factor and draw mode
+        // In Future material and shader program
+        int i = 0;
+        for (TextureSegment ts : textureSegments) {
+            data.put("TextureSegment" + i + ":VAO", ts.getVao().vertsToString());
+            data.put("TextureSegment" + i + ":COORDS", ts.getCoords().vertsToString());
+            data.put("TextureSegment" + i + ":RELATIVE_TRANSFORM", ts.getRelativeTransform().simpleSerialize());
+            data.put("TextureSegment" + i + ":TEXTURE", ts.getTexture().resource.getName() + ":" + ts.getTexture().resource.getBundle().tryGetFilepath().getPath(true));
+            data.put("TextureSegment" + i + ":NORMAL", ts.getTexture().resource.getName() + ":" + ts.getNormal().resource.getBundle().tryGetFilepath().getPath(true));
+            data.put("TextureSegment" + i + ":TILE_FACTOR", ts.getTileFactor().x() + ":" + ts.getTileFactor().y());
+            data.put("TextureSegment" + i + ":DRAW_MODE", ts.getDrawMode() + "");
+            i++;
+        }
+
+        return data;
+    }
 }

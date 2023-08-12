@@ -41,10 +41,13 @@ import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIElements.UIImage;
 import org.JE.JE2.UI.UIObjects.UIWindow;
+import org.JE.JE2.Utility.Encryption;
 import org.JE.JE2.Utility.ForceNonNull;
 import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
 import org.joml.Vector2f;
+
+import java.util.HashMap;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 
@@ -79,11 +82,6 @@ public class BasicScene {
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
 
-        GameObject child = GameObject.Sprite(ShaderProgram.spriteShader(),
-                Texture.get("PlayerTexture"),
-                Texture.get("PlayerNormal"));
-        child.setPosition(-1,-1);
-        child.setParent(player);
         Camera playerCam = new Camera();
 
         //addParticles(scene);
@@ -174,7 +172,7 @@ public class BasicScene {
         PhysicsBody pb = new PhysicsBody();
         player.addScript(pb);
         player.addScript(new PlayerScript());
-
+        //player.getTransform().translateX(1);
 
 
         MovementController mc = new MovementController();
@@ -182,25 +180,22 @@ public class BasicScene {
         mc.absoluteYPositioning = true;
         mc.canMoveDown = true;
         mc.enableJump = false;
+        mc.allowSaving = false;
         pb.setGravity(0);
 
         player.addScript(mc);
         player.addScript(playerCam);
-        /*Manager.queueGLFunction(new Runnable() {
-            @Override
-            public void run() {
-                player.getSpriteRenderer().getTexture().resource.setID(Window.colorTexture);
-                player.getSpriteRenderer().getNormalTexture().resource.setID(Window.colorTexture);
-            }
-        },true);*/
 
         player.setPosition(2,0);
         scene.setCamera(playerCam);
         scene.add(pl);
-        //scene.add(AmbientLight.ambientLightObject(1,Color.WHITE));
-        //player.addScript(cs);
 
-        //scene.add(AmbientLight.ambientLightObject(1, Color.WHITE));
+        HashMap<String, HashMap<String,String>> save = player.save();
+        GameObject newObj = new GameObject();
+        newObj.load(save);
+
+        scene.add(newObj);
+
 
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("E")){

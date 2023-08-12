@@ -72,4 +72,20 @@ public class VAO2f extends VAO {
         }
         return data;
     }
+
+    public String vertsToString(){
+        StringBuilder sb = new StringBuilder();
+        for (Vector2f v : vertices) {
+            sb.append(v.x).append(",").append(v.y).append(",");
+        }
+        return sb.toString();
+    }
+    public static Vector2f[] stringToVerts(String s){
+        String[] split = s.split(",");
+        Vector2f[] verts = new Vector2f[split.length/2];
+        for (int i = 0; i < split.length; i+=2) {
+            verts[i/2] = new Vector2f(Float.parseFloat(split[i]),Float.parseFloat(split[i+1]));
+        }
+        return verts;
+    }
 }

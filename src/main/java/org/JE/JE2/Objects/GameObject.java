@@ -3,25 +3,36 @@ package org.JE.JE2.Objects;
 import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.ReadOnly;
 import org.JE.JE2.Annotations.RequireNonNull;
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.Logging.Errors.GameObjectError;
+import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Objects.Scripts.LambdaScript.LambdaScript;
 import org.JE.JE2.Objects.Scripts.ScriptRestrictions;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Objects.Scripts.Serialize.IgnoreSave;
+import org.JE.JE2.Objects.Scripts.Serialize.Load;
+import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Rendering.Renderers.Renderer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.Scene.Scene;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -307,6 +318,10 @@ public final class GameObject implements Serializable {
     }
 
     public void setIdentity(String name, String tag){
+        if(name == null)
+            name = "GameObject";
+        if(tag == null)
+            tag = "gameObject";
         identity.name = name;
         identity.tag = tag;
         this.name = name;
@@ -480,6 +495,111 @@ public final class GameObject implements Serializable {
             return ((GameObject) obj).identity.uniqueID == identity.uniqueID;
         }
         return false;
+    }
+
+    public HashMap<String, HashMap<String,String>> save(){
+        HashMap<String, HashMap<String,String>> map = new HashMap<>();
+        HashMap<String, String> identity = new HashMap<>();
+        identity.put("name", this.identity.name);
+        identity.put("tag", this.identity.tag);
+        map.put("identity", identity);
+        for (Script script : scripts) {
+            if(script == null)
+                continue;
+            if(script instanceof IgnoreSave || !script.allowSaving)
+                continue;
+            if(script instanceof Save save){
+                map.put(script.getClass().getName(),save.save());
+            }
+            else{
+                Logger.log("WARNING: Script <" + script.getClass().getName() + "> does not implement save interface " +
+                        "but is undergoing the save process. This script will be ignored in the save output", Logger.WARN);
+            }
+        }
+
+        return map;
+    }
+
+    public void load(HashMap<String, HashMap<String,String>> map){
+        HashMap<String, String> id = map.get("identity");
+        setIdentity(id.get("name"), id.get("tag"));
+
+       map.remove("identity");
+        for (String scriptName : map.keySet()) {
+            // Check scriptName exists. ex: org.JE.JE2.Manager
+            // Create new instance with empty constructor
+            // If It has the load interface, call it with map.get(scriptName)
+            // If it doesn't have the load interface, log a warning
+            try {
+                Class<?> clazz = Class.forName(scriptName);
+                if(clazz == Transform.class){
+                    getTransform().load(map.get(scriptName));
+                    continue;
+                }
+                Script script = (Script) clazz.getConstructor().newInstance();
+                if(script instanceof Load load){
+                    load.load(map.get(scriptName));
+                    addScript(script);
+                }
+                else{
+                    Logger.log("WARNING: Script <" + scriptName + "> does not implement load interface " +
+                            "but is undergoing the load process. This script will be ignored in the load output", Logger.WARN);
+                }
+            } catch (Exception e) {
+                Logger.log("WARNING: Script <" + scriptName + "> does not exist or does not have a default constructor " +
+                        "but is undergoing the load process. This script will be ignored in the load output", Logger.WARN);
+            }
+        }
+    }
+    public String serialize(){
+        HashMap<String, HashMap<String,String>> data = save();
+        String[] lines = new String[data.size()];
+        int i = 0;
+        for (Map.Entry<String, HashMap<String, String>> entry : data.entrySet()) {
+            String key = entry.getKey();
+            HashMap<String, String> value = entry.getValue();
+            lines[i] = key + ":";
+            for (Map.Entry<String, String> entry2 : value.entrySet()) {
+                String key2 = entry2.getKey();
+                String value2 = entry2.getValue();
+                lines[i] += key2 + "=" + value2 + ";";
+            }
+            i++;
+        }
+        // Combine string array into one string
+        StringBuilder sb = new StringBuilder();
+        for (String s : lines) {
+            sb.append(s);
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+    public void saveToFile(Filepath filepath){
+        File file = new File(filepath.getDefault());
+        try (FileWriter fr = new FileWriter(file)) {
+            fr.write(serialize());
+        } catch (IOException e) {
+            Logger.log(new JE2Error(e));
+        }
+    }
+
+    public void loadFromFile(Filepath filepath){
+        String[] loadedData = DataLoader.readTextFile(filepath);
+        HashMap<String, HashMap<String,String>> data = new HashMap<>();
+        for (String line : loadedData) {
+            String[] split = line.split(":");
+            String scriptName = split[0];
+            String[] scriptData = split[1].split(";");
+            HashMap<String, String> scriptDataMap = new HashMap<>();
+            for (String s : scriptData) {
+                String[] split2 = s.split("=");
+                String key = split2[0];
+                String value = split2[1];
+                scriptDataMap.put(key, value);
+            }
+            data.put(scriptName, scriptDataMap);
+        }
+        load(data);
     }
 
 }

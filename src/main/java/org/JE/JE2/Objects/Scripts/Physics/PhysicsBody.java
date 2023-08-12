@@ -3,6 +3,8 @@ package org.JE.JE2.Objects.Scripts.Physics;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Objects.Scripts.Serialize.Load;
+import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.Utility.MethodTimer;
 import org.jbox2d.collision.AABB;
@@ -16,7 +18,9 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 import org.joml.Vector2f;
 
-public class PhysicsBody extends Script {
+import java.util.HashMap;
+
+public class PhysicsBody extends Script implements Save, Load {
     public transient org.jbox2d.dynamics.BodyDef bodyDef;
     public transient org.jbox2d.dynamics.Body body;
     public transient Fixture activeFixture;
@@ -247,5 +251,30 @@ public class PhysicsBody extends Script {
         //System.out.println(Manager.activeScene().name + " : " + attachedScene.name);
 
         return Manager.activeScene() == attachedScene;
+    }
+
+    @Override
+    public void load(HashMap<String, String> data) {
+        defaultRestitution = Float.parseFloat(data.get("defaultRestitution"));
+        defaultDensity = Float.parseFloat(data.get("defaultDensity"));
+        defaultFriction = Float.parseFloat(data.get("defaultFriction"));
+        defaultGravity = Float.parseFloat(data.get("defaultGravity"));
+        String[] size = data.get("defaultSize").split(":");
+        defaultSize.set(Float.parseFloat(size[0]), Float.parseFloat(size[1]));
+        fixedRotation = Boolean.parseBoolean(data.get("fixedRotation"));
+        mode = BodyType.valueOf(data.get("mode"));
+    }
+
+    @Override
+    public HashMap<String, String> save() {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("defaultRestitution", String.valueOf(defaultRestitution));
+        data.put("defaultDensity", String.valueOf(defaultDensity));
+        data.put("defaultFriction", String.valueOf(defaultFriction));
+        data.put("defaultGravity", String.valueOf(defaultGravity));
+        data.put("defaultSize", defaultSize.x + ":" + defaultSize.y);
+        data.put("fixedRotation", String.valueOf(fixedRotation));
+        data.put("mode", mode.toString());
+        return data;
     }
 }

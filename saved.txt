@@ -1,9 +1,8 @@
-Field:identity.name
-Type:string
-Value:"GameObject"
-Field:identity.tag
-Type:string
-Value:"Untagged"
-Field:active
-Type:boolean
-Value:true
+org.JE.JE2.SampleScripts.PlayerScript:
+org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad:
+org.JE.JE2.SampleScripts.MovementController:jumpVelocity=5.0;moveSpeed=5.0;masterCanMove=true;canMoveUp=true;canMoveLeft=true;enableJump=false;canMoveDown=true;canMoveRight=true;physicsBased=true;absoluteXPositioning=true;absoluteYPositioning=true;
+org.JE.JE2.Objects.Scripts.Physics.PhysicsBody:mode=DYNAMIC;defaultGravity=0.0;defaultSize=1.0:1.0;defaultRestitution=0.0;defaultDensity=1.0;defaultFriction=1.0;fixedRotation=true;
+identity:name=Player;tag=player;
+org.JE.JE2.Objects.Scripts.Transform:rotation=0.0:0.0:0.0;scale=1.0:1.0:1.0;restrictions=false:true:true:true:true:true:true:true:true:true:true:true:true:true;position=2.0:0.0:0.0;
+org.JE.JE2.Rendering.Camera:zPos=100.0;backgroundColor=0.0:0.0:0.0:1.0;checkRenderDistance=true;renderDistance=10.0;viewportSize=0.0:0.0:0.0:1.0;zoomMultiplier=1.0;useDefaultViewport=true;width=5.0;positionOffset=0.0:0.0;height=0.0;
+org.JE.JE2.Rendering.Renderers.SpriteRenderer:TextureSegment0:VAO=0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,;TextureSegment0:NORMAL=PlayerTexture:texture1_N.png;TextureSegment0:COORDS=0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,;TextureSegment0:RELATIVE_TRANSFORM=0.0:0.0:0.0:0.0:0.0:0.0:1.0:1.0:1.0;TextureSegment0:TEXTURE=PlayerTexture:texture1.png;TextureSegment0:DRAW_MODE=6;TextureSegment0:TILE_FACTOR=1.0:1.0;

@@ -3,13 +3,16 @@ package org.JE.JE2.Rendering;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Objects.Scripts.Serialize.Load;
+import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.joml.*;
 
 import java.lang.Math;
+import java.util.HashMap;
 
-public class Camera extends Script {
+public class Camera extends Script implements Save, Load {
     public float zPos = 100;
 
     public boolean checkRenderDistance = true;
@@ -140,5 +143,38 @@ public class Camera extends Script {
 
     public float getHeight() {
         return height;
+    }
+
+    @Override
+    public void load(HashMap<String, String> data) {
+        zPos = Float.parseFloat(data.get("zPos"));
+        checkRenderDistance = Boolean.parseBoolean(data.get("checkRenderDistance"));
+        renderDistance = Float.parseFloat(data.get("renderDistance"));
+        String[] posOffset = data.get("positionOffset").split(":");
+        positionOffset.set(Float.parseFloat(posOffset[0]), Float.parseFloat(posOffset[1]));
+        zoomMultiplier = Float.parseFloat(data.get("zoomMultiplier"));
+        width = Float.parseFloat(data.get("width"));
+        height = Float.parseFloat(data.get("height"));
+        String[] viewport = data.get("viewportSize").split(":");
+        viewportSize.set(Float.parseFloat(viewport[0]), Float.parseFloat(viewport[1]), Float.parseFloat(viewport[2]), Float.parseFloat(viewport[3]));
+        useDefaultViewport = Boolean.parseBoolean(data.get("useDefaultViewport"));
+        String[] bgColor = data.get("backgroundColor").split(":");
+        backgroundColor.set(Float.parseFloat(bgColor[0]), Float.parseFloat(bgColor[1]), Float.parseFloat(bgColor[2]), Float.parseFloat(bgColor[3]));
+    }
+
+    @Override
+    public HashMap<String, String> save() {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("zPos", String.valueOf(zPos));
+        data.put("checkRenderDistance", String.valueOf(checkRenderDistance));
+        data.put("renderDistance", String.valueOf(renderDistance));
+        data.put("positionOffset", positionOffset.x() + ":" + positionOffset.y());
+        data.put("zoomMultiplier", String.valueOf(zoomMultiplier));
+        data.put("width", String.valueOf(width));
+        data.put("height", String.valueOf(height));
+        data.put("viewportSize", viewportSize.x() + ":" + viewportSize.y() + ":" + viewportSize.z() + ":" + viewportSize.w());
+        data.put("useDefaultViewport", String.valueOf(useDefaultViewport));
+        data.put("backgroundColor", backgroundColor.r() + ":" + backgroundColor.g() + ":" + backgroundColor.b() + ":" + backgroundColor.a());
+        return data;
     }
 }

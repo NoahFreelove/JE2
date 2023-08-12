@@ -1,7 +1,6 @@
 package org.JE.JE2.Objects.Scripts;
 
 public class TransformRestrictions {
-
     public boolean LOCK = false;
     public boolean TRANSLATE_X = true;
     public boolean TRANSLATE_Y = true;

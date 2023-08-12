@@ -171,21 +171,6 @@ public class Renderer extends Script {
         }
     }
 
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void awake() {
-
-    }
-
     public void setDrawMode(int mode){
         drawMode = mode;
     }

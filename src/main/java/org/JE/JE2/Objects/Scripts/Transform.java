@@ -3,11 +3,15 @@ package org.JE.JE2.Objects.Scripts;
 import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.PrimarySetter;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
+import org.JE.JE2.Objects.Scripts.Serialize.Load;
+import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.jbox2d.common.Vec2;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class Transform extends Script {
+import java.util.HashMap;
+
+public class Transform extends Script implements Save, Load {
 
     public static Transform zero = new Transform();
 
@@ -245,11 +249,6 @@ public class Transform extends Script {
         }
     }
 
-    @Override
-    public void load(){
-        super.load();
-        setRestrictions(new ScriptRestrictions(false,false,false));
-    }
 
     public Transform relativeAdd(Transform other){
         this.translate(other.position());
@@ -319,4 +318,53 @@ public class Transform extends Script {
     }
 
 
+    @Override
+    public void load(HashMap<String, String> data) {
+        String[] posSplit = data.get("position").split(":");
+        String[] rotSplit = data.get("rotation").split(":");
+        String[] scaleSplit = data.get("scale").split(":");
+        String[] restrictionsSplit = data.get("restrictions").split(":");
+        position.set(Float.parseFloat(posSplit[0]), Float.parseFloat(posSplit[1]), Float.parseFloat(posSplit[2]));
+        rotation.set(Float.parseFloat(rotSplit[0]), Float.parseFloat(rotSplit[1]), Float.parseFloat(rotSplit[2]));
+        scale.set(Float.parseFloat(scaleSplit[0]), Float.parseFloat(scaleSplit[1]), Float.parseFloat(scaleSplit[2]));
+        restrictions.LOCK = Boolean.parseBoolean(restrictionsSplit[0]);
+        restrictions.TRANSLATE_X = Boolean.parseBoolean(restrictionsSplit[1]);
+        restrictions.TRANSLATE_Y = Boolean.parseBoolean(restrictionsSplit[2]);
+        restrictions.TRANSLATE_Z = Boolean.parseBoolean(restrictionsSplit[3]);
+        restrictions.ROTATE_X = Boolean.parseBoolean(restrictionsSplit[4]);
+        restrictions.ROTATE_Y = Boolean.parseBoolean(restrictionsSplit[5]);
+        restrictions.ROTATE_Z = Boolean.parseBoolean(restrictionsSplit[6]);
+        restrictions.SCALE_X = Boolean.parseBoolean(restrictionsSplit[7]);
+        restrictions.SCALE_Y = Boolean.parseBoolean(restrictionsSplit[8]);
+        restrictions.SCALE_Z = Boolean.parseBoolean(restrictionsSplit[9]);
+        restrictions.INHERIT = Boolean.parseBoolean(restrictionsSplit[10]);
+        restrictions.INHERIT_POSITION = Boolean.parseBoolean(restrictionsSplit[11]);
+        restrictions.INHERIT_ROTATION = Boolean.parseBoolean(restrictionsSplit[12]);
+        restrictions.INHERIT_SCALE = Boolean.parseBoolean(restrictionsSplit[13]);
+    }
+
+    @Override
+    public HashMap<String, String> save() {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("position", position.x + ":" + position.y + ":" + position.z);
+        data.put("rotation", rotation.x + ":" + rotation.y + ":" + rotation.z);
+        data.put("scale", scale.x + ":" + scale.y + ":" + scale.z);
+        data.put("restrictions", restrictions.LOCK + ":" + restrictions.TRANSLATE_X + ":" + restrictions.TRANSLATE_Y + ":"
+                + restrictions.TRANSLATE_Z + ":" + restrictions.ROTATE_X + ":" + restrictions.ROTATE_Y + ":"
+                + restrictions.ROTATE_Z + ":" + restrictions.SCALE_X + ":" + restrictions.SCALE_Y + ":"
+                + restrictions.SCALE_Z + ":" + restrictions.INHERIT + ":" + restrictions.INHERIT_POSITION + ":"
+                + restrictions.INHERIT_ROTATION + ":" + restrictions.INHERIT_SCALE);
+        return data;
+    }
+
+    public String simpleSerialize(){
+        return position.x + ":" + position.y + ":" + position.z + ":" + rotation.x + ":" + rotation.y + ":" + rotation.z + ":" + scale.x + ":" + scale.y + ":" + scale.z;
+    }
+
+    public void simpleDeserialize(String input) {
+        String[] split = input.split(":");
+        position.set(Float.parseFloat(split[0]), Float.parseFloat(split[1]), Float.parseFloat(split[2]));
+        rotation.set(Float.parseFloat(split[3]), Float.parseFloat(split[4]), Float.parseFloat(split[5]));
+        scale.set(Float.parseFloat(split[6]), Float.parseFloat(split[7]), Float.parseFloat(split[8]));
+    }
 }

@@ -4,10 +4,14 @@ import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Identity;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Objects.Scripts.Serialize.Load;
+import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Scene.Scene;
 
-public class DontDestroyOnLoad extends Script {
+import java.util.HashMap;
+
+public class DontDestroyOnLoad extends Script implements Load, Save {
 
     @Override
     public void update(){
@@ -39,4 +43,13 @@ public class DontDestroyOnLoad extends Script {
 
     }
 
+    @Override
+    public void load(HashMap<String, String> data) {
+
+    }
+
+    @Override
+    public HashMap<String, String> save() {
+        return new HashMap<>();
+    }
 }

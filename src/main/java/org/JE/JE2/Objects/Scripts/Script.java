@@ -25,6 +25,8 @@ public class Script implements Serializable {
 
     private transient GameObject parentObject;
 
+    public boolean allowSaving = true;
+
     public ScriptRestrictions getRestrictions(){
         if(restrictions == null)
             this.restrictions = new ScriptRestrictions();
@@ -79,10 +81,6 @@ public class Script implements Serializable {
         if(parentObject !=null)
             parentObject.removeScript(this);
         this.parentObject = newParent;
-    }
-
-    public void load() {
-        this.restrictions = new ScriptRestrictions();
     }
 
     public ILambdaScript getExternalScriptBehaviourPre() {
