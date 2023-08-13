@@ -25,7 +25,7 @@ public class Script implements Serializable {
 
     private transient GameObject parentObject;
 
-    public boolean allowSaving = true;
+    private boolean allowSaving = true;
 
     public ScriptRestrictions getRestrictions(){
         if(restrictions == null)
@@ -97,5 +97,13 @@ public class Script implements Serializable {
 
     public void setExternalScriptBehaviourPost(ILambdaScript externalScriptBehaviourPost) {
         this.externalScriptBehaviourPost = externalScriptBehaviourPost;
+    }
+
+    public boolean allowSaving() {
+        return allowSaving;
+    }
+
+    public void setAllowSaving(boolean allowSaving) {
+        this.allowSaving = allowSaving;
     }
 }

@@ -503,17 +503,23 @@ public final class GameObject implements Serializable {
         identity.put("name", this.identity.name);
         identity.put("tag", this.identity.tag);
         map.put("identity", identity);
+        int i = 0;
         for (Script script : scripts) {
+            i++;
             if(script == null)
                 continue;
-            if(script instanceof IgnoreSave || !script.allowSaving)
+            if(!script.allowSaving())
                 continue;
             if(script instanceof Save save){
                 map.put(script.getClass().getName(),save.save());
             }
             else{
-                Logger.log("WARNING: Script <" + script.getClass().getName() + "> does not implement save interface " +
-                        "but is undergoing the save process. This script will be ignored in the save output", Logger.WARN);
+                if(!(script instanceof IgnoreSave)) {
+                    Logger.log("WARNING: Script <" + script.getClass().getName() + "> does not implement save interface " +
+                            "but is undergoing the save process. This script will be added but no fields will be saved." + i, Logger.WARN);
+                }
+                map.put(script.getClass().getName(), new HashMap<>());
+
             }
         }
 
@@ -542,8 +548,7 @@ public final class GameObject implements Serializable {
                     addScript(script);
                 }
                 else{
-                    Logger.log("WARNING: Script <" + scriptName + "> does not implement load interface " +
-                            "but is undergoing the load process. This script will be ignored in the load output", Logger.WARN);
+                    addScript(script);
                 }
             } catch (Exception e) {
                 Logger.log("WARNING: Script <" + scriptName + "> does not exist or does not have a default constructor " +

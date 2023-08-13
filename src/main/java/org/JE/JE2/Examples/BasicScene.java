@@ -180,7 +180,6 @@ public class BasicScene {
         mc.absoluteYPositioning = true;
         mc.canMoveDown = true;
         mc.enableJump = false;
-        mc.allowSaving = false;
         pb.setGravity(0);
 
         player.addScript(mc);
