@@ -1,16 +1,19 @@
 package org.JE.JE2.Utility.Timeline;
 
+import org.JE.JE2.Annotations.StandaloneScript;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
 
 import java.util.ArrayList;
 
+@StandaloneScript
 public class Timeline extends Script {
     private float time = 0;
     private float start = 0;
     private float end = 1;
     private boolean playing = false;
+    private boolean loop = false;
     private final ArrayList<Track<?>> tracks = new ArrayList<>();
 
     public Timeline() {
@@ -30,6 +33,8 @@ public class Timeline extends Script {
         if(!playing)
             return;
         time = JE2Math.clamp(time+deltaTime,start,end);
+        if(time == end && loop)
+            time = start;
         for (Track<?> track : tracks) {
             track.update(time);
         }
@@ -81,5 +86,17 @@ public class Timeline extends Script {
 
     public void setEnd(float end) {
         this.end = end;
+    }
+
+    public boolean playing() {
+        return playing;
+    }
+
+    public boolean isLoop() {
+        return loop;
+    }
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 }

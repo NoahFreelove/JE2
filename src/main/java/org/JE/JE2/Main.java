@@ -62,7 +62,7 @@ public class Main {
 
         Manager.activeScene().watchers.add(() -> {
             timeline.update(Time.deltaTime());
-            Logger.log(positionTrack.getRecentValue());
+            //Logger.log(positionTrack.getRecentValue());
 
         });
     }

@@ -114,4 +114,13 @@ public class RenderSegment {
             return;
         getVao().destroy();
     }
+
+    public static Transform[] getTransforms(RenderSegment[] segs)
+    {
+        Transform[] transforms = new Transform[segs.length];
+        for (int i = 0; i < segs.length; i++) {
+            transforms[i] = segs[i].getRelativeTransform();
+        }
+        return transforms;
+    }
 }

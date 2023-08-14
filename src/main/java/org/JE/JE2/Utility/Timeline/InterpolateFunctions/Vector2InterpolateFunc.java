@@ -9,7 +9,7 @@ public interface Vector2InterpolateFunc extends InterpolateFunc<Vector2f>{
     }
 
     static Vector2f lerp(Vector2f start, Vector2f end, float t) {
-        return new org.joml.Vector2f(
+        return new Vector2f(
                 start.x + (end.x - start.x) * t,
                 start.y + (end.y - start.y) * t
         );

@@ -1,37 +1,34 @@
 package org.JE.JE2.Examples;
 
 import org.JE.JE2.IO.Filepath;
-import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.KeyReleasedEvent;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
+import org.JE.JE2.Objects.Scripts.Animator.Physical.CharacterAnimator;
 import org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Objects.Scripts.Pathfinding.NavigableArea;
 import org.JE.JE2.Objects.Scripts.Pathfinding.PathfindingActor;
 import org.JE.JE2.Objects.Scripts.Pathfinding.SimplePathfindingAgent;
 import org.JE.JE2.Objects.Scripts.Physics.Collision.BoxTrigger;
+import org.JE.JE2.Objects.Scripts.Physics.Collision.TriggerEvent;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Physics.Raycast;
-import org.JE.JE2.Objects.Scripts.Physics.Collision.TriggerEvent;
-import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.TemporaryParticleEmitter;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessingVolume;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Debug.QuickDebugUI;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
+import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
-import org.JE.JE2.Rendering.TextureUtils;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
 import org.JE.JE2.SampleScripts.PlayerScript;
-import org.JE.JE2.SampleScripts.SampleParticleEmitter.SampleEmitter;
 import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.UI.UIElements.Group;
 import org.JE.JE2.UI.UIElements.Label;
@@ -40,13 +37,10 @@ import org.JE.JE2.UI.UIElements.Sliders.Slider;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIElements.UIImage;
 import org.JE.JE2.UI.UIObjects.UIWindow;
-import org.JE.JE2.Utility.Encryption;
 import org.JE.JE2.Utility.ForceNonNull;
 import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
 import org.joml.Vector2f;
-
-import java.util.HashMap;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 
@@ -85,7 +79,7 @@ public class BasicScene {
 
         //addParticles(scene);
 
-        addParticles(scene);
+        addAnim(new ForceNonNull<>(SpriteRenderer.class).forceNonNull(player.getSpriteRenderer()));
 
         /*asp.setExternalScriptBehaviourPost(new ILambdaScript() {
             @Override
@@ -207,13 +201,20 @@ public class BasicScene {
         return scene;
     }
 
-    private static void addParticles(Scene scene) {
-        //SampleEmitter pe = new SampleEmitter(30);
-        GameObject emitterObject = new GameObject();
-        emitterObject.getTransform().translateY(-1);
-        //TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
-        //emitterObject.addScript(pe);
-        //scene.add(emitterObject);
+    private static void addAnim(SpriteRenderer player){
+        CharacterAnimator ca = new CharacterAnimator(player.getTextureSegments());
+        ca.setLoop(true);
+        Vector2f startPos = player.getAttachedObject().getTransform().position();
+        ca.createAnim(player.getTextureSegment(),startPos, new Vector2f(3,3),new Vector2f(startPos));
+        player.getAttachedObject().addScript(ca);
+        Keyboard.addKeyReleasedEvent(new KeyReleasedEvent() {
+            @Override
+            public void invoke(int key, int mods) {
+                if(key == Keyboard.nameToCode("L")){
+                    ca.play();
+                }
+            }
+        });
     }
 
     private static void createUI(Scene scene) {
