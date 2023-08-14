@@ -19,7 +19,6 @@ import org.JE.JE2.Objects.Scripts.Physics.Collision.TriggerEvent;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles.TemporaryParticleEmitter;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessRegistry;
 import org.JE.JE2.Objects.Scripts.ScreenEffects.PostProcess.PostProcessingVolume;
-import org.JE.JE2.Objects.Scripts.TransformRecorder;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Debug.QuickDebugUI;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
@@ -105,29 +104,14 @@ public class BasicScene {
         scene.add(sound);*/
         //asp.play(true);
 
-        TransformRecorder tr = new TransformRecorder();
 
         player.addScript(new DontDestroyOnLoad());
         //player.addScript(tr);
         Keyboard.addKeyReleasedEvent(new KeyReleasedEvent() {
             @Override
             public void invoke(int key, int mods) {
-                if(Keyboard.nameToCode("4") == key){
-
-                }
                 if(Keyboard.nameToCode("1") == key){
-                    tr.reset();
-                    tr.recording = true;
-                    tr.playing = false;
-                }
-                if(Keyboard.nameToCode("2") == key){
-                    tr.recording = false;
-                    tr.playing = true;
-                    tr.setFrame(Integer.MAX_VALUE);
-                }
-                if(Keyboard.nameToCode("3") == key){
-                    tr.recording = false;
-                    tr.playing = false;
+
                 }
             }
         });
@@ -189,12 +173,11 @@ public class BasicScene {
         scene.setCamera(playerCam);
         scene.add(pl);
 
-        HashMap<String, HashMap<String,String>> save = player.save();
+        /*HashMap<String, HashMap<String,String>> save = player.save();
         GameObject newObj = new GameObject();
         newObj.load(save);
 
-        scene.add(newObj);
-
+        scene.add(newObj);*/
 
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("E")){
@@ -228,8 +211,8 @@ public class BasicScene {
         //SampleEmitter pe = new SampleEmitter(30);
         GameObject emitterObject = new GameObject();
         emitterObject.getTransform().translateY(-1);
-        TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
-        emitterObject.addScript(pe);
+        //TemporaryParticleEmitter pe = new TemporaryParticleEmitter(Texture.get("fire"),200,2,10);
+        //emitterObject.addScript(pe);
         //scene.add(emitterObject);
     }
 

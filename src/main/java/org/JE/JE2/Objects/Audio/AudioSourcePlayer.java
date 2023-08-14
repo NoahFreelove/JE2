@@ -65,7 +65,6 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
     }
 
     public void play(){
-        System.out.println(getAudioResource().getID());
         if(worldRef == null)
         {
             worldRef = Manager.activeScene().world;

@@ -1,5 +1,6 @@
-package org.JE.JE2.Objects.Scripts;
+package org.JE.JE2.Objects.Scripts.Animator.Physical;
 
+import org.JE.JE2.Objects.Scripts.Script;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 

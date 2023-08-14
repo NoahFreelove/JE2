@@ -1,8 +1,10 @@
-package org.JE.JE2.Objects;
+package org.JE.JE2.Utility;
 
 import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.Logging.Logger;
+import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Objects.Identity;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Renderers.TextureSegment;

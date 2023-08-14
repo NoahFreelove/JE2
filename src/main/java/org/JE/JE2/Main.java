@@ -19,9 +19,16 @@ import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIScaler;
 import org.JE.JE2.Utility.GarbageCollection;
 import org.JE.JE2.Utility.MemoryReference;
+import org.JE.JE2.Utility.Time;
+import org.JE.JE2.Utility.Timeline.InterpolateFunctions.Vector2InterpolateFunc;
+import org.JE.JE2.Utility.Timeline.Timeline;
+import org.JE.JE2.Utility.Timeline.Track;
+import org.JE.JE2.Utility.Timeline.TrackPoint;
+import org.JE.JE2.Utility.Watcher;
 import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowPreferences;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import static org.JE.JE2.Examples.BasicScene.mainScene;
 
@@ -34,29 +41,29 @@ public class Main {
                 1920,1080,
                 "JE2",
                 false, true, true);
-        Manager.start(preferences);
 
         Logger.logErrors = true;
         Logger.logThreshold = 2;
-        Scene s = Manager.activeScene();
 
-        s.add(RenderColoredArea.getRadius(new Vector2f(5,0),2,30, Color.PASTEL_RED.clone().a(0.7f)));
-
+        Manager.start(preferences);
         Manager.indexAndSet(mainScene());
         Manager.activeScene().addUI(SceneSwitcherUI.getWindow());
 
-        GameObject go = new GameObject();
-        MemoryReference<GameObject> ref = new MemoryReference<>(go);
 
-        Keyboard.addKeyReleasedEvent((key, mods) -> {
-            if(key == Keyboard.nameToCode("P")){
-                //GarbageCollection.takeOutDaTrash();
-                System.out.println(ref.hasBeenCollected());
-            }
+        Timeline timeline = new Timeline();
+        timeline.setEnd(2);
+        TrackPoint<Vector2f> start = new TrackPoint<>(new Vector2f(0,0), 0);
+        TrackPoint<Vector2f> mid = new TrackPoint<>(new Vector2f(1,1), 0.5f);
+        TrackPoint<Vector2f> end = new TrackPoint<>(new Vector2f(2,2), 1);
+        TrackPoint<Vector2f> end2 = new TrackPoint<>(new Vector2f(0,0), 2);
+
+        Track<Vector2f> positionTrack = new Track<>(new Vector2InterpolateFunc() {},start,mid,end,end2);
+        timeline.addTrack(positionTrack);
+
+        Manager.activeScene().watchers.add(() -> {
+            timeline.update(Time.deltaTime());
+            Logger.log(positionTrack.getRecentValue());
+
         });
-
-        //Scene.addNow(RenderColoredArea.getRadius(new Vector2f(5,0),2,30, Color.PASTEL_BLUE.clone().a(0.7f)));
-
-        //Window.setWindowIcon(Texture.createTexture("texture2.png",false));
     }
 }

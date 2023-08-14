@@ -1,13 +1,10 @@
 package org.JE.JE2.SampleScripts;
 
-import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
-import org.JE.JE2.Objects.Scripts.Serialize.IgnoreSave;
 import org.JE.JE2.Objects.Scripts.Serialize.Load;
 import org.JE.JE2.Objects.Scripts.Serialize.Save;
-import org.JE.JE2.Utility.MethodLimiter;
 import org.JE.JE2.Utility.Time;
 import org.jbox2d.common.Vec2;
 

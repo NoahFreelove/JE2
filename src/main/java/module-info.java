@@ -59,4 +59,7 @@ module org.JE.JE2 {
     exports org.JE.JE2.Utility.Settings;
     exports org.JE.JE2.Utility.Settings.Limits;
     exports org.JE.JE2.Window;
+    exports org.JE.JE2.Utility.Timeline;
+    exports org.JE.JE2.Utility.FlowControl;
+    exports org.JE.JE2.Utility.Timeline.InterpolateFunctions;
 }

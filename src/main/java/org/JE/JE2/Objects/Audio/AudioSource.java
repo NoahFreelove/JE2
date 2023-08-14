@@ -92,7 +92,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
     protected void playAt(int pos){
         int state = alGetSourcei(audioResource.getID(), AL_SOURCE_STATE);
-        System.out.println(audioResource.getID() + " " + state);
+        //System.out.println(audioResource.getID() + " " + state);
 
         if(state == AL_STOPPED)
         {

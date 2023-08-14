@@ -1,4 +1,4 @@
-package org.JE.JE2.Utility;
+package org.JE.JE2.Utility.FlowControl;
 
 public class MethodTimer {
     public long startTime;

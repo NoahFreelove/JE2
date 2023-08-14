@@ -2,6 +2,7 @@ package org.JE.JE2.Objects.Scripts.Animator.Physical;
 
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
 import org.joml.Vector2f;
@@ -26,6 +27,8 @@ public class RelativeAnimator extends Script {
     public void update() {
         if(object == null)
             return;
+
+
 
         if(point >= relativePosPoints.length)
         {

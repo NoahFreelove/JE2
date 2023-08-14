@@ -2,10 +2,9 @@ package org.JE.JE2.Objects.Scripts.ScreenEffects.Physical.Particles;
 
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
-import org.JE.JE2.Rendering.Renderers.Renderer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Utility.Delayer;
+import org.JE.JE2.Utility.FlowControl.Delayer;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class ParticleEmitter extends SpriteRenderer {
     }
 
     protected void spawnParticle(Particle newParticle){
-        Vector2f randomOffset = new Vector2f((float) Math.random() * randXPos - 1, (float) Math.random() * randYPos - 1);
+        Vector2f randomOffset = new Vector2f((float) Math.random() * randXPos, (float) Math.random() * randYPos);
         randomOffset.normalize();
         randomOffset.mul((float) Math.random() * randMagnitude);
         newParticle.setRelativeT(new Transform(randomOffset));

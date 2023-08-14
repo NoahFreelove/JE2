@@ -1,4 +1,6 @@
-package org.JE.JE2.Utility;
+package org.JE.JE2.Utility.FlowControl;
+
+import org.JE.JE2.Utility.RunnableArg;
 
 public class Friend {
     private final String parent;

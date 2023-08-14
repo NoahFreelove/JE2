@@ -6,7 +6,6 @@ import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Serialize.Load;
 import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Scene.Scene;
-import org.JE.JE2.Utility.MethodTimer;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.RayCastInput;
 import org.jbox2d.collision.RayCastOutput;
