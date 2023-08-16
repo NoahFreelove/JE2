@@ -7,6 +7,7 @@ import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Animator.Physical.CharacterAnimator;
+import org.JE.JE2.Objects.Scripts.Animator.Physical.RelativeAnimator;
 import org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Objects.Scripts.Pathfinding.NavigableArea;
@@ -75,6 +76,13 @@ public class BasicScene {
                 Texture.get("PlayerTexture"),
                 Texture.get("PlayerNormal"));
 
+       /* RelativeAnimator ra = new RelativeAnimator(new Vector2f[]{
+                new Vector2f(0,-1),
+                new Vector2f(1,-1),
+                new Vector2f(1,0),
+                new Vector2f(0,0)
+        },1);
+        player.addScript(ra);*/
         Camera playerCam = new Camera();
 
         //addParticles(scene);
@@ -185,7 +193,7 @@ public class BasicScene {
         });
 
         PostProcessingVolume ppv = new PostProcessingVolume(new Vector2f(1,1));
-        ppv.setScreenShader(new ShaderProgram(PostProcessRegistry.blurShaderModule));
+        ppv.setScreenShader(new ShaderProgram(PostProcessRegistry.invertShaderModule));
         //new ShaderProgram(PostProcessRegistry.invertShaderModule)
         GameObject ppo = new GameObject();
         ppo.setPosition(2,-1);
@@ -197,7 +205,6 @@ public class BasicScene {
         createUI(scene);
         scene.add(player);
 
-
         return scene;
     }
 
@@ -205,14 +212,11 @@ public class BasicScene {
         CharacterAnimator ca = new CharacterAnimator(player.getTextureSegments());
         ca.setLoop(true);
         Vector2f startPos = player.getAttachedObject().getTransform().position();
-        ca.createAnim(player.getTextureSegment(),startPos, new Vector2f(3,3),new Vector2f(startPos));
+        ca.createAnim(player.getTextureSegment(),startPos, new Vector2f(1,1),new Vector2f(startPos));
         player.getAttachedObject().addScript(ca);
-        Keyboard.addKeyReleasedEvent(new KeyReleasedEvent() {
-            @Override
-            public void invoke(int key, int mods) {
-                if(key == Keyboard.nameToCode("L")){
-                    ca.play();
-                }
+        Keyboard.addKeyReleasedEvent((key, mods) -> {
+            if(key == Keyboard.nameToCode("L")){
+                ca.play();
             }
         });
     }

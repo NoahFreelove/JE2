@@ -81,12 +81,14 @@ public class Renderer extends Script {
     protected void Render(RenderSegment seg, Transform t, Camera camera){
 
         Transform segTransform = seg.getRelativeTransform();
+        Transform animTransform = seg.getAnimationTransform();
 
         if(debug)
             System.out.println("passed attached object check");
 
         adjustedTransform.set(t);
-        adjustedTransform.relativeAdd(segTransform);
+        adjustedTransform.quickRelativeAdd(segTransform);
+        adjustedTransform.quickRelativeAdd(animTransform);
 
         if(seg.usesRenderDistance()){
             if(!camera.withinRenderDistance(adjustedTransform.position(),adjustedTransform.scale()))
@@ -161,11 +163,14 @@ public class Renderer extends Script {
 
     @GLThread
     private void setLighting(int selectedLayer) {
-        shaderProgram.light_count.setValue(Manager.activeScene().world.lights.size());
+        shaderProgram.light_count.setValue(Manager.activeScene().world.activeLights());
         shaderProgram.layer.setValue(selectedLayer);
 
         int i = 0;
         for (Light light : Manager.activeScene().world.lights) {
+            if(light.notActive()){
+                continue;
+            }
             light.setLighting(shaderProgram, i);
             i++;
         }

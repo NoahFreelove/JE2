@@ -7,7 +7,7 @@ import org.JE.JE2.UI.UIElements.Style.Color;
 
 public class AmbientLight extends Light{
     public AmbientLight() {
-        super(Color.WHITE,1,0);
+        super(Color.WHITE(),1,0);
     }
 
     @Override

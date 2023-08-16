@@ -9,7 +9,7 @@ public class AreaLight extends Light {
     public Vector2f boundPos = new Vector2f(-5,-5);
     public Vector2f boundSize = new Vector2f(10,10);
     public AreaLight() {
-        super(Color.WHITE,1,2);
+        super(Color.WHITE(),1,2);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.JE.JE2.Objects.Scripts.Animator.Sprite;
 
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
+import org.JE.JE2.Rendering.Renderers.TextureSegment;
 import org.JE.JE2.Rendering.Texture;
 
 public class SpriteAnimationFrame {
@@ -15,10 +16,10 @@ public class SpriteAnimationFrame {
         this.normalTexture = normalTexture;
     }
 
-    public void Activate(SpriteRenderer sprite){
+    public void Activate(TextureSegment sprite){
         if(sprite == null)
             return;
         sprite.setTexture(texture);
-        sprite.setNormalTexture(normalTexture);
+        sprite.setNormal(normalTexture);
     }
 }

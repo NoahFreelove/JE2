@@ -19,9 +19,9 @@ import java.io.Serializable;
  **/
 public class Script implements Serializable {
     @ActPublic
-    protected ScriptRestrictions restrictions = new ScriptRestrictions();
-    protected ILambdaScript externalScriptBehaviourPre = new ILambdaScript() {};
-    protected ILambdaScript externalScriptBehaviourPost = new ILambdaScript() {};
+    protected ScriptRestrictions restrictions;
+    protected ILambdaScript externalScriptBehaviourPre;
+    protected ILambdaScript externalScriptBehaviourPost;
 
     private transient GameObject parentObject;
 
@@ -53,7 +53,7 @@ public class Script implements Serializable {
     }
 
     public boolean getActive(){return active;}
-
+    public  boolean notActive(){return !active;}
     public void update(){} // Every frame
     public void postRender(){} // After the scene is rendered
     public void start(){} // When the scene starts
@@ -84,6 +84,8 @@ public class Script implements Serializable {
     }
 
     public ILambdaScript getExternalScriptBehaviourPre() {
+        if(externalScriptBehaviourPre == null)
+            externalScriptBehaviourPre = new ILambdaScript() {};
         return externalScriptBehaviourPre;
     }
 
@@ -92,6 +94,8 @@ public class Script implements Serializable {
     }
 
     public ILambdaScript getExternalScriptBehaviourPost() {
+        if(externalScriptBehaviourPost == null)
+            externalScriptBehaviourPost = new ILambdaScript() {};
         return externalScriptBehaviourPost;
     }
 

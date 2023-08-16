@@ -6,6 +6,7 @@ import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 public class RenderSegment {
     protected VAO2f vao;
     private Transform relativeTransform;
+    private Transform animationTransform;
     private int drawMode;
     private boolean wireframe = false;
     private int lightLayer;
@@ -18,6 +19,7 @@ public class RenderSegment {
     public RenderSegment(VAO2f vao, Transform relativeTransform, int drawMode) {
         this.vao = vao;
         this.relativeTransform = relativeTransform;
+        this.animationTransform = new Transform();
         this.drawMode = drawMode;
     }
 
@@ -27,6 +29,10 @@ public class RenderSegment {
 
     public Transform getRelativeTransform() {
         return relativeTransform;
+    }
+
+    public Transform getAnimationTransform() {
+        return animationTransform;
     }
 
     public int getDrawMode() {
@@ -51,6 +57,10 @@ public class RenderSegment {
 
     public void setRelativeTransform(Transform relativeTransform) {
         this.relativeTransform = relativeTransform;
+    }
+
+    public void setAnimationTransform(Transform animationTransform) {
+        this.animationTransform = animationTransform;
     }
 
     public void setDrawMode(int drawMode) {

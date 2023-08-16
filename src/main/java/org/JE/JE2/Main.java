@@ -27,6 +27,7 @@ import org.JE.JE2.Utility.Timeline.TrackPoint;
 import org.JE.JE2.Utility.Watcher;
 import org.JE.JE2.Window.Window;
 import org.JE.JE2.Window.WindowPreferences;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -48,22 +49,6 @@ public class Main {
         Manager.start(preferences);
         Manager.indexAndSet(mainScene());
         Manager.activeScene().addUI(SceneSwitcherUI.getWindow());
-
-
-        Timeline timeline = new Timeline();
-        timeline.setEnd(2);
-        TrackPoint<Vector2f> start = new TrackPoint<>(new Vector2f(0,0), 0);
-        TrackPoint<Vector2f> mid = new TrackPoint<>(new Vector2f(1,1), 0.5f);
-        TrackPoint<Vector2f> end = new TrackPoint<>(new Vector2f(2,2), 1);
-        TrackPoint<Vector2f> end2 = new TrackPoint<>(new Vector2f(0,0), 2);
-
-        Track<Vector2f> positionTrack = new Track<>(new Vector2InterpolateFunc() {},start,mid,end,end2);
-        timeline.addTrack(positionTrack);
-
-        Manager.activeScene().watchers.add(() -> {
-            timeline.update(Time.deltaTime());
-            //Logger.log(positionTrack.getRecentValue());
-
-        });
     }
+
 }

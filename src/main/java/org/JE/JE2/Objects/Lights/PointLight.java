@@ -12,7 +12,7 @@ public class PointLight extends Light {
     public float constant = 1;
     public float radius = 5;
     public PointLight(){
-        super(Color.WHITE, 1, 1);
+        super(Color.WHITE(), 1, 1);
     }
 
     @Override

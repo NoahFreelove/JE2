@@ -92,7 +92,7 @@ public class TextField extends UIElement {
         }
         length.rewind();
         if(title != null){
-            nk_label_colored(UIHandler.nuklearContext, title, NK_TEXT_ALIGN_LEFT, Color.WHITE.nkColor());
+            nk_label_colored(UIHandler.nuklearContext, title, NK_TEXT_ALIGN_LEFT, Color.WHITE().nkColor());
         }
 
         prevString = getValue();

@@ -11,39 +11,63 @@ public class Color implements Serializable {
 
     //region Pre-made Colors
     public static final Color TRANSPARENT = Color.createColor(0,0,0,0);
+    public static Color TRANSPARENT(){return TRANSPARENT.clone();}
     public static final Color WHITE = Color.createColor(1,1,1,1);
+    public static Color WHITE(){return WHITE.clone();}
     public static final Color SUPER_WHITE = Color.createColor(5,5,5,1);
+    public static Color SUPER_WHITE(){return SUPER_WHITE.clone();}
     public static final Color BLACK = Color.createColor(0,0,0,1);
+    public static Color BLACK(){return BLACK.clone();}
     public static final Color GREY = Color.createColor(0.6f,0.6f,0.6f);
+    public static Color GREY(){return GREY.clone();}
     public static final Color DARK_GREY = Color.createColor(0.3f,0.3f,0.3f);
+    public static Color DARK_GREY(){return DARK_GREY.clone();}
 
     public static final Color RED = Color.createColor(1,0,0,1);
+    public static Color RED(){return RED.clone();}
     public static final Color GREEN = Color.createColor(0,1,0,1);
+    public static Color GREEN(){return GREEN.clone();}
     public static final Color BLUE = Color.createColor(0,0,1,1);
+    public static Color BLUE(){return BLUE.clone();}
 
     public static final Color YELLOW = Color.createColor(1,1,0,1);
+    public static Color YELLOW(){return YELLOW.clone();}
     public static final Color CYAN = Color.createColor(0,1,1,1);
+    public static Color CYAN(){return CYAN.clone();}
     public static final Color MAGENTA = Color.createColor(1,0,1,1);
+    public static Color MAGENTA(){return MAGENTA.clone();}
 
     public static final Color BROWN = Color.createColor(0.6f,0.4f,0.2f);
+    public static Color BROWN(){return BROWN.clone();}
     public static final Color PURPLE = Color.createColor(0.6f,0.2f,0.6f);
+    public static Color PURPLE(){return PURPLE.clone();}
     public static final Color ORANGE = Color.createColor(1,0.5f,0);
+    public static Color ORANGE(){return ORANGE.clone();}
     public static final Color PINK = Color.createColor(1,0.5f,0.5f);
+    public static Color PINK(){return PINK.clone();}
     public static final Color TEAL = Color.createColor(0,0.5f,0.5f);
+    public static Color TEAL(){return TEAL.clone();}
     public static final Color LIME = Color.createColor(0.5f,1,0);
+    public static Color LIME(){return LIME.clone();}
 
     public static final Color PASTEL_RED = Color.createColor(1,0.5f,0.5f);
+    public static Color PASTEL_RED(){return PASTEL_RED.clone();}
     public static final Color PASTEL_GREEN = Color.createColor(0.5f,1,0.5f);
+    public static Color PASTEL_GREEN(){return PASTEL_GREEN.clone();}
     public static final Color PASTEL_BLUE = Color.createColor(0.5f,0.5f,1);
+    public static Color PASTEL_BLUE(){return PASTEL_BLUE.clone();}
     public static final Color PASTEL_YELLOW = Color.createColor(1,1,0.5f);
+    public static Color PASTEL_YELLOW(){return PASTEL_YELLOW.clone();}
     public static final Color PASTEL_CYAN = Color.createColor(0.5f,1,1);
+    public static Color PASTEL_CYAN(){return PASTEL_CYAN.clone();}
     public static final Color PASTEL_MAGENTA = Color.createColor(1,0.5f,1);
+    public static Color PASTEL_MAGENTA(){return PASTEL_MAGENTA.clone();}
     //endregion
 
-    @ActPublic private float r;
-    @ActPublic private float g;
-    @ActPublic private float b;
-    @ActPublic private float a;
+    private float r;
+    private float g;
+    private float b;
+    private float a;
 
     transient NkColor nkColor = NkColor.create();
 
@@ -219,5 +243,22 @@ public class Color implements Serializable {
     @Override
     public String toString(){
         return "("+r + ", " + g + ", " + b + ", " + a + ")";
+    }
+
+    public String serialize(){
+        return r + "," + g + "," + b + "," + a;
+    }
+
+    public static Color deserialize(String s){
+        String[] split = s.split(",");
+        return Color.createColor(Float.parseFloat(split[0]),Float.parseFloat(split[1]),Float.parseFloat(split[2]),Float.parseFloat(split[3]));
+    }
+    public Color deserializeThis(String s){
+        String[] split = s.split(",");
+        this.r = Float.parseFloat(split[0]);
+        this.g = Float.parseFloat(split[1]);
+        this.b = Float.parseFloat(split[2]);
+        this.a = Float.parseFloat(split[3]);
+        return this;
     }
 }

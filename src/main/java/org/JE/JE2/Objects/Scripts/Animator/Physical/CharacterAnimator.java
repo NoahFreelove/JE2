@@ -53,7 +53,6 @@ public class CharacterAnimator extends Script {
             points[i] = new TrackPoint<>(t, time);
         }
         selected.setPoints(points);
-
     }
 
     @Override
@@ -62,7 +61,7 @@ public class CharacterAnimator extends Script {
             return;
         animationTimeline.update();
         for (int i = 0; i < parts.length; i++) {
-            parts[i].setRelativeTransform((Transform) animationTimeline.getTrack(i).getRecentValue());
+            parts[i].setAnimationTransform((Transform) animationTimeline.getTrack(i).getRecentValue());
         }
     }
     public void play(){

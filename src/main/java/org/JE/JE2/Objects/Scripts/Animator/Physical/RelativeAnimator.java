@@ -13,6 +13,7 @@ public class RelativeAnimator extends Script {
     private float timePerPoint;
     private float t;
     private int point;
+    private boolean loop = false;
 
     private boolean completed = false;
     public RelativeAnimator(Vector2f[] relativePosPoints, float timePerPoint) {
@@ -28,16 +29,18 @@ public class RelativeAnimator extends Script {
         if(object == null)
             return;
 
-
-
         if(point >= relativePosPoints.length)
         {
+            if(loop){
+                point = 0;
+                t = 0;
+                return;
+            }
             completed = true;
             return;
         }
 
         float timeMultiplier = 1/timePerPoint * Time.deltaTime();
-
 
         Vector2f startPos;
         if(point == 0)
@@ -99,5 +102,13 @@ public class RelativeAnimator extends Script {
 
     public boolean hasCompleted(){
         return completed;
+    }
+
+    public boolean isLoop() {
+        return loop;
+    }
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 }

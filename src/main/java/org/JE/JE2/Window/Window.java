@@ -11,6 +11,7 @@ import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.UI.UIElements.Style.Color;
 import org.JE.JE2.UI.UIScaler;
+import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Utility.Time;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -32,6 +33,8 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
+import static org.lwjgl.opengl.GL30.GL_MAX_SAMPLES;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -39,6 +42,7 @@ public final class Window {
     private static long windowHandle = -1;
     private static long audioDevice =-1;
     private static long audioContext =-1;
+    private static int maxSamples;
     private static volatile boolean hasInit = false;
     private static boolean doubleRenderPostProcess = true;
     private static int width;
@@ -86,7 +90,7 @@ public final class Window {
             initializeWindow(wp);
             if (videoModeErrorCheck()) return;
             hasInit = true;
-
+            maxSamples = glGetInteger(GL_MAX_SAMPLES);
             loop();
         });
         glThread.start();
@@ -489,6 +493,16 @@ public final class Window {
         //System.out.println("[OpenGL Error] Source: " + source + " | Type: " + type + " | ID: " + id + " | Severity: " + severity);
         //System.out.println("Error Message: " + message);
         Logger.log(new JE2Error(message));
+    }
+
+    public void setAntiAliasLevel(int level){
+        level = JE2Math.clamp(level,0,maxSamples);
+        glEnable(GL_MULTISAMPLE);
+        glfwWindowHint(GLFW_SAMPLES, level);
+
+        if(level == 0)
+            glDisable(GL_MULTISAMPLE);
+
     }
 
 

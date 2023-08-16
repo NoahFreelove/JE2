@@ -39,11 +39,11 @@ uniform sampler2D JE_Texture;
 uniform sampler2D JE_Normal;
 
 uniform int use_texture;
+uniform int use_lighting;
 
 out vec4 color;
 
-void main(){
-
+vec3 calculateLight(){
     vec3 total_light = vec3(0,0,0);
 
     for(int i = 0; i < light_count; i++){
@@ -102,6 +102,16 @@ void main(){
 
         total_light += light.color.rgb * falloff * intensity;
     }
+    return total_light;
+}
+
+void main(){
+
+    vec3 total_light = vec3(1,1,1);
+    if(use_lighting == 1){
+        total_light = calculateLight();
+    }
+
     if(use_texture == 1){
         color = texture(JE_Texture, UV) * vec4(total_light, 1.0);
     }

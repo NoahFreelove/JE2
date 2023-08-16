@@ -43,4 +43,13 @@ public class World implements Serializable {
         }
         return null;
     }
+
+    public int activeLights(){
+        int count = 0;
+        for (Light light : lights) {
+            if(light.getActive())
+                count++;
+        }
+        return count;
+    }
 }

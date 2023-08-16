@@ -2,6 +2,7 @@ package org.JE.JE2.Objects.Scripts;
 
 import org.JE.JE2.Annotations.ActPublic;
 import org.JE.JE2.Annotations.PrimarySetter;
+import org.JE.JE2.Annotations.StandaloneScript;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Serialize.Load;
 import org.JE.JE2.Objects.Scripts.Serialize.Save;
@@ -11,6 +12,7 @@ import org.joml.Vector3f;
 
 import java.util.HashMap;
 
+@StandaloneScript
 public class Transform extends Script implements Save, Load {
 
     public static Transform zero = new Transform();
@@ -254,6 +256,13 @@ public class Transform extends Script implements Save, Load {
         this.translate(other.position());
         this.setRotation(rotation().add(other.rotation()));
         this.setScale(scale().mul(other.scale()));
+        return this;
+    }
+
+    public Transform quickRelativeAdd(Transform other){
+        setPosition(position.x + other.position().x, position.y + other.position().y, position.z + other.zPos());
+        setRotation(rotation.x + other.rotation().x, rotation.y + other.rotation().y, rotation.z + other.rotation().z);
+        setScale(scale.x * other.scale().x, scale.y * other.scale().y, scale.z * other.scale3D().z);
         return this;
     }
 

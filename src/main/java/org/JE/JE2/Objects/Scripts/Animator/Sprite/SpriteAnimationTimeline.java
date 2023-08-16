@@ -1,6 +1,7 @@
 package org.JE.JE2.Objects.Scripts.Animator.Sprite;
 
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
+import org.JE.JE2.Rendering.Renderers.TextureSegment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +41,7 @@ public class SpriteAnimationTimeline {
         currentFrameDuration = 0;
     }
 
-    public void animUpdate(SpriteRenderer sprite){
+    public void animUpdate(TextureSegment sprite){
         float newDelta = System.currentTimeMillis() - updateDelta;
         updateDelta = System.currentTimeMillis();
 

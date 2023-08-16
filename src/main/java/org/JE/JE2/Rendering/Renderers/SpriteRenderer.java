@@ -118,6 +118,11 @@ public class SpriteRenderer extends Renderer implements Save, Load {
         return textureSegments;
     }
 
+    @Override
+    public RenderSegment[] getRenderSegments() {
+        return textureSegments;
+    }
+
     public TextureSegment getTextureSegment(int index) {
         return textureSegments[index];
     }

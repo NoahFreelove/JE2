@@ -8,7 +8,7 @@ public class Material {
     private Vector3f diffuse;
     private Vector3f specular;
     private float shininess;
-    private Color baseColor = Color.WHITE;
+    private Color baseColor = Color.WHITE();
 
     public Material(){
         this(new Vector3f(1), new Vector3f(1), new Vector3f(.5f), 0f);
