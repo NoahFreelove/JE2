@@ -1,6 +1,7 @@
 package org.JE.JE2.Rendering.Shaders;
 
 import org.JE.JE2.Annotations.GLThread;
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.Logging.Errors.ShaderError;
 import org.JE.JE2.IO.Logging.Logger;
 import org.JE.JE2.Manager;
@@ -75,7 +76,7 @@ public final class ShaderProgram implements Serializable {
         this.supportsLighting = supportsLighting;
     }
 
-    public ShaderProgram(File vertexShader, File fragmentShader, boolean supportsTextures, boolean supportsLighting){
+    public ShaderProgram(Filepath vertexShader, Filepath fragmentShader, boolean supportsTextures, boolean supportsLighting){
         createShader(vertexShader, fragmentShader);
         this.supportsLighting = supportsLighting;
         this.supportsTextures = supportsTextures;
@@ -182,7 +183,7 @@ public final class ShaderProgram implements Serializable {
             glUniform3f(location, value.x, value.y, value.z);
     }
 
-    public void createShader(File vertex, File fragment){
+    public void createShader(Filepath vertex, Filepath fragment){
         StringBuilder vertexShader = new StringBuilder();
         StringBuilder fragmentShader = new StringBuilder();
 
@@ -190,8 +191,8 @@ public final class ShaderProgram implements Serializable {
         FileInputStream fragmentStream = null;
 
         try {
-            vertexStream = new FileInputStream(vertex);
-            fragmentStream = new FileInputStream(fragment);
+            vertexStream = new FileInputStream(vertex.getPath(false));
+            fragmentStream = new FileInputStream(fragment.getPath(false));
 
             int data = vertexStream.read();
             while(data != -1){

@@ -6,6 +6,7 @@ import org.JE.JE2.Scene.Scene;
 
 public class LambdaScript extends Script {
     ILambdaScript lambdaScript;
+    public LambdaScript(){}
     public LambdaScript(ILambdaScript lambdaScript){
         this.lambdaScript = lambdaScript;
     }
@@ -64,5 +65,7 @@ public class LambdaScript extends Script {
             return;
         lambdaScript.postRender(getAttachedObject());
     }
+
+
 }
 

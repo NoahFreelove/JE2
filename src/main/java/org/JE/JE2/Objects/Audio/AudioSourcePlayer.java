@@ -27,6 +27,10 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
         }
     }
 
+    public AudioSourcePlayer(Resource<AudioBundle> resource){
+        super(resource);
+    }
+
     public static AudioSourcePlayer checkExistElseCreate(String name, int ID, Filepath fp){
         Resource<AudioBundle> resource = (Resource<AudioBundle>) ResourceManager.getIfExists(AudioBundle.class, name, ID);
         if(resource != null){
@@ -139,5 +143,9 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
         setPositionWorld(horizPan,vertPan);
 
 
+    }
+
+    public AudioSourcePlayer clonePlayer() {
+        return new AudioSourcePlayer(getAudioResource(), false);
     }
 }

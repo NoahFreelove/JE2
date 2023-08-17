@@ -205,6 +205,8 @@ public class BasicScene {
         createUI(scene);
         scene.add(player);
 
+        scene.saveSceneToZip(new Filepath("scene.zip"));
+
         return scene;
     }
 

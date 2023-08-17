@@ -516,7 +516,7 @@ public final class GameObject implements Serializable {
             else{
                 if(!(script instanceof IgnoreSave)) {
                     Logger.log("WARNING: Script <" + script.getClass().getName() + "> does not implement save interface " +
-                            "but is undergoing the save process. This script will be added but no fields will be saved." + i, Logger.WARN);
+                            "but is undergoing the save process. This script will be added but no fields will be saved.", Logger.WARN);
                 }
                 map.put(script.getClass().getName(), new HashMap<>());
 

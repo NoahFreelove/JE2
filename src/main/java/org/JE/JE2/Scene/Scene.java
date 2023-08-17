@@ -1,6 +1,7 @@
 package org.JE.JE2.Scene;
 
 import org.JE.JE2.Annotations.RequireNonNull;
+import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Identity;
@@ -11,6 +12,7 @@ import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Texture;
+import org.JE.JE2.Resources.DataWriter;
 import org.JE.JE2.UI.UIObjects.UIObject;
 import org.JE.JE2.UI.UIObjects.UIWindow;
 import org.JE.JE2.Utility.Time;
@@ -19,6 +21,7 @@ import org.JE.JE2.Utility.Watcher;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 public class Scene implements Serializable {
 
@@ -234,6 +237,20 @@ public class Scene implements Serializable {
             i++;
         }
         return false;
+    }
+
+    public String[] saveAllObjects(){
+        ArrayList<String> save = new ArrayList<>();
+        world.gameObjects.forEach(new Consumer<GameObject>() {
+            @Override
+            public void accept(GameObject gameObject) {
+                save.add(gameObject.serialize());
+            }
+        });
+        return save.toArray(new String[0]);
+    }
+    public void saveSceneToZip(Filepath path){
+        DataWriter.saveArrayToZip(saveAllObjects(), path);
     }
 }
 

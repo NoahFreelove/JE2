@@ -152,6 +152,7 @@ public class SpriteRenderer extends Renderer implements Save, Load {
     public void load(HashMap<String, String> data) {
         // Need to load the Texture Segments, Its VAO points, its relative transform, texture, and normal texture, and tile factor and draw mode
         // In Future material and shader program
+        textureSegments = new TextureSegment[0];
         int i = 0;
         while (data.containsKey("TextureSegment" + i + ":VAO")) {
             VAO2f vao = new VAO2f();
@@ -161,6 +162,8 @@ public class SpriteRenderer extends Renderer implements Save, Load {
 
             Transform relativeTransform = new Transform();
             relativeTransform.simpleDeserialize(data.get("TextureSegment" + i + ":RELATIVE_TRANSFORM"));
+            Transform animationTransform = new Transform();
+            animationTransform.simpleDeserialize(data.get("TextureSegment" + i + ":ANIMATION_TRANSFORM"));
             String[] textureData = data.get("TextureSegment" + i + ":TEXTURE").split(":");
             Texture texture = Texture.checkExistElseCreate(textureData[0],-1, new Filepath(textureData[1],true));
             String[] normalData = data.get("TextureSegment" + i + ":NORMAL").split(":");
@@ -186,6 +189,7 @@ public class SpriteRenderer extends Renderer implements Save, Load {
             data.put("TextureSegment" + i + ":VAO", ts.getVao().vertsToString());
             data.put("TextureSegment" + i + ":COORDS", ts.getCoords().vertsToString());
             data.put("TextureSegment" + i + ":RELATIVE_TRANSFORM", ts.getRelativeTransform().simpleSerialize());
+            data.put("TextureSegment" + i + ":ANIMATION_TRANSFORM", ts.getAnimationTransform().simpleSerialize());
             data.put("TextureSegment" + i + ":TEXTURE", ts.getTexture().resource.getName() + ":" + ts.getTexture().resource.getBundle().tryGetFilepath().getPath(true));
             data.put("TextureSegment" + i + ":NORMAL", ts.getTexture().resource.getName() + ":" + ts.getNormal().resource.getBundle().tryGetFilepath().getPath(true));
             data.put("TextureSegment" + i + ":TILE_FACTOR", ts.getTileFactor().x() + ":" + ts.getTileFactor().y());

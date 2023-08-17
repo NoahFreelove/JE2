@@ -5,6 +5,8 @@ import org.JE.JE2.Annotations.EditorEnum;
 import org.JE.JE2.Annotations.GLThread;
 import org.JE.JE2.Manager;
 import org.JE.JE2.Objects.Scripts.Script;
+import org.JE.JE2.Objects.Scripts.Serialize.Load;
+import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Rendering.Camera;
@@ -17,10 +19,13 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.GL_MAX_ARRAY_TEXTURE_LAYERS;
 
-public class Renderer extends Script {
+public class Renderer extends Script implements Save, Load {
     protected RenderSegment[] renderSegments = new RenderSegment[0];
     public Material material = new Material();
     protected ShaderProgram shaderProgram = ShaderProgram.invalidShader();
@@ -140,7 +145,6 @@ public class Renderer extends Script {
     }
 
     private void setMaterial(ShaderProgram shader) {
-
         shader.material_ambient.setValue(material.getAmbient());
         shader.material_diffuse.setValue(material.getDiffuse());
         shader.material_specular.setValue(material.getSpecular());
@@ -200,5 +204,57 @@ public class Renderer extends Script {
         Manager.queueGLFunction(() -> {
             System.out.println("Highest Buffer " + glGenBuffers());
         });
+    }
+
+
+    @Override
+    public void load(HashMap<String, String> data) {
+        // Need to load the Texture Segments, Its VAO points, its relative transform, texture, and normal texture, and tile factor and draw mode
+        // In Future material and shader program
+
+        ArrayList<RenderSegment> segs = new ArrayList<>();
+        int i = 0;
+        while (data.containsKey("RenderSegment" + i + ":VAO")) {
+            VAO2f vao = new VAO2f();
+            vao.setVertices(VAO2f.stringToVerts(data.get("RenderSegment" + i + ":VAO")));
+            Transform relativeTransform = new Transform();
+            relativeTransform.simpleDeserialize(data.get("RenderSegment" + i + ":RELATIVE_TRANSFORM"));
+            Transform animationTransform = new Transform();
+            animationTransform.simpleDeserialize(data.get("RenderSegment" + i + ":ANIMATION_TRANSFORM"));
+
+            int drawMode = Integer.parseInt(data.get("TextureSegment" + i + ":DRAW_MODE"));
+            RenderSegment ts = new RenderSegment(vao, relativeTransform, drawMode);
+            ts.setAnimationTransform(animationTransform);
+            segs.add(ts);
+            i++;
+        }
+        renderSegments = segs.toArray(new RenderSegment[0]);
+
+    }
+
+    public void addRenderSegment(RenderSegment rs) {
+        RenderSegment[] temp = new RenderSegment[renderSegments.length + 1];
+        for (int i = 0; i < renderSegments.length; i++) {
+            temp[i] = renderSegments[i];
+        }
+        temp[temp.length - 1] = rs;
+        renderSegments = temp;
+    }
+
+    @Override
+    public HashMap<String, String> save() {
+        HashMap<String, String> data = new HashMap<>();
+        // Need to save the Texture Segments, Its VAO points, its relative transform, texture, and normal texture, and tile factor and draw mode
+        // In Future material and shader program
+        int i = 0;
+        for (RenderSegment ts : renderSegments) {
+            data.put("RenderSegment" + i + ":VAO", ts.getVao().vertsToString());
+            data.put("RenderSegment" + i + ":RELATIVE_TRANSFORM", ts.getRelativeTransform().simpleSerialize());
+            data.put("RenderSegment" + i + ":ANIMATION_TRANSFORM", ts.getAnimationTransform().simpleSerialize());
+            data.put("RenderSegment" + i + ":DRAW_MODE", ts.getDrawMode() + "");
+            i++;
+        }
+
+        return data;
     }
 }

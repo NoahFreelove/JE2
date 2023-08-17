@@ -33,6 +33,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     private SoundFilter filter;
 
     private transient int audioBuffer;
+    private int source;
     private transient float duration = 0;
 
     protected float maxDistance = 10;
@@ -65,11 +66,11 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
                 audioResource.getBundle().getSampleRate());
 
         // Generate source
-        audioResource.setID(alGenSources());
-        alSourcei(audioResource.getID(), AL10.AL_BUFFER, audioBuffer);
-        alSourcei(audioResource.getID(), AL10.AL_LOOPING, loops?1:0);
+        source = alGenSources();
+        alSourcei(source, AL10.AL_BUFFER, audioBuffer);
+        alSourcei(source, AL10.AL_LOOPING, loops?1:0);
 
-        alSourcei(audioResource.getID(), AL_POSITION, 0);
+        alSourcei(source, AL_POSITION, 0);
 
         setMaxGain(1);
         setGain(1);
@@ -91,18 +92,18 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
 
     protected void playAt(int pos){
-        int state = alGetSourcei(audioResource.getID(), AL_SOURCE_STATE);
+        int state = alGetSourcei(source, AL_SOURCE_STATE);
         //System.out.println(audioResource.getID() + " " + state);
 
         if(state == AL_STOPPED)
         {
             isPlaying = false;
-            alSourcei(audioResource.getID(), AL_POSITION, pos);
-            alGetSourcei(audioResource.getID(), AL_POSITION);
+            alSourcei(source, AL_POSITION, pos);
+            alGetSourcei(source, AL_POSITION);
         }
 
         if(!isPlaying){
-            alSourcePlay(audioResource.getID());
+            alSourcePlay(source);
 
             isPlaying = true;
         }
@@ -110,13 +111,13 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
     protected void stopSound(){
         if(isPlaying){
-            alSourceStop(audioResource.getID());
+            alSourceStop(source);
             isPlaying = false;
         }
     }
 
     public boolean isPlaying() {
-        int state = alGetSourcei(audioResource.getID(), AL_SOURCE_STATE);
+        int state = alGetSourcei(source, AL_SOURCE_STATE);
         return state == AL_PLAYING;
     }
 
@@ -125,7 +126,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
     public void setLoops(boolean loops){
         this.loops = loops;
-        alSourcei(audioResource.getID(), AL10.AL_LOOPING, loops?1:0);
+        alSourcei(source, AL10.AL_LOOPING, loops?1:0);
     }
 
     public void setFilter(SoundFilter filter){
@@ -135,17 +136,17 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
     }
     public void updateFilter(){
         if(filter == null) return;
-        AL10.alSourcei(audioResource.getID(), EXTEfx.AL_DIRECT_FILTER, filter.filterHandle);
+        AL10.alSourcei(source, EXTEfx.AL_DIRECT_FILTER, filter.filterHandle);
     }
     public SoundFilter getFilter(){return filter;}
     public void removeFilter(){
         setFilter(new SoundFilter());
     }
     public void setGain(float gain){
-        alSourcef(audioResource.getID(), AL_GAIN, gain);
+        alSourcef(source, AL_GAIN, gain);
     }
     public void setMaxGain(float maxGain){
-        alSourcef(audioResource.getID(),AL_MAX_GAIN, maxGain);
+        alSourcef(source,AL_MAX_GAIN, maxGain);
     }
 
     public void setReferenceDistance(float distance){
@@ -154,7 +155,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
 
     public void setPanStrength(float factor){
         panStrength = factor;
-        alSourcef(audioResource.getID(), AL_ROLLOFF_FACTOR, factor);
+        alSourcef(source, AL_ROLLOFF_FACTOR, factor);
     }
 
     public void setMaxDistance(float distance){
@@ -166,7 +167,7 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
             Logger.log("Audio Warning For Clip <" + getAudioResource().getName() + ">: " +
                     "setPositionWorld position is out of bounds. Must be between -1 and 1", Logger.WARN);
         }
-        alSource3f(audioResource.getID(), AL_POSITION, x, y, 0);
+        alSource3f(source, AL_POSITION, x, y, 0);
     }
 
     public int getBufferPosition(){
@@ -175,11 +176,11 @@ public sealed class AudioSource extends Script permits AudioSourcePlayer {
         if(error != AL_NO_ERROR){
             Logger.log("Error: " + error);
         }*/
-        return alGetSourcei(audioResource.getID(), AL_SAMPLE_OFFSET);
+        return alGetSourcei(source, AL_SAMPLE_OFFSET);
     }
     public void setAttribute3f(int attribute, Vector3f value)
     {
-        alSource3f(audioResource.getID(), attribute, value.x, value.y, value.z);
+        alSource3f(source, attribute, value.x, value.y, value.z);
     }
     public int getSourceSize(){
         IntBuffer size = BufferUtils.createIntBuffer(1);

@@ -103,7 +103,7 @@ public class ResourceManager implements Serializable {
         }
         if(clazz == AudioBundle.class){
             for (Resource<AudioBundle> s : sounds) {
-                if(s.getID() == ID || s.getName().equals(name)){
+                if(s.getName().equals(name)){
                     return s;
                 }
             }
