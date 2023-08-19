@@ -26,6 +26,7 @@ import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
+import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
@@ -205,9 +206,10 @@ public class BasicScene {
         createUI(scene);
         scene.add(player);
 
-        scene.saveSceneToZip(new Filepath("scene.zip"));
+        //scene.saveSceneToZip(new Filepath("scene.zip"));
 
         return scene;
+        //return DataLoader.zipToScene(new Filepath("scene.zip",false));
     }
 
     private static void addAnim(SpriteRenderer player){

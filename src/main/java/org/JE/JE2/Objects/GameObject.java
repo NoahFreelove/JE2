@@ -30,10 +30,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -588,23 +585,42 @@ public final class GameObject implements Serializable {
         }
     }
 
-    public void loadFromFile(Filepath filepath){
-        String[] loadedData = DataLoader.readTextFile(filepath);
+    public static HashMap<String, HashMap<String,String>> deserialize(String[] input){
+        System.out.println(Arrays.toString(input));
         HashMap<String, HashMap<String,String>> data = new HashMap<>();
-        for (String line : loadedData) {
+        for (String line : input) {
             String[] split = line.split(":");
             String scriptName = split[0];
-            String[] scriptData = split[1].split(";");
             HashMap<String, String> scriptDataMap = new HashMap<>();
-            for (String s : scriptData) {
-                String[] split2 = s.split("=");
-                String key = split2[0];
-                String value = split2[1];
-                scriptDataMap.put(key, value);
+
+            if(split.length >1){
+                String[] scriptData = split[1].split(";");
+                for (String s : scriptData) {
+                    String[] split2 = s.split("=");
+                    String key = split2[0];
+                    if(split2.length>1){
+                        String value = split2[1];
+                        scriptDataMap.put(key, value);
+                    }
+                    else {
+                        System.out.println("KEY: "+ key + ", HAS NO VALUE");
+
+                    }                }
             }
             data.put(scriptName, scriptDataMap);
         }
-        load(data);
+        return data;
+    }
+
+    public static GameObject load(String[] input){
+        GameObject newObj = new GameObject();
+        newObj.load(deserialize(input));
+        return newObj;
+    }
+
+    public void loadFromFile(Filepath filepath){
+        String[] loadedData = DataLoader.readTextFile(filepath);
+        load(deserialize(loadedData));
     }
 
 }

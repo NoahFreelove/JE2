@@ -4,13 +4,17 @@ import org.JE.JE2.Annotations.JarSafe;
 import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.Logging.Logger;
+import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Scene.Scene;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public final class DataLoader {
 
@@ -124,5 +128,69 @@ public final class DataLoader {
 
     public static String[] readTextFile(Filepath path){
         return readTextFile(path.getDefault());
+    }
+
+    public static Scene zipToScene(Filepath fp){
+        File file = new File(fp.getDefault());
+        if(!file.exists()){
+            Logger.log("File does not exist to unzip scene from: " + fp.getDefault(), Logger.WARN);
+            return new Scene();
+        }
+
+        List<String> list = processZipAndExtractTextFiles(readZipFileIntoMemory(file.getAbsolutePath()));
+        Scene scene = new Scene();
+        list.forEach(s -> {
+            GameObject go = GameObject.load(s.split("\n"));
+            scene.add(go);
+        });
+        return scene;
+    }
+
+    public static byte[] readZipFileIntoMemory(String zipFilePath) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+
+        try (InputStream is = new FileInputStream(zipFilePath)) {
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, bytesRead);
+            }
+        }
+        catch (IOException e){
+            Logger.log(new JE2Error("IO Error when reading scene zip: " + e.getMessage()));
+            return new byte[0];
+        }
+
+        return baos.toByteArray();
+    }
+
+    public static List<String> processZipAndExtractTextFiles(byte[] zipData) {
+        List<String> textFileContents = new ArrayList<>();
+
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(zipData);
+             ZipInputStream zis = new ZipInputStream(bais)) {
+
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (!entry.isDirectory() && entry.getName().endsWith(".txt")) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+
+                    while ((bytesRead = zis.read(buffer)) != -1) {
+                        baos.write(buffer, 0, bytesRead);
+                    }
+
+                    textFileContents.add(baos.toString("UTF-8"));
+                }
+
+                zis.closeEntry();
+            }
+        }
+        catch (IOException e){
+            Logger.log(new JE2Error("IO Error when extracting scene zip: " + e.getMessage()));
+        }
+
+        return textFileContents;
     }
 }

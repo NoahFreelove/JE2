@@ -40,7 +40,6 @@ module org.JE.JE2 {
     exports org.JE.JE2.Rendering.Renderers;
     exports org.JE.JE2.Rendering.Renderers.VertexBuffers;
     exports org.JE.JE2.Rendering.Shaders;
-    exports org.JE.JE2.Rendering.Shaders.Debugging;
     exports org.JE.JE2.Rendering.Shaders.Uniforms;
     exports org.JE.JE2.Resources;
     exports org.JE.JE2.Resources.Bundles;
