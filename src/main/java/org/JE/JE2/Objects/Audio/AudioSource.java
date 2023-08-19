@@ -1,5 +1,6 @@
 package org.JE.JE2.Objects.Audio;
 
+import org.JE.JE2.Annotations.StandaloneScript;
 import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.Objects.Audio.Filters.SoundFilter;
 import org.JE.JE2.IO.Logging.Logger;
@@ -23,6 +24,7 @@ import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryStack.stackPop;
 
+@StandaloneScript
 public sealed class AudioSource extends Script permits AudioSourcePlayer {
     private Resource<AudioBundle> audioResource;
 
