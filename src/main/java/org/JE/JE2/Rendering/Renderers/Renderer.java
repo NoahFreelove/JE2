@@ -12,10 +12,9 @@ import org.JE.JE2.Objects.Lights.Light;
 import org.JE.JE2.Rendering.Camera;
 import org.JE.JE2.Rendering.Material;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO;
 import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
+import org.JE.JE2.Utility.Time;
 import org.joml.Vector2f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.GL_MAX_ARRAY_TEXTURE_LAYERS;
 
 public class Renderer extends Script implements Save, Load {
     protected RenderSegment[] renderSegments = new RenderSegment[0];
@@ -111,6 +109,9 @@ public class Renderer extends Script implements Save, Load {
 
         shaderProgram.use_texture.setValue((shaderProgram.supportsTextures? 1 : 0));
         shaderProgram.use_lighting.setValue((shaderProgram.supportsLighting? 1 : 0));
+        shaderProgram.delta_time.setValue(Time.deltaTime());
+        shaderProgram.JE_Time.setValue(Time.systemTime());
+        shaderProgram.render_size.setValue(t.scale());
 
         if(shaderProgram.supportsLighting)
         {

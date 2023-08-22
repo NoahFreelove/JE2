@@ -7,7 +7,6 @@ import org.JE.JE2.IO.UserInput.Mouse.Mouse;
 import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Objects.Lights.PointLight;
 import org.JE.JE2.Objects.Scripts.Animator.Physical.CharacterAnimator;
-import org.JE.JE2.Objects.Scripts.Animator.Physical.RelativeAnimator;
 import org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Objects.Scripts.Pathfinding.NavigableArea;
@@ -24,9 +23,9 @@ import org.JE.JE2.Rendering.Debug.QuickDebugUI;
 import org.JE.JE2.Rendering.Renderers.ShapeRenderer;
 import org.JE.JE2.Rendering.Renderers.SpriteRenderer;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
+import org.JE.JE2.Rendering.Shaders.ShaderRegistry;
 import org.JE.JE2.Rendering.Texture;
 import org.JE.JE2.Resources.Bundles.TextureBundle;
-import org.JE.JE2.Resources.DataLoader;
 import org.JE.JE2.Resources.ResourceManager;
 import org.JE.JE2.SampleScripts.FloorFactory;
 import org.JE.JE2.SampleScripts.MovementController;
@@ -47,9 +46,9 @@ import org.joml.Vector2f;
 import static org.lwjgl.nuklear.Nuklear.*;
 
 public class BasicScene {
-    static GameObject pl;
+    static GameObject pointLight;
     static{
-        pl = PointLight.pointLightObject(new Vector2f(1,-1), 0f,0f,0.2f,8, 1);
+        pointLight = PointLight.pointLightObject(new Vector2f(1,-1), 0f,0f,0.2f,8, 1);
     }
 
     public static Scene mainScene(){
@@ -61,12 +60,14 @@ public class BasicScene {
                         "PlayerNormal",
                         "floor",
                         "fire",
+                        "water"
                 },
                 new Filepath[]{
                         new Filepath("texture1.png", true),
                         new Filepath("texture1_N.png", true),
                         new Filepath("texture2.png", true),
                         new Filepath("fire.png", true),
+                        new Filepath("water.png", true)
                 },
                 TextureBundle.class);
 
@@ -119,7 +120,7 @@ public class BasicScene {
             }
         });
 
-        pl.addScript(new ILambdaScript() {
+        pointLight.addScript(new ILambdaScript() {
             @Override
             public void update(GameObject parent) {
                 parent.setPosition(player.getTransform().position());
@@ -174,7 +175,7 @@ public class BasicScene {
 
         player.setPosition(2,0);
         scene.setCamera(playerCam);
-        scene.add(pl);
+        scene.add(pointLight);
 
         /*HashMap<String, HashMap<String,String>> save = player.save();
         GameObject newObj = new GameObject();
@@ -199,12 +200,49 @@ public class BasicScene {
         GameObject ppo = new GameObject();
         ppo.setPosition(2,-1);
         ppo.addScript(ppv);
-        scene.add(ppo);
+        //scene.add(ppo);
 
         //addPhysicsObject(scene, player);
         addFloors(scene);
         createUI(scene);
         scene.add(player);
+
+        ShaderProgram waterShader = new ShaderProgram(ShaderRegistry.SPRITE_VERTEX, """
+                #version 330 core
+                  #ifdef GL_ES
+                  precision mediump float;
+                  #endif
+                  out vec4 FragColor;
+                  
+                  uniform sampler2D JE_Texture;
+                  uniform int JE_Time;
+                  uniform int JE_Time2;
+                  
+                  const float PI = 3.14159265359;
+                  const float speed = 0.2; // Speed of the ripple animation
+                  const float frequency = 1.0; // Frequency of the ripples
+                  const float amplitude = 3; // Amplitude of the ripples
+                  in vec2 UV;
+                  void main(void) {
+                      vec2 uv = UV;
+                  
+                      // Add time-based offset to create animation
+                      float offset = JE_Time * speed;
+                  
+                      // Calculate the displacement of the water surface based on ripples
+                      float displacement = amplitude * sin(2.0 * PI * frequency * (uv.x + uv.y) + offset*0.01);
+                  
+                      // Apply the displacement to the texture coordinates
+                      vec2 displacedUV = uv + vec2(0, displacement);
+                  
+                      // Sample the texture with the displaced coordinates
+                      vec4 color = texture2D(JE_Texture, displacedUV);
+                  
+                      FragColor = color;
+                  }
+                """, true, false);
+        GameObject water = GameObject.Sprite(waterShader, Texture.get("water"));
+        scene.add(water);
 
         //scene.saveSceneToZip(new Filepath("scene.zip"));
 
@@ -237,43 +275,43 @@ public class BasicScene {
         Label Constant = new Label("Constant");
         Slider constant = new Slider(0f, 0f, 0.2f, 0.01f);
         constant.onChange = value -> {
-            pl.getScripts(PointLight.class).forEach(pl -> pl.constant = value);
+            pointLight.getScripts(PointLight.class).forEach(pl -> pl.constant = value);
         };
 
         Label Linear = new Label("Linear");
         Slider linear = new Slider(0f, 0f, 0.2f, 0.01f);
         linear.onChange = value -> {
-            pl.getScripts(PointLight.class).forEach(pl -> pl.linear = value);
+            pointLight.getScripts(PointLight.class).forEach(pl -> pl.linear = value);
         };
 
         Label Quadratic = new Label("Quadratic");
         Slider quadratic = new Slider(0f, 0f, 0.1f, 0.01f);
         quadratic.onChange = value -> {
-            pl.getScripts(PointLight.class).forEach(pl -> pl.quadratic = value);
+            pointLight.getScripts(PointLight.class).forEach(pl -> pl.quadratic = value);
         };
 
         Label radiusLabel = new Label("Radius");
         Slider radius = new Slider(3f, 0f, 10f, 0.01f);
         radius.onChange = value -> {
-            pl.getScripts(PointLight.class).forEach(pl -> pl.radius = value);
+            pointLight.getScripts(PointLight.class).forEach(pl -> pl.radius = value);
         };
 
         Label intensityLabel = new Label("Intensity");
         Slider intensity = new Slider(1f, 0f, 10f, 0.01f);
         intensity.onChange = value -> {
-            pl.getScripts(PointLight.class).forEach(pl -> pl.intensity = value);
+            pointLight.getScripts(PointLight.class).forEach(pl -> pl.intensity = value);
         };
 
         Label xPosLabel = new Label("X Position");
         Slider xPos = new Slider(1f, -10f, 10f, 0.01f);
         xPos.onChange = value -> {
-            pl.setPosition(value, pl.getTransform().position().y);
+            pointLight.setPosition(value, pointLight.getTransform().position().y);
         };
 
         Label yPosLabel = new Label("Y Position");
         Slider yPos = new Slider(-1f, -10f, 10f, 0.01f);
         yPos.onChange = value -> {
-            pl.setPosition(pl.getTransform().position().x, value);
+            pointLight.setPosition(pointLight.getTransform().position().x, value);
         };
         uiWindow.addElement(Constant, constant, Linear, linear, Quadratic, quadratic, radiusLabel, radius, intensityLabel, intensity);
         //uiWindow.addElement(xPosLabel, xPos, yPosLabel, yPos);

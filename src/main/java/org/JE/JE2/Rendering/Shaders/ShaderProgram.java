@@ -11,7 +11,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
@@ -54,6 +53,9 @@ public final class ShaderProgram implements Serializable {
     public UniformVec3 material_diffuse;
     public UniformVec3 material_specular;
     public UniformFloat material_shininess;
+    public UniformFloat delta_time;
+    public UniformInt64 JE_Time;
+    public UniformVec2 render_size;
     public UniformVec4 material_base_color;
     public UniformInt light_count;
     public UniformInt layer;
@@ -284,6 +286,9 @@ public final class ShaderProgram implements Serializable {
         material_specular = new UniformVec3("material.specular", new Vector3f());
         material_shininess = new UniformFloat("material.shininess", 0);
         material_base_color = new UniformVec4("material.base_color", new Vector4f());
+        delta_time = new UniformFloat("delta_time", 0);
+        JE_Time = new UniformInt64("JE_Time", 0);
+        render_size = new UniformVec2("render_size", new Vector2f());
         light_count = new UniformInt("light_count", 0);
         layer = new UniformInt("layer", 0);
         JE_Texture = new UniformInt("JE_Texture", 0);
@@ -291,7 +296,7 @@ public final class ShaderProgram implements Serializable {
         texture_size = new UniformVec2("texture_size", new Vector2f());
         normal_texture_size = new UniformVec2("normal_texture_size", new Vector2f());
         tile_factor = new UniformVec2("tile_factor", new Vector2f(1,1));
-        setUniforms(use_texture, use_lighting, MVP, model, view, projection, world_position, world_scale, world_rotation, material_ambient, material_diffuse, material_specular, material_shininess, material_base_color, light_count, layer, JE_Texture, JE_Normal, texture_size, normal_texture_size, tile_factor);
+        setUniforms(use_texture, use_lighting, MVP, model, view, projection, world_position, world_scale, world_rotation, material_ambient, material_diffuse, material_specular, material_shininess, material_base_color, light_count, layer, JE_Texture, JE_Normal, texture_size, normal_texture_size, tile_factor, delta_time, render_size, JE_Time);
     }
 
     public void destroy(){
@@ -376,4 +381,20 @@ public final class ShaderProgram implements Serializable {
             uniforms[index] = ShaderUniform.EMPTY;
         }
     }
+
+    public void setUniformI64(String name, long value) {
+        int locationFirst32 = glGetUniformLocation(programID, name);
+        int locationSecond32 = glGetUniformLocation(programID, name + "2");
+        if (locationFirst32 != -1) {
+            glUniform1i(locationFirst32, (int) (value & 0xFFFFFFFFL));
+            //System.out.println((int) (value & 0xFFFFFFFFL) + " : time1");
+        }
+
+        if(locationSecond32 != -1){
+            glUniform1i(locationSecond32, (int)((value >> 32) & 0xFFFFFFFFL));
+            //System.out.println((int)((value >> 32) & 0xFFFFFFFFL));
+        }
+
+    }
+
 }

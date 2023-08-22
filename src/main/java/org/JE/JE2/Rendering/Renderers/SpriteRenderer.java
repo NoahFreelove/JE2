@@ -5,9 +5,9 @@ import org.JE.JE2.Objects.Scripts.Serialize.Load;
 import org.JE.JE2.Objects.Scripts.Serialize.Save;
 import org.JE.JE2.Objects.Scripts.Transform;
 import org.JE.JE2.Rendering.Camera;
+import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
 import org.JE.JE2.Rendering.Texture;
-import org.JE.JE2.Rendering.Renderers.VertexBuffers.VAO2f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -16,8 +16,6 @@ import java.util.HashMap;
 import static org.lwjgl.opengl.GL11C.GL_TRIANGLE_FAN;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glUniform1i;
 
 public class SpriteRenderer extends Renderer implements Save, Load {
     private TextureSegment[] textureSegments;

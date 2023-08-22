@@ -1,25 +1,24 @@
 package org.JE.JE2.Rendering.Shaders.Uniforms;
 
 import org.JE.JE2.Rendering.Shaders.ShaderProgram;
-import org.joml.Vector3f;
 
-public class UniformFloat extends ShaderUniform{
-    private float value;
-    public UniformFloat(String name, float value) {
+public class UniformInt64 extends ShaderUniform{
+    private long value;
+    public UniformInt64(String name, long value) {
         super(name);
         this.value = value;
     }
 
     @Override
     public void set(ShaderProgram program){
-        program.setUniform1f(name,value);
+        program.setUniformI64(name,value);
     }
 
-    public void setValue(float value) {
+    public void setValue(long value) {
         this.value = value;
     }
 
-    public float getValue() {
+    public long getValue() {
         return value;
     }
 }

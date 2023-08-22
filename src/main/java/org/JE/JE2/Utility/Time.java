@@ -26,4 +26,8 @@ public class Time {
     public static void setTimeScale(float timeScale) {
         Time.timeScale = JE2Math.clamp0(timeScale);
     }
+
+    public static long systemTime() {
+        return System.currentTimeMillis();
+    }
 }

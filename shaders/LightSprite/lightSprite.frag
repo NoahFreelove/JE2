@@ -68,7 +68,10 @@ vec3 calculateLight(){
         float falloff = 1;
         float intensity = light.intensity;
 
+        vec3 other_factor = vec3(1,1,1);
+
         if(light.type == 1){
+            // POINT LIGHT
             // Calculate the falloff factor using the smoothstep function
             // Calculate the light intensity using falloff
             float attenuation = 1.0 / (light.constant + light.linear * dist +
@@ -78,11 +81,7 @@ vec3 calculateLight(){
             attenuation = clamp(1.0 - (dist / light.radius), 0.0, 1.0) * attenuation;
 
             // Calculate diffuse lighting using the fragment normal and light direction
-
-
             falloff = smoothstep(0.0,1.0,attenuation);
-            // Calculate the diffuse lighting
-            //diffuse = abs(dot(lightDir, normal));
         }
         else if (light.type == 2){
             dist = 1;
@@ -100,7 +99,7 @@ vec3 calculateLight(){
 
         float diffuseFactor = max(dot(normal, lightDir), 0.0);
 
-        total_light += light.color.rgb * falloff * intensity;
+        total_light += light.color.rgb * falloff * intensity * other_factor;
     }
     return total_light;
 }
