@@ -33,7 +33,7 @@ public class StaticLoadSequence extends LoadingSequence {
     @Override
     public void initiate() {
         loadedScene = new Scene();
-        Manager.activeScene().world.UI.add(0,screen);
+        Manager.activeScene().getWorld().UI.add(0,screen);
         Keyboard.disableGameInput = true;
         Mouse.disableGameInput = true;
         super.initiate();
@@ -58,7 +58,7 @@ public class StaticLoadSequence extends LoadingSequence {
         {
             try {
                 Thread.sleep(forceLoadTimeMs);
-                Manager.activeScene().world.UI.remove(screen);
+                Manager.activeScene().getWorld().UI.remove(screen);
                 Manager.setScene(loadedScene);
                 next();
             } catch (InterruptedException e) {
@@ -66,7 +66,7 @@ public class StaticLoadSequence extends LoadingSequence {
             }
         }
         else{
-            Manager.activeScene().world.UI.remove(screen);
+            Manager.activeScene().getWorld().UI.remove(screen);
             Manager.setScene(loadedScene);
             next();
         }
@@ -79,7 +79,7 @@ public class StaticLoadSequence extends LoadingSequence {
 
     @Override
     public void cancel() {
-        Manager.activeScene().world.UI.remove(screen);
+        Manager.activeScene().getWorld().UI.remove(screen);
         Keyboard.disableGameInput = false;
         Mouse.disableGameInput = false;
         super.cancel();

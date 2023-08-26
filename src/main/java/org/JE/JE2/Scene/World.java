@@ -18,12 +18,12 @@ public class World implements Serializable {
     public CopyOnWriteArrayList<UIObject> UI = new CopyOnWriteArrayList<>();
     public org.jbox2d.dynamics.World physicsWorld;
     public boolean supportPhysics = true;
+
     public World(){
         physicsWorld = new org.jbox2d.dynamics.World(new Vec2(0f,-9.8f));
         physicsWorld.setAllowSleep(false);
         physicsWorld.setContinuousPhysics(true);
     }
-
 
     public World(boolean supportPhysics){
         this.supportPhysics = supportPhysics;

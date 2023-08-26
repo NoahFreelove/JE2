@@ -61,7 +61,7 @@ public class Manager {
     public static void setScene(Scene s){
         activeScene.unload(activeScene, s);
         activeScene = s;
-        s.start();
+        activeScene.start();
     }
 
     public static void setScene(Scene s, Runnable postFirstFrame){

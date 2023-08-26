@@ -356,7 +356,7 @@ public class UIHandler {
             glViewport(0, 0, Window.getMonitorWidth(), Window.getMonitorHeight());
         }
 
-        Manager.activeScene().world.UI.forEach(UIObject::requestRender);
+        Manager.activeScene().getWorld().UI.forEach(UIObject::requestRender);
 
         {
             // convert from command queue into draw list and draw to screen

@@ -9,6 +9,7 @@ import org.JE.JE2.Utility.Time;
 import org.jbox2d.common.Vec2;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 
 public class MovementController extends Script implements Save, Load {

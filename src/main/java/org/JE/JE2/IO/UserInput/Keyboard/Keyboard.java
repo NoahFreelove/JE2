@@ -3,6 +3,7 @@ package org.JE.JE2.IO.UserInput.Keyboard;
 import org.JE.JE2.IO.UserInput.Keyboard.Combos.KeyCombo;
 import org.JE.JE2.Window.Window;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,6 +17,9 @@ public class Keyboard {
 
     public static boolean disableGameInput = false;
     public static boolean disableUIInput = false;
+
+    private static long lastKeystroke = -1L;
+    private static long lastRelease = -1L;
 
     private static final ArrayList<KeyPressedEvent> keyPressedEvents = new ArrayList<>();
     private static final ArrayList<KeyReleasedEvent> keyReleasedEvents = new ArrayList<>();
@@ -92,7 +96,6 @@ public class Keyboard {
 
     public static void copyToClipboard(String str){
         glfwSetClipboardString(Window.handle(),str);
-
     }
 
     private static final boolean[] keys = new boolean[1024];
@@ -100,11 +103,13 @@ public class Keyboard {
     private static void keyPressed(int code) {
         if(within(0,keys.length,code))
             keys[code] = true;
+        lastKeystroke = System.currentTimeMillis();
     }
 
     private static void keyReleased(int code) {
         if(within(0,keys.length,code))
             keys[code] = false;
+        lastRelease = System.currentTimeMillis();
     }
 
     public static void reset(){
@@ -334,5 +339,9 @@ public class Keyboard {
 
     public static void frameReset() {
 
+    }
+
+    public static long lastActionTimestamp(){
+        return Math.max(lastKeystroke,lastRelease);
     }
 }

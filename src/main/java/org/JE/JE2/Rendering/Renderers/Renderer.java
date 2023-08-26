@@ -168,11 +168,11 @@ public class Renderer extends Script implements Save, Load {
 
     @GLThread
     private void setLighting(int selectedLayer) {
-        shaderProgram.light_count.setValue(Manager.activeScene().world.activeLights());
+        shaderProgram.light_count.setValue(Manager.activeScene().getWorld().activeLights());
         shaderProgram.layer.setValue(selectedLayer);
 
         int i = 0;
-        for (Light light : Manager.activeScene().world.lights) {
+        for (Light light : Manager.activeScene().getWorld().lights) {
             if(light.notActive()){
                 continue;
             }

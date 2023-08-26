@@ -27,7 +27,13 @@ public class Scene implements Serializable {
 
     private Camera activeCamera = new Camera();
 
-    public final World world = new World();
+    private World world = new World();
+
+    private static final World persistentWorld = new World();
+    public static final Scene persistentScene = new Scene(-1);
+    static {
+        persistentScene.world = persistentWorld;
+    }
 
     public int buildIndex = -1;
     public String name = "scene";
@@ -72,6 +78,8 @@ public class Scene implements Serializable {
                 addLight(light);
             }
         }
+
+        persistentWorld.gameObjects.remove(newGameObject);
 
         world.gameObjects.add(index,newGameObject);
         for (GameObject child :
@@ -188,20 +196,35 @@ public class Scene implements Serializable {
 
     public void update(boolean physicsUpdate) {
         if (physicsUpdate){
+            persistentWorld.physicsWorld.step(Time.deltaTime(), 8, 3);
+            persistentWorld.gameObjects.forEach(GameObject::physicsUpdate);
             world.physicsWorld.step(Time.deltaTime(), 8, 3);
             world.gameObjects.forEach(GameObject::physicsUpdate);
         }
+
+        persistentWorld.gameObjects.forEach(GameObject::scriptUpdate);
         if(updateObjects)
             world.gameObjects.forEach(GameObject::scriptUpdate);
+
+        persistentWorld.UI.forEach(UIObject::update);
         if(updateUI)
             world.UI.forEach(UIObject::update);
     }
 
     public void start(){
         world.gameObjects.forEach(GameObject::scriptStart);
+        persistentWorld.gameObjects.forEach(GameObject::scriptStart);
     }
 
     public void unload(Scene oldScene, Scene newScene) {
+        persistentWorld.gameObjects.forEach(gameObject -> gameObject.scriptUnload(oldScene,newScene));
+        persistentWorld.UI.forEach(ui ->{
+            if(ui instanceof UIWindow window){
+                if(!window.destroyOnLoad)
+                    newScene.addUI(window);
+            }
+        });
+
         world.gameObjects.forEach(gameObject -> gameObject.scriptUnload(oldScene,newScene));
         world.UI.forEach(ui ->{
             if(ui instanceof UIWindow window){
@@ -251,6 +274,10 @@ public class Scene implements Serializable {
     }
     public void saveSceneToZip(Filepath path){
         DataWriter.saveArrayToZip(saveAllObjects(), path);
+    }
+
+    public World getWorld() {
+        return world;
     }
 }
 

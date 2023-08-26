@@ -1,9 +1,11 @@
 package org.JE.JE2.Window;
 
 import org.JE.JE2.Manager;
+import org.JE.JE2.Objects.GameObject;
 import org.JE.JE2.Rendering.Framebuffer;
 import org.JE.JE2.Rendering.Renderers.FramebufferRenderer;
 import org.JE.JE2.Rendering.Renderers.Renderer;
+import org.JE.JE2.Scene.Scene;
 import org.JE.JE2.Utility.Watcher;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -13,6 +15,21 @@ import static org.lwjgl.opengl.GL14.glBlendEquation;
 public class DefaultPipeline extends Pipeline{
     public boolean renderObjects = true;
     public boolean renderUI = true;
+
+    private static void renderObject(GameObject gameObject) {
+        if (gameObject == null)
+            return;
+        if (!gameObject.active())
+            return;
+
+        Renderer r = gameObject.getRenderer();
+
+        if (r != null) {
+            if (!r.getActive())
+                return;
+            r.requestRender(gameObject.getTransform(), Manager.getMainCamera());
+        }
+    }
 
     @Override
     public void run() {
@@ -45,21 +62,9 @@ public class DefaultPipeline extends Pipeline{
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBlendEquation(GL_FUNC_ADD);
 
-        Manager.activeScene().world.gameObjects.forEach((gameObject) ->{
-            if(gameObject == null)
-                return;
-            if(!gameObject.active())
-                return;
+        Scene.persistentScene.getWorld().gameObjects.forEach(DefaultPipeline::renderObject);
 
-            Renderer r = gameObject.getRenderer();
-
-            if(r != null)
-            {
-                if(!r.getActive())
-                    return;
-                r.requestRender(gameObject.getTransform(), Manager.getMainCamera());
-            }
-        });
+        Manager.activeScene().getWorld().gameObjects.forEach(DefaultPipeline::renderObject);
         //GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
@@ -73,7 +78,15 @@ public class DefaultPipeline extends Pipeline{
         if(!Window.doubleRenderPostProcess())
             fbRenderer.Render();
 
-        Manager.activeScene().world.gameObjects.forEach((gameObject) -> {
+        Scene.persistentScene.getWorld().gameObjects.forEach((gameObject) -> {
+            if(gameObject == null)
+                return;
+            if(!gameObject.active())
+                return;
+            gameObject.scriptPostRender();
+        });
+
+        Manager.activeScene().getWorld().gameObjects.forEach((gameObject) -> {
             if(gameObject == null)
                 return;
             if(!gameObject.active())

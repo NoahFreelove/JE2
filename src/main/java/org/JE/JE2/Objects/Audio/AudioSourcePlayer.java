@@ -71,7 +71,7 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
     public void play(){
         if(worldRef == null)
         {
-            worldRef = Manager.activeScene().world;
+            worldRef = Manager.activeScene().getWorld();
             worldRef.sounds.add(this);
         }
         playSound();
@@ -100,7 +100,7 @@ public non-sealed class AudioSourcePlayer extends AudioSource {
 
     @Override
     public void gameObjectAddedToScene(Scene scene) {
-        worldRef = scene.world;
+        worldRef = scene.getWorld();
         worldRef.sounds.add(this);
     }
 

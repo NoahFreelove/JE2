@@ -30,6 +30,10 @@ public class Mouse {
     public static boolean disableGameInput = false;
     public static boolean disableUIInput = false;
 
+    private static long lastClick = -1L;
+    private static long lastRelease = -1L;
+    private static long lastMove = -1L;
+
     private static final ArrayList<MousePressedEvent> mousePressedEvents = new ArrayList<>();
     private static final ArrayList<MouseReleasedEvent> mouseReleasedEvents = new ArrayList<>();
 
@@ -59,6 +63,8 @@ public class Mouse {
 
         Mouse.x = x;
         Mouse.y = y;
+
+        lastMove = System.currentTimeMillis();
     }
 
     public static Vector2f getMousePosition(){
@@ -115,6 +121,7 @@ public class Mouse {
         buttons[button] = true;
         pressedFor[button] = System.currentTimeMillis();
         releasedSince[button] = 0;
+        lastClick = System.currentTimeMillis();
     }
 
     private static void mouseReleased(int button){
@@ -123,6 +130,7 @@ public class Mouse {
         buttons[button] = false;
         pressedFor[button] = 0;
         releasedSince[button] = System.currentTimeMillis();
+        lastRelease = System.currentTimeMillis();
     }
 
     public static boolean isPressed(int button){
@@ -259,5 +267,9 @@ public class Mouse {
 
     public static float getDeltaY() {
         return deltaY;
+    }
+
+    public static long lastActionTimestamp(){
+        return Math.max(Math.max(lastClick,lastMove),lastRelease);
     }
 }

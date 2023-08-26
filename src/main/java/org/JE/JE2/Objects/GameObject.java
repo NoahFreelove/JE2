@@ -7,6 +7,7 @@ import org.JE.JE2.IO.Filepath;
 import org.JE.JE2.IO.Logging.Errors.GameObjectError;
 import org.JE.JE2.IO.Logging.Errors.JE2Error;
 import org.JE.JE2.IO.Logging.Logger;
+import org.JE.JE2.Objects.Scripts.Attributes.DontDestroyOnLoad;
 import org.JE.JE2.Objects.Scripts.LambdaScript.ILambdaScript;
 import org.JE.JE2.Objects.Scripts.LambdaScript.LambdaScript;
 import org.JE.JE2.Objects.Scripts.ScriptRestrictions;
@@ -623,4 +624,14 @@ public final class GameObject implements Serializable {
         load(deserialize(loadedData));
     }
 
+    public boolean hasScript(Class<? extends Script> clazz) {
+        if(clazz == null)
+            return false;
+        for (Script script : scripts) {
+            if(script.getClass() == clazz){
+                return true;
+            }
+        }
+        return false;
+    }
 }

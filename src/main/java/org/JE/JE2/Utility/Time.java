@@ -2,6 +2,11 @@ package org.JE.JE2.Utility;
 
 import org.JE.JE2.Annotations.ReadOnly;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class Time {
 
     @ReadOnly
@@ -29,5 +34,9 @@ public class Time {
 
     public static long systemTime() {
         return System.currentTimeMillis();
+    }
+    private static Instant referenceTimestamp = Instant.parse("2000-01-01T00:00:00Z");
+    public static long millis2000(){
+        return ChronoUnit.MILLIS.between(referenceTimestamp, Instant.now());
     }
 }

@@ -51,7 +51,7 @@ public class PhysicsBody extends Script implements Save, Load {
         adjustedPos.x += getSize().x/2;
         adjustedPos.y += getSize().y/2;
         bodyDef.position.set(adjustedPos.x(),adjustedPos.y());
-        body = attachedScene.world.physicsWorld.createBody(this.bodyDef);
+        body = attachedScene.getWorld().physicsWorld.createBody(this.bodyDef);
         body.setTransform(new Vec2(adjustedPos.x(),adjustedPos.y()), 0);
         body.setGravityScale(defaultGravity);
         // Create box shape
@@ -95,6 +95,8 @@ public class PhysicsBody extends Script implements Save, Load {
 
         activeFixture.setFriction(v);
     }
+
+
 
     @Override
     public void start() {
@@ -156,7 +158,7 @@ public class PhysicsBody extends Script implements Save, Load {
                 // Somehow this works, but I don't know why...
                 pos2.y -= 0.2f;
                 aabb.upperBound.set(pos2);
-                Manager.activeScene().world.physicsWorld.queryAABB((fixture) -> {
+                Manager.activeScene().getWorld().physicsWorld.queryAABB((fixture) -> {
                     if(fixture.getBody() != body)
                     {
                         if(fixture.m_isSensor)
@@ -192,7 +194,7 @@ public class PhysicsBody extends Script implements Save, Load {
         org.jbox2d.dynamics.Fixture closestFixture = null;
         GameObject userData = null;
         org.jbox2d.collision.RayCastOutput output = new org.jbox2d.collision.RayCastOutput();
-        for(Body b = Manager.activeScene().world.physicsWorld.getBodyList(); b != null; b = b.getNext()){
+        for(Body b = Manager.activeScene().getWorld().physicsWorld.getBodyList(); b != null; b = b.getNext()){
             if(b.getUserData() != null && b.getUserData() instanceof GameObject localData){
                 // ignore if hit self
                 if(localData == getAttachedObject())
@@ -275,5 +277,11 @@ public class PhysicsBody extends Script implements Save, Load {
         data.put("fixedRotation", String.valueOf(fixedRotation));
         data.put("mode", mode.toString());
         return data;
+    }
+
+    @Override
+    public void destroy(){
+        if(attachedScene !=null)
+            attachedScene.getWorld().physicsWorld.destroyBody(body);
     }
 }

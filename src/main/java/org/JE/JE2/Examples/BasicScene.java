@@ -207,6 +207,8 @@ public class BasicScene {
         createUI(scene);
         scene.add(player);
 
+        Scene.persistentScene.add(GameObject.Sprite(ShaderProgram.spriteShader(), Texture.get("fire")));
+
         ShaderProgram waterShader = new ShaderProgram(ShaderRegistry.SPRITE_VERTEX, """
                 #version 330 core
                   #ifdef GL_ES
@@ -242,7 +244,7 @@ public class BasicScene {
                   }
                 """, true, false);
         GameObject water = GameObject.Sprite(waterShader, Texture.get("water"));
-        scene.add(water);
+        //scene.add(water);
 
         //scene.saveSceneToZip(new Filepath("scene.zip"));
 
