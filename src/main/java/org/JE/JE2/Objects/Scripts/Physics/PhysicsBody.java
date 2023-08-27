@@ -101,8 +101,9 @@ public class PhysicsBody extends Script implements Save, Load {
     @Override
     public void start() {
         updateOnScriptUpdate = false;
-        if(attachedScene == null)
+        if(attachedScene == null) {
             attachedScene = Manager.activeScene();
+        }
 
         if(!hasInitialized()){
             create(mode, getAttachedObject().getTransform().position(), defaultSize);
@@ -284,5 +285,9 @@ public class PhysicsBody extends Script implements Save, Load {
     public void destroy(){
         if(attachedScene !=null)
             attachedScene.getWorld().physicsWorld.destroyBody(body);
+    }
+
+    public void changeAttachedScene(Scene ref){
+        attachedScene = ref;
     }
 }

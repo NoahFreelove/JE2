@@ -26,6 +26,7 @@ import org.JE.JE2.Scene.Scene;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -88,7 +89,7 @@ public final class GameObject implements Serializable {
     {
         getTransform().setPosition(x,y,z);
     }
-
+    public Vector2f getPosition(){return getTransform().position();}
     public void setScale(Vector2f scale){
         getTransform().setScale(scale);
     }
@@ -96,11 +97,12 @@ public final class GameObject implements Serializable {
     {
         getTransform().setScale(x,y);
     }
+    public Vector2f getScale(){return  getTransform().scale();}
     public void setRotation(float z)
     {
         getTransform().setRotation(0,0,z);
     }
-
+    public Vector3f getRotation(){return getTransform().rotation();}
     public void setTransform(Transform transform){
         scripts.set(0, transform);
     }

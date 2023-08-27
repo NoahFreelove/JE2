@@ -18,6 +18,10 @@ public abstract class TriggerVolume extends PhysicsBody {
         return this;
     }
 
+    public void clearContactList(){
+        triggeredObjects.clear();
+    }
+
     @Override
     public void start() {
         super.start();

@@ -1,5 +1,6 @@
 package org.JE.JE2.SampleScripts;
 
+import org.JE.JE2.IO.UserInput.Keyboard.Combos.ComboList;
 import org.JE.JE2.IO.UserInput.Keyboard.Keyboard;
 import org.JE.JE2.Objects.Scripts.Script;
 import org.JE.JE2.Objects.Scripts.Physics.PhysicsBody;
@@ -9,7 +10,6 @@ import org.JE.JE2.Utility.Time;
 import org.jbox2d.common.Vec2;
 
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 
 public class MovementController extends Script implements Save, Load {
@@ -47,54 +47,54 @@ public class MovementController extends Script implements Save, Load {
                 return;
             }
             //Logger.log(getAttachedObject().getTransform().position(),2);
-            if(Keyboard.isKeyPressed(65) && canMoveLeft){
+            if(Keyboard.isComboPartPressed(ComboList.LEFT) && canMoveLeft){
                 physicsBody.body.setLinearVelocity(new Vec2(-moveSpeed, physicsBody.body.getLinearVelocity().y));
             }
-            if(Keyboard.isKeyPressed(68) && canMoveRight){
+            if(Keyboard.isComboPartPressed(ComboList.RIGHT) && canMoveRight){
                 physicsBody.body.setLinearVelocity(new Vec2(moveSpeed, physicsBody.body.getLinearVelocity().y));
             }
 
             if(absoluteXPositioning){
-                if(!Keyboard.isKeyPressed(68) && !Keyboard.isKeyPressed(65)){
+                if(!Keyboard.isComboPartPressed(ComboList.RIGHT) && !Keyboard.isComboPartPressed(ComboList.LEFT)){
                     physicsBody.body.setLinearVelocity(new Vec2(0, physicsBody.body.getLinearVelocity().y));
                 }
             }
             if(absoluteYPositioning){
-                if(!Keyboard.isKeyPressed(87) && !Keyboard.isKeyPressed(83)){
+                if(!Keyboard.isComboPartPressed(ComboList.UP )&& !Keyboard.isComboPartPressed(ComboList.DOWN)){
                     physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,0));
                 }
             }
             if(enableJump)
             {
-                if(Keyboard.isKeyPressed(87)){
+                if(Keyboard.isComboPartPressed(ComboList.UP)){
                     if(physicsBody.onGround)
                         physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,jumpVelocity));
                 }
             }
             else {
                 if(canMoveUp){
-                    if(Keyboard.isKeyPressed(87)){
+                    if(Keyboard.isComboPartPressed(ComboList.UP)){
                         physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,moveSpeed));
                     }
                 }
             }
             if(canMoveDown){
-                if(Keyboard.isKeyPressed(83)){
+                if(Keyboard.isComboPartPressed(ComboList.DOWN)){
                     physicsBody.body.setLinearVelocity(new Vec2(physicsBody.body.getLinearVelocity().x,-moveSpeed));
                 }
             }
         }
         else{
-            if(Keyboard.isKeyPressed(65) && canMoveLeft){
+            if(Keyboard.isComboPartPressed(ComboList.LEFT) && canMoveLeft){
                 getAttachedObject().getTransform().translateX(-moveSpeed * Time.deltaTime);
             }
-            if(Keyboard.isKeyPressed(68) && canMoveRight){
+            if(Keyboard.isComboPartPressed(ComboList.RIGHT) && canMoveRight){
                 getAttachedObject().getTransform().translateX(moveSpeed * Time.deltaTime);
             }
-            if(Keyboard.isKeyPressed(87) && canMoveUp){
+            if(Keyboard.isComboPartPressed(ComboList.UP) && canMoveUp){
                 getAttachedObject().getTransform().translateY(moveSpeed * Time.deltaTime);
             }
-            if(Keyboard.isKeyPressed(83) && canMoveDown){
+            if(Keyboard.isComboPartPressed(ComboList.DOWN) && canMoveDown){
                 getAttachedObject().getTransform().translateY(-moveSpeed * Time.deltaTime);
             }
         }

@@ -1,6 +1,8 @@
 package org.JE.JE2.Objects.Scripts.Physics.Collision;
 
 import org.JE.JE2.Objects.GameObject;
+import org.JE.JE2.Scene.Scene;
+import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 
 /**
@@ -43,6 +45,15 @@ public class BoxTrigger extends TriggerVolume{
         triggerObject.addScript(bt);
         bt.triggerEvent = triggerEvent;
         return triggerObject;
+    }
+
+    @Override
+    public void cloneAndAdd(Scene scene) {
+        BoxTrigger bt = new BoxTrigger();
+        bt.triggerEvent = triggerEvent;
+        bt.attachedScene = scene;
+        getAttachedObject().addScript(bt);
+        bt.create(BodyType.STATIC, getAttachedObject().getTransform().position(), getAttachedObject().getTransform().scale());
     }
 
     public void setTriggerEvent(TriggerEvent triggerEvent){

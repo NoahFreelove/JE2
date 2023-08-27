@@ -1,9 +1,9 @@
 package org.JE.JE2.IO.UserInput.Keyboard;
 
 import org.JE.JE2.IO.UserInput.Keyboard.Combos.KeyCombo;
+import org.JE.JE2.Utility.JE2Math;
 import org.JE.JE2.Window.Window;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -120,8 +120,14 @@ public class Keyboard {
         return v >= min && v <= max;
     }
 
+    public static boolean isKeyPressed(String name) {
+        return isKeyPressed(nameToCode(name));
+    }
+
     public static boolean isKeyPressed(int code) {
-        return keys[code];
+        if(JE2Math.inRangeExclusive(code,0,keys.length))
+            return keys[code];
+        return false;
     }
     public static boolean isAnyKeyPressed(){
         for (boolean key : keys) {
@@ -131,11 +137,11 @@ public class Keyboard {
         return false;
     }
 
-    public static boolean isComboPressed(KeyCombo combo){
+    public static boolean isComboPartPressed(KeyCombo combo){
         return combo.or(keys);
     }
 
-    public static boolean isComboFullyPressed(KeyCombo combo){
+    public static boolean isComboPressed(KeyCombo combo){
         return combo.and(keys);
     }
 

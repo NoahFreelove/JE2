@@ -30,6 +30,7 @@ public class DontDestroyOnLoad extends Script implements Load, Save {
     private void addDefaultLiabilities(){
         liabilities.add(new IPhysicsLiability(){});
         liabilities.add(new ICameraLiability(){});
+        liabilities.add(new ITriggerLiability(){});
     }
 
     @Override

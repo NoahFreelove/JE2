@@ -93,6 +93,7 @@ public final class Window {
             maxSamples = glGetInteger(GL_MAX_SAMPLES);
             loop();
         });
+        glThread.setName("JE2");
         glThread.start();
         /*if(wp.waitForInit){
             while (!hasInit) Thread.onSpinWait();

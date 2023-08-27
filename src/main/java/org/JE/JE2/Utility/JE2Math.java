@@ -39,4 +39,8 @@ public class JE2Math {
     public static float lerp(int a, int b, float level) {
         return a + (b-a)*level;
     }
+
+    public static boolean inRangeExclusive(int code, int min, int max) {
+        return (code<max && code>=min);
+    }
 }
