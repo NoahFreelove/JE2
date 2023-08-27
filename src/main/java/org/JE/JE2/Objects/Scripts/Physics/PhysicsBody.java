@@ -132,6 +132,7 @@ public class PhysicsBody extends Script implements Save, Load {
 
         if (body !=null)
         {
+            body.setUserData(getAttachedObject());
             if(mode == BodyType.STATIC)
                 return;
             bodyPos.set(body.getPosition());

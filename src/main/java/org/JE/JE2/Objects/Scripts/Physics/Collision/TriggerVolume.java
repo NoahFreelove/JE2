@@ -39,23 +39,23 @@ public abstract class TriggerVolume extends PhysicsBody {
             while (contactEdge != null) {
                 if (contactEdge.contact.isTouching()) {
                     if (contactEdge.contact.getFixtureA() == activeFixture) {
-                        onTrigger((GameObject) contactEdge.contact.getFixtureB().getUserData());
+                        onTrigger((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData());
 
                         // if the object is already triggered, don't trigger it again
-                        if(triggeredObjects.containsKey((GameObject) contactEdge.contact.getFixtureB().getUserData()))
+                        if(triggeredObjects.containsKey((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData()))
                             return;
                         // mark the object as triggered so we don't call onTriggerEnter again
-                        triggeredObjects.put((GameObject) contactEdge.contact.getFixtureB().getUserData(),true);
-                        onTriggerEnter((GameObject) contactEdge.contact.getFixtureB().getUserData());
+                        triggeredObjects.put((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData(),true);
+                        onTriggerEnter((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData());
 
                     } else if (contactEdge.contact.getFixtureB() == activeFixture) {
-                        onTrigger((GameObject) contactEdge.contact.getFixtureB().getUserData());
+                        onTrigger((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData());
 
                         // if the object is already triggered, don't trigger it again
-                        if(triggeredObjects.containsKey((GameObject) contactEdge.contact.getFixtureA().getUserData()))
+                        if(triggeredObjects.containsKey((GameObject) contactEdge.contact.getFixtureA().getBody().getUserData()))
                             return;
-                        triggeredObjects.put((GameObject) contactEdge.contact.getFixtureA().getUserData(),true);
-                        onTriggerEnter((GameObject) contactEdge.contact.getFixtureA().getUserData());
+                        triggeredObjects.put((GameObject) contactEdge.contact.getFixtureA().getBody().getUserData(),true);
+                        onTriggerEnter((GameObject) contactEdge.contact.getFixtureA().getBody().getUserData());
                     }
                 }
                 contactEdge = contactEdge.next;
