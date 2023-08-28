@@ -256,7 +256,7 @@ public class BasicScene {
         CharacterAnimator ca = new CharacterAnimator(player.getTextureSegments());
         ca.setLoop(true);
         Vector2f startPos = player.getAttachedObject().getTransform().position();
-        ca.createAnim(player.getTextureSegment(),startPos, new Vector2f(1,1),new Vector2f(startPos));
+        ca.createAnim(player.getTextureSegment(),new Vector2f[]{startPos, new Vector2f(1,1),new Vector2f(startPos)}, new float[]{0,0.5f,1});
         player.getAttachedObject().addScript(ca);
         Keyboard.addKeyReleasedEvent((key, mods) -> {
             if(key == Keyboard.nameToCode("L")){

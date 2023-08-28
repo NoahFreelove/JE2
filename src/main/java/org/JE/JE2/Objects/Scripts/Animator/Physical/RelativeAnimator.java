@@ -14,6 +14,7 @@ public class RelativeAnimator extends Script {
     private float t;
     private int point;
     private boolean loop = false;
+    private boolean play = true;
 
     private boolean completed = false;
     public RelativeAnimator(Vector2f[] relativePosPoints, float timePerPoint) {
@@ -27,6 +28,8 @@ public class RelativeAnimator extends Script {
     @Override
     public void update() {
         if(object == null)
+            return;
+        if(!play || completed)
             return;
 
         if(point >= relativePosPoints.length)
@@ -110,5 +113,15 @@ public class RelativeAnimator extends Script {
 
     public void setLoop(boolean loop) {
         this.loop = loop;
+    }
+
+    public void setPlay(boolean play) {
+        this.play = play;
+    }
+
+    public void reset(){
+        t = 0;
+        point = 0;
+        completed = false;
     }
 }

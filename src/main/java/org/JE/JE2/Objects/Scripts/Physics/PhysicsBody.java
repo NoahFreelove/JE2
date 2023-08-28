@@ -27,7 +27,7 @@ public class PhysicsBody extends Script implements Save, Load {
     public transient boolean onGround = false;
     public boolean fixedRotation = true;
     private Vector2f size = new Vector2f(1,1);
-    private BodyType mode = BodyType.DYNAMIC;
+    protected BodyType mode = BodyType.DYNAMIC;
 
     protected Scene attachedScene = null;
 
@@ -36,7 +36,8 @@ public class PhysicsBody extends Script implements Save, Load {
     public float defaultFriction = 1f;
     public float defaultGravity = 1f;
     private Vector2f defaultSize = new Vector2f();
-
+    public Vector2f positionOffset = new Vector2f();
+    public boolean checkOnGround = false;
     public PhysicsBody(){
         super();
     }
@@ -130,7 +131,6 @@ public class PhysicsBody extends Script implements Save, Load {
                 return;
         }
 
-
         if (body !=null)
         {
             body.setUserData(getAttachedObject());
@@ -142,6 +142,8 @@ public class PhysicsBody extends Script implements Save, Load {
 
             adjustedPos.set(pos);
 
+            adjustedPos.x-= positionOffset.x;
+            adjustedPos.y-= positionOffset.y;
             adjustedPos.x -= getSize().x /2;
             adjustedPos.y -= getSize().y/2;
 
@@ -151,7 +153,7 @@ public class PhysicsBody extends Script implements Save, Load {
                 getAttachedObject().getTransform().setRotation(0,0, body.getAngle());
 
             onGround = false;
-            if(body.getType() == BodyType.DYNAMIC){
+            if((body.getType() == BodyType.DYNAMIC || body.getType() == BodyType.KINEMATIC) && checkOnGround){
                 // check if on ground directly below
                 AABB aabb = new AABB();
                 Vec2 pos2 = body.getPosition();
@@ -165,7 +167,7 @@ public class PhysicsBody extends Script implements Save, Load {
                     {
                         if(fixture.m_isSensor)
                         {
-                            return true;
+                            return false;
                         }
                         onGround = true;
                         return true;
@@ -244,6 +246,7 @@ public class PhysicsBody extends Script implements Save, Load {
         pb.mode = mode;
         pb.size = size;
         pb.attachedScene = scene;
+        pb.positionOffset = positionOffset;
         getAttachedObject().addScript(pb);
         pb.create(mode, getAttachedObject().getTransform().position(), getAttachedObject().getTransform().scale());
     }

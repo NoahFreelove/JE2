@@ -11,9 +11,14 @@ import java.util.HashMap;
 public abstract class TriggerVolume extends PhysicsBody {
     private final HashMap<GameObject,Boolean> triggeredObjects = new HashMap<>();
 
+    public TriggerVolume() {
+        super();
+        setMode(BodyType.STATIC);
+    }
+
     @Override
     protected PhysicsBody create(BodyType defaultState, Vector2f initialPosition, Vector2f initialSize) {
-        super.create(BodyType.STATIC,initialPosition,initialSize);
+        super.create(defaultState,initialPosition,initialSize);
         activeFixture.m_isSensor = true;
         return this;
     }
@@ -29,6 +34,7 @@ public abstract class TriggerVolume extends PhysicsBody {
 
     @Override
     public void update(){
+        super.update();
         if(!hasInitialized)
             return;
 
@@ -47,7 +53,7 @@ public abstract class TriggerVolume extends PhysicsBody {
 
                         // if the object is already triggered, don't trigger it again
                         if(triggeredObjects.containsKey((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData()))
-                            return;
+                            break;
                         // mark the object as triggered so we don't call onTriggerEnter again
                         triggeredObjects.put((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData(),true);
                         onTriggerEnter((GameObject) contactEdge.contact.getFixtureB().getBody().getUserData());
@@ -57,7 +63,7 @@ public abstract class TriggerVolume extends PhysicsBody {
 
                         // if the object is already triggered, don't trigger it again
                         if(triggeredObjects.containsKey((GameObject) contactEdge.contact.getFixtureA().getBody().getUserData()))
-                            return;
+                            break;
                         triggeredObjects.put((GameObject) contactEdge.contact.getFixtureA().getBody().getUserData(),true);
                         onTriggerEnter((GameObject) contactEdge.contact.getFixtureA().getBody().getUserData());
                     }

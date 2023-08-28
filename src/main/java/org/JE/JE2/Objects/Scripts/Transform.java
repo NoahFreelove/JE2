@@ -231,7 +231,8 @@ public class Transform extends Script implements Save, Load {
         {
             if(!physicsBody.hasInitialized())
                 return;
-            adjustedPos.set(position());
+            Vector2f pos = position();
+            adjustedPos.set(pos.x() + physicsBody.positionOffset.x(), pos.y() + physicsBody.positionOffset.y());
             adjustedPos.x += physicsBody.getSize().x/2;
             adjustedPos.y += physicsBody.getSize().y/2;
             jBoxAdjustedPos.set(adjustedPos.x(),adjustedPos.y());

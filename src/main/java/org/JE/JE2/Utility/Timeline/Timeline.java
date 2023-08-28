@@ -35,6 +35,8 @@ public class Timeline extends Script {
         time = JE2Math.clamp(time+deltaTime,start,end);
         if(time == end && loop)
             time = start;
+        else if(time == end)
+            stop();
         for (Track<?> track : tracks) {
             track.update(time);
         }
