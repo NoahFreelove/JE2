@@ -10,8 +10,7 @@ You can find all the JEngine 2 documentation [here](https://noahfreelove.github.
 3. Read the documentation for how to use the engine but to quickly open a window use `org.JE.JE2.Manager.run()`;
 
 ## Roadmap
-* **JE 1.1** - Fully document the engine. Create test cases for the engine.
-* **JE 1.0** - Implement saving and loading of entire scenes and multi-body-part rendering **(in progress)**
+* **JE 1.0** - Fully document the engine. Create test cases for the engine.
 * **JE 0.95** - Fix up confusing I/O system. Fix broken systems ✅
 * **JE 0.9** - Implement post processing ✅
 
